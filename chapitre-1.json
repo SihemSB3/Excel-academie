@@ -1,0 +1,558 @@
+{
+  "chapitre": 1,
+  "titre": "Découvrir Excel & son vocabulaire",
+  "partie": 1,
+  "niveau": 1,
+  "ceinture": "blanche",
+  "objectif": "Maîtriser le vocabulaire et les raccourcis de base d'Excel. On observe et on nomme, pas encore de manipulation.",
+  "note_pedago": "Ce chapitre ne contient pas d'exercice Google Sheet (le premier exercice arrive au chapitre 2). La ceinture blanche se gagne par la lecture + le quiz.",
+  "xp_valeurs_note": "Valeurs XP indicatives, à ajuster librement.",
+  "modules": [
+    {
+      "id": "ch1-m1-lexique",
+      "titre": "Le Lexique",
+      "type": "lecon",
+      "xp_par_ecran": 10,
+      "ecrans": [
+        {
+          "id": "ch1-lex-01",
+          "ordre": 1,
+          "titre": "La barre d'accès rapide",
+          "texte": "Située tout en haut à gauche, elle permet d'accéder rapidement aux fonctions courantes comme Enregistrer, Annuler, Répéter.",
+          "capture": {
+            "fichier": "captures/ch1/01-acces-rapide.png",
+            "interaction": "clic",
+            "cible": "barre_acces_rapide",
+            "consigne": "Clique sur la barre d'accès rapide"
+          }
+        },
+        {
+          "id": "ch1-lex-02",
+          "ordre": 2,
+          "titre": "Le ruban",
+          "texte": "Le ruban est la barre horizontale située en haut d'Excel. Il regroupe toutes les commandes, réparties en onglets (ex : Accueil, Insertion, Formules…). Chaque onglet contient des groupes d'outils classés par fonction (police, alignement, style…).",
+          "capture": {
+            "fichier": "captures/ch1/02-ruban.png",
+            "interaction": "clic",
+            "cible": "ruban",
+            "consigne": "Clique sur le ruban"
+          }
+        },
+        {
+          "id": "ch1-lex-03",
+          "ordre": 3,
+          "titre": "Les onglets et les groupes",
+          "texte": "Un onglet est une section du ruban (comme « Accueil » ou « Formules »). Chaque onglet contient des groupes d'outils liés entre eux (ex : « Police » ou « Alignement »).",
+          "capture": {
+            "fichier": "captures/ch1/03-onglets-groupes.png",
+            "interaction": "clic",
+            "cible": "onglet_accueil",
+            "consigne": "Clique sur l'onglet Accueil, puis repère le groupe Alignement"
+          }
+        },
+        {
+          "id": "ch1-lex-04",
+          "ordre": 4,
+          "titre": "La barre de formule",
+          "texte": "C'est la barre située juste au-dessus du tableau, sous le ruban. Elle affiche le contenu actif de la cellule sélectionnée, qu'il s'agisse de texte, de nombre ou de formule. Tu peux aussi y écrire ou modifier directement une formule.",
+          "capture": {
+            "fichier": "captures/ch1/04-barre-formule.png",
+            "interaction": "clic",
+            "cible": "barre_formule",
+            "consigne": "Clique sur la barre de formule"
+          }
+        },
+        {
+          "id": "ch1-lex-05",
+          "ordre": 5,
+          "titre": "Les cellules et leur adresse",
+          "texte": "Une cellule est l'unité de base d'une feuille Excel. Elle est définie par une adresse composée de la colonne (lettre) et de la ligne (chiffre). Exemple : A1 (colonne A, ligne 1).",
+          "capture": {
+            "fichier": "captures/ch1/05-cellule-adresse.png",
+            "interaction": "clic",
+            "cible": "cellule_A1",
+            "consigne": "Clique sur la cellule A1"
+          }
+        },
+        {
+          "id": "ch1-lex-06",
+          "ordre": 6,
+          "titre": "Qu'est-ce qu'une plage de cellules ?",
+          "texte": "Une plage de cellules est un ensemble de cellules voisines. On l'écrit en indiquant la première cellule et la dernière séparées par « : ». Exemples : A1:A5 = de A1 à A5 (5 cellules verticales). A1:C3 = rectangle de 3 colonnes × 3 lignes.",
+          "capture": {
+            "fichier": "captures/ch1/06-plage.png",
+            "interaction": "selection",
+            "cible": "A1:A5",
+            "consigne": "Sélectionne la plage A1:A5"
+          }
+        },
+        {
+          "id": "ch1-lex-07",
+          "ordre": 7,
+          "titre": "Les types d'adresses de cellule",
+          "texte": "L'adresse d'une cellule peut être figée, en tout ou en partie, grâce au signe $ (touche F4).",
+          "capture": null,
+          "blocs": [
+            {
+              "type": "adresses",
+              "items": [
+                {
+                  "notation": "A1",
+                  "categorie": "Relative",
+                  "explication": "bouge si tu recopies la formule ailleurs"
+                },
+                {
+                  "notation": "$A$1",
+                  "categorie": "Absolue",
+                  "explication": "reste toujours fixée"
+                },
+                {
+                  "notation": "$A1",
+                  "categorie": "Mixte",
+                  "explication": "la colonne est figée, la ligne bouge"
+                },
+                {
+                  "notation": "A$1",
+                  "categorie": "Mixte",
+                  "explication": "la ligne est figée, la colonne bouge"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch1-lex-08",
+          "ordre": 8,
+          "titre": "La structure d'une formule",
+          "texte": "Une formule commence toujours par le signe =.",
+          "capture": null,
+          "blocs": [
+            {
+              "type": "formules",
+              "items": [
+                {
+                  "formule": "=A1+B1",
+                  "role": "une addition"
+                },
+                {
+                  "formule": "=SI(A1>10;\"OK\";\"NON\")",
+                  "role": "une condition : si... alors... sinon"
+                },
+                {
+                  "formule": "=SOMME(A1:A10)",
+                  "role": "additionne toute une plage d'un coup"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ch1-lex-09",
+          "ordre": 9,
+          "titre": "L'onglet contextuel",
+          "texte": "Un onglet contextuel est un onglet du ruban qui n'apparaît que lorsque tu sélectionnes un objet ou actives une fonctionnalité spécifique (un graphique, un tableau croisé dynamique, une image…), et qui regroupe les commandes pertinentes à ce contexte. Exemple : quand un graphique est sélectionné, les onglets « Création de graphique » et « Format » s'affichent.",
+          "capture": {
+            "fichier": "captures/ch1/09-onglet-contextuel.png",
+            "interaction": "clic",
+            "cible": "graphique",
+            "consigne": "Clique sur le graphique pour faire apparaître l'onglet contextuel"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ch1-m2-raccourcis",
+      "titre": "Les raccourcis clavier",
+      "type": "flashcards",
+      "xp_completion": 20,
+      "intro": "Les raccourcis clavier sont de précieuses astuces pour gagner du temps. Au début ils semblent peu naturels, c'est normal : il faut les répéter souvent pour qu'ils deviennent instinctifs. Et aucun stress si tu préfères la souris, l'essentiel est d'être à l'aise dans ta façon de travailler.",
+      "hack_shaolin": "Hack Shaolin : un raccourci, c'est comme un geste martial. Tu le répètes jusqu'à ce que la main le fasse sans que la tête y pense.",
+      "cartes": [
+        {
+          "n": 1,
+          "raccourci": "Tab",
+          "action": "Passer à la cellule suivante (à droite)",
+          "categorie": "navigation",
+          "mac": "Tab"
+        },
+        {
+          "n": 2,
+          "raccourci": "Shift + Tab",
+          "action": "Passer à la cellule précédente (à gauche)",
+          "categorie": "navigation",
+          "mac": "Shift + Tab"
+        },
+        {
+          "n": 3,
+          "raccourci": "Ctrl + Flèche",
+          "action": "Atteindre l'extrémité d'un tableau de données",
+          "categorie": "navigation",
+          "mac": "⌘ + Flèche"
+        },
+        {
+          "n": 4,
+          "raccourci": "Ctrl + Maj + Flèche",
+          "action": "Se rendre à la dernière cellule renseignée en sélectionnant",
+          "categorie": "navigation",
+          "mac": "⌘ + Maj + Flèche"
+        },
+        {
+          "n": 5,
+          "raccourci": "Shift + Flèche",
+          "action": "Sélectionner les données des cellules adjacentes",
+          "categorie": "selection",
+          "mac": "Shift + Flèche"
+        },
+        {
+          "n": 6,
+          "raccourci": "Ctrl + Espace",
+          "action": "Sélectionner la colonne active",
+          "categorie": "selection",
+          "mac": "Ctrl + Espace"
+        },
+        {
+          "n": 7,
+          "raccourci": "Maj + Espace",
+          "action": "Sélectionner la ligne active",
+          "categorie": "selection",
+          "mac": "Maj + Espace"
+        },
+        {
+          "n": 8,
+          "raccourci": "Ctrl + A",
+          "action": "Sélectionner le tableau actif",
+          "categorie": "selection",
+          "mac": "⌘ + A"
+        },
+        {
+          "n": 9,
+          "raccourci": "Ctrl + O",
+          "action": "Ouvrir une feuille de calcul",
+          "categorie": "fichier",
+          "mac": "⌘ + O"
+        },
+        {
+          "n": 10,
+          "raccourci": "Ctrl + W",
+          "action": "Fermer une feuille de calcul",
+          "categorie": "fichier",
+          "mac": "⌘ + W"
+        },
+        {
+          "n": 11,
+          "raccourci": "Ctrl + S",
+          "action": "Sauvegarder un fichier Excel",
+          "categorie": "fichier",
+          "mac": "⌘ + S"
+        },
+        {
+          "n": 12,
+          "raccourci": "Ctrl + N",
+          "action": "Créer un nouveau classeur",
+          "categorie": "fichier",
+          "mac": "⌘ + N"
+        },
+        {
+          "n": 13,
+          "raccourci": "Suppr",
+          "action": "Effacer le contenu d'une cellule",
+          "categorie": "edition",
+          "mac": "⌫"
+        },
+        {
+          "n": 14,
+          "raccourci": "Ctrl + Z",
+          "action": "Annuler la dernière action",
+          "categorie": "edition",
+          "mac": "⌘ + Z"
+        },
+        {
+          "n": 15,
+          "raccourci": "Ctrl + Y",
+          "action": "Effectuer une action précédemment annulée",
+          "categorie": "edition",
+          "mac": "⌘ + Y"
+        },
+        {
+          "n": 16,
+          "raccourci": "Ctrl + F",
+          "action": "Rechercher une valeur sur Excel",
+          "categorie": "edition",
+          "mac": "⌘ + F"
+        }
+      ]
+    },
+    {
+      "id": "ch1-m3-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 9,
+      "total": 12,
+      "xp_reussite": 40,
+      "note": "reponses_correctes = liste des index corrects (0-3), multi-réponses possible. Q1-Q8 validées sur le corrigé de l'ebook (p301-302). Q9-Q12 (raccourcis) confiance haute, à confirmer sur la page de corrigé correspondante.",
+      "questions": [
+        {
+          "id": "ch1-qcm-01",
+          "question": "Qu'est-ce que le ruban dans Excel ?",
+          "options": [
+            "Un espace pour écrire une formule manuellement",
+            "L'ensemble des onglets et groupes de commandes en haut de la fenêtre",
+            "Le nom donné à une cellule sélectionnée",
+            "Une zone de calcul automatique"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            1
+          ]
+        },
+        {
+          "id": "ch1-qcm-02",
+          "question": "Que trouve-t-on dans un groupe d'un onglet ?",
+          "options": [
+            "Des feuilles de calcul",
+            "Des commandes liées à une action spécifique",
+            "Des macros",
+            "Des barres de défilement"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            1
+          ]
+        },
+        {
+          "id": "ch1-qcm-03",
+          "question": "À quoi sert la barre de formule ?",
+          "options": [
+            "À créer des graphiques",
+            "À insérer du texte dans une cellule",
+            "À lire ou modifier le contenu d'une cellule active",
+            "À changer la couleur du texte"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            2
+          ]
+        },
+        {
+          "id": "ch1-qcm-04",
+          "question": "Quelle est la bonne définition d'une « plage de cellules » ?",
+          "options": [
+            "Une cellule fusionnée",
+            "Un groupe de cellules adjacentes sélectionnées ensemble",
+            "Une ligne entière",
+            "Une formule qui contient plusieurs arguments"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            1
+          ]
+        },
+        {
+          "id": "ch1-qcm-05",
+          "question": "Parmi ces adresses, laquelle est une référence absolue ?",
+          "options": [
+            "A1",
+            "A$1",
+            "$A1",
+            "$A$1"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            3
+          ]
+        },
+        {
+          "id": "ch1-qcm-06",
+          "question": "Complète la structure d'une formule Excel simple.",
+          "options": [
+            "+",
+            "%",
+            "=",
+            "@"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            0,
+            2
+          ],
+          "multi": true,
+          "note": "Multi-réponses : l'ebook accepte « + » et « = » (Excel convertit +A1 en =+A1)."
+        },
+        {
+          "id": "ch1-qcm-07",
+          "question": "Quelle action permet d'accéder rapidement à une commande favorite ?",
+          "options": [
+            "Ajouter cette commande à la barre d'accès rapide",
+            "Cliquer sur la cellule A1",
+            "Changer le thème du ruban",
+            "D la réponse D"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            0
+          ],
+          "note": "4e option « D la réponse D » = clin d'oeil humoristique volontaire (sketch Gad Elmaleh), a garder tel quel."
+        },
+        {
+          "id": "ch1-qcm-08",
+          "question": "Quel est l'ordre logique d'une formule bien structurée ?",
+          "options": [
+            "Valeur – signe = cellule",
+            "Cellule, opérateur, résultat",
+            "=, fonction, parenthèses et arguments",
+            "Signe égal, tableau croisé, et graphique"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            2
+          ]
+        },
+        {
+          "id": "ch1-qcm-09",
+          "question": "Comment sélectionner tout un tableau sur Excel ?",
+          "options": [
+            "Ctrl+F",
+            "Shift+Flèche",
+            "Ctrl+A",
+            "Ctrl+Z"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            2
+          ],
+          "note": "Pas de corrige ebook pour les raccourcis ; reponse factuelle certaine."
+        },
+        {
+          "id": "ch1-qcm-10",
+          "question": "Quel raccourci permet d'annuler la dernière action ?",
+          "options": [
+            "Ctrl+Y",
+            "Ctrl+Z",
+            "Ctrl+W",
+            "Ctrl+S"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            1
+          ],
+          "note": "Pas de corrige ebook pour les raccourcis ; reponse factuelle certaine."
+        },
+        {
+          "id": "ch1-qcm-11",
+          "question": "Quel raccourci permet de passer à la cellule suivante (à droite) ?",
+          "options": [
+            "Tab",
+            "Ctrl+Flèche",
+            "Ctrl+S",
+            "Shift+Tab"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            0
+          ],
+          "note": "Pas de corrige ebook pour les raccourcis ; reponse factuelle certaine."
+        },
+        {
+          "id": "ch1-qcm-12",
+          "question": "Quel raccourci permet d'effectuer une action précédemment annulée ?",
+          "options": [
+            "Ctrl+Z",
+            "Ctrl+Y",
+            "Ctrl+S",
+            "Ctrl+F"
+          ],
+          "a_valider": false,
+          "reponses_correctes": [
+            1
+          ],
+          "note": "Pas de corrige ebook pour les raccourcis ; reponse factuelle certaine."
+        }
+      ]
+    },
+    {
+      "id": "ch1-m4-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "consigne": "Coche les compétences que tu maîtrises. Reviens-y régulièrement pour valider tes acquis ou repérer les points à revoir.",
+      "items": [
+        "Je sais ce qu'est la barre d'accès rapide et comment y ajouter une commande",
+        "Je sais repérer le ruban en haut de la fenêtre Excel",
+        "Je sais faire la différence entre un onglet et un groupe de commandes",
+        "Je comprends à quoi sert la barre de formule",
+        "Je sais sélectionner une cellule et en lire l'adresse (ex : B2)",
+        "Je peux sélectionner une plage de cellules (ex : A1:A10)",
+        "Je comprends ce qu'est une adresse relative (A1) et une adresse absolue ($A$1)",
+        "Je comprends comment sélectionner rapidement des cellules ou des tableaux (Shift+Flèche, Ctrl+A...)",
+        "Je peux naviguer et manipuler Excel plus efficacement grâce aux raccourcis clavier",
+        "Je sais utiliser les raccourcis clavier de base (Tab, Ctrl+S, Ctrl+Z...)"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": [
+        "ruban"
+      ],
+      "question": "C'est quoi le ruban ?",
+      "reponse": "Le ruban est la barre horizontale en haut d'Excel qui regroupe toutes les commandes, rangées en onglets (Accueil, Insertion, Formules…)."
+    },
+    {
+      "mots_cles": [
+        "onglet",
+        "groupe",
+        "difference"
+      ],
+      "question": "Quelle différence entre un onglet et un groupe ?",
+      "reponse": "Un onglet est une grande section du ruban (Accueil, Formules…). À l'intérieur, les commandes sont rangées en groupes (Police, Alignement…)."
+    },
+    {
+      "mots_cles": [
+        "plage",
+        "cellules"
+      ],
+      "question": "C'est quoi une plage de cellules ?",
+      "reponse": "Un ensemble de cellules voisines, noté première:dernière. Ex : A1:A5 = de A1 à A5."
+    },
+    {
+      "mots_cles": [
+        "relative",
+        "absolue",
+        "dollar",
+        "adresse"
+      ],
+      "question": "Relative ou absolue, quelle différence ?",
+      "reponse": "Relative (A1) : l'adresse change quand tu recopies la formule. Absolue ($A$1) : elle reste fixée. Mixte ($A1 ou A$1) : fige soit la colonne, soit la ligne."
+    },
+    {
+      "mots_cles": [
+        "barre de formule"
+      ],
+      "question": "À quoi sert la barre de formule ?",
+      "reponse": "À lire ou modifier le contenu de la cellule active : texte, nombre ou formule."
+    },
+    {
+      "mots_cles": [
+        "annuler",
+        "ctrl z"
+      ],
+      "question": "Comment annuler une action ?",
+      "reponse": "Ctrl+Z annule la dernière action. Ctrl+Y la rétablit."
+    },
+    {
+      "mots_cles": [
+        "selectionner",
+        "tableau",
+        "ctrl a"
+      ],
+      "question": "Comment sélectionner tout un tableau ?",
+      "reponse": "Ctrl+A sélectionne le tableau actif."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "blanche",
+    "xp_bonus": 50,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture blanche débloquée. Tu connais le terrain, place à la pratique."
+  }
+}

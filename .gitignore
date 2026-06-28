@@ -1,0 +1,14 @@
+# Dépendances et build (régénérés par Netlify, jamais committés)
+node_modules/
+dist/
+
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# macOS
+.DS_Store
+
+# Logs
+*.log

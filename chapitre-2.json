@@ -1,0 +1,479 @@
+{
+  "chapitre": 2,
+  "titre": "Réalisation de tableaux avec des calculs",
+  "partie": 1,
+  "niveau": 2,
+  "ceinture": "jaune",
+  "objectif": "Manipuler Excel pour de vrai : saisir, calculer, recopier, créer des séries, utiliser les fonctions de base. C'est le premier chapitre avec de vrais exercices Google Sheet.",
+  "note_pedago": "Chapitre central du pilote : boucle complete lecon narree -> exercice .xlsx (Drive) -> quiz -> deblocage ceinture jaune. 8 lecons narrees + fiche memo, exercices Drive branches sur chaque lecon.",
+  "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
+  "modules": [
+    {
+      "id": "ch2-saisie",
+      "type": "narration",
+      "lecon": "saisie",
+      "titre": "Saisir des données",
+      "xp": 30
+    },
+    {
+      "id": "ch2-calculs",
+      "type": "narration",
+      "lecon": "calculs",
+      "titre": "Faire des calculs",
+      "xp": 30
+    },
+    {
+      "id": "ch2-recopie",
+      "type": "narration",
+      "lecon": "recopie",
+      "titre": "Recopie des données & formules",
+      "xp": 30
+    },
+    {
+      "id": "ch2-series",
+      "type": "narration",
+      "lecon": "series",
+      "titre": "Les séries automatiques",
+      "xp": 30
+    },
+    {
+      "id": "ch2-deplacer",
+      "type": "narration",
+      "lecon": "deplacer",
+      "titre": "Déplacer & copier des cellules",
+      "xp": 30
+    },
+    {
+      "id": "ch2-collage",
+      "type": "narration",
+      "lecon": "collage",
+      "titre": "Le collage spécial",
+      "xp": 30
+    },
+    {
+      "id": "ch2-somme",
+      "type": "narration",
+      "lecon": "somme",
+      "titre": "La fonction SOMME",
+      "xp": 30
+    },
+    {
+      "id": "ch2-assistant",
+      "type": "narration",
+      "lecon": "assistant",
+      "titre": "L'assistant fonction & les fonctions de base",
+      "xp": 30
+    },
+    {
+      "id": "ch2-references",
+      "type": "narration",
+      "lecon": "references",
+      "titre": "Références relatives & absolues",
+      "xp": 30
+    },
+    {
+      "id": "ch2-fichememo",
+      "type": "fiche_memo",
+      "titre": "Fiche mémo des fonctions",
+      "xp_completion": 20,
+      "fonctions": [
+        {
+          "nom": "SOMME",
+          "syntaxe": "=SOMME(B2:B9)",
+          "but": "Additionner plusieurs cellules",
+          "exemple": "total des ventes du mois"
+        },
+        {
+          "nom": "MOYENNE",
+          "syntaxe": "=MOYENNE(B2:B9)",
+          "but": "Calculer la moyenne de plusieurs valeurs",
+          "exemple": "moyenne de notes ou de CA"
+        },
+        {
+          "nom": "MIN",
+          "syntaxe": "=MIN(A1:A10)",
+          "but": "Trouver la valeur la plus petite",
+          "exemple": "le plus petit prix"
+        },
+        {
+          "nom": "MAX",
+          "syntaxe": "=MAX(B2:B9)",
+          "but": "Trouver la valeur la plus grande",
+          "exemple": "le meilleur score"
+        },
+        {
+          "nom": "NBVAL",
+          "syntaxe": "=NBVAL(B2:B9)",
+          "but": "Compter toutes les cellules non vides (nombres, textes, dates)",
+          "exemple": "combien de réponses dans une enquête"
+        },
+        {
+          "nom": "NB",
+          "syntaxe": "=NB(A1:A10)",
+          "but": "Compter uniquement les cellules contenant des nombres",
+          "exemple": "combien de valeurs numériques saisies"
+        },
+        {
+          "nom": "CONCATENER",
+          "syntaxe": "=CONCATENER(A1;B1)",
+          "but": "Assembler le contenu de plusieurs cellules",
+          "exemple": "prénom + nom dans une seule cellule"
+        },
+        {
+          "nom": "AUJOURDHUI",
+          "syntaxe": "=AUJOURDHUI()",
+          "but": "Insérer la date du jour (mise à jour automatique)",
+          "exemple": "afficher la date d'aujourd'hui"
+        },
+        {
+          "nom": "SI",
+          "syntaxe": "=SI(A1>10;\"OK\";\"Non\")",
+          "but": "Tester une condition",
+          "exemple": "si une vente dépasse 100€, afficher Bonus"
+        }
+      ]
+    },
+    {
+      "id": "ch2-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 12,
+      "total": 16,
+      "xp_reussite": 40,
+      "note": "reponses_correctes = liste des index corrects (0-3). Validees sur ton corrige (PARTIE 2 p303-306), sauf ch2-qcm-12 (corrigee NB->NBVAL, voir note) et ch2-qcm-07 (options a verifier).",
+      "questions": [
+        {
+          "id": "ch2-qcm-01",
+          "question": "Que se passe-t-il si tu tapes du texte dans une cellule déjà remplie ?",
+          "options": [
+            "Rien ne change",
+            "Le nouveau texte remplace l'ancien",
+            "Une erreur s'affiche",
+            "Excel demande une confirmation"
+          ],
+          "reponses_correctes": [
+            1
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-02",
+          "question": "Que signifie une série de ##### dans une cellule ?",
+          "options": [
+            "Problème de formule",
+            "Cellule vide",
+            "Colonne trop étroite",
+            "Texte trop long"
+          ],
+          "reponses_correctes": [
+            2
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-03",
+          "question": "Quelle touche permet d'annuler une saisie en cours ?",
+          "options": [
+            "Ctrl",
+            "Echap",
+            "Alt",
+            "Suppr"
+          ],
+          "reponses_correctes": [
+            1
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-04",
+          "question": "Quelle est la syntaxe correcte pour faire une multiplication dans Excel ?",
+          "options": [
+            "=A1+B1",
+            "=A1×B1",
+            "=A1*B1",
+            "=A1.B1"
+          ],
+          "reponses_correctes": [
+            2
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-05",
+          "question": "Que signifie =5+2*3 dans Excel ?",
+          "options": [
+            "21",
+            "11",
+            "13",
+            "7"
+          ],
+          "reponses_correctes": [
+            1
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-06",
+          "question": "Que produit la formule =SOMME(A1:A3) si A1=1, A2=2, A3 est vide ?",
+          "options": [
+            "3",
+            "0",
+            "Erreur",
+            "2"
+          ],
+          "reponses_correctes": [
+            0
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-07",
+          "question": "Comment faire une addition de cellules non adjacentes ?",
+          "options": [
+            "=SOMME(A1:A3)",
+            "=A1+A3",
+            "=SOMME(A1;A3)",
+            "=A1*A3"
+          ],
+          "reponses_correctes": [
+            1
+          ],
+          "a_valider": false,
+          "note": "Options 0 et 2 affichées presque identiques dans l'ebook (=SOMME(A1 A3)) ; reconstruites ici en =SOMME(A1:A3) et =SOMME(A1;A3). A verifier."
+        },
+        {
+          "id": "ch2-qcm-08",
+          "question": "Quelle fonction permet de copier uniquement les valeurs avec Collage spécial ?",
+          "options": [
+            "Collage complet",
+            "Collage intelligent",
+            "Collage des formules",
+            "Collage des valeurs"
+          ],
+          "reponses_correctes": [
+            3
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-09",
+          "question": "Quelle est la différence entre E2 et $E$2 ?",
+          "options": [
+            "Aucune",
+            "$E$2 est fixe",
+            "E2 est absolue",
+            "Les deux sont absolues"
+          ],
+          "reponses_correctes": [
+            1
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-10",
+          "question": "Quelle touche transforme une référence en référence absolue ?",
+          "options": [
+            "Ctrl",
+            "Alt",
+            "F4",
+            "Tab"
+          ],
+          "reponses_correctes": [
+            2
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-11",
+          "question": "Quel est l'intérêt de l'assistant fonction ?",
+          "options": [
+            "Supprimer les formules",
+            "Créer des graphiques",
+            "Aider à écrire une formule",
+            "Lancer une macro"
+          ],
+          "reponses_correctes": [
+            2
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-12",
+          "question": "Quelle fonction est idéale pour connaître le nombre de cellules non vides ?",
+          "options": [
+            "NB",
+            "NB.SI",
+            "NBVAL",
+            "SOMME"
+          ],
+          "reponses_correctes": [
+            2
+          ],
+          "a_valider": false,
+          "note": "Confirmé par Sihem : NBVAL (le corrigé imprimé indiquait NB par erreur, contredit par la fiche mémo p76)."
+        },
+        {
+          "id": "ch2-qcm-13",
+          "question": "Que fait Excel quand tu recopies une formule vers le bas ?",
+          "options": [
+            "Rien",
+            "Recopie avec les mêmes cellules",
+            "Adapte les lignes automatiquement",
+            "Efface la formule"
+          ],
+          "reponses_correctes": [
+            2
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-14",
+          "question": "Pour créer une suite comme 1, 2, 3, 4, tu dois :",
+          "options": [
+            "Saisir 1 et recopier",
+            "Saisir 1 et 2 puis recopier",
+            "Cliquer sur Insérer une suite",
+            "Utiliser une macro"
+          ],
+          "reponses_correctes": [
+            1
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-15",
+          "question": "Que fait l'option Transposer dans le collage spécial ?",
+          "options": [
+            "Supprime les lignes",
+            "Met les lignes à la place des colonnes",
+            "Colle en miroir",
+            "Colle sans mise en forme"
+          ],
+          "reponses_correctes": [
+            1
+          ],
+          "a_valider": false
+        },
+        {
+          "id": "ch2-qcm-16",
+          "question": "Quel raccourci clavier utilise-t-on pour copier une cellule ?",
+          "options": [
+            "Ctrl + C",
+            "Alt + C",
+            "Ctrl + V",
+            "F2"
+          ],
+          "reponses_correctes": [
+            0
+          ],
+          "a_valider": false
+        }
+      ]
+    },
+    {
+      "id": "ch2-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Ajout du dojo : l'ebook ch2 n'a pas de checklist (il a une page MES NOTES). Choix validé par Sihem : on la garde pour renforcer la validation de ceinture jaune.",
+      "a_valider": false,
+      "items": [
+        "Je sais saisir et modifier du texte, des nombres et des dates",
+        "Je sais annuler une saisie (Échap, croix de la barre de formule, Ctrl+Z)",
+        "Je sais écrire un calcul avec les opérateurs (+, -, *, /) et gérer les priorités",
+        "Je sais recopier une donnée ou une formule avec la poignée de recopie",
+        "Je comprends la référence relative (qui s'adapte quand on recopie)",
+        "Je sais créer des séries automatiques (mois, jours, dates, nombres)",
+        "Je sais utiliser la somme automatique (Σ) et la fonction =SOMME()",
+        "Je sais déplacer et copier des cellules (couper/coller, glisser-déposer, Ctrl+X/C/V)",
+        "Je sais utiliser le collage spécial (coller les valeurs, transposer)",
+        "Je sais figer une cellule en référence absolue ($ ou touche F4)",
+        "Je sais utiliser l'assistant fonction et les fonctions de base (SOMME, MOYENNE, MIN, MAX, NBVAL, NB, SI)"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": [
+        "poignée",
+        "recopie",
+        "tirer"
+      ],
+      "question": "C'est quoi la poignée de recopie ?",
+      "reponse": "Le petit carré en bas à droite d'une cellule. Tu cliques dessus et tu tires pour dupliquer un contenu, une formule ou créer une série."
+    },
+    {
+      "mots_cles": [
+        "#####",
+        "dièse",
+        "colonne"
+      ],
+      "question": "Pourquoi je vois ##### dans ma cellule ?",
+      "reponse": "La colonne est trop étroite pour afficher le nombre. Élargis-la et la valeur réapparaît."
+    },
+    {
+      "mots_cles": [
+        "absolue",
+        "dollar",
+        "figer",
+        "F4"
+      ],
+      "question": "Comment figer une cellule dans une formule ?",
+      "reponse": "Mets des $ devant la colonne et la ligne ($A$1), ou appuie sur F4 après avoir cliqué la cellule. Elle ne bougera plus quand tu recopies."
+    },
+    {
+      "mots_cles": [
+        "collage",
+        "valeurs",
+        "spécial"
+      ],
+      "question": "Comment coller seulement les valeurs sans les formules ?",
+      "reponse": "Copie, puis clic droit > Collage spécial > Valeurs. Tu colles le résultat sans la formule derrière."
+    },
+    {
+      "mots_cles": [
+        "somme",
+        "additionner",
+        "Σ"
+      ],
+      "question": "Comment additionner rapidement une colonne ?",
+      "reponse": "Sélectionne les cellules + la cellule résultat, puis Accueil > Σ Somme automatique. Excel écrit =SOMME() tout seul."
+    },
+    {
+      "mots_cles": [
+        "priorité",
+        "ordre",
+        "calcul",
+        "parenthèses"
+      ],
+      "question": "Dans quel ordre Excel calcule ?",
+      "reponse": "D'abord * et /, ensuite + et -. Les parenthèses passent en premier : =(5+2)*3 fait 21, =5+2*3 fait 11."
+    },
+    {
+      "mots_cles": [
+        "NB",
+        "NBVAL",
+        "compter",
+        "non vides"
+      ],
+      "question": "NB ou NBVAL pour compter ?",
+      "reponse": "NB compte seulement les cellules contenant des nombres. NBVAL compte toutes les cellules non vides (nombres, textes, dates)."
+    },
+    {
+      "mots_cles": [
+        "série",
+        "suite",
+        "mois",
+        "nombres"
+      ],
+      "question": "Comment créer une suite automatique ?",
+      "reponse": "Écris les premiers éléments (1 puis 3, ou 'janvier'), sélectionne, et tire la poignée : Excel continue la logique."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "jaune",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture jaune débloquée. Tu ne lis plus Excel, tu le manies."
+  }
+}
