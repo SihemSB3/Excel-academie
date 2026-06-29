@@ -39,7 +39,9 @@ export default function ChapterMap({ ch, estFait, tousFaits, onOuvrir, onQuitter
           {ch.modules.map((m, i) => {
             const fait = i < faits
             const courant = i === faits && !tousFaits
-            const dispo = fait || courant
+            // MODE REVUE (temporaire) : toutes les leçons cliquables pour la relecture.
+            // Pour réactiver la progression : const dispo = fait || courant
+            const dispo = true
             const topMint = i <= faits
             const bottomMint = i < faits
             return (

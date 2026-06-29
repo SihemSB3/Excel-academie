@@ -13,7 +13,9 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
   const prochaine = CEINTURES[indexCeinture(derniere) + 1] || null
 
   const valides = (n) => Object.keys(etat.ecransValides).filter((k) => k.startsWith(`ch${n}-`)).length
-  const estDebloque = (n) => n === 1 || etat.chapitresTermines.includes(n - 1)
+  // MODE REVUE (temporaire) : tous les chapitres accessibles pour relire le ch.3 sans refaire 1 et 2.
+  // Pour réactiver la progression : const estDebloque = (n) => n === 1 || etat.chapitresTermines.includes(n - 1)
+  const estDebloque = () => true
   let objectif = null
   try {
     objectif = localStorage.getItem('excel-dojo-objectif')

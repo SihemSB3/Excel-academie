@@ -9,6 +9,28 @@ function gras(str = '') {
   return str.split('**').map((t, i) => (i % 2 === 1 ? <strong key={i} className="font-bold text-navy">{t}</strong> : <span key={i}>{t}</span>))
 }
 
+// Bloc « méthode » : un titre (ex. « Méthode 1 : le ruban ») puis les étapes,
+// chacune sur sa propre ligne (numérotée), jamais en paragraphe.
+// `depart` permet de continuer la numérotation après une capture intercalée.
+function EtapesListe({ titre, items = [], depart = 1 }) {
+  if (!titre && !items.length) return null
+  return (
+    <div className="space-y-2">
+      {titre && <p className="font-display text-lg leading-tight text-navy">{gras(titre)}</p>}
+      {items.length > 0 && (
+        <ol className="space-y-1.5">
+          {items.map((e, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm text-navy/85">
+              <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-mint text-[11px] font-bold text-navy-deep">{depart + i}</span>
+              <span>{gras(e)}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  )
+}
+
 // Bloc « En savoir plus » qui se déplie dans l'app, sans en sortir (détail repris de l'ebook).
 function PlusInfo({ plus }) {
   const [ouvert, setOuvert] = useState(false)
@@ -244,8 +266,8 @@ function AutoComplete({ v }) {
   )
 }
 
-// Ruban Excel simplifié : montre où se trouve un bouton (ex. « Insérer une fonction »).
-function Ruban({ v }) {
+// Photo du ruban Excel : onglets + groupe encadré et nommé (montre où se trouve un bouton).
+function RubanImg({ v }) {
   const {
     onglets = ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données', 'Révision', 'Affichage'],
     actif = 'Formules',
@@ -257,27 +279,48 @@ function Ruban({ v }) {
       { icone: '?', label: 'Logique' },
     ],
     groupeNom = 'Bibliothèque de fonctions',
+    lanceur,
   } = v
   return (
-    <div className="mx-auto mt-3 max-w-md animate-fade-up overflow-hidden rounded-md border border-navy/15 text-[10px] shadow-lg">
+    <div className="mx-auto max-w-md animate-fade-up overflow-hidden rounded-md border border-navy/15 text-[10px] shadow-lg">
       <div className="flex gap-0.5 bg-[#f3f3f3] px-2 pt-1">
         {onglets.map((o) => (
           <span key={o} className={`rounded-t px-2 py-1 ${o === actif ? 'bg-white font-bold text-[#0a7a3d]' : 'text-navy/55'}`}>{o}</span>
         ))}
       </div>
-      <div className="flex items-end gap-1 bg-white px-2 py-2">
-        {groupes.map((g, i) => (
-          <div key={i} className={`flex w-16 flex-col items-center gap-1 rounded px-1 py-1 text-center ${g.actif ? 'ring-2 ring-mint' : 'opacity-55'}`}>
-            <span className={`grid h-7 w-7 place-items-center rounded text-sm ${g.icone === 'fx' ? 'bg-[#107c41] font-bold italic text-white' : 'text-navy/60'}`}>{g.icone}</span>
-            <span className="leading-tight text-navy/75">
-              {g.label.split('\n').map((l, j) => (
-                <span key={j} className="block">{l}</span>
-              ))}
-            </span>
+      <div className="flex items-start gap-2 bg-white px-2 py-2">
+        {/* Le groupe est encadré et clairement nommé en dessous (ex. « Cellules »). */}
+        <div className="rounded-md border border-navy/15 bg-navy/[0.02] px-1.5 pb-1 pt-1.5">
+          <div className="flex items-end gap-1">
+            {groupes.map((g, i) => (
+              <div key={i} className={`flex w-16 flex-col items-center gap-1 rounded px-1 py-1 text-center ${g.actif ? 'bg-mint/15 ring-2 ring-mint' : 'opacity-60'}`}>
+                <span className={`grid h-7 w-7 place-items-center rounded text-sm ${g.icone === 'fx' ? 'bg-[#107c41] font-bold italic text-white' : 'text-navy/70'}`}>{g.icone}</span>
+                <span className="leading-tight text-navy/75">
+                  {g.label.split('\n').map((l, j) => (
+                    <span key={j} className="block">{l}</span>
+                  ))}
+                </span>
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="mt-1 flex items-center justify-center gap-1 border-t border-navy/10 pt-0.5 text-[9px] font-semibold text-navy/60">
+            <span>{groupeNom}</span>
+            {lanceur && (
+              <span className="grid h-3.5 w-3.5 animate-glow place-items-center rounded-sm leading-none text-navy ring-2 ring-mint" title="Lanceur de boîte de dialogue">↘</span>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="bg-[#f3f3f3] py-0.5 text-center text-[8px] text-navy/40">{groupeNom}</div>
+    </div>
+  )
+}
+
+// Enveloppe : étapes (avec titre de méthode) au-dessus, puis la photo du ruban.
+function Ruban({ v }) {
+  return (
+    <div className="mt-3 space-y-3">
+      <EtapesListe titre={v.titre} items={v.etapes} />
+      <RubanImg v={v} />
     </div>
   )
 }
@@ -352,12 +395,12 @@ function Curseurs({ v }) {
   )
 }
 
-// Menu contextuel (clic droit) : liste d'options, certaines mises en avant.
-function MenuContextuel({ v }) {
+// Photo d'un menu / liste déroulante : options, certaines mises en avant.
+function MenuImg({ v }) {
   const { items = [] } = v
   return (
-    <div className="mt-3 flex justify-center">
-      <div className="w-60 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-xs shadow-xl">
+    <div className="flex justify-center">
+      <div className="w-64 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-xs shadow-xl">
         {items.map((it, i) =>
           it === '-' ? (
             <div key={i} className="my-1 border-t border-navy/10" />
@@ -369,6 +412,16 @@ function MenuContextuel({ v }) {
           )
         )}
       </div>
+    </div>
+  )
+}
+
+// Menu contextuel (clic droit) : titre de méthode + étapes, puis la photo du menu.
+function MenuContextuel({ v }) {
+  return (
+    <div className="mt-3 space-y-3">
+      <EtapesListe titre={v.titre} items={v.etapes} />
+      <MenuImg v={v} />
     </div>
   )
 }
@@ -478,24 +531,56 @@ function FormatCellule({ v }) {
             <span key={t} className={`rounded-t px-2 py-1 ${t === actif ? 'bg-white font-bold text-navy ring-1 ring-navy/15' : 'text-navy/50'}`}>{t}</span>
           ))}
         </div>
-        <div className="grid grid-cols-2 gap-2 bg-white p-3">
-          <div>
-            <p className="mb-1 text-navy/60">Catégorie :</p>
-            <div className="h-24 overflow-hidden rounded-sm border border-navy/20">
-              {categories.map((c) => (
-                <div key={c} className={`px-2 py-0.5 ${c === categorieActive ? 'bg-[#0a63c9] text-white' : 'text-navy'}`}>{c}</div>
-              ))}
+        {actif === 'Bordure' ? (
+          <div className="grid grid-cols-2 gap-3 bg-white p-3">
+            <div>
+              <p className="mb-1 text-navy/60">Style du trait :</p>
+              <div className="space-y-2 rounded-sm border border-navy/20 p-2">
+                <div className="border-t border-navy/70" />
+                <div className="border-t-2 border-navy/80" />
+                <div className="border-t border-dashed border-navy/70" />
+                <div className="border-t-2 border-double border-navy/80" />
+              </div>
+              <p className="mb-1 mt-2 text-navy/60">Couleur :</p>
+              <span className="flex items-center justify-between rounded-sm border border-navy/25 px-2 py-1">
+                <span className="h-3 w-8 rounded-sm bg-navy" />
+                <span className="text-navy/40">▾</span>
+              </span>
+            </div>
+            <div>
+              <p className="mb-1 text-navy/60">Présélections :</p>
+              <div className="flex gap-1.5">
+                {['Aucune', 'Contour', 'Intérieur'].map((p, i) => (
+                  <span key={p} className={`flex flex-col items-center gap-1 rounded-sm border px-1.5 py-1 text-[8px] ${i === 1 ? 'border-mint bg-mint/15 text-navy' : 'border-navy/20 text-navy/55'}`}>
+                    <span className="h-4 w-4 border border-navy/50" />
+                    {p}
+                  </span>
+                ))}
+              </div>
+              <p className="mb-1 mt-3 text-navy/60">Aperçu :</p>
+              <div className="mx-auto grid h-12 w-20 place-items-center border-2 border-navy/70 text-[9px] text-navy/40">Texte</div>
             </div>
           </div>
-          <div>
-            <p className="mb-1 text-navy/60">{titreDroite}</p>
-            <div className="h-24 overflow-hidden rounded-sm border border-navy/20">
-              {types.map((c, i) => (
-                <div key={c} className={`px-2 py-0.5 ${i === 0 ? 'bg-[#0a63c9] text-white' : 'text-navy'}`}>{c}</div>
-              ))}
+        ) : (
+          <div className="grid grid-cols-2 gap-2 bg-white p-3">
+            <div>
+              <p className="mb-1 text-navy/60">Catégorie :</p>
+              <div className="h-24 overflow-hidden rounded-sm border border-navy/20">
+                {categories.map((c) => (
+                  <div key={c} className={`px-2 py-0.5 ${c === categorieActive ? 'bg-[#0a63c9] text-white' : 'text-navy'}`}>{c}</div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="mb-1 text-navy/60">{titreDroite}</p>
+              <div className="h-24 overflow-hidden rounded-sm border border-navy/20">
+                {types.map((c, i) => (
+                  <div key={c} className={`px-2 py-0.5 ${i === 0 ? 'bg-[#0a63c9] text-white' : 'text-navy'}`}>{c}</div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="flex justify-end gap-2 bg-white px-3 pb-2">
           <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span>
           <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
@@ -751,7 +836,7 @@ function RefFiger() {
 // Bordures + couleur de fond + couleur de texte : un tableau « avant / après »,
 // et le petit menu déroulant « Bordures » d'Excel.
 function BorduresFond({ v }) {
-  const { menu } = v
+  const { menu, avantSelection, apres = 'complet' } = v
   const lignes = [
     ['Produit', 'Prix'],
     ['Clavier', '30 €'],
@@ -771,36 +856,34 @@ function BorduresFond({ v }) {
   return (
     <div className="mt-3 space-y-3">
       <div className="flex flex-wrap items-center justify-center gap-3">
-        {/* Avant : tableau brut */}
+        {/* Avant : tableau brut, ou plage sélectionnée (avantSelection) */}
         <div>
           <p className="mb-1 text-center text-[10px] font-bold uppercase tracking-wide text-navy/40">Avant</p>
           <div className="overflow-hidden rounded-sm border border-dashed border-navy/20 text-[11px]">
             {lignes.map((r, i) => (
               <div key={i} className="flex">
                 {r.map((c, j) => (
-                  <div key={j} className="w-20 px-2 py-1 text-navy/70">{c}</div>
+                  <div key={j} className={`w-20 px-2 py-1 text-navy/70 ${avantSelection && i === 0 ? 'bg-[#cfe2ff] ring-1 ring-inset ring-[#0a63c9]/60' : ''}`}>{c}</div>
                 ))}
               </div>
             ))}
           </div>
+          {avantSelection && <p className="mt-1 text-center text-[9px] text-navy/45">↑ on sélectionne d'abord</p>}
         </div>
         <span className="text-xl font-bold text-mint">→</span>
-        {/* Après : bordures + fond + texte coloré */}
+        {/* Après : bordures complètes, ou juste le fond (apres='fond') */}
         <div>
           <p className="mb-1 text-center text-[10px] font-bold uppercase tracking-wide text-mint">Après</p>
-          <div className="overflow-hidden rounded-sm border border-navy/60 text-[11px] shadow">
+          <div className={`overflow-hidden rounded-sm text-[11px] shadow ${apres === 'fond' ? 'border border-navy/15' : 'border border-navy/60'}`}>
             {lignes.map((r, i) => (
               <div key={i} className="flex">
-                {r.map((c, j) => (
-                  <div
-                    key={j}
-                    className={`w-20 border-navy/60 px-2 py-1 ${j ? 'border-l' : ''} ${i ? 'border-t' : ''} ${
-                      i === 0 ? 'bg-navy font-bold text-cream' : j === 1 ? 'font-semibold text-mint' : 'text-navy/90'
-                    }`}
-                  >
-                    {c}
-                  </div>
-                ))}
+                {r.map((c, j) =>
+                  apres === 'fond' ? (
+                    <div key={j} className={`w-20 px-2 py-1 ${i === 0 ? 'bg-amber-300/80 font-bold text-navy' : 'text-navy/80'}`}>{c}</div>
+                  ) : (
+                    <div key={j} className={`w-20 border-navy/60 px-2 py-1 ${j ? 'border-l' : ''} ${i ? 'border-t' : ''} ${i === 0 ? 'bg-navy font-bold text-cream' : j === 1 ? 'font-semibold text-mint' : 'text-navy/90'}`}>{c}</div>
+                  ),
+                )}
               </div>
             ))}
           </div>
@@ -858,25 +941,34 @@ function FormatNombre() {
   )
 }
 
-// Le pinceau (reproduire la mise en forme) : la cellule modèle, le pinceau, la cellule repeinte.
+// Le pinceau (reproduire la mise en forme), ANIMÉ : la cellule « Sous-total » part
+// sans mise en forme, puis prend le style de la cellule modèle (sous les yeux de l'élève).
 function Pinceau() {
-  const Cellule = ({ children, style }) => (
-    <div className={`grid h-12 w-24 place-items-center rounded-sm border text-sm font-bold ${style}`}>{children}</div>
-  )
+  const [peint, setPeint] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setPeint(true), 1100)
+    return () => clearTimeout(t)
+  }, [])
+  const base = 'grid h-12 w-24 place-items-center rounded-sm border text-sm font-bold transition-all duration-700'
   return (
-    <div className="mt-3 flex flex-wrap items-center justify-center gap-3 py-2">
-      <div className="flex flex-col items-center gap-1">
-        <Cellule style="border-navy bg-navy text-cream">Total</Cellule>
-        <span className="text-[10px] text-navy/50">1. La cellule modèle</span>
+    <div className="mt-3">
+      <div className="flex flex-wrap items-center justify-center gap-3 py-2">
+        <div className="flex flex-col items-center gap-1">
+          <div className={`${base} border-navy bg-navy text-cream`}>Total</div>
+          <span className="text-[10px] text-navy/50">1. La cellule modèle</span>
+        </div>
+        <div className="flex flex-col items-center text-mint">
+          <span className={`text-2xl ${peint ? '' : 'animate-bounce'}`}>🖌️</span>
+          <span className="text-[10px] font-bold">{peint ? '✓ style copié' : '→ on copie le style'}</span>
+        </div>
+        <div className="flex flex-col items-center gap-1">
+          <div className={`${base} ${peint ? 'border-navy bg-navy text-cream' : 'border-navy/20 bg-white text-navy/80'}`}>Sous-total</div>
+          <span className="text-[10px] text-navy/50">2. La cellule {peint ? 'repeinte' : 'à repeindre'}</span>
+        </div>
       </div>
-      <div className="flex flex-col items-center text-mint">
-        <span className="text-2xl">🖌️</span>
-        <span className="text-[10px] font-bold">→ on copie le style</span>
-      </div>
-      <div className="flex flex-col items-center gap-1">
-        <Cellule style="border-navy bg-navy text-cream">Sous-total</Cellule>
-        <span className="text-[10px] text-navy/50">2. La cellule repeinte</span>
-      </div>
+      <p className="mx-auto mt-2 max-w-xs text-center text-[11px] leading-snug text-navy/55">
+        La cellule « Sous-total » prend la même mise en forme que la cellule modèle.
+      </p>
     </div>
   )
 }
@@ -908,8 +1000,46 @@ function Styles() {
 
 // Aperçu d'une page d'impression : marges, zones en-tête/pied, orientation portrait/paysage.
 function ApercuImpression({ v }) {
-  const { orientation = 'portrait', zones, legende } = v
+  const { orientation = 'portrait', zones, legende, bureau } = v
   const paysage = orientation === 'paysage'
+  // Mode « bureau » : fenêtre Excel en paysage (mode Page), avec les zones en-tête/pied.
+  if (bureau) {
+    return (
+      <div className="mt-3 flex flex-col items-center gap-2">
+        <div className="w-full max-w-md overflow-hidden rounded-md border border-navy/20 shadow-lg">
+          <div className="flex items-center bg-[#1f7a4d] px-2 py-1 text-[10px] text-white">
+            <span className="font-semibold">Classeur1 — Excel</span>
+            <span className="ml-auto opacity-80">—&nbsp;&nbsp;▢&nbsp;&nbsp;✕</span>
+          </div>
+          <div className="bg-[#eceae3] p-2">
+            <div className="flex text-[8px] text-navy/45">
+              <div className="w-4" />
+              {['A', 'B', 'C', 'D', 'E'].map((c) => (
+                <div key={c} className="flex-1 border-l border-navy/15 bg-navy/10 text-center">{c}</div>
+              ))}
+            </div>
+            <div className="mt-1 bg-white p-2 shadow-inner">
+              <div className="rounded-sm bg-mint/25 py-1 text-center text-[9px] font-bold text-mint ring-1 ring-mint">EN-TÊTE</div>
+              <div className="my-1 text-[8px]">
+                {['Produit  Prix  Qté', 'Clavier  30   2', 'Souris   20   3', 'Écran    150  1'].map((r, i) => (
+                  <div key={i} className={`border-b border-navy/10 px-1 py-0.5 ${i === 0 ? 'bg-navy/10 font-bold text-navy/70' : 'text-navy/60'}`}>
+                    <span className="whitespace-pre">{r}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-sm bg-mint/25 py-1 text-center text-[9px] font-bold text-mint ring-1 ring-mint">PIED DE PAGE</div>
+            </div>
+          </div>
+        </div>
+        {legende && (
+          <p className="flex max-w-md items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+            <span className="text-navy/40">↳</span>
+            <span>{legende}</span>
+          </p>
+        )}
+      </div>
+    )
+  }
   return (
     <div className="mt-3 flex flex-col items-center gap-2">
       <div
@@ -947,8 +1077,184 @@ function ApercuImpression({ v }) {
   )
 }
 
+// Éditeur « Personnaliser l'en-tête / pied de page » : barre d'insertion + 3 zones.
+function EntetePerso() {
+  const outils = [
+    { i: 'A', t: 'Police' },
+    { i: '#', t: 'Numéro de page' },
+    { i: '##', t: 'Nombre de pages' },
+    { i: '📅', t: 'Date' },
+    { i: '🕐', t: 'Heure' },
+    { i: '🖼', t: 'Image' },
+  ]
+  const zones = [
+    { t: 'Partie gauche', c: '' },
+    { t: 'Partie centrale', c: 'Mon entreprise' },
+    { t: 'Partie droite', c: 'Page &[Page]' },
+  ]
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+        <span>En-tête</span>
+        <span className="text-navy/40">✕</span>
+      </div>
+      <div className="space-y-2 bg-white p-3">
+        <p className="text-navy/60">Insère ce que tu veux :</p>
+        <div className="flex flex-wrap gap-1">
+          {outils.map((o, i) => (
+            <span key={i} className="grid h-7 min-w-[28px] place-items-center rounded border border-navy/15 bg-navy/5 px-1 text-xs font-bold text-navy/70" title={o.t}>{o.i}</span>
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-1.5">
+          {zones.map((z, i) => (
+            <div key={i}>
+              <p className="mb-0.5 text-[9px] text-navy/45">{z.t}</p>
+              <div className="grid h-12 place-items-center rounded-sm border border-navy/20 px-1 text-center text-[9px] text-navy/80">{z.c}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex justify-end gap-2 bg-white px-3 pb-2">
+        <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span>
+        <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
+      </div>
+    </div>
+  )
+}
+
+// Écran « Fichier > Imprimer » : réglages à gauche, aperçu de la page à droite.
+function ImpressionApercu() {
+  const reglages = [
+    ['Imprimer', 'Feuilles actives ▾'],
+    ['Orientation', 'Portrait ▾'],
+    ['Format', 'A4 ▾'],
+    ['Mise à l\'échelle', 'Aucune ▾'],
+  ]
+  return (
+    <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/20 shadow-xl">
+      <div className="bg-[#1f7a4d] px-3 py-1.5 text-[11px] font-semibold text-white">Fichier ▸ Imprimer</div>
+      <div className="flex gap-2 bg-white p-2 text-[10px]">
+        <div className="w-1/2 space-y-1.5">
+          <span className="block rounded bg-[#0a63c9] py-1 text-center font-bold text-white">🖨 Imprimer</span>
+          <div className="flex items-center justify-between">
+            <span className="text-navy/50">Copies :</span>
+            <span className="rounded border border-navy/25 px-2">1</span>
+          </div>
+          <div>
+            <p className="text-navy/45">Imprimante</p>
+            <div className="rounded-sm border border-navy/25 px-2 py-0.5 text-navy/80">HP DeskJet ▾</div>
+          </div>
+          {reglages.map(([l, val], i) => (
+            <div key={i}>
+              <p className="text-navy/45">{l}</p>
+              <div className="rounded-sm border border-navy/25 px-2 py-0.5 text-navy/80">{val}</div>
+            </div>
+          ))}
+        </div>
+        <div className="w-1/2">
+          <p className="mb-1 text-center text-navy/45">Aperçu</p>
+          <div className="mx-auto bg-white p-1.5 shadow ring-1 ring-navy/15">
+            <div className="border border-dashed border-navy/20 p-1.5 text-[7px] leading-tight">
+              <div className="mb-1 text-center font-semibold text-navy/50">Mon entreprise</div>
+              {['Produit   Prix', 'Clavier   30 €', 'Souris    20 €', 'Écran     150 €'].map((r, i) => (
+                <div key={i} className={`border-b border-navy/10 ${i === 0 ? 'font-bold text-navy/60' : 'text-navy/50'}`}>
+                  <span className="whitespace-pre">{r}</span>
+                </div>
+              ))}
+              <div className="mt-2 text-center text-navy/40">Page 1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Double-clic interactif : l'élève double-clique LUI-MÊME le bord droit de l'en-tête B,
+// et la colonne s'ajuste au contenu le plus long. Curseur double-flèche ↔.
+function DoubleClic({ onResolu }) {
+  const [ajuste, setAjuste] = useState(false)
+  const faire = () => {
+    if (!ajuste) {
+      setAjuste(true)
+      onResolu && onResolu()
+    }
+  }
+  const largeurB = ajuste ? 150 : 54
+  const lignes = [
+    ['Clavier', 'Clavier mécanique'],
+    ['Écran', 'Écran 27 pouces'],
+    ['Souris', 'Souris sans fil'],
+  ]
+  return (
+    <div className="mt-3">
+      <div className="flex justify-center">
+        <div className="select-none overflow-visible rounded-xl border border-navy/10 bg-white text-xs shadow-lg">
+          <div className="flex">
+            <div className="w-6 shrink-0 border-b border-navy/10 bg-navy/10" />
+            <div className="w-20 shrink-0 border-b border-l border-navy/10 bg-navy/10 py-0.5 text-center text-navy/50">A</div>
+            <div className="relative shrink-0 border-b border-l border-navy/10 bg-navy/10 py-0.5 text-center text-navy/50" style={{ width: largeurB, transition: 'width .5s ease' }}>
+              B
+              <div onDoubleClick={faire} title="Double-clique pour ajuster" className="absolute -right-1.5 top-0 z-10 flex h-full w-3 cursor-col-resize items-center justify-center">
+                <span className="h-full w-0.5 bg-mint" />
+                <span className="pointer-events-none absolute text-[11px] font-black leading-none text-navy-deep">↔</span>
+              </div>
+            </div>
+          </div>
+          {lignes.map(([a, b], i) => (
+            <div className="flex" key={i}>
+              <div className="w-6 shrink-0 border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{i + 1}</div>
+              <div className="w-20 shrink-0 border-b border-l border-navy/10 px-2 py-1 text-navy/90">{a}</div>
+              <div className="shrink-0 overflow-hidden whitespace-nowrap border-b border-l border-navy/10 px-2 py-1 text-navy/90" style={{ width: largeurB, transition: 'width .5s ease' }}>{b}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="mt-3 rounded-full bg-mint/15 px-3 py-2 text-center text-sm font-bold text-mint">
+        {ajuste ? "✓ La colonne s'ajuste au contenu le plus long." : '👆 Double-clique sur le bord droit de l\'en-tête (entre B et C)'}
+      </p>
+    </div>
+  )
+}
+
+// Bloc « méthode » composite : alterne étapes (numérotation continue) et captures.
+function CaptureInline({ c }) {
+  if (!c) return null
+  if (c.type === 'ruban') return <RubanImg v={c} />
+  if (c.type === 'menu') return <MenuImg v={c} />
+  // Tout autre visuel (formatcellule, borduresfond, formatnombre, pinceau, styles,
+  // apercuimpression, tableur…) peut aussi être intercalé entre les étapes.
+  return <Visuel v={c} />
+}
+function Methode({ v }) {
+  const { titre, blocs = [] } = v
+  let n = 0
+  return (
+    <div className="mt-3 space-y-3">
+      {titre && <p className="font-display text-lg leading-tight text-navy">{gras(titre)}</p>}
+      {blocs.map((b, i) => {
+        if (b.etapes) {
+          const depart = n + 1
+          n += b.etapes.length
+          return <EtapesListe key={i} items={b.etapes} depart={depart} />
+        }
+        if (b.capture) return <CaptureInline key={i} c={b.capture} />
+        if (b.note)
+          return (
+            <p key={i} className="rounded-xl border border-mint/30 bg-mint/5 px-3 py-2 text-sm leading-relaxed text-navy/85">
+              <span className="font-bold text-mint">Astuce : </span>
+              {gras(b.note)}
+            </p>
+          )
+        return null
+      })}
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
+  if (v.type === 'methode') return <Methode v={v} />
   if (v.type === 'recopieanim') return <RecopieAnim />
   if (v.type === 'reffiger') return <RefFiger />
   if (v.type === 'seriesoptions') return <SeriesOptions v={v} />
@@ -971,6 +1277,8 @@ function Visuel({ v }) {
   if (v.type === 'pinceau') return <Pinceau />
   if (v.type === 'styles') return <Styles />
   if (v.type === 'apercuimpression') return <ApercuImpression v={v} />
+  if (v.type === 'enteteperso') return <EntetePerso />
+  if (v.type === 'impressionapercu') return <ImpressionApercu />
   if (v.type === 'barreformule') return <BarreFormule />
   if (v.type === 'formule') {
     return <div className="mt-3 animate-fade-up rounded-xl border border-navy/10 bg-[#ffffff] p-3 text-center font-mono text-lg">{coloreFormule(v.formule)}</div>
@@ -981,7 +1289,7 @@ function Visuel({ v }) {
         {v.items.map((it, i) => (
           <div key={i} className="flex items-center gap-3 rounded-xl border border-navy/10 bg-navy/5 p-3 animate-fade-up" style={{ animationDelay: `${i * 130}ms` }}>
             <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mint font-bold text-navy-deep">{i + 1}</span>
-            <span className="text-sm text-navy/90">{it.label}</span>
+            <span className="text-sm text-navy/90">{gras(it.label)}</span>
           </div>
         ))}
       </div>
@@ -1040,9 +1348,19 @@ function Visuel({ v }) {
         <div className="shrink-0 animate-float text-mint">
           <NinjaIcon size={34} className="text-mint" />
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="text-xs font-bold uppercase tracking-wide text-mint">{v.label || 'Bon à savoir'}</p>
-          <p className="mt-1 text-sm leading-relaxed text-navy/90">{gras(v.texte)}</p>
+          {v.texte && <p className="mt-1 text-sm leading-relaxed text-navy/90">{gras(v.texte)}</p>}
+          {v.liste && (
+            <ul className="mt-1.5 space-y-1.5">
+              {v.liste.map((it, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm leading-snug text-navy/90">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-mint" />
+                  <span>{gras(it)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     )
@@ -1087,8 +1405,18 @@ function Question({ q, onResolu }) {
   )
 }
 
-// Exercice interactif : l'élève élargit lui-même la colonne pour faire réapparaître le nombre.
-function Elargir({ onResolu }) {
+// Exercice interactif : l'élève élargit lui-même la colonne. Paramétrable via `v`
+// (par défaut : démo ##### du ch.2 ; au ch.3 on étire une colonne de texte, sans #####).
+function Elargir({ onResolu, v = {} }) {
+  const {
+    labelA = 'Écran',
+    valeurEtroit = '#####',
+    valeurLarge = '1 500',
+    largeurLarge = '120px',
+    aligneDroite = true,
+    okMsg = '✓ Le nombre réapparaît : 1 500 €',
+    promptMsg = "👆 Clique sur la poignée verte (bord droit de la colonne B) pour l'élargir",
+  } = v
   const [large, setLarge] = useState(false)
   const ouvrir = () => {
     if (!large) {
@@ -1099,22 +1427,25 @@ function Elargir({ onResolu }) {
   return (
     <div className="mt-3">
       <div className="select-none overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
-        <div className="grid text-xs" style={{ gridTemplateColumns: `26px 1fr ${large ? '108px' : '40px'} 1fr`, transition: 'grid-template-columns .6s ease' }}>
+        <div className="grid text-xs" style={{ gridTemplateColumns: `26px 1fr ${large ? largeurLarge : '44px'} 1fr`, transition: 'grid-template-columns .6s ease' }}>
           <div className="bg-navy/10" />
           <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">A</div>
           <div className="relative border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">
             B
-            <div onClick={ouvrir} title="Élargir la colonne" className="absolute right-0 top-0 z-10 h-full w-2 cursor-col-resize bg-mint" />
+            <div onClick={ouvrir} title="Élargir la colonne" className="absolute -right-1.5 top-0 z-10 flex h-full w-3 cursor-col-resize items-center justify-center">
+              <span className="h-full w-0.5 bg-mint" />
+              <span className="pointer-events-none absolute text-[11px] font-black leading-none text-navy-deep">↔</span>
+            </div>
           </div>
           <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">C</div>
           <div className="bg-navy/10 text-center text-navy/50">1</div>
-          <div className="border-b border-l border-navy/10 px-2 py-1 text-navy/90">Écran</div>
-          <div className="border-b border-l border-navy/10 px-2 py-1 text-right text-navy/90">{large ? '1 500' : '#####'}</div>
+          <div className="border-b border-l border-navy/10 px-2 py-1 text-navy/90">{labelA}</div>
+          <div className={`overflow-hidden whitespace-nowrap border-b border-l border-navy/10 px-2 py-1 text-navy/90 ${aligneDroite ? 'text-right' : ''}`}>{large ? valeurLarge : valeurEtroit}</div>
           <div className="border-b border-l border-navy/10" />
         </div>
       </div>
       <p className="mt-3 rounded-full bg-mint/15 px-3 py-2 text-center text-sm font-bold text-mint">
-        {large ? '✓ Le nombre réapparaît : 1 500 €' : '👆 Clique sur la poignée verte (bord droit de la colonne B) pour l\'élargir'}
+        {large ? okMsg : promptMsg}
       </p>
     </div>
   )
@@ -1136,7 +1467,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const [resolu, setResolu] = useState(false)
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = (s.visuel?.type === 'question' || s.visuel?.type === 'elargir') && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -1164,7 +1495,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
           {s.visuel?.type === 'question' ? (
             <Question q={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'elargir' ? (
-            <Elargir onResolu={() => setResolu(true)} />
+            <Elargir v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'doubleclic' ? (
+            <DoubleClic onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -1173,7 +1506,15 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
 
         <div className="mt-4">
           <Bouton onClick={avancer} disabled={bloque}>
-            {bloque ? (s.visuel?.type === 'elargir' ? 'Élargis la colonne' : 'Réponds pour continuer') : dernier ? 'Terminer' : 'Continuer'}
+            {bloque
+              ? s.visuel?.type === 'elargir'
+                ? 'Élargis la colonne'
+                : s.visuel?.type === 'doubleclic'
+                  ? 'Double-clique sur le bord'
+                  : 'Réponds pour continuer'
+              : dernier
+                ? 'Terminer'
+                : 'Continuer'}
           </Bouton>
           {etape > 0 && (
             <button onClick={reculer} className="mt-3 block w-full text-center text-xs text-navy/50 hover:text-navy">

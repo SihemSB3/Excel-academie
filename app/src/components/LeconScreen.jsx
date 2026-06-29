@@ -133,19 +133,19 @@ function ExcelMock({ cible, onZone, vert = [], indice = null, fige = false }) {
         </div>
         <span className="text-[10px] text-navy/30">Classeur1 — Excel</span>
       </div>
-      <div onClick={clic('ruban')} className={cls('ruban', 'flex cursor-pointer items-center gap-3 bg-[#1f7a4d] px-3 py-1.5 text-[11px] text-navy hover:brightness-110')}>
-        <span className="opacity-80">Fichier</span>
+      <div onClick={clic('ruban')} className={cls('ruban', 'flex cursor-pointer items-center gap-3 bg-[#1f7a4d] px-3 py-1.5 text-[11px] text-white hover:brightness-110')}>
+        <span className="opacity-90">Fichier</span>
         <span
           onClick={(e) => {
             e.stopPropagation()
             clic('onglet_accueil')()
           }}
-          className={cls('onglet_accueil', 'cursor-pointer rounded px-1 font-bold hover:bg-navy/20')}
+          className={cls('onglet_accueil', 'cursor-pointer rounded px-1 font-bold hover:bg-white/20')}
         >
           Accueil
         </span>
-        <span className="opacity-70">Insertion</span>
-        <span className="opacity-70">Formules</span>
+        <span className="opacity-80">Insertion</span>
+        <span className="opacity-80">Formules</span>
       </div>
       <div onClick={clic('barre_formule')} className={cls('barre_formule', 'flex cursor-pointer items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1 text-[11px] hover:bg-navy/10')}>
         <span className="font-bold text-navy/60">fx</span>

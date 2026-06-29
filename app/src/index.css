@@ -127,3 +127,19 @@ body {
 .animate-rayons {
   animation: rayons 16s linear infinite;
 }
+
+/* Double-clic sur le bord d'une colonne : largeur ajustée automatiquement */
+@keyframes elargir-auto {
+  0%,
+  28% {
+    width: 54px;
+  }
+  68%,
+  100% {
+    width: 140px;
+  }
+}
+.anim-elargir {
+  width: 54px;
+  animation: elargir-auto 2.6s ease-in-out infinite alternate;
+}

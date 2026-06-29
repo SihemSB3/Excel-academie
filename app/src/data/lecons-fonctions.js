@@ -543,21 +543,35 @@ const LIGNESCOLONNES = {
     { humeur: 'accueil', dit: 'Un tableau, ça vit : on ajoute une ligne oubliée, on enlève une colonne en trop, on ajuste la taille. On va voir tous les gestes, tranquillement.' },
     {
       humeur: 'pensif',
-      dit: '**Insérer une ligne ou une colonne, méthode 1, le ruban :** sélectionne une cellule, va dans l\'onglet **Accueil > groupe Cellules**, clique sur **Insérer**, puis choisis Insérer des lignes (ou des colonnes).',
-      visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer', actif: true }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format' }] },
-      plus: ['Méthode 1 : via le ruban. 1. Sélectionne une cellule. 2. Va dans l\'onglet Accueil, groupe Cellules. 3. Clique sur Insérer (icône en forme de petit tableau avec une flèche). 4. Choisis : Insérer des lignes dans la feuille, ou Insérer des colonnes dans la feuille.'],
+      dit: 'Pour **insérer** une ligne ou une colonne, tu as deux méthodes. Voici la première, avec le ruban.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 1 : le ruban',
+        blocs: [
+          { etapes: ['Sélectionne une cellule', 'Va dans l\'onglet **Accueil**, groupe **Cellules**', 'Clique sur **Insérer** (l\'icône en forme de petit tableau avec une flèche)'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer', actif: true }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format' }] } },
+          { etapes: ['Choisis : **Insérer des lignes dans la feuille**, ou **Insérer des colonnes dans la feuille**'] },
+          { capture: { type: 'menu', items: [{ label: 'Insérer des cellules…' }, { label: 'Insérer des lignes dans la feuille', actif: true }, { label: 'Insérer des colonnes dans la feuille', actif: true }, { label: 'Insérer une feuille' }] } },
+        ],
+      },
     },
     {
       humeur: 'pensif',
-      dit: '**Méthode 2, le clic droit :** clique droit sur l\'**en-tête** de la ligne (le chiffre) ou de la colonne (la lettre), puis choisis **Insérer** dans le menu.',
-      visuel: { type: 'menu', items: [{ icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }, { icone: '📋', label: 'Coller' }, '-', { icone: '⊞', label: 'Insérer', actif: true }, { icone: '⊟', label: 'Supprimer' }] },
-      plus: ['Méthode 2 : clic droit. 1. Clique droit sur l\'en-tête de la ligne ou de la colonne (lettre ou chiffre). 2. Choisis Insérer dans le menu contextuel.'],
+      dit: 'Et la deuxième, souvent la plus rapide, avec le clic droit.',
+      visuel: {
+        type: 'menu',
+        titre: 'Méthode 2 : le clic droit',
+        etapes: [
+          'Clique droit sur l\'**en-tête** de la ligne (le chiffre) ou de la colonne (la lettre)',
+          'Choisis **Insérer** dans le menu',
+        ],
+        items: [{ icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }, { icone: '📋', label: 'Coller' }, '-', { icone: '⊞', label: 'Insérer', actif: true }, { icone: '⊟', label: 'Supprimer' }],
+      },
     },
     {
       humeur: 'accueil',
-      dit: '**Supprimer**, c\'est la même logique : sélectionne la ligne ou la colonne, puis **Accueil > Cellules > Supprimer**, ou bien **clic droit sur l\'en-tête > Supprimer**.',
-      visuel: { type: 'menu', items: [{ icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }, '-', { icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer', actif: true }] },
-      plus: ['Supprimer des lignes ou des colonnes. Méthode 1, via le ruban : 1. Sélectionne la ligne ou la colonne à supprimer. 2. Onglet Accueil > groupe Cellules > bouton Supprimer. 3. Choisis : Supprimer des lignes, ou Supprimer des colonnes.', 'Méthode 2 : clic droit sur l\'en-tête de la ligne ou de la colonne, puis Supprimer.'],
+      dit: 'Et pour **supprimer** ? C\'est exactement la même chose, mais tu cliques sur **Supprimer** au lieu d\'**Insérer** (ou clic droit sur l\'en-tête > Supprimer).',
+      visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer', actif: true }, { icone: '▤', label: 'Format' }] },
     },
     {
       humeur: 'pensif',
@@ -566,20 +580,37 @@ const LIGNESCOLONNES = {
     },
     {
       humeur: 'accueil',
-      dit: '**Adapter la largeur d\'une colonne à la main :** place ta souris sur la **limite droite** de l\'en-tête de colonne (le curseur devient une double flèche), puis clique-glisse vers la droite pour l\'élargir. À toi d\'essayer !',
-      visuel: { type: 'elargir' },
-      plus: ['Personnaliser manuellement la taille. Largeur de colonne : 1. Place ta souris sur la limite droite de l\'en-tête de colonne (ex : entre C et D). 2. Clique-glisse vers la droite ou la gauche pour élargir ou réduire.', 'Hauteur de ligne : 1. Place ta souris sur la limite inférieure de l\'en-tête de ligne (ex : entre la ligne 5 et 6). 2. Clique-glisse vers le haut ou le bas.'],
+      dit: 'Maintenant, **ajuster la largeur d\'une colonne à la main** : place ta souris sur le **bord droit** de l\'en-tête (le curseur devient une double flèche ↔), puis clique-glisse. À toi d\'essayer !',
+      visuel: { type: 'elargir', labelA: 'Réunion', valeurEtroit: 'Compte-rendu mensuel', valeurLarge: 'Compte-rendu mensuel', largeurLarge: '150px', aligneDroite: false, okMsg: '✓ Colonne élargie : le texte s\'affiche en entier.', promptMsg: '👆 Clique sur la poignée verte (bord droit de la colonne) pour l\'élargir' },
+      plus: [
+        '**Personnaliser manuellement la taille**',
+        '**Largeur de colonne :**',
+        '1. Place ta souris sur la limite droite de l\'en-tête de colonne (ex : entre C et D).',
+        '2. Clique-glisse vers la droite ou la gauche pour élargir ou réduire.',
+        '**Hauteur de ligne :**',
+        '1. Place ta souris sur la limite inférieure de l\'en-tête de ligne (ex : entre la ligne 5 et 6).',
+        '2. Clique-glisse vers le haut ou le bas.',
+      ],
     },
     {
       humeur: 'accueil',
-      dit: '**Astuce rapide :** double-clique sur la limite droite de l\'en-tête de colonne, et Excel ajuste **automatiquement** la largeur au contenu le plus long.',
-      visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Désignation complète', entete: true }, C1: { t: 'Prix', entete: true }, A2: { t: 'Clavier' }, B2: { t: 'Clavier mécanique' }, C2: { t: '30 €', num: true }, A3: { t: 'Écran' }, B3: { t: 'Écran 27 pouces' }, C3: { t: '150 €', num: true } }, legende: 'Double-clic sur le bord droit de l\'en-tête : la colonne s\'ajuste toute seule au texte le plus long.' },
+      dit: '**Encore plus rapide :** double-clique toi-même sur le bord droit de l\'en-tête, et Excel ajuste la largeur au contenu le plus long. Essaie !',
+      visuel: { type: 'doubleclic' },
     },
     {
       humeur: 'pensif',
-      dit: '**La commande Format**, pour une taille précise et identique : sélectionne les colonnes (ou lignes), va dans **Accueil > Cellules > Format**, puis choisis Largeur de colonne (valeur exacte) ou Ajuster la largeur de colonne (automatique).',
-      visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format', actif: true }] },
-      plus: ['Utiliser la commande "Format" : 1. Sélectionne les colonnes ou lignes à modifier. 2. Va dans Accueil > Cellules > Format. 3. Choisis : Ajuster la largeur de colonne, ou Ajuster la hauteur de ligne.', 'Astuce pratique : sélectionne plusieurs en-têtes de colonnes (ou de lignes) et modifie la taille de l\'une d\'elles : toutes prendront la même taille. Et utilise le double-clic pour aller vite.'],
+      dit: 'Et pour une taille **précise** (ou identique sur plusieurs colonnes), il y a la commande Format.',
+      visuel: {
+        type: 'methode',
+        titre: 'La commande Format',
+        blocs: [
+          { etapes: ['Sélectionne les colonnes (ou les lignes) à modifier', 'Va dans **Accueil > Cellules > Format**'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format', actif: true }] } },
+          { etapes: ['Choisis : **Largeur de colonne** (valeur exacte), ou **Ajuster la largeur de colonne** (automatique)'] },
+          { capture: { type: 'menu', items: [{ label: 'Largeur de colonne…', actif: true }, { label: 'Ajuster la largeur de colonne', actif: true }, '-', { label: 'Hauteur de ligne…' }, { label: 'Ajuster la hauteur de ligne' }] } },
+          { note: 'Sélectionne plusieurs en-têtes d\'un coup pour leur donner tous la même taille.' },
+        ],
+      },
     },
     {
       humeur: 'accueil',
@@ -601,29 +632,30 @@ const MISEENFORME = {
       humeur: 'pensif',
       dit: '**L\'onglet Accueil :** il regroupe tous les outils de mise en forme, sous forme d\'icônes. Quand tu **survoles** une option, Excel affiche un **aperçu instantané** du résultat, avant même de cliquer.',
       visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures', actif: true }, { icone: '🪣', label: 'Remplissage' }] },
-      plus: ['Dans Excel, l\'onglet Accueil te permet d\'accéder rapidement à toutes les options de mise en forme des cellules. Ces outils sont accessibles via le ruban, sous forme d\'icônes. Quand tu survoles une option, Excel affiche un aperçu instantané pour te montrer le résultat avant même de cliquer.'],
     },
     {
       humeur: 'accueil',
       dit: 'Ce que tu peux formater depuis le ruban :',
-      visuel: { type: 'parties', items: [{ label: 'La police : taille, couleur, gras, italique' }, { label: 'L\'alignement du texte dans la cellule' }, { label: 'Les bordures et la couleur de fond' }, { label: 'Le format des nombres (€, %, décimales)' }] },
+      visuel: { type: 'parties', items: [{ label: 'La **police** : taille, couleur, gras, italique' }, { label: 'L\'**alignement** du texte dans la cellule' }, { label: 'Les **bordures** et la **couleur de fond**' }, { label: 'Le **format des nombres** (€, %, décimales)' }] },
     },
     {
       humeur: 'pensif',
-      dit: '**Pour tout régler au même endroit**, ouvre la boîte de dialogue Format de cellule :',
-      visuel: { type: 'etapes', items: ['Sélectionne une cellule ou une plage', 'Onglet Accueil > clique sur le petit lanceur (la flèche en bas à droite) du groupe Nombre', 'Une fenêtre s\'ouvre avec plusieurs onglets'] },
-      plus: ['La boîte de dialogue permet d\'accéder à toutes les options de mise en forme au même endroit, pour personnaliser précisément l\'affichage des cellules.', 'Comment ouvrir la boîte de dialogue ? 1. Sélectionne une cellule ou une plage. 2. Clique sur le lanceur de boîte de dialogue dans le groupe Nombre de l\'onglet Accueil (petite flèche en bas à droite). 3. Une fenêtre s\'ouvre avec plusieurs onglets.'],
-    },
-    {
-      humeur: 'accueil',
-      dit: 'La voici. Elle a **6 onglets** : chacun gère une famille de réglages.',
-      visuel: { type: 'formatcellule', actif: 'Nombre' },
+      dit: '**Pour tout régler au même endroit**, ouvre la boîte de dialogue Format de cellule.',
+      visuel: {
+        type: 'methode',
+        titre: 'Ouvrir la boîte Format de cellule',
+        blocs: [
+          { etapes: ['Sélectionne une cellule ou une plage', 'Onglet **Accueil** > clique sur le petit **lanceur** du groupe **Nombre** (la flèche ↘ en bas à droite du groupe)'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Nombre', lanceur: true, groupes: [{ icone: '€', label: 'Monétaire' }, { icone: '%', label: 'Pourcentage' }, { icone: '000', label: 'Milliers' }] } },
+          { capture: { type: 'formatcellule', actif: 'Nombre' } },
+          { note: 'La fenêtre s\'ouvre avec ses 6 onglets, un par famille de réglages.' },
+        ],
+      },
     },
     {
       humeur: 'pensif',
-      dit: 'À quoi sert chaque onglet :',
-      visuel: { type: 'parties', items: [{ label: 'Nombre : choisir un format (date, heure, pourcentage, monétaire...)' }, { label: 'Alignement : centrer, justifier, orienter, retour à la ligne' }, { label: 'Police : taille, couleur, police de caractères' }, { label: 'Bordure : cadres autour ou à l\'intérieur des cellules' }, { label: 'Remplissage : couleur d\'arrière-plan' }, { label: 'Protection : empêcher la modification de certaines cellules' }] },
-      plus: ['Onglet Nombre : choisir un format (date, heure, pourcentage, monétaire, etc.). Onglet Alignement : centrer, justifier, orienter le texte, gérer le retour à la ligne. Onglet Police : modifier la taille, la couleur ou la police de caractères. Onglet Bordure : ajouter des cadres autour ou à l\'intérieur des cellules. Onglet Remplissage : changer la couleur d\'arrière-plan. Onglet Protection : empêcher la modification de certaines cellules.'],
+      dit: 'À quoi sert chacun des **6 onglets** :',
+      visuel: { type: 'parties', items: [{ label: '**Nombre** : choisir un format (date, heure, pourcentage, monétaire...)' }, { label: '**Alignement** : centrer, justifier, orienter, retour à la ligne' }, { label: '**Police** : taille, couleur, police de caractères' }, { label: '**Bordure** : cadres autour ou à l\'intérieur des cellules' }, { label: '**Remplissage** : couleur d\'arrière-plan' }, { label: '**Protection** : empêcher la modification de certaines cellules' }] },
     },
     {
       humeur: 'accueil',
@@ -643,32 +675,60 @@ const COULEURS = {
     { humeur: 'accueil', dit: 'Les couleurs et les bordures rendent ton tableau plus clair et agréable à lire. On va les poser proprement.' },
     {
       humeur: 'pensif',
-      dit: '**Encadrer avec des bordures, méthode rapide :** sélectionne ta plage, clique sur l\'icône **Bordures** dans **Accueil > groupe Police**, puis choisis un style (ex : Toutes les bordures).',
-      visuel: { type: 'borduresfond', menu: true },
-      plus: ['Encadrer les cellules avec des bordures. Méthode rapide : 1. Sélectionne ta plage de cellules. 2. Clique sur l\'icône Bordures dans l\'onglet Accueil > groupe Police. 3. Choisis un style (ex : Toutes les bordures).'],
+      dit: 'Pour **encadrer ton tableau de bordures**, la méthode rapide passe par le ruban.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode rapide',
+        blocs: [
+          { etapes: ['Sélectionne ta plage de cellules', 'Clique sur l\'icône **Bordures** dans **Accueil > groupe Police**'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures', actif: true }, { icone: '🪣', label: 'Remplissage' }] } },
+          { etapes: ['Choisis un style (ex : **Toutes les bordures**)'] },
+          { capture: { type: 'borduresfond', menu: true } },
+        ],
+      },
     },
     {
       humeur: 'pensif',
-      dit: '**Méthode avancée, personnalisée :** clic droit > **Format de cellule** > onglet **Bordure**. Là, tu choisis le style du trait, la couleur, et les côtés à appliquer (haut, bas, intérieur...).',
-      visuel: { type: 'formatcellule', actif: 'Bordure' },
-      plus: ['Méthode avancée (personnalisée) : 1. Clic droit > Format de cellule. 2. Onglet Bordure. 3. Choisis : le style du trait, la couleur, les côtés à appliquer (haut, bas, intérieur...).'],
+      dit: 'Pour des bordures **sur-mesure**, passe par la boîte Format de cellule.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode avancée (personnalisée)',
+        blocs: [
+          { etapes: ['Clic droit > **Format de cellule**', 'Va sur l\'onglet **Bordure**', 'Choisis le **style** du trait, la **couleur**, et les **côtés** à appliquer (haut, bas, intérieur...)'] },
+          { capture: { type: 'formatcellule', actif: 'Bordure' } },
+        ],
+      },
     },
     {
       humeur: 'accueil',
-      dit: '**Modifier la couleur de fond :** sélectionne tes cellules, clique sur le bouton **Remplissage** (le pot de peinture) dans **Accueil > groupe Police**, et choisis une couleur.',
-      visuel: { type: 'borduresfond' },
-      plus: ['Modifier la couleur de fond : 1. Sélectionne ta ou tes cellules. 2. Clique sur le bouton Remplissage dans l\'onglet Accueil > groupe Police. 3. Choisis une couleur.'],
+      dit: '**Modifier la couleur de fond** d\'une cellule, c\'est le pot de peinture.',
+      visuel: {
+        type: 'methode',
+        titre: 'Modifier la couleur de fond',
+        blocs: [
+          { etapes: ['Sélectionne tes cellules', 'Clique sur le bouton **Remplissage** (le pot de peinture) dans **Accueil > groupe Police**', 'Choisis une couleur'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage', actif: true }] } },
+          { capture: { type: 'borduresfond', avantSelection: true, apres: 'fond' } },
+        ],
+      },
     },
     {
       humeur: 'accueil',
-      dit: '**Modifier la couleur du texte :** sélectionne la cellule, clique sur l\'icône **Couleur de police** (le A coloré) dans **Accueil > Police**, puis choisis la couleur.',
-      visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'État', entete: true }, A2: { t: 'Clavier' }, B2: { t: 'Soldes' } }, refsCouleur: { B2: 'violet' }, legende: 'La couleur de police met un mot en valeur (ici « Soldes » en couleur).' },
-      plus: ['Modifier la couleur du texte. Étapes pas à pas : 1. Sélectionne la cellule ou le texte. 2. Clique sur l\'icône couleur de police dans l\'onglet Accueil > Police. 3. Choisis la couleur désirée.'],
+      dit: '**Modifier la couleur du texte** met un mot en valeur.',
+      visuel: {
+        type: 'methode',
+        titre: 'Modifier la couleur du texte',
+        blocs: [
+          { etapes: ['Sélectionne la cellule ou le texte', 'Clique sur l\'icône **Couleur de police** (le A coloré) dans **Accueil > groupe Police**', 'Choisis la couleur'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur', actif: true }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }] } },
+          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'État', entete: true }, A2: { t: 'Clavier' }, B2: { t: 'Soldes' } }, refsCouleur: { B2: 'violet' }, legende: 'La couleur de police met un mot en valeur (ici « Soldes »).' } },
+        ],
+      },
     },
     {
       humeur: 'pensif',
       dit: 'Attention, le piège du « trop » :',
-      visuel: { type: 'encart', label: 'Erreurs à éviter', texte: 'Trop de couleurs vives diminue la lisibilité. Pas de contraste entre le fond et le texte rend la lecture difficile. Trop de styles de bordures donne un effet fouillis.' },
+      visuel: { type: 'encart', label: 'Erreurs à éviter', liste: ['Trop de couleurs vives diminue la lisibilité.', 'Pas de contraste entre le fond et le texte rend la lecture difficile.', 'Trop de styles de bordures donne un effet fouillis.'] },
     },
     {
       humeur: 'accueil',
@@ -694,15 +754,30 @@ const NOMBRES = {
     { humeur: 'accueil', dit: 'Un nombre bien formaté se comprend tout de suite : 1 234,50 € se lit mieux que 1234,5. On va choisir le bon format.' },
     {
       humeur: 'pensif',
-      dit: '**Méthode complète, la boîte Format de cellule :** sélectionne tes cellules de nombres, ouvre Format de cellule (le lanceur du groupe **Nombre**), et choisis un format : Standard, Nombre, Monétaire, Comptabilité, Pourcentage...',
-      visuel: { type: 'formatcellule', actif: 'Nombre', categorieActive: 'Monétaire', categories: ['Standard', 'Nombre', 'Monétaire', 'Comptabilité', 'Pourcentage', 'Personnalisé'], titreDroite: 'Aperçu :', types: ['1 234,50 €', '1 234,50 $', '1 234,50'] },
-      plus: ['Utiliser la boîte "Format de cellule". Les étapes pour accéder à la fenêtre : 1. Sélectionne une ou plusieurs cellules avec des nombres. 2. Onglet Accueil > clique sur le petit lanceur dans le groupe Nombre. 3. Dans la fenêtre, choisis un format : Standard, Nombre, Monétaire, Comptabilité, Pourcentage, Scientifique, Personnalisé...'],
+      dit: '**Méthode complète :** la boîte Format de cellule donne accès à tous les formats.',
+      visuel: {
+        type: 'methode',
+        titre: 'La boîte Format de cellule',
+        blocs: [
+          { etapes: ['Sélectionne tes cellules de nombres', 'Onglet **Accueil** > clique sur le petit **lanceur** du groupe **Nombre** (la flèche ↘ en bas à droite du groupe)'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Nombre', lanceur: true, groupes: [{ icone: '€', label: 'Monétaire' }, { icone: '%', label: 'Pourcentage' }, { icone: '000', label: 'Milliers' }] } },
+          { etapes: ['Choisis un format dans la liste'] },
+          { capture: { type: 'formatcellule', actif: 'Nombre', categorieActive: 'Monétaire', categories: ['Standard', 'Nombre', 'Monétaire', 'Comptabilité', 'Pourcentage', 'Scientifique', 'Personnalisé'], titreDroite: 'Aperçu :', types: ['1 234,50 €', '1 234,50 $', '1 234,50'] } },
+        ],
+      },
     },
     {
       humeur: 'accueil',
-      dit: '**Plus rapide, via le ruban :** dans **Accueil > groupe Nombre**, des boutons changent le format en un clic. La même valeur s\'affiche alors différemment :',
-      visuel: { type: 'formatnombre' },
-      plus: ['Raccourcis rapides via l\'onglet Accueil : 1. Sélectionne une ou plusieurs cellules avec des nombres. 2. Va dans l\'onglet Accueil > groupe Nombre. 3. Clique sur la liste déroulante pour changer de format : Monétaire (ex : 1 000,00 €), Pourcentage (ex : 0,75 devient 75 %), Séparateur de milliers (ex : 1000 → 1 000), Ajouter une décimale, Supprimer une décimale.'],
+      dit: '**Plus rapide :** des boutons du ruban changent le format en un clic.',
+      visuel: {
+        type: 'methode',
+        titre: 'Les raccourcis du ruban',
+        blocs: [
+          { etapes: ['Sélectionne tes cellules de nombres', 'Va dans **Accueil > groupe Nombre**', 'Clique sur le bouton du format voulu'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Nombre', groupes: [{ icone: '€', label: 'Monétaire' }, { icone: '%', label: 'Pourcentage' }, { icone: '000', label: 'Séparateur' }, { icone: ',0', label: 'Décimale' }] } },
+          { capture: { type: 'formatnombre' } },
+        ],
+      },
     },
     {
       humeur: 'accueil',
@@ -712,7 +787,7 @@ const NOMBRES = {
     {
       humeur: 'pensif',
       dit: 'Les pièges classiques du format des nombres :',
-      visuel: { type: 'encart', label: 'Erreurs fréquentes', texte: 'Oublier le format « % » : un 0,45 sera mal interprété (0,45 au lieu de 45 %). Mélanger les formats dans une même colonne (du nombre et du texte). Mettre trop de décimales : une surcharge visuelle inutile.' },
+      visuel: { type: 'encart', label: 'Erreurs fréquentes', liste: ['Oublier le format « % » : un 0,45 sera mal interprété (0,45 au lieu de 45 %).', 'Mélanger les formats dans une même colonne (du nombre et du texte).', 'Mettre trop de décimales : une surcharge visuelle inutile.'] },
     },
     {
       humeur: 'accueil',
@@ -732,20 +807,34 @@ const PINCEAUSTYLES = {
     { humeur: 'accueil', dit: 'Tu as passé du temps à formater une cellule (police, couleur, bordure...) et tu veux le même style ailleurs, sans tout refaire ? Deux outils magiques pour ça.' },
     {
       humeur: 'pensif',
-      dit: '**Le pinceau (Reproduire la mise en forme) :** clique sur la cellule **modèle**, clique sur l\'icône **Pinceau** dans **Accueil > Presse-papiers**, puis clique sur la cellule à repeindre. Pour l\'éteindre, re-clique sur l\'icône ou appuie sur **Échap**.',
-      visuel: { type: 'pinceau' },
-      plus: ['Utilise l\'outil "Reproduire la mise en forme", aussi appelé pinceau magique. 1. Sélectionne la cellule source (celle qui a le style que tu veux copier). 2. Clique sur l\'icône Pinceau dans l\'onglet Accueil > groupe Presse-papiers. 3. Clique sur la cellule que tu veux modifier. 4. Pour désactiver le pinceau, clique à nouveau sur l\'icône ou appuie sur Échap.'],
+      dit: 'Le **pinceau** (Reproduire la mise en forme) copie le style d\'une cellule sur une autre.',
+      visuel: {
+        type: 'methode',
+        titre: 'Le pinceau (Reproduire la mise en forme)',
+        blocs: [
+          { etapes: ['Clique sur la cellule **modèle** (celle qui a le style à copier)', 'Clique sur l\'icône **Pinceau** dans **Accueil > groupe Presse-papiers**', 'Clique sur la cellule à repeindre', 'Pour l\'éteindre : re-clique sur l\'icône, ou appuie sur **Échap**'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '🖌️', label: 'Pinceau', actif: true }] } },
+          { capture: { type: 'pinceau' } },
+        ],
+      },
     },
     {
       humeur: 'pensif',
       dit: 'Un détail bien pratique avec le pinceau :',
-      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Si tu cliques sur le pinceau puis que tu **fais glisser** ta souris sur plusieurs cellules, la mise en forme s\'applique à **toute la plage**. Si tu cliques une seule fois, elle s\'applique à **une seule** cellule.' },
+      visuel: { type: 'encart', label: 'Bon à savoir', liste: ['Tu cliques sur le pinceau puis **fais glisser** sur plusieurs cellules → la mise en forme s\'applique à **toute la plage**.', 'Tu cliques **une seule fois** → elle s\'applique à **une seule** cellule.'] },
     },
     {
       humeur: 'accueil',
-      dit: '**Les styles de cellule** sont des mises en forme prêtes à l\'emploi (police, taille, couleur, alignement, bordure regroupés). Pour en appliquer un : **Accueil > groupe Style > Styles de cellule**, survole pour l\'aperçu, puis clique.',
-      visuel: { type: 'styles' },
-      plus: ['Un style de cellule regroupe plusieurs éléments de mise en forme : Police, Taille, Couleur, Alignement, Bordure.', 'Étapes pour appliquer un style : 1. Sélectionne la ou les cellules à formater. 2. Va dans Accueil > groupe Style. 3. Clique sur Styles de cellule. 4. Survole les styles proposés pour voir un aperçu. 5. Clique sur le style souhaité.'],
+      dit: '**Les styles de cellule** regroupent police, taille, couleur, alignement et bordure en une mise en forme prête à l\'emploi.',
+      visuel: {
+        type: 'methode',
+        titre: 'Appliquer un style de cellule',
+        blocs: [
+          { etapes: ['Sélectionne la ou les cellules à formater', 'Va dans **Accueil > groupe Style > Styles de cellule**', 'Survole les styles pour voir un aperçu', 'Clique sur le style souhaité'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Style', groupes: [{ icone: '🎨', label: 'Styles de cellule', actif: true }, { icone: '▦', label: 'Sous forme de tableau' }] } },
+          { capture: { type: 'styles' } },
+        ],
+      },
     },
     {
       humeur: 'accueil',
@@ -754,9 +843,17 @@ const PINCEAUSTYLES = {
     },
     {
       humeur: 'pensif',
-      dit: '**Créer ton propre style** (pratique pour tes devis ou factures) : **Accueil > Styles de cellule > Nouveau style de cellule**, nomme-le, clique sur **Format** pour définir police, bordures, fond, alignement, puis valide.',
-      visuel: { type: 'etapes', items: ['Accueil > Styles de cellule > Nouveau style de cellule', 'Nomme ton style', 'Clique sur Format pour définir : police, bordures, couleur de fond, alignement', 'Valide une première fois, puis OK'] },
-      plus: ['Créer ton propre style : 1. Va dans l\'onglet Accueil > Styles de cellule > Nouveau style de cellule. 2. Nomme ton style. 3. Clique sur Format pour définir : Police, Bordures, Couleur de fond, Alignement. 4. Valide une première fois, puis OK.', 'Astuce pratique : tu peux utiliser les styles personnalisés dans le fichier en cours (ils y sont mémorisés). Pour les réutiliser dans d\'autres fichiers, enregistre ton document comme modèle Excel (.xltx).'],
+      dit: '**Créer ton propre style** est pratique pour tes devis ou tes factures.',
+      visuel: {
+        type: 'methode',
+        titre: 'Créer ton propre style',
+        blocs: [
+          { etapes: ['Va dans **Accueil > groupe Style > Styles de cellule**', 'Tout en bas du menu, clique sur **Nouveau style de cellule**'] },
+          { capture: { type: 'menu', items: [{ label: 'Titre' }, { label: 'Total' }, { label: 'Accentuation' }, '-', { label: 'Nouveau style de cellule…', actif: true }] } },
+          { etapes: ['Nomme ton style', 'Clique sur **Format** pour définir : police, bordures, couleur de fond, alignement', 'Valide une première fois, puis OK'] },
+          { note: 'Tes styles personnalisés sont mémorisés dans le fichier en cours. Pour les réutiliser ailleurs, enregistre ton document comme modèle Excel (.xltx).' },
+        ],
+      },
     },
     {
       humeur: 'accueil',
@@ -776,15 +873,28 @@ const MISEENPAGE = {
     { humeur: 'accueil', dit: 'Avant d\'imprimer, on prépare la page pour que tout soit propre, lisible et bien découpé. C\'est l\'onglet Mise en page.' },
     {
       humeur: 'pensif',
-      dit: '**Les thèmes :** un thème applique à **tout le classeur** une palette de couleurs, une police cohérente et des effets unifiés. Va dans **Mise en page > groupe Thèmes**, survole pour prévisualiser, clique pour appliquer.',
-      visuel: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Thèmes', groupes: [{ icone: '🎨', label: 'Thèmes', actif: true }, { icone: 'A', label: 'Polices' }, { icone: '🎨', label: 'Couleurs' }] },
-      plus: ['Un thème permet d\'appliquer à tout ton classeur : une palette de couleurs, une police cohérente, des effets graphiques unifiés. Pour appliquer un thème : 1. Va dans l\'onglet Mise en page > groupe Thèmes. 2. Survole les thèmes pour prévisualiser le rendu. 3. Clique pour appliquer.', 'Bon à savoir : le thème s\'applique à tout le classeur, pas à une seule feuille.'],
+      dit: 'Un **thème** harmonise d\'un coup les couleurs et les polices de tout le classeur.',
+      visuel: {
+        type: 'methode',
+        titre: 'Appliquer un thème',
+        blocs: [
+          { etapes: ['Va dans **Mise en page > groupe Thèmes**', 'Survole les thèmes pour prévisualiser le rendu', 'Clique pour appliquer'] },
+          { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Thèmes', groupes: [{ icone: '🎨', label: 'Thèmes', actif: true }, { icone: 'A', label: 'Polices' }, { icone: '🎨', label: 'Couleurs' }] } },
+          { note: 'Le thème s\'applique à tout le classeur, pas à une seule feuille.' },
+        ],
+      },
     },
     {
       humeur: 'accueil',
-      dit: '**Le mode Page** te montre la feuille telle qu\'elle sera imprimée (marges, en-têtes, sauts de page). **L\'aperçu des sauts de page** montre où ça coupera à l\'impression.',
-      visuel: { type: 'apercuimpression', orientation: 'portrait', legende: 'Le mode Page affiche la feuille telle qu\'elle sera imprimée, avec ses marges et ses zones.' },
-      plus: ['Aperçu des sauts de page : pour visualiser où se fera la coupure à l\'impression. Mode Page : pour voir toutes les pages imprimables et régler les marges, en-têtes, pieds de page.', 'Via le ruban : 1. Clique sur l\'onglet Affichage. 2. Dans le groupe Mode Affichage, clique sur Mise en page. 3. Tu vois désormais : les sauts de page en pointillés ou en bleu, les zones en-tête et pied de page, le découpage exact des pages. Tu peux revenir au mode normal à tout moment via Affichage > Mode Normal.'],
+      dit: '**Le mode Page** te montre la feuille telle qu\'elle sera imprimée.',
+      visuel: {
+        type: 'methode',
+        titre: 'Voir le mode Page',
+        blocs: [
+          { etapes: ['Clique sur l\'icône **Mise en page** en bas à droite de la fenêtre (ou onglet **Affichage > Mise en page**)', 'Tu vois alors les **sauts de page**, les **marges** et les **zones en-tête/pied**'] },
+          { capture: { type: 'apercuimpression', orientation: 'portrait', legende: 'Le mode Page : la feuille telle qu\'elle sera imprimée, avec ses marges et ses zones.' } },
+        ],
+      },
     },
     {
       humeur: 'pensif',
@@ -798,26 +908,50 @@ const MISEENPAGE = {
     },
     {
       humeur: 'accueil',
-      dit: '**L\'orientation :** portrait (vertical) ou paysage (horizontal), selon la largeur de ton tableau. Un tableau large respire mieux en paysage.',
-      visuel: { type: 'apercuimpression', orientation: 'paysage', legende: 'Paysage : idéal quand le tableau a beaucoup de colonnes.' },
+      dit: '**L\'orientation** dépend de la largeur de ton tableau.',
+      visuel: {
+        type: 'methode',
+        titre: 'Choisir l\'orientation',
+        blocs: [
+          { etapes: ['Va dans **Mise en page > Orientation**', 'Choisis **Portrait** (vertical) ou **Paysage** (horizontal)'] },
+          { capture: { type: 'apercuimpression', orientation: 'paysage', legende: 'Paysage : idéal quand le tableau a beaucoup de colonnes.' } },
+        ],
+      },
     },
     {
       humeur: 'pensif',
-      dit: '**La zone d\'impression** définit quelles cellules seront imprimées : sélectionne la plage, puis **Mise en page > Zone d\'impression > Définir**.',
-      visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Note' }, A2: { t: 'Clavier', ref: true }, B2: { t: '30', ref: true }, C2: { t: 'interne' }, A3: { t: 'Souris', ref: true }, B3: { t: '20', ref: true }, C3: { t: 'interne' } }, legende: 'La plage sélectionnée (en bleu) est la seule qui sera imprimée. Vérifie avec Fichier > Imprimer.' },
-      plus: ['Définir une zone d\'impression : la zone d\'impression détermine quelles cellules seront imprimées. 1. Sélectionne la plage de cellules à imprimer. 2. Va dans le groupe Mise en page > Zone d\'impression > Définir. Pour vérifier que la zone a bien été définie, clique sur Fichier, puis sur Imprimer : l\'aperçu à droite te montre exactement la partie qui sera imprimée.'],
+      dit: '**La zone d\'impression** choisit quelles cellules seront imprimées.',
+      visuel: {
+        type: 'methode',
+        titre: 'Définir la zone d\'impression',
+        blocs: [
+          { etapes: ['Sélectionne la plage de cellules à imprimer', 'Va dans **Mise en page > Zone d\'impression > Définir**', 'Vérifie avec **Fichier > Imprimer** (l\'aperçu à droite)'] },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Note' }, A2: { t: 'Clavier', ref: true }, B2: { t: '30', ref: true }, C2: { t: 'interne' }, A3: { t: 'Souris', ref: true }, B3: { t: '20', ref: true }, C3: { t: 'interne' } }, legende: 'La plage sélectionnée (en bleu) est la seule qui sera imprimée.' } },
+        ],
+      },
     },
     {
       humeur: 'accueil',
-      dit: '**Répéter les titres :** pour que les en-têtes de colonnes apparaissent sur **chaque page**, va dans **Mise en page > Imprimer les titres**, et choisis les lignes à répéter en haut.',
-      visuel: { type: 'etapes', items: ['Va dans Mise en page', 'Clique sur Imprimer les titres', 'Dans la fenêtre, sélectionne : Lignes à répéter en haut, Colonnes à répéter à gauche'] },
-      plus: ['Répéter les titres à l\'impression : idéal pour que les titres de colonnes apparaissent sur chaque page imprimée. 1. Va dans Mise en page. 2. Clique sur Imprimer les titres. 3. Dans la fenêtre qui s\'ouvre, sélectionne : Lignes à répéter en haut, Colonnes à répéter à gauche.'],
+      dit: '**Répéter les titres** pour qu\'ils apparaissent sur chaque page imprimée.',
+      visuel: {
+        type: 'methode',
+        titre: 'Répéter les titres à l\'impression',
+        blocs: [
+          { etapes: ['Va dans **Mise en page > Imprimer les titres**', 'Dans la fenêtre, choisis **Lignes à répéter en haut** (et/ou colonnes à répéter à gauche)'] },
+        ],
+      },
     },
     {
       humeur: 'pensif',
-      dit: '**La mise à l\'échelle** ajuste ton tableau pour qu\'il tienne sur une page : **Mise en page > Mise à l\'échelle > « 1 page de large sur 1 page de haut »**.',
-      visuel: { type: 'encart', label: 'Attention à la lisibilité', texte: 'La mise à l\'échelle est pratique, mais Excel **réduit la taille de la police** si le tableau est trop grand. Vérifie toujours que ça reste lisible.' },
-      plus: ['Mise à l\'échelle automatique : pour ajuster ton tableau à une ou plusieurs pages, sans couper les colonnes. 1. Va dans l\'onglet Mise en page > groupe Mise à l\'échelle. 2. Choisis : "1 page de large sur 1 page de haut". 3. Le texte sera automatiquement redimensionné. Attention à la lisibilité ! Excel réduit la taille de police si le tableau est trop grand.'],
+      dit: '**La mise à l\'échelle** fait tenir ton tableau sur le nombre de pages voulu.',
+      visuel: {
+        type: 'methode',
+        titre: 'La mise à l\'échelle',
+        blocs: [
+          { etapes: ['Va dans **Mise en page > groupe Mise à l\'échelle**', 'Choisis « **1 page de large sur 1 page de haut** »'] },
+          { note: 'Attention à la lisibilité : Excel réduit la taille de la police si le tableau est trop grand. Vérifie que ça reste lisible.' },
+        ],
+      },
     },
     {
       humeur: 'accueil',
@@ -837,38 +971,62 @@ const IMPRESSION = {
     { humeur: 'accueil', dit: 'La touche finale : ajouter un en-tête et un pied de page, puis lancer une impression propre et pro.' },
     {
       humeur: 'pensif',
-      dit: '**L\'en-tête** est la zone en **haut** de chaque page imprimée (titre, nom de l\'auteur ou de l\'entreprise, date, logo...). **Le pied de page** est en **bas** (numéro de page, date, mention de confidentialité, contact...).',
-      visuel: { type: 'apercuimpression', zones: true, legende: 'En-tête en haut, pied de page en bas, répétés sur chaque page imprimée.' },
-      plus: ['En-tête : c\'est la zone située en haut de chaque page imprimée. On y ajoute souvent des informations importantes comme le titre du document, le nom de l\'auteur ou de l\'entreprise, la date ou le nom de la feuille, un logo...', 'Pied de page : c\'est la zone située en bas de chaque page imprimée. Elle sert à afficher par exemple : le numéro de page, une date d\'impression, une mention de confidentialité, une URL ou un contact.'],
+      dit: '**L\'en-tête** est en **haut** de chaque page (titre, nom de l\'auteur ou de l\'entreprise, date, logo...). **Le pied de page** est en **bas** (numéro de page, date, mention de confidentialité, contact...).',
+      visuel: { type: 'apercuimpression', bureau: true, legende: 'En mode Page (vue Excel), l\'en-tête est en haut et le pied de page en bas, sur chaque page imprimée.' },
     },
     {
       humeur: 'accueil',
-      dit: 'À quoi ça sert, un en-tête/pied de page :',
-      visuel: { type: 'parties', items: [{ label: 'Donner un aspect professionnel et structuré au document' }, { label: 'Faciliter la lecture quand on imprime plusieurs pages' }, { label: 'Ajouter des repères utiles (numéro de page, date, nom de la feuille)' }] },
-      plus: ['Ces zones ne sont pas visibles à l\'écran pendant l\'édition normale, mais elles apparaissent : en mode page, dans l\'aperçu avant impression, et sur la version papier du document.'],
+      dit: 'À quoi ça sert, un en-tête / pied de page :',
+      visuel: { type: 'parties', items: [{ label: 'Donner un aspect **professionnel** et structuré au document' }, { label: 'Faciliter la lecture quand on imprime **plusieurs pages**' }, { label: 'Ajouter des **repères** utiles (numéro de page, date, nom de la feuille)' }] },
     },
     {
       humeur: 'pensif',
-      dit: '**Pour insérer un en-tête ou un pied de page :** onglet **Mise en page** > petite **flèche** (lanceur) du groupe Mise en page > onglet **En-tête/Pied de page** > choisis un modèle.',
-      visuel: { type: 'etapes', items: ['Clique sur l\'onglet Mise en page', 'Clique sur la petite flèche (lanceur) en bas à droite du groupe', 'Choisis l\'onglet En-tête/Pied de page', 'Sélectionne un modèle : En-tête (haut) ou Pied de page (bas)'] },
-      plus: ['Pour insérer un en-tête ou un pied de page : 1. Clique sur l\'onglet Mise en page. 2. Clique sur la petite flèche (lanceur de boîte de dialogue) en bas à droite du groupe. 3. Une fenêtre s\'ouvre : choisis l\'onglet En-tête/Pied de page. 4. Sélectionne un modèle dans En-tête (haut de page) ou Pied de page (bas de page).'],
-    },
-    {
-      humeur: 'accueil',
-      dit: 'Tu peux aussi **personnaliser**. Clique sur **Personnalisé** pour ajouter :',
-      visuel: { type: 'etapes', items: ['Date, Heure', 'Nom de l\'auteur', 'Titre du fichier', 'Numéro de page', 'Image ou logo', 'Puis clique sur OK pour valider'] },
-      plus: ['Tu peux également personnaliser ton en-tête ou pied de page ! 1. Clique sur Personnalisé pour ajouter : Date, Heure, Nom de l\'auteur, Titre du fichier, Numéro de page, Image ou logo. 2. Clique sur OK pour valider.'],
-    },
-    {
-      humeur: 'accueil',
-      dit: '**Imprimer :** menu **Fichier > Imprimer**. Choisis l\'imprimante, ce que tu imprimes, ajuste, vérifie l\'aperçu, puis imprime.',
-      visuel: { type: 'etapes', items: ['Menu Fichier > Imprimer', 'Choisis ton imprimante', 'Choisis quoi imprimer : feuilles actives, tout le classeur, ou sélection', 'Ajuste : format papier (A4, Paysage...), nombre de copies, pages', 'Vérifie dans l\'aperçu avant impression', 'Clique sur Imprimer'] },
-      plus: ['Méthode : impression. 1. Menu Fichier > clique sur Imprimer. 2. Choisis ton imprimante. 3. Choisis ce que tu veux imprimer : Feuilles actives, Tout le classeur, Sélection uniquement. 4. Ajuste : le format papier (A4, Paysage...), le nombre de copies, les pages à imprimer. 5. Vérifie dans l\'aperçu avant impression. 6. Clique sur Imprimer.'],
+      dit: 'Un point à savoir sur ces zones :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Ces zones ne sont **pas visibles** à l\'écran en édition normale. Elles apparaissent en **mode Page**, dans l\'**aperçu avant impression**, et sur la **version papier**.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Avant de cliquer, **vérifie toujours l\'aperçu** à droite : tu vois exactement ce qui sortira sur le papier.',
-      visuel: { type: 'apercuimpression', orientation: 'portrait', legende: 'L\'aperçu, à droite de Fichier > Imprimer : ton document tel qu\'il sera imprimé.' },
+      dit: '**Pour insérer** un en-tête ou un pied de page :',
+      visuel: {
+        type: 'methode',
+        titre: 'Insérer un en-tête ou un pied de page',
+        blocs: [
+          { etapes: ['Onglet **Mise en page** > clique sur la petite **flèche** (lanceur ↘) du groupe', 'Va sur l\'onglet **En-tête/Pied de page**'] },
+          { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Mise en page', lanceur: true, groupes: [{ icone: '📏', label: 'Marges' }, { icone: '📄', label: 'Orientation' }, { icone: '📐', label: 'Taille' }] } },
+          { etapes: ['Choisis un modèle dans la liste (En-tête en haut, Pied de page en bas)'] },
+          { capture: { type: 'menu', items: [{ label: '(aucun)' }, { label: 'Page 1' }, { label: 'Confidentiel ; Page 1', actif: true }, { label: 'Feuil1' }, { label: 'Personnalisé…' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Tu peux aussi **personnaliser** entièrement ton en-tête ou ton pied de page.',
+      visuel: {
+        type: 'methode',
+        titre: 'Personnaliser ton en-tête / pied de page',
+        blocs: [
+          { etapes: ['Clique sur le bouton **Personnalisé**'] },
+          { capture: { type: 'enteteperso' } },
+          { etapes: ['Insère ce que tu veux : **date**, **heure**, **nom de l\'auteur**, **titre du fichier**, **numéro de page**, **image/logo**', 'Place chaque élément à gauche, au centre ou à droite', 'Clique sur **OK** pour valider'] },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Enfin, **imprimer** :',
+      visuel: {
+        type: 'methode',
+        titre: 'Imprimer',
+        blocs: [
+          { etapes: ['Menu **Fichier > Imprimer**', 'Choisis ton **imprimante**', 'Choisis quoi imprimer : feuilles actives, tout le classeur, ou sélection', 'Ajuste : orientation, format papier (A4...), mise à l\'échelle, nombre de copies', 'Vérifie l\'**aperçu** à droite', 'Clique sur **Imprimer**'] },
+          { capture: { type: 'impressionapercu' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le réflexe qui évite les mauvaises surprises :',
+      visuel: { type: 'encart', label: 'Astuce', texte: '**Prévisualise toujours** avant d\'imprimer : l\'aperçu te montre exactement le rendu papier (marges, sauts de page, zone d\'impression).' },
     },
     {
       humeur: 'accueil',
