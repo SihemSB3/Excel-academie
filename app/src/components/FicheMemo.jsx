@@ -61,10 +61,10 @@ export default function FicheMemo({ module, onTermine }) {
         .foot{margin-top:18px;color:rgba(10,51,93,.5);font-size:11px;text-align:center;}
         @media print{body{background:#fff;padding:12px;}}
       </style></head><body>
-        <div class="sub">L'Art du Digital &middot; Excel Dojo</div>
+        <div class="sub">L'Art du Digital &middot; Excel Académie</div>
         <h1>Fiche mémo &ndash; Les fonctions essentielles</h1>
         ${lignes}
-        <div class="foot">Excel Dojo &middot; Astuce : enregistre cette page en PDF pour la garder sur ton téléphone.</div>
+        <div class="foot">Excel Académie &middot; Astuce : enregistre cette page en PDF pour la garder sur ton téléphone.</div>
         <script>window.onload=function(){setTimeout(function(){window.print()},350)}</script>
       </body></html>`)
     w.document.close()

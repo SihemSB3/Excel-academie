@@ -29,7 +29,8 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
       {/* Sur desktop, l'identité (logo, Shifu, ceinture) est dans la barre latérale : on masque ici. */}
       <header className="text-center lg:hidden">
         <p className="text-xs font-bold uppercase tracking-[.3em] text-mint">L'Art du Digital</p>
-        <h1 className="font-display text-5xl text-navy">EXCEL DOJO</h1>
+        <h1 className="font-display text-5xl leading-[0.95] text-navy">EXCEL ACADÉMIE</h1>
+        <p className="mt-1.5 text-sm font-bold text-navy/55">La méthode Shaolin pour maîtriser Excel</p>
       </header>
 
       <div className="mt-5 lg:hidden">
@@ -169,7 +170,7 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
       </button>
 
       <p className="mt-6 text-center text-[11px] text-navy/30">
-        Pilote, ceintures blanche, jaune et orange. Progression sauvegardée sur ton compte.
+        Pilote, ceintures blanche, jaune, orange et verte. Progression sauvegardée sur ton compte.
       </p>
     </div>
   )

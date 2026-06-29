@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 
-// Le Shifu : la mascotte-maître du dojo (façon Duolingo, mais un vieux maître de kung-fu).
+// Le Shifu : la mascotte-maître de l'académie (façon Duolingo, mais un vieux maître de kung-fu).
 // humeur : 'accueil' | 'content' | 'fier' | 'pensif'
 export function Shifu({ humeur = 'accueil', size = 110, className = '' }) {
   const yeux = {

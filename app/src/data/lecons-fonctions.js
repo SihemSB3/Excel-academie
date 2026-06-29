@@ -833,6 +833,7 @@ const PINCEAUSTYLES = {
           { etapes: ['Sélectionne la ou les cellules à formater', 'Va dans **Accueil > groupe Style > Styles de cellule**', 'Survole les styles pour voir un aperçu', 'Clique sur le style souhaité'] },
           { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Style', groupes: [{ icone: '🎨', label: 'Styles de cellule', actif: true }, { icone: '▦', label: 'Sous forme de tableau' }] } },
           { capture: { type: 'styles' } },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Qté', entete: true }, A2: { t: 'Clavier' }, B2: { t: '30 €' }, C2: { t: '2' }, A3: { t: 'Souris' }, B3: { t: '20 €' }, C3: { t: '3' }, A4: { t: 'Total', vert: true }, B4: { t: '80 €', vert: true }, C4: { t: '5', vert: true } }, legende: 'Le résultat : un tableau lisible, ici avec un style sur l\'en-tête et la ligne « Total ».' } },
         ],
       },
     },
@@ -848,9 +849,15 @@ const PINCEAUSTYLES = {
         type: 'methode',
         titre: 'Créer ton propre style',
         blocs: [
-          { etapes: ['Va dans **Accueil > groupe Style > Styles de cellule**', 'Tout en bas du menu, clique sur **Nouveau style de cellule**'] },
+          { etapes: ['Va dans l\'onglet **Accueil**, groupe **Style**, et clique sur **Styles de cellule**'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Style', groupes: [{ icone: '🎨', label: 'Styles de cellule', actif: true }, { icone: '▦', label: 'Sous forme de tableau' }] } },
+          { etapes: ['Tout en bas du menu, clique sur **Nouveau style de cellule**'] },
           { capture: { type: 'menu', items: [{ label: 'Titre' }, { label: 'Total' }, { label: 'Accentuation' }, '-', { label: 'Nouveau style de cellule…', actif: true }] } },
-          { etapes: ['Nomme ton style', 'Clique sur **Format** pour définir : police, bordures, couleur de fond, alignement', 'Valide une première fois, puis OK'] },
+          { etapes: ['**Nomme** ton style (ex. « Mon style devis »)'] },
+          { capture: { type: 'stylenom' } },
+          { etapes: ['Clique sur **Format** pour définir : police, bordures, couleur de fond, alignement'] },
+          { capture: { type: 'formatcellule' } },
+          { etapes: ['Valide une première fois, puis **OK**'] },
           { note: 'Tes styles personnalisés sont mémorisés dans le fichier en cours. Pour les réutiliser ailleurs, enregistre ton document comme modèle Excel (.xltx).' },
         ],
       },
@@ -878,8 +885,10 @@ const MISEENPAGE = {
         type: 'methode',
         titre: 'Appliquer un thème',
         blocs: [
-          { etapes: ['Va dans **Mise en page > groupe Thèmes**', 'Survole les thèmes pour prévisualiser le rendu', 'Clique pour appliquer'] },
+          { etapes: ['Va dans **Mise en page > groupe Thèmes**'] },
           { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Thèmes', groupes: [{ icone: '🎨', label: 'Thèmes', actif: true }, { icone: 'A', label: 'Polices' }, { icone: '🎨', label: 'Couleurs' }] } },
+          { etapes: ['Survole les thèmes proposés pour prévisualiser, puis clique pour appliquer'] },
+          { capture: { type: 'themes' } },
           { note: 'Le thème s\'applique à tout le classeur, pas à une seule feuille.' },
         ],
       },
@@ -891,8 +900,10 @@ const MISEENPAGE = {
         type: 'methode',
         titre: 'Voir le mode Page',
         blocs: [
-          { etapes: ['Clique sur l\'icône **Mise en page** en bas à droite de la fenêtre (ou onglet **Affichage > Mise en page**)', 'Tu vois alors les **sauts de page**, les **marges** et les **zones en-tête/pied**'] },
-          { capture: { type: 'apercuimpression', orientation: 'portrait', legende: 'Le mode Page : la feuille telle qu\'elle sera imprimée, avec ses marges et ses zones.' } },
+          { etapes: ['Onglet **Affichage** > groupe **Modes d\'affichage** > **Mise en page** (ou l\'icône en bas à droite de la fenêtre)'] },
+          { capture: { type: 'ruban', actif: 'Affichage', groupeNom: 'Modes d\'affichage', groupes: [{ icone: '▭', label: 'Normal' }, { icone: '📄', label: 'Mise en page', actif: true }, { icone: '✂', label: 'Sauts de page' }] } },
+          { etapes: ['Tu vois alors les **sauts de page**, les **marges** et les **zones en-tête/pied**'] },
+          { capture: { type: 'apercuimpression', bureau: true, legende: 'Le mode Page : la feuille telle qu\'elle sera imprimée, avec ses marges et ses zones.' } },
         ],
       },
     },
@@ -925,8 +936,12 @@ const MISEENPAGE = {
         type: 'methode',
         titre: 'Définir la zone d\'impression',
         blocs: [
-          { etapes: ['Sélectionne la plage de cellules à imprimer', 'Va dans **Mise en page > Zone d\'impression > Définir**', 'Vérifie avec **Fichier > Imprimer** (l\'aperçu à droite)'] },
-          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Note' }, A2: { t: 'Clavier', ref: true }, B2: { t: '30', ref: true }, C2: { t: 'interne' }, A3: { t: 'Souris', ref: true }, B3: { t: '20', ref: true }, C3: { t: 'interne' } }, legende: 'La plage sélectionnée (en bleu) est la seule qui sera imprimée.' } },
+          { etapes: ['Sélectionne la plage de cellules à imprimer'] },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Note' }, A2: { t: 'Clavier', ref: true }, B2: { t: '30', ref: true }, C2: { t: 'interne' }, A3: { t: 'Souris', ref: true }, B3: { t: '20', ref: true }, C3: { t: 'interne' } }, legende: 'La plage sélectionnée (en bleu) est celle qui sera imprimée.' } },
+          { etapes: ['Va dans **Mise en page > Zone d\'impression > Définir**'] },
+          { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '🖨', label: 'Zone d\'impression', actif: true }, { icone: '📐', label: 'Marges' }, { icone: '📄', label: 'Orientation' }] } },
+          { etapes: ['Vérifie avec **Fichier > Imprimer** : l\'aperçu à droite te montre la zone'] },
+          { capture: { type: 'impressionapercu' } },
         ],
       },
     },
@@ -937,7 +952,10 @@ const MISEENPAGE = {
         type: 'methode',
         titre: 'Répéter les titres à l\'impression',
         blocs: [
-          { etapes: ['Va dans **Mise en page > Imprimer les titres**', 'Dans la fenêtre, choisis **Lignes à répéter en haut** (et/ou colonnes à répéter à gauche)'] },
+          { etapes: ['Va dans **Mise en page > Imprimer les titres**'] },
+          { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '⬓', label: 'Imprimer les titres', actif: true }, { icone: '🖨', label: 'Zone d\'impression' }, { icone: '📐', label: 'Marges' }] } },
+          { etapes: ['Dans la fenêtre, choisis **Lignes à répéter en haut** (et/ou colonnes à répéter à gauche)'] },
+          { capture: { type: 'champs', titre: 'Mise en page — Feuille', champs: [{ l: 'Lignes à répéter en haut', v: '$1:$1', actif: true }, { l: 'Colonnes à répéter à gauche', v: '' }] } },
         ],
       },
     },
@@ -948,7 +966,10 @@ const MISEENPAGE = {
         type: 'methode',
         titre: 'La mise à l\'échelle',
         blocs: [
-          { etapes: ['Va dans **Mise en page > groupe Mise à l\'échelle**', 'Choisis « **1 page de large sur 1 page de haut** »'] },
+          { etapes: ['Va dans **Mise en page > groupe Mise à l\'échelle**'] },
+          { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Mise à l\'échelle', groupes: [{ icone: '↔', label: 'Largeur' }, { icone: '↕', label: 'Hauteur' }, { icone: '%', label: 'Échelle' }] } },
+          { etapes: ['Choisis « **1 page de large sur 1 page de haut** »'] },
+          { capture: { type: 'champs', titre: 'Mise à l\'échelle', champs: [{ l: 'Largeur', v: '1 page', actif: true }, { l: 'Hauteur', v: '1 page', actif: true }] } },
           { note: 'Attention à la lisibilité : Excel réduit la taille de la police si le tableau est trop grand. Vérifie que ça reste lisible.' },
         ],
       },
@@ -1042,4 +1063,516 @@ const IMPRESSION = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION }
+// ======================================================================
+// CHAPITRE 4 — Les fonctions de calculs Excel (ceinture verte)
+// Chaque explication a son visuel. « En savoir plus » = texte de l'ebook (verbatim).
+// Le ch.2 a déjà enseigné l'assistant, les fonctions de base et les références :
+// ici on approfondit (fonctions simples/complexes, ARRONDI) et on découvre le NEUF
+// (les noms dans les formules, les fonctions à plusieurs arguments, VPM).
+// ======================================================================
+const U4 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX4 = {
+  ex27: { titre: 'Exercice 27 · La somme automatique & l\'assistant fonction', url: U4('1gLigeNmo2AoNXepQFKYX_E--PIBMzKDZ') },
+  ex28: { titre: 'Exercice 28 · Les formules simples', url: U4('1JKWi2XOuuMVEKpkkZs29uklNAXuQak2e') },
+  ex29: { titre: 'Exercice 29 · Les références absolues', url: U4('1jmbeEpSQhDTRBUklRyADas9cGgCkGnBs') },
+  ex30: { titre: 'Exercice 30 · Les noms de cellules', url: U4('1el8wJNKuVKPaUHlAMlMSMyDG3hJVC26s') },
+  ex31: { titre: 'Exercice 31 · L\'Assistant Fonction & la fonction VPM', url: U4('12iolLrs8zG3TjJGG4R_tsfjaH_Hr_FXw') },
+}
+
+// --- Tableur d'exemple : ventes par produit (pour MIN) ---
+const VENTES = {
+  A1: { t: 'Produit', entete: true },
+  B1: { t: 'Ventes (€)', entete: true },
+  A2: { t: 'Clavier' },
+  B2: { t: '12000', num: true },
+  A3: { t: 'Souris' },
+  B3: { t: '9500', num: true },
+  A4: { t: 'Écran' },
+  B4: { t: '15000', num: true },
+  A5: { t: 'Casque' },
+  B5: { t: '11000', num: true },
+  A6: { t: 'Tablier' },
+  B6: { t: '8800', num: true },
+  A7: { t: 'Le + petit', entete: true },
+}
+const tabMIN = (formule, resultat, refs) => {
+  const cells = { ...VENTES }
+  if (refs) refs.forEach((id) => (cells[id] = { ...cells[id], ref: true }))
+  if (resultat) cells.B7 = resultat
+  else if (formule) cells.B7 = { t: formule }
+  return { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5, 6, 7], cells, actif: 'B7', formule }
+}
+
+// --- Leçon 1 : Les fonctions simples ---
+const FONCTIONSSIMPLES = {
+  id: 'fn-fonctionssimples',
+  titre: 'Les fonctions simples',
+  exercices: [EX4.ex27, EX4.ex28],
+  narration: [
+    { humeur: 'accueil', dit: 'Une fonction, c\'est un outil tout prêt d\'Excel pour faire un calcul à ta place. Les plus simples n\'ont besoin que d\'une seule chose : une plage de cellules.' },
+    {
+      humeur: 'pensif',
+      dit: 'Les fonctions **simples** sont celles pour lesquelles tu as juste besoin d\'indiquer une plage de cellules. Pas de formules compliquées, pas d\'arguments multiples à gérer. Et leur structure est **toujours la même**.',
+      visuel: { type: 'formule', formule: '=Nom_de_la_fonction(plage_de_cellules)' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La règle d\'or, vraie pour toutes les formules :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Tu dois **toujours** commencer ta formule par le signe **=**. C\'est ce qui indique à Excel qu\'il s\'agit d\'un calcul, et pas d\'un simple texte.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dans une plage, deux séparateurs à connaître. Ils ne veulent pas dire la même chose.',
+      visuel: { type: 'encart', label: 'À retenir sur les séparateurs', liste: ['**Deux points :** → signifie « jusqu\'à » (ex : A1:A5 → de A1 à A5).', '**Point-virgule ;** → signifie « et » (ex : A1;C1;E1 → A1 et C1 et E1).'] },
+    },
+    { humeur: 'accueil', dit: 'Un exemple concret : on cherche le produit qui a le **moins** vendu. La fonction MIN trouve la plus petite valeur de la plage. On la construit en la tapant.', visuel: tabMIN() },
+    {
+      humeur: 'pensif',
+      dit: 'On la saisit directement dans la cellule, pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 1 : saisie directe',
+        blocs: [
+          { etapes: ['Clique dans la cellule où tu veux voir le résultat (ici B7)', 'Tape **=** suivi du nom de la fonction (ex : **MIN** pour la valeur la plus petite)', 'Clique sur la suggestion **MIN**'] },
+          { capture: { type: 'autocomplete', saisie: '=MI', items: [{ nom: 'MILLIONS.OCTETS.CONVERTIS' }, { nom: 'MIN', desc: 'Renvoie la plus petite valeur d\'une série de valeurs.' }, { nom: 'MIN.SI.ENS' }, { nom: 'MINUSCULE' }, { nom: 'MINUTE' }], selection: 1 } },
+          { etapes: ['Sélectionne la plage à calculer (ici B2:B6) : elle se surligne en bleu, et la formule s\'écrit dans B7 et dans la barre de formule'], depart: 4 },
+          { capture: tabMIN('=MIN(B2:B6', null, ['B2', 'B3', 'B4', 'B5', 'B6']) },
+          { etapes: ['Ferme la parenthèse **)**'], depart: 5 },
+          { capture: tabMIN('=MIN(B2:B6)') },
+          { etapes: ['Clique sur **Entrée**'], depart: 6 },
+          { capture: tabMIN('=MIN(B2:B6)', { t: '8800', num: true, vert: true }) },
+          { note: 'Dans cette plage (B2 à B6), la valeur 8800 correspond aux ventes du Tablier, le produit qui a eu le moins de ventes.' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Tu peux aussi te faire guider par l\'**assistant fonction** (fx), exactement comme en ceinture jaune.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 2 : l\'assistant fonction (fx)',
+        blocs: [
+          { etapes: ['Clique dans la cellule où tu veux le résultat (ici B7)'] },
+          { capture: tabMIN() },
+          { etapes: ['Clique sur le bouton **fx** (ou onglet **Formules** > **Insérer une fonction**)'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer une fonction', actif: true }, { icone: '∑', label: 'Somme automatique' }, { icone: '🕘', label: 'Récentes' }] } },
+          { etapes: ['Choisis une **catégorie** (ex : Statistiques, Math & Trigo…)'], depart: 3 },
+          { capture: { type: 'assistant', categorie: 'Statistiques', fonctions: ['MAX', 'MEDIANE', 'MIN', 'MOYENNE', 'NB', 'NBVAL'], selection: -1, focus: 'categorie' } },
+          { etapes: ['Sélectionne la fonction (ex : **MIN**), puis clique sur **OK**'], depart: 4 },
+          { capture: { type: 'assistant', categorie: 'Statistiques', fonctions: ['MAX', 'MEDIANE', 'MIN', 'MOYENNE', 'NB', 'NBVAL'], selection: 2, signature: 'MIN(nombre1;nombre2;...)', description: 'Renvoie la plus petite valeur d\'une série de valeurs. Ignore le texte et les valeurs logiques.', focus: 'liste' } },
+          { etapes: ['Remplis les arguments (**Nombre1**, **Nombre2**…), puis clique de nouveau sur **OK**'], depart: 5 },
+          { capture: { type: 'arguments', fonction: 'MIN', args: [{ label: 'Nombre1', ref: 'B2:B6', valeur: '{12000;9500;…}' }, { label: 'Nombre2', ref: '', valeur: 'nombre' }], apercu: '8800', description: 'Renvoie la plus petite valeur d\'une série de valeurs.', resultat: '8800', encadre: true } },
+          { note: 'Deux façons de remplir les arguments : soit tu sélectionnes toute la plage d\'un coup dans **Nombre1** (ex : B2:B6), soit tu mets chaque cellule séparément (**Nombre1** = B2, **Nombre2** = B3, **Nombre3** = B4…). Tu peux aller jusqu\'à 255 arguments.' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Ta formule ne fonctionne pas ? La cause la plus fréquente, en images :',
+      visuel: {
+        type: 'methode',
+        titre: 'Ta formule ne fonctionne pas ?',
+        blocs: [
+          { etapes: ['Tu vois la **formule** au lieu du **résultat** ? La cellule est sûrement au format « Texte »'] },
+          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5, 6, 7], cells: { ...VENTES, B7: { t: '=MIN(B2:B6)' } }, actif: 'B7', formule: '=MIN(B2:B6)', legende: 'Ici, B7 affiche la formule au lieu de 8800 : la cellule est au format « Texte ».' } },
+          { etapes: ['Fais **clic droit > Format de cellule**, choisis « **Standard** » ou « **Nombre** », puis revalide avec **Entrée**'], depart: 2 },
+          { capture: { type: 'formatcellule', actif: 'Nombre', categorieActive: 'Standard', categories: ['Standard', 'Nombre', 'Monétaire', 'Comptabilité', 'Date', 'Texte'], titreDroite: 'Aperçu :', types: ['8 800'] } },
+          { note: 'Autre cause possible : une erreur de syntaxe. Vérifie les parenthèses, les points-virgules (;) et la plage de cellules.' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle écriture est correcte pour une fonction simple ?',
+      visuel: { type: 'question', options: ['=MIN(B2:B6)', '=MIN[B2;B6]'], bonne: 0, explication: 'Une fonction simple s\'écrit =Nom(plage), avec des parenthèses rondes et les deux points pour « jusqu\'à ». Les crochets ne sont pas reconnus par Excel.' },
+    },
+    { humeur: 'fier', dit: 'Tu sais reconnaître et écrire une fonction simple, à la main ou avec l\'assistant. Premier pas de la ceinture verte. Bravo ! 🎉' },
+  ],
+}
+
+// --- Tableur SI (rappel) pour les fonctions complexes ---
+const baseSI4 = { A1: { t: 'Note', entete: true }, B1: { t: 'Résultat', entete: true } }
+const tabSI4 = (a2, formule, resultat) => {
+  const cells = { ...baseSI4, A2: a2 }
+  if (resultat) cells.B2 = resultat
+  else if (formule) cells.B2 = { t: formule }
+  return { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells, actif: 'B2', formule }
+}
+// Tableur ARRONDI
+const tabARR = (formule, resultat) => ({
+  type: 'tableur',
+  cols: ['A', 'B'],
+  rows: [1, 2],
+  cells: { A1: { t: 'Montant', entete: true }, B1: { t: 'Arrondi', entete: true }, A2: { t: '12,8', num: true, ...(formule && formule.includes('A2') ? { ref: true } : {}) }, ...(resultat ? { B2: resultat } : formule ? { B2: { t: formule } } : {}) },
+  actif: 'B2',
+  formule,
+})
+
+// --- Leçon 2 : Les fonctions complexes (SI & ARRONDI) ---
+const FONCTIONSCOMPLEXES = {
+  id: 'fn-fonctionscomplexes',
+  titre: 'Les fonctions complexes : SI & ARRONDI',
+  exercices: [EX4.ex31],
+  narration: [
+    { humeur: 'accueil', dit: 'Certaines fonctions ont besoin de plusieurs informations pour travailler : ce sont les fonctions complexes. Rien de méchant, juste plusieurs **arguments** séparés par des points-virgules.' },
+    {
+      humeur: 'pensif',
+      dit: 'Une fonction **complexe** demande **plusieurs arguments** (deux ou plus) pour fonctionner. La structure générale :',
+      visuel: { type: 'formule', formule: '=Nom_de_la_fonction(Argument1 ; Argument2 ; … ; ArgumentN)' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Tu l\'as déjà croisée en ceinture jaune : la fonction **SI**. Elle demande **trois** arguments.',
+      visuel: { type: 'parties', items: [{ label: 'Une **condition** (la question posée à Excel)' }, { label: 'Un **résultat si c\'est vrai**' }, { label: 'Un **résultat si c\'est faux**' }] },
+    },
+    { humeur: 'accueil', dit: 'On va la construire pas à pas dans la cellule B2. Le but : afficher « OK » si la note en A2 dépasse 10, sinon « À refaire ».', visuel: tabSI4({ t: '12' }) },
+    { humeur: 'pensif', dit: '**Étape 1 :** clique dans B2 et tape **=**. Il s\'écrit dans la cellule et dans la barre de formule.', visuel: tabSI4({ t: '12' }, '=') },
+    { humeur: 'pensif', dit: '**Étape 2 :** écris **SI** et ouvre une parenthèse.', visuel: tabSI4({ t: '12' }, '=SI(') },
+    { humeur: 'accueil', dit: '**Argument 1, la condition :** on teste si A2 (la case bleue) est supérieur à 10.', visuel: tabSI4({ t: '12', ref: true }, '=SI(A2>10') },
+    { humeur: 'pensif', dit: 'Un point-virgule **;** puis **argument 2, le résultat si VRAI**, entre guillemets.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK"') },
+    { humeur: 'pensif', dit: 'Encore un **;** puis **argument 3, le résultat si FAUX**.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK";"À refaire"') },
+    { humeur: 'pensif', dit: 'On ferme la parenthèse **)**. La formule complète est dans B2 et dans la barre de formule.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK";"À refaire")') },
+    { humeur: 'fier', dit: 'On appuie sur **Entrée** : 12 > 10 ? Oui → B2 affiche **OK**.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK";"À refaire")', { t: 'OK', vert: true }) },
+    { humeur: 'pensif', dit: 'Et si la note avait été 7 ? 7 > 10 ? Non → B2 affiche **À refaire**.', visuel: tabSI4({ t: '7' }, '=SI(A2>10;"OK";"À refaire")', { t: 'À refaire', rouge: true }) },
+    {
+      humeur: 'pensif',
+      dit: 'Un détail à ne pas oublier dans SI :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Les **guillemets** sont nécessaires : tout texte dans une formule Excel doit être entouré de guillemets (« OK », « À refaire »). Sans eux, Excel ne reconnaît pas le mot comme du texte.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Si tu préfères être guidé(e), construis SI avec l\'**assistant fonction**.',
+      visuel: {
+        type: 'methode',
+        titre: 'La formule SI avec l\'assistant',
+        blocs: [
+          { etapes: ['Clique dans la cellule où tu veux le résultat (ici B2)', 'Clique sur le bouton **fx** dans la barre de formule'] },
+          { capture: { type: 'barrefx', cellule: 'B2' } },
+          { etapes: ['Choisis une **catégorie** (ex : Logique)', 'Sélectionne ta fonction **SI**', 'Clique sur **OK**'], depart: 3 },
+          { capture: { type: 'assistant', categorie: 'Logique', fonctions: ['ET', 'FAUX', 'OU', 'SI', 'SI.CONDITIONS', 'SIERREUR'], selection: 3, signature: 'SI(test_logique;valeur_si_vrai;valeur_si_faux)', description: 'Vérifie si une condition est respectée et renvoie une valeur si VRAI, une autre si FAUX.', focus: 'liste' } },
+          { etapes: ['Renseigne chaque argument (au moins les obligatoires)', 'Clique sur **OK** → Excel remplit la formule pour toi'], depart: 6 },
+          { capture: { type: 'arguments', fonction: 'SI', args: [{ label: 'Test_logique', ref: 'A2>10', valeur: 'VRAI' }, { label: 'Valeur_si_vrai', ref: '"OK"', valeur: '"OK"' }, { label: 'Valeur_si_faux', ref: '"À refaire"', valeur: '"À refaire"' }], apercu: 'OK', description: 'Vérifie si une condition est respectée.', resultat: 'OK', encadre: true } },
+          { note: 'Une fois tous les champs remplis, Excel affiche un aperçu du résultat (ici « OK », car le test est vrai).' },
+        ],
+      },
+    },
+    { humeur: 'accueil', dit: 'Une autre fonction complexe bien pratique : **ARRONDI**. Elle réduit le nombre de décimales d\'un chiffre. Tu choisis combien de chiffres après la virgule, et Excel arrondit pour toi.', visuel: { type: 'formule', formule: '=ARRONDI(nombre ; nombre_de_chiffres)' } },
+    { humeur: 'accueil', dit: 'On l\'écrit pas à pas dans B2, pour arrondir le montant 12,8 placé en A2.', visuel: tabARR() },
+    { humeur: 'pensif', dit: '**Étape 1 :** dans B2, tape **=ARRONDI(**.', visuel: tabARR('=ARRONDI(') },
+    { humeur: 'accueil', dit: '**Argument 1, le nombre :** clique sur A2 (la case bleue), la valeur à arrondir.', visuel: tabARR('=ARRONDI(A2') },
+    { humeur: 'pensif', dit: 'Un **;** puis **argument 2, le nombre de décimales** : 0 pour un entier.', visuel: tabARR('=ARRONDI(A2;0') },
+    { humeur: 'pensif', dit: 'On ferme la parenthèse **)**.', visuel: tabARR('=ARRONDI(A2;0)') },
+    { humeur: 'fier', dit: 'On appuie sur **Entrée** : 12,8 arrondi à l\'entier donne **13**.', visuel: tabARR('=ARRONDI(A2;0)', { t: '13', num: true, vert: true }) },
+    {
+      humeur: 'accueil',
+      dit: 'Et avec l\'assistant, c\'est exactement la même logique que pour SI.',
+      visuel: {
+        type: 'methode',
+        titre: 'ARRONDI avec l\'assistant',
+        blocs: [
+          { etapes: ['Clique dans la cellule où tu veux le résultat (ici B2)', 'Clique sur le bouton **fx** dans la barre de formule'] },
+          { capture: { type: 'barrefx', cellule: 'B2' } },
+          { etapes: ['Choisis une catégorie ou **tape le nom** dans la barre de recherche', 'Sélectionne ta fonction **ARRONDI**', 'Clique sur **OK**'], depart: 3 },
+          { capture: { type: 'assistant', recherche: 'arrondi', categorie: 'Recommandé', fonctions: ['ARRONDI', 'ARRONDI.INF', 'ARRONDI.SUP'], selection: 0, signature: 'ARRONDI(nombre;no_chiffres)', description: 'Arrondit un nombre au nombre de chiffres indiqué.', focus: 'recherche' } },
+          { etapes: ['Renseigne les deux arguments : **Nombre** = la valeur à arrondir, **No_chiffres** = le nombre de décimales', 'Clique sur **OK**, le résultat s\'affiche'], depart: 6 },
+          { capture: { type: 'arguments', fonction: 'ARRONDI', args: [{ label: 'Nombre', ref: 'A2', valeur: '12,8' }, { label: 'No_chiffres', ref: '0', valeur: '0' }], apercu: '13', description: 'Arrondit un nombre au nombre de chiffres indiqué.', resultat: '13', encadre: true } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le réflexe à garder sur le second argument :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Si tu mets **0** en second argument, Excel arrondit à l\'entier le plus proche. Mets **2** pour garder deux décimales (ex : les centimes d\'euro).' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Tu te demandais s\'il y avait d\'autres ARRONDI : oui, deux petites sœurs, au cas où tu veux forcer le sens.',
+      visuel: { type: 'encart', label: 'Les variantes d\'ARRONDI', liste: ['**ARRONDI** : arrondit normalement (au plus proche).', '**ARRONDI.INF** : arrondit toujours vers le **bas**.', '**ARRONDI.SUP** : arrondit toujours vers le **haut**.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Que donne =ARRONDI(12,8 ; 0) ?',
+      visuel: { type: 'question', options: ['13', '12'], bonne: 0, explication: '12,8 arrondi à l\'entier le plus proche donne 13 (au-delà de ,5 on monte). Le 0 indique « zéro décimale ».' },
+    },
+    { humeur: 'fier', dit: 'SI, ARRONDI : tu construis les fonctions à plusieurs arguments, à la main ou avec l\'assistant. Bravo ! 🎉' },
+  ],
+}
+
+// --- Tableur références (rappel) ---
+const REF4 = { A1: { t: 'Produit', entete: true }, B1: { t: 'Prix HT', entete: true }, C1: { t: 'TTC', entete: true }, E1: { t: 'TVA', entete: true }, A2: { t: 'Clavier' }, B2: { t: '30', num: true }, A3: { t: 'Souris' }, B3: { t: '20', num: true }, E2: { t: '1,2', num: true } }
+const tabREF4 = (cells, formule, actif, legende, extra = {}) => ({ type: 'tableur', cols: ['A', 'B', 'C', 'D', 'E'], rows: [1, 2, 3], cells: { ...REF4, ...cells }, actif, formule, legende, ...extra })
+
+// --- Leçon 3 : Recopier les formules (références relatives & absolues) — RAPPEL ---
+const RECOPIERFORMULES = {
+  id: 'fn-recopierformules',
+  titre: 'Recopier les formules : références relatives & absolues',
+  exercices: [EX4.ex29],
+  narration: [
+    { humeur: 'accueil', dit: 'Petit rappel essentiel avant d\'aller plus loin : quand tu recopies une formule, Excel adapte les cellules tout seul. Et parfois, tu veux qu\'une cellule reste figée. Revoyons les deux cas, vite fait bien fait.' },
+    {
+      humeur: 'pensif',
+      dit: '**Les références relatives.** Quand tu copies une formule (avec la poignée ou un copier-coller), les cellules utilisées s\'ajustent automatiquement selon la nouvelle position. Exemple : =B2*C2 en D2, tiré vers le bas, devient =B3*C3 puis =B4*C4.',
+      visuel: { type: 'recopieanim' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Le sens de la recopie décide de ce qui change :',
+      visuel: { type: 'encart', label: 'Recopie vers le bas ou vers la droite ?', liste: ['Vers le **bas** : les lignes changent, la colonne reste la même (=B2 devient =B3, puis =B4).', 'Vers la **droite** : les colonnes changent, la ligne reste la même (=B2 devient =C2, puis =D2).'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un piège classique avec les relatives :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Si tes formules ne se recalculent pas toutes seules, le mode de calcul est sûrement réglé sur « manuel ». Solution : **Formules > Options de calcul > Automatique**.' },
+    },
+    { humeur: 'accueil', dit: '**Les références absolues.** Parfois, une cellule doit rester fixe, même en recopiant : un taux de TVA, un seuil, une constante. Ici, le taux est en E2 et on veut le garder. On écrit =B2*$E$2.', visuel: tabREF4({ C2: { t: '=B2*$E$2' } }, '=B2*$E$2', 'C2', 'Les $ verrouillent E2 : le taux restera figé en recopiant.', { refsCouleur: { B2: 'bleu', E2: 'ambre' } }) },
+    { humeur: 'fier', dit: 'En recopiant vers le bas, B2 s\'adapte (B3…) mais $E$2 reste figé. Tous les calculs tombent juste.', visuel: tabREF4({ C2: { t: '36', vert: true }, C3: { t: '24', vert: true } }, '=B3*$E$2', 'C3', 'B3 a changé (bleu), mais $E$2 (orange) est resté le même.', { refsCouleur: { B3: 'bleu', E2: 'ambre' } }) },
+    {
+      humeur: 'pensif',
+      dit: 'Le raccourci pour mettre les $ sans les taper :',
+      visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Clique sur la cellule dans ta formule, puis appuie sur **F4** : Excel transforme B1 en $B$1. Si F4 ne marche pas tout seul, essaie **Fn + F4** (claviers portables). Sur **Mac**, utilise **⌘ + T**.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Le $ peut figer la colonne, la ligne, ou les deux. Voici les types de référence (en vert, ce qui reste fixe) :',
+      visuel: { type: 'reffiger' },
+      plus: ['$A$1 → Absolu (ligne et colonne figées). A$1 → ligne figée. $A1 → colonne figée. A1 → référence relative.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Tu recopies une formule et tu veux que la cellule E2 reste fixe. Tu écris...',
+      visuel: { type: 'question', options: ['$E$2', 'E2'], bonne: 0, explication: 'Les $ figent la cellule : $E$2 ne bougera pas, même en recopiant la formule ailleurs. E2 seul, lui, s\'adapterait.' },
+    },
+    { humeur: 'fier', dit: 'Relative qui suit, absolue qui reste : ce rappel te servira dans toutes tes fonctions. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 4 : Utiliser les noms dans les formules (NOUVEAU) ---
+const NOMSFORMULES = {
+  id: 'fn-nomsformules',
+  titre: 'Utiliser les noms dans les formules',
+  exercices: [EX4.ex30],
+  narration: [
+    { humeur: 'accueil', dit: 'Imagine écrire =Prix*Quantité au lieu de =A1*B1. Plus clair, plus pro, et tu t\'y retrouves bien mieux, surtout dans un gros fichier. C\'est tout l\'intérêt de **nommer** une cellule.' },
+    {
+      humeur: 'pensif',
+      dit: 'Utiliser un nom rend le fichier plus **lisible**. Plutôt que =A1+B1, tu écris =Prix+Quantité. La formule se comprend d\'un coup d\'œil, surtout si d\'autres personnes utilisent ton fichier.',
+      visuel: { type: 'formule', formule: '=Prix + Quantité' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Avant de commencer, le petit lexique à avoir en tête :',
+      visuel: { type: 'parties', items: [{ label: '**Nom** : l\'identifiant qu\'on donne à une cellule ou une plage' }, { label: '**Plage** : un ensemble de cellules (ex : A1:A10)' }, { label: '**Référence** : l\'adresse d\'une cellule (comme B2)' }, { label: '**Zone Nom** : la boîte à gauche de la barre de formule, où s\'affiche ou s\'écrit un nom' }] },
+    },
+    { humeur: 'accueil', dit: 'Justement, voici la **Zone Nom** : repère-la bien, c\'est elle qu\'on va utiliser.', visuel: { type: 'zonenom', nom: 'B2', formule: '30' } },
+    {
+      humeur: 'pensif',
+      dit: 'Première méthode pour nommer, la plus rapide : directement dans la Zone Nom.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 1 : via la Zone Nom',
+        blocs: [
+          { etapes: ['Sélectionne la cellule ou la plage à nommer', 'Clique dans la **Zone Nom** (à gauche de la barre de formule)', 'Tape le nom (respecte la syntaxe, juste après)', 'Appuie sur **Entrée**'] },
+          { capture: { type: 'zonenom', nom: 'Prix_Unitaire', saisie: true, formule: '30', legende: 'On tape « Prix_Unitaire » dans la Zone Nom, puis Entrée : la cellule B2 s\'appelle désormais Prix_Unitaire.' } },
+          { note: 'N\'oublie pas d\'appuyer sur Entrée : sans ça, le nom n\'est pas enregistré.' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Les trois erreurs qui font échouer un nom :',
+      visuel: { type: 'encart', label: 'Erreurs à éviter', liste: ['Oublier d\'appuyer sur **Entrée** après avoir tapé le nom.', 'Utiliser un **espace** dans le nom (« Prix unitaire » → erreur).', 'Nommer avec un mot **déjà utilisé** par Excel (comme SOMME).'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Deuxième méthode, via le ruban : pratique pour un nom limité à une feuille précise.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 2 : via le ruban (Noms définis)',
+        blocs: [
+          { etapes: ['Va dans l\'onglet **Formules > groupe Noms définis**', 'Clique sur **Définir un nom** (ou Créer un nom)'] },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom', actif: true }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection' }] } },
+          { etapes: ['Renseigne le **Nom**, le **Champ** (classeur ou feuille) et la **Zone** (la plage concernée)', 'Valide avec **OK**'], depart: 3 },
+          { capture: { type: 'champs', titre: 'Nouveau nom', champs: [{ l: 'Nom', v: 'Prix_Unitaire', actif: true }, { l: 'Champ', v: 'Classeur' }, { l: 'Fait référence à', v: '=Feuil1!$B$2' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Troisième méthode, avec la souris : le clic droit.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 3 : avec le clic droit',
+        blocs: [
+          { etapes: ['Sélectionne la cellule ou la plage à nommer', 'Fais un **clic droit** sur la sélection', 'Choisis **Définir un nom** dans le menu'] },
+          { capture: { type: 'menu', items: [{ icone: '📄', label: 'Copier' }, { icone: '📋', label: 'Coller' }, '-', { icone: '🔖', label: 'Définir un nom…', actif: true }, { label: 'Lien…' }] } },
+          { etapes: ['Dans la fenêtre, donne un nom explicite (ex : PrixHT), vérifie que la référence est correcte', 'Clique sur **OK**'], depart: 4 },
+          { capture: { type: 'champs', titre: 'Nouveau nom', champs: [{ l: 'Nom', v: 'PrixHT', actif: true }, { l: 'Fait référence à', v: '=Feuil1!$B$2' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Quel que soit le moyen, le nom doit respecter quelques règles :',
+      visuel: { type: 'encart', label: 'Les règles à suivre pour un nom', liste: ['Il doit **commencer par une lettre**.', '**Pas d\'espace** (utilise _ ou colle les mots : Prix_Unitaire, PrixUnitaire).', 'Pas de **référence** (n\'utilise pas l\'adresse d\'une cellule, comme A1).', 'Longueur **max : 255 caractères** (largement suffisant !).', 'Pas de **doublon** dans un même classeur.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Et trois bons réflexes pour t\'y retrouver :',
+      visuel: { type: 'encart', label: 'Astuce pratique', liste: ['Utilise des noms **courts mais parlants** : TVA, Client, Montant.', 'Pour un tableau complexe, crée un **tableau structuré** avant de nommer les plages.', 'Tu peux gérer tous tes noms via **Formules > Gestionnaire de noms**.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour **supprimer** un nom devenu inutile :',
+      visuel: {
+        type: 'methode',
+        titre: 'Supprimer un nom de cellule',
+        blocs: [
+          { etapes: ['Va dans **Formules > groupe Noms définis**', 'Clique sur **Gestionnaire de noms**'] },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms', actif: true }, { icone: '⊞', label: 'Créer depuis sélection' }] } },
+          { etapes: ['La fenêtre affiche tous les noms du classeur', 'Sélectionne le nom à supprimer', 'Clique sur **Supprimer**', 'Confirme si une alerte s\'affiche'], depart: 3 },
+          { capture: { type: 'champs', titre: 'Gestionnaire de noms', champs: [{ l: 'PrixHT', v: '=Feuil1!$B$2', actif: true }, { l: 'TVA', v: '=Feuil1!$E$2' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Une précaution avant de supprimer :',
+      visuel: { type: 'encart', label: 'Attention', texte: 'Si une formule utilise encore ce nom, elle renverra une erreur **#NOM ?** après suppression. Vérifie que le nom n\'est plus utilisé avant de le supprimer.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Maintenant, **utiliser** tes noms. D\'abord pour **naviguer** : la Zone Nom t\'emmène directement à la cellule.',
+      visuel: {
+        type: 'methode',
+        titre: 'Naviguer grâce à un nom',
+        blocs: [
+          { etapes: ['Clique sur la **flèche** de la Zone Nom (à gauche de la barre de formule)', 'Choisis le nom dans la liste déroulante', 'Excel te conduit automatiquement à la cellule ou la plage'] },
+          { capture: { type: 'zonenom', nom: 'Prix_Unitaire', fleche: true, liste: ['Prix_Unitaire', 'Quantite', 'TVA'], legende: 'La flèche ouvre la liste de tous tes noms : un clic et Excel t\'y emmène.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Ensuite, dans une **formule**. Quand tu écris une formule, tu ne peux pas cliquer dans la Zone Nom, mais tu insères un nom très facilement avec **F3**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 1 : avec le raccourci F3',
+        blocs: [
+          { etapes: ['Tape **=** pour commencer une formule', 'Appuie sur la touche **F3**', 'Une boîte « Coller un nom » s\'affiche', 'Clique sur le nom voulu, puis sur **OK**'] },
+          { capture: { type: 'champs', titre: 'Coller un nom', champs: [{ l: 'Prix_Unitaire', v: '', actif: true }, { l: 'Quantite', v: '' }, { l: 'TVA', v: '' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Encore plus rapide : tape les **premières lettres** du nom.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 2 : en tapant les premières lettres',
+        blocs: [
+          { etapes: ['Tape **=** puis les premières lettres du nom (ex : =P)', 'Excel affiche une liste de propositions (fonctions + tes noms)', 'Double-clique sur le nom souhaité'] },
+          { capture: { type: 'autocomplete', saisie: '=P', items: [{ nom: 'Prix_Unitaire', desc: 'Nom personnalisé → Feuil1!$B$2' }, { nom: 'PAIR' }, { nom: 'PENTE' }, { nom: 'PGCD' }, { nom: 'PRODUIT' }], selection: 0 } },
+          { note: 'Tes noms personnalisés apparaissent en haut de la liste, juste après (ou avant) les fonctions Excel. Tu les reconnais facilement, surtout s\'ils sont bien nommés.' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dernier bonus : quand ton tableau a des **titres**, Excel peut créer les noms tout seul à partir d\'eux.',
+      visuel: {
+        type: 'methode',
+        titre: 'Créer des noms à partir d\'étiquettes',
+        blocs: [
+          { etapes: ['Sélectionne tout le tableau, **titres compris**'] },
+          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3], cells: { A1: { t: 'Produit', entete: true, ref: true }, B1: { t: 'Prix', entete: true, ref: true }, A2: { t: 'Clavier', ref: true }, B2: { t: '30', ref: true }, A3: { t: 'Souris', ref: true }, B3: { t: '20', ref: true } }, legende: 'Tout le tableau est sélectionné, y compris la ligne de titres.' } },
+          { etapes: ['Va dans **Formules > groupe Noms définis**', 'Clique sur **Créer à partir de la sélection**'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection', actif: true }] } },
+          { etapes: ['Coche **Ligne du haut** (titres en haut) ou **Colonne de gauche** (titres à gauche)', 'Clique sur **OK**'], depart: 4 },
+          { capture: { type: 'champs', titre: 'Créer des noms à partir de la sélection', champs: [{ l: '☑ Ligne du haut', v: '', actif: true }, { l: '☐ Colonne de gauche', v: '' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle est la règle à respecter pour créer un nom de cellule ?',
+      visuel: { type: 'question', options: ['Ne pas contenir d\'espace et commencer par une lettre', 'Commencer par un chiffre et être en majuscules'], bonne: 0, explication: 'Un nom doit commencer par une lettre, sans espace (ni doublon, ni adresse de cellule). « Prix_Unitaire » fonctionne, « 1Prix » ou « Prix unitaire » non.' },
+    },
+    { humeur: 'fier', dit: 'Nommer, gérer, utiliser : tes formules deviennent lisibles et pro. C\'était LE gros morceau du chapitre. Bravo ! 🎉' },
+  ],
+}
+
+// --- Tableur VPM (simulation de prêt) ---
+const tabVPM = (resultat) => ({
+  type: 'tableur',
+  cols: ['A', 'B'],
+  rows: [1, 2, 3, 4],
+  cells: {
+    A1: { t: 'Montant emprunté', entete: true },
+    B1: { t: '15 000 €' },
+    A2: { t: 'Taux annuel', entete: true },
+    B2: { t: '5 %' },
+    A3: { t: 'Durée (mois)', entete: true },
+    B3: { t: '120' },
+    A4: { t: 'Mensualité', entete: true },
+    B4: resultat ? { t: '-159,10 €', rouge: true } : { t: '=VPM(B2/12;B3;-B1)' },
+  },
+  actif: 'B4',
+  formule: resultat ? '=VPM(B2/12;B3;-B1)' : '=VPM(B2/12;B3;-B1)',
+})
+
+// --- Leçon 5 : Fonctions à plusieurs arguments & VPM (NOUVEAU) ---
+const ARGUMENTSVPM = {
+  id: 'fn-argumentsvpm',
+  titre: 'Fonctions à plusieurs arguments & VPM',
+  exercices: [EX4.ex31],
+  narration: [
+    { humeur: 'accueil', dit: 'Pour finir la ceinture verte, on s\'attaque aux fonctions un peu costaudes (VPM, NB.SI, RECHERCHEV). Bonne nouvelle : tu n\'es pas obligé(e) de tout taper à la main. L\'assistant te tient la main.' },
+    {
+      humeur: 'pensif',
+      dit: 'L\'**assistant fonction** remplit les cases une à une, avec des explications. Voici la marche à suivre pour n\'importe quelle fonction complexe.',
+      visuel: {
+        type: 'methode',
+        titre: 'Utiliser l\'assistant pour une fonction à plusieurs arguments',
+        blocs: [
+          { etapes: ['Clique sur la cellule où tu veux le résultat', 'Clique sur l\'icône **fx** (à côté de la barre de formule), ou **Formules > Insérer une fonction**', 'La boîte « Insérer une fonction » s\'ouvre'] },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer une fonction', actif: true }, { icone: '💰', label: 'Financières' }, { icone: '🔎', label: 'Recherche & Référence' }] } },
+          { etapes: ['Tape un mot-clé ou choisis une **catégorie** (ex : Financières…)', 'Sélectionne la fonction souhaitée (ex : **VPM**)', 'Clique sur **OK**'], depart: 4 },
+          { capture: { type: 'assistant', categorie: 'Financières', fonctions: ['TAUX', 'VA', 'VAN', 'VC', 'VPM'], selection: 4, signature: 'VPM(taux;npm;va;[vc];[type])', description: 'Calcule le remboursement d\'un emprunt sur la base de remboursements et d\'un taux d\'intérêt constants.', focus: 'liste' } },
+          { etapes: ['Une fenêtre s\'ouvre avec les **arguments** de la fonction', 'Renseigne chaque champ (tu peux cliquer dans les cellules du tableau pour les remplir)', 'Clique sur **OK** pour valider'], depart: 7 },
+          { capture: { type: 'arguments', fonction: 'VPM', args: [{ label: 'Taux', ref: '5%/12', valeur: '0,00417' }, { label: 'Npm', ref: '120', valeur: '120' }, { label: 'Va', ref: '-15000', valeur: '-15000' }, { label: 'Vc', ref: '', valeur: 'facultatif' }, { label: 'Type', ref: '', valeur: 'facultatif' }], apercu: '-159,10 €', description: 'Calcule la mensualité d\'un emprunt à taux constant.', resultat: '-159,10 €', encadre: true } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dans la fenêtre des arguments, l\'affichage te dit l\'essentiel :',
+      visuel: { type: 'encart', label: 'Détails utiles sur les arguments', liste: ['**Gras** : argument **obligatoire**.', '**Normal** : argument **facultatif**.', '**Valeur affichée** : la valeur par défaut si tu ne changes rien.'] },
+    },
+    { humeur: 'accueil', dit: 'Zoom sur une fonction très concrète : **VPM** (Valeur des Paiements Mensuels). Elle calcule la **mensualité d\'un prêt** en fonction du taux, du nombre de périodes et du montant emprunté.' },
+    {
+      humeur: 'pensif',
+      dit: 'À quoi elle sert au quotidien : savoir combien tu rembourses chaque mois pour...',
+      visuel: { type: 'parties', items: [{ label: 'Un **crédit auto**' }, { label: 'Un **prêt immobilier**' }, { label: 'Tout autre **emprunt à paiements fixes**' }] },
+    },
+    { humeur: 'pensif', dit: 'Sa structure, avec ses arguments (entre crochets = facultatifs) :', visuel: { type: 'formule', formule: '=VPM(taux ; nb_périodes ; valeur_actuelle ; [valeur_future] ; [type])' } },
+    { humeur: 'accueil', dit: 'Un exemple : tu empruntes 15 000 € à 5 % par an, sur 10 ans (120 mois), avec des paiements mensuels. La formule =VPM(5%/12 ; 120 ; -15000) donne environ -159,10 € par mois.', visuel: tabVPM(true) },
+    {
+      humeur: 'pensif',
+      dit: 'Pourquoi le résultat est-il négatif :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Le résultat est **négatif** car c\'est une sortie d\'argent (tu paies). Si tu veux un résultat **positif**, ajoute un signe moins devant la formule : =-VPM(...).' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Et si tu bloques sur les arguments d\'une fonction (VPM, SI…), le réflexe :',
+      visuel: { type: 'encart', label: 'Astuce pratique', texte: 'Ne reste pas bloqué(e) ! Clique sur le bouton **fx**, choisis ta fonction et **lis bien les descriptions** : les champs en gras sont obligatoires, les autres facultatifs. Pose-toi simplement : « Qu\'est-ce que je veux calculer exactement ? »' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quel est le rôle de la fonction VPM ?',
+      visuel: { type: 'question', options: ['Calculer une mensualité de prêt', 'Afficher le total hors taxe'], bonne: 0, explication: 'VPM (Valeur des Paiements Mensuels) calcule la mensualité d\'un emprunt selon le taux, la durée et le montant emprunté.' },
+    },
+    { humeur: 'fier', dit: 'Assistant, arguments obligatoires/facultatifs, VPM : tu manies maintenant les fonctions complexes. La ceinture verte est à toi ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM }

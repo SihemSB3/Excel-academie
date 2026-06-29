@@ -1,4 +1,4 @@
-// Les 7 ceintures du dojo, dans l'ordre de progression.
+// Les 7 ceintures de l'académie, dans l'ordre de progression.
 export const CEINTURES = [
   { id: 'blanche', label: 'Blanche', couleur: '#f2f0e6', bord: '#cfc9b4' },
   { id: 'jaune', label: 'Jaune', couleur: '#f4cf3f', bord: '#caa520' },

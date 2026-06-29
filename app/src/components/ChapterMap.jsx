@@ -21,7 +21,7 @@ export default function ChapterMap({ ch, estFait, tousFaits, onOuvrir, onQuitter
       <div className="sticky top-0 z-10 flex items-center gap-3 bg-cream/90 px-4 py-3 backdrop-blur">
         <button
           onClick={onQuitter}
-          aria-label="Retour au dojo"
+          aria-label="Retour à l'académie"
           className="text-2xl leading-none text-navy/60 hover:text-navy"
         >
           ×
@@ -82,7 +82,7 @@ export default function ChapterMap({ ch, estFait, tousFaits, onOuvrir, onQuitter
                   <p className="text-[11px] font-bold uppercase tracking-wide text-mint/80">{ETIQUETTE[m.type]}</p>
                   <p className="font-bold leading-tight text-navy">{m.titre}</p>
                   <p className="mt-0.5 text-xs text-navy/45">
-                    {fait ? 'Terminé ✓' : courant ? 'À faire maintenant' : 'Verrouillé'}
+                    {fait ? 'Terminé ✓' : courant ? 'À faire maintenant' : dispo ? 'À revoir' : 'Verrouillé'}
                   </p>
                 </button>
               </li>

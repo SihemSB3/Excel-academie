@@ -1,0 +1,308 @@
+{
+  "chapitre": 4,
+  "titre": "Les fonctions de calculs Excel",
+  "partie": 1,
+  "niveau": 4,
+  "ceinture": "verte",
+  "objectif": "Maîtriser les fonctions de calcul : reconnaître et écrire les fonctions simples (=Nom(plage)), construire les fonctions complexes (SI, ARRONDI) à la main ou avec l'assistant, recopier des formules (références relatives/absolues), nommer des cellules pour des formules lisibles, et utiliser les fonctions à plusieurs arguments comme VPM.",
+  "note_pedago": "Même format que les ch.2-3 : lecons narrees (un visuel par explication), exercices Drive sur chaque lecon, fiche memo, quiz, checklist, deblocage ceinture verte. Le ch.2 (jaune) ayant deja enseigne l'assistant, les fonctions de base et les references, le ch.4 approfondit (fonctions simples/complexes, ARRONDI) et introduit le NEUF (noms dans les formules, fonctions a plusieurs arguments, VPM). Les sections de l'ebook marquees RAPPEL sont traitees comme de vrais rappels concis.",
+  "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
+  "modules": [
+    {
+      "id": "ch4-fonctionssimples",
+      "type": "narration",
+      "lecon": "fonctionssimples",
+      "titre": "Les fonctions simples",
+      "xp": 30
+    },
+    {
+      "id": "ch4-fichefonctions",
+      "type": "fiche_memo",
+      "titre": "Fiche mémo des fonctions essentielles",
+      "xp_completion": 20,
+      "note": "Fiche memo de l'ebook ch.4 (p131-132). Identique a celle du ch.2 : a conserver ici (l'ebook ch.4 l'inclut) ou a retirer si doublon genant, au choix de Sihem.",
+      "fonctions": [
+        {
+          "nom": "SOMME",
+          "syntaxe": "=SOMME(B2:B9)",
+          "but": "Additionner plusieurs cellules",
+          "exemple": "total des ventes du mois"
+        },
+        {
+          "nom": "MOYENNE",
+          "syntaxe": "=MOYENNE(B2:B9)",
+          "but": "Calculer la moyenne de plusieurs valeurs",
+          "exemple": "moyenne de notes ou de chiffres d'affaires"
+        },
+        {
+          "nom": "MIN",
+          "syntaxe": "=MIN(A1:A10)",
+          "but": "Trouver la valeur la plus petite",
+          "exemple": "le plus petit prix"
+        },
+        {
+          "nom": "MAX",
+          "syntaxe": "=MAX(B2:B9)",
+          "but": "Trouver la valeur la plus grande",
+          "exemple": "le meilleur score"
+        },
+        {
+          "nom": "NBVAL",
+          "syntaxe": "=NBVAL(B2:B9)",
+          "but": "Compter toutes les cellules non vides (nombres, textes, dates…)",
+          "exemple": "combien de réponses données dans une enquête"
+        },
+        {
+          "nom": "NB",
+          "syntaxe": "=NB(A1:A10)",
+          "but": "Compter uniquement les cellules avec des nombres",
+          "exemple": "savoir combien de valeurs numériques ont été saisies"
+        }
+      ]
+    },
+    {
+      "id": "ch4-fonctionscomplexes",
+      "type": "narration",
+      "lecon": "fonctionscomplexes",
+      "titre": "Les fonctions complexes : SI & ARRONDI",
+      "xp": 30
+    },
+    {
+      "id": "ch4-recopierformules",
+      "type": "narration",
+      "lecon": "recopierformules",
+      "titre": "Recopier les formules : références relatives & absolues",
+      "xp": 30
+    },
+    {
+      "id": "ch4-nomsformules",
+      "type": "narration",
+      "lecon": "nomsformules",
+      "titre": "Utiliser les noms dans les formules",
+      "xp": 30
+    },
+    {
+      "id": "ch4-argumentsvpm",
+      "type": "narration",
+      "lecon": "argumentsvpm",
+      "titre": "Fonctions à plusieurs arguments & VPM",
+      "xp": 30
+    },
+    {
+      "id": "ch4-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 9,
+      "total": 12,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.4 p158-160 (12 questions, reponses uniques). reponses_correctes = index correct (0-3). Reponses determinees a partir de faits Excel standards (le corrige imprime n'etait pas exploitable, les coches etaient des images). Spot-check possible par Sihem.",
+      "questions": [
+        {
+          "id": "ch4-qcm-01",
+          "question": "Quelle syntaxe est correcte pour une addition ?",
+          "options": [
+            "=SOMME(A1:A10)",
+            "=somme[A1;A10]",
+            "=SOMME:A1:A10",
+            "=Somme{A1:A10}"
+          ],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch4-qcm-02",
+          "question": "Que permet de faire le bouton ∑ Somme automatique ?",
+          "options": [
+            "Supprimer les doublons",
+            "Calculer automatiquement une moyenne",
+            "Insérer automatiquement une formule pour additionner une plage de cellules",
+            "Arrondir une valeur à l'entier le plus proche"
+          ],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch4-qcm-03",
+          "question": "La fonction MOYENNE permet de :",
+          "options": [
+            "Compter le nombre de valeurs",
+            "Obtenir la valeur la plus haute",
+            "Calculer le total des cellules",
+            "Calculer la moyenne de plusieurs valeurs"
+          ],
+          "reponses_correctes": [3]
+        },
+        {
+          "id": "ch4-qcm-04",
+          "question": "À quoi sert l'assistant fonction (fx) ?",
+          "options": [
+            "À créer un graphique",
+            "À insérer une image",
+            "À remplir une formule étape par étape",
+            "À supprimer des doublons"
+          ],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch4-qcm-05",
+          "question": "La fonction MIN affiche :",
+          "options": [
+            "Le total de la colonne",
+            "Le nombre de cellules non vides",
+            "La plus petite valeur d'une plage",
+            "L'erreur dans une formule"
+          ],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch4-qcm-06",
+          "question": "Quelle est la différence entre NB et NBVAL ?",
+          "options": [
+            "NB compte tout, NBVAL uniquement les chiffres",
+            "NB compte les textes, NBVAL les vides",
+            "NB compte les nombres uniquement, NBVAL compte toutes les cellules non vides",
+            "Ils sont identiques"
+          ],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch4-qcm-07",
+          "question": "Quelle formule est correcte pour afficher la valeur la plus grande ?",
+          "options": [
+            "=HAUT(A1:A10)",
+            "=MAX(A1:A10)",
+            "=PLUSGRAND(A1:A10)",
+            "=VALMAX(A1:A10)"
+          ],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch4-qcm-08",
+          "question": "Quel est le rôle de la fonction VPM ?",
+          "options": [
+            "Calculer une moyenne pondérée",
+            "Afficher le total hors taxe",
+            "Calculer une mensualité de prêt",
+            "Vérifier la validité d'un mot de passe"
+          ],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch4-qcm-09",
+          "question": "Comment commence toute formule dans Excel ?",
+          "options": [
+            "Par une parenthèse",
+            "Par une lettre majuscule",
+            "Par le signe égal (=)",
+            "Par un dièse (#)"
+          ],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch4-qcm-10",
+          "question": "Pourquoi utiliser un nom pour une cellule ?",
+          "options": [
+            "Pour cacher la valeur",
+            "Pour rendre la formule plus lisible",
+            "Pour bloquer les formules",
+            "Pour ajouter un mot-clé de recherche"
+          ],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch4-qcm-11",
+          "question": "Quelle est la règle à respecter pour créer un nom de cellule ?",
+          "options": [
+            "Peut contenir des espaces",
+            "Doit commencer par un chiffre",
+            "Doit être en majuscule",
+            "Ne doit pas contenir d'espace et commencer par une lettre"
+          ],
+          "reponses_correctes": [3]
+        },
+        {
+          "id": "ch4-qcm-12",
+          "question": "Que fait Excel quand tu copies une formule avec des références relatives ?",
+          "options": [
+            "Il garde les mêmes références",
+            "Il modifie automatiquement les références selon la nouvelle position",
+            "Il convertit la formule en texte",
+            "Il bloque les cellules utilisées"
+          ],
+          "reponses_correctes": [1]
+        }
+      ]
+    },
+    {
+      "id": "ch4-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist de l'ebook ch.4 (p161), reprise verbatim.",
+      "a_valider": false,
+      "items": [
+        "J'utilise le bouton Somme automatique (∑) pour additionner une plage de cellules",
+        "Je connais la différence entre les fonctions SOMME, MOYENNE, MIN, MAX",
+        "Je sais quand utiliser NB et quand utiliser NBVAL",
+        "Je suis capable d'insérer une formule en utilisant le bouton fx (assistant fonction)",
+        "Je sais remplir les arguments d'une fonction dans la fenêtre de l'assistant",
+        "Je comprends la syntaxe générale d'une formule Excel",
+        "Je sais créer un nom pour une cellule ou une plage",
+        "Je connais les règles pour nommer une cellule correctement",
+        "Je comprends la différence entre référence relative et référence absolue",
+        "Je peux utiliser la fonction VPM pour simuler une mensualité de prêt"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["fonction", "fonction simple", "structure", "plage"],
+      "question": "C'est quoi une fonction simple et comment l'écrire ?",
+      "reponse": "Une fonction simple n'a besoin que d'une plage de cellules. Sa structure est toujours =Nom_de_la_fonction(plage), par exemple =MIN(B2:B6). Toute formule commence par le signe =, et la plage s'écrit avec les deux points (B2:B6 = de B2 à B6)."
+    },
+    {
+      "mots_cles": ["séparateur", "deux points", "point-virgule", ":", ";"],
+      "question": "Quelle différence entre : et ; dans une formule ?",
+      "reponse": "Les deux points : veulent dire « jusqu'à » (A1:A5 = de A1 à A5). Le point-virgule ; veut dire « et » (A1;C1;E1 = A1 et C1 et E1). C'est aussi le ; qui sépare les arguments d'une fonction complexe."
+    },
+    {
+      "mots_cles": ["assistant", "fx", "insérer une fonction"],
+      "question": "Comment utiliser l'assistant fonction (fx) ?",
+      "reponse": "Clique sur la cellule du résultat, puis sur le bouton fx (ou Formules > Insérer une fonction). Choisis une catégorie, sélectionne ta fonction, OK, puis remplis les champs (en cliquant dans les cellules) et valide. L'assistant t'explique chaque argument en bas."
+    },
+    {
+      "mots_cles": ["si", "condition", "fonction complexe", "arrondi"],
+      "question": "Comment écrire une fonction SI ou ARRONDI ?",
+      "reponse": "SI demande 3 arguments : =SI(A2>10;\"OK\";\"À refaire\") (les textes vont entre guillemets). ARRONDI réduit les décimales : =ARRONDI(12,8;0) donne 13 (0 = arrondi à l'entier). Tu peux les construire au clavier ou via l'assistant fx."
+    },
+    {
+      "mots_cles": ["texte", "formule", "résultat", "#####", "format"],
+      "question": "Je vois la formule au lieu du résultat, pourquoi ?",
+      "reponse": "La cellule est sûrement en format « Texte ». Fais clic droit > Format de cellule > choisis « Standard » ou « Nombre », puis revalide ta formule avec Entrée. Vérifie aussi les parenthèses et les points-virgules."
+    },
+    {
+      "mots_cles": ["nom", "nommer", "zone nom", "lisible"],
+      "question": "Comment nommer une cellule pour mes formules ?",
+      "reponse": "Sélectionne la cellule, clique dans la Zone Nom (à gauche de la barre de formule), tape un nom (ex : Prix_Unitaire) et Entrée. Tu peux ensuite écrire =Prix_Unitaire*Quantite. Règles : commence par une lettre, pas d'espace, pas de doublon, max 255 caractères."
+    },
+    {
+      "mots_cles": ["gestionnaire de noms", "supprimer un nom", "#nom"],
+      "question": "Comment gérer ou supprimer un nom de cellule ?",
+      "reponse": "Formules > Noms définis > Gestionnaire de noms : la fenêtre liste tous tes noms, tu sélectionnes et tu cliques Supprimer. Attention : si une formule utilise encore ce nom, elle affichera l'erreur #NOM ? après suppression."
+    },
+    {
+      "mots_cles": ["référence absolue", "figer", "$", "f4"],
+      "question": "Comment figer une cellule dans une formule ?",
+      "reponse": "Ajoute des $ : =B2*$E$2 garde E2 fixe en recopiant (référence absolue). Le plus simple : clique sur la cellule dans ta formule et appuie sur F4 (ou Fn+F4, ou ⌘+T sur Mac), Excel met les $ pour toi."
+    },
+    {
+      "mots_cles": ["vpm", "mensualité", "prêt", "emprunt", "crédit"],
+      "question": "Comment calculer une mensualité de prêt (VPM) ?",
+      "reponse": "=VPM(taux;nb_périodes;valeur_actuelle). Exemple : 15 000 € à 5 % sur 120 mois → =VPM(5%/12;120;-15000) ≈ -159,10 €/mois. Le résultat est négatif (sortie d'argent) ; mets un - devant la formule pour l'afficher en positif."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "verte",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture verte débloquée. Les fonctions n'ont plus de secret pour toi : tu calcules, tu nommes, tu arrondis, tu simules un prêt. Tu passes de l'élève au pratiquant."
+  }
+}

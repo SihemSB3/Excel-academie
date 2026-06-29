@@ -165,7 +165,7 @@ function AssistantDialog({ v }) {
           </div>
           <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-1">Rechercher</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${focus === 'categorie' ? 'rounded ring-2 ring-mint ring-offset-1' : ''}`}>
           <span>Ou sélectionnez une catégorie :</span>
           <span className="flex flex-1 items-center justify-between rounded-sm border border-navy/25 px-2 py-1">{categorie}<span className="text-navy/40">▾</span></span>
         </div>
@@ -609,6 +609,81 @@ function BarreFormule() {
         <span className="text-navy/40">↳</span>
         <span>La croix rouge ✕ (ou la touche Échap) annule ta saisie en cours. La coche verte ✓ la valide.</span>
       </p>
+    </div>
+  )
+}
+
+// La barre de formule avec le bouton fx (Insérer une fonction) surligné.
+// Sert pour « clique sur le bouton fx dans la barre de formule ».
+function BarreFx({ v }) {
+  const { cellule = 'B2', formule = '' } = v
+  return (
+    <div className="mt-3">
+      <div className="overflow-hidden rounded-md border border-navy/15 bg-white shadow">
+        <div className="flex items-stretch text-xs">
+          <div className="flex w-14 items-center justify-center border-r border-navy/10 bg-navy/5 py-1.5 text-navy/70">{cellule}</div>
+          <div className="flex items-center gap-2 border-r border-navy/10 px-2">
+            <span className="text-navy/30">✕</span>
+            <span className="text-navy/30">✓</span>
+            <span className="grid place-items-center rounded-sm bg-mint/15 px-1.5 py-0.5 text-sm italic text-mint ring-2 ring-mint">fx</span>
+          </div>
+          <div className="flex-1 px-2 py-1.5 font-mono text-navy">{formule ? coloreFormule(formule) : <span className="text-navy/25">|</span>}</div>
+        </div>
+      </div>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>
+          Le bouton <strong className="font-bold text-navy">fx</strong> (Insérer une fonction), juste à gauche de la barre de formule, ouvre l'assistant.
+        </span>
+      </p>
+    </div>
+  )
+}
+
+// La « Zone Nom » : la boîte à gauche de la barre de formule, où s'affiche / s'écrit
+// le nom d'une cellule. Sert pour la leçon « Utiliser les noms dans les formules ».
+function ZoneNom({ v }) {
+  const { nom = 'Nom', saisie = false, fleche = false, formule = '', liste = [], legende } = v
+  return (
+    <div className="mt-3">
+      <div className="overflow-hidden rounded-md border border-navy/15 bg-white shadow">
+        <div className="flex items-stretch text-xs">
+          {/* La Zone Nom, surlignée pour bien la repérer */}
+          <div className="relative flex w-28 shrink-0 items-center justify-between gap-1 border-r border-navy/10 bg-mint/15 px-2 py-1.5 ring-2 ring-mint ring-inset">
+            <span className="truncate font-mono text-navy">
+              {nom}
+              {saisie && <span className="animate-pulse">|</span>}
+            </span>
+            {fleche && <span className="text-navy/40">▾</span>}
+          </div>
+          <div className="flex items-center gap-2 border-r border-navy/10 px-2 text-navy/50">
+            <span className="text-sm italic">fx</span>
+          </div>
+          <div className="flex-1 px-2 py-1.5 font-mono text-navy">
+            {formule ? coloreFormule(formule) : <span className="text-navy/25">|</span>}
+          </div>
+        </div>
+        {/* Liste déroulante des noms (navigation), si fournie */}
+        {liste.length > 0 && (
+          <div className="border-t border-navy/10 bg-white text-[11px]">
+            {liste.map((n, i) => (
+              <div key={i} className={`px-3 py-1 font-mono ${i === 0 ? 'bg-[#0a63c9] text-white' : 'text-navy/80'}`}>{n}</div>
+            ))}
+          </div>
+        )}
+      </div>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>
+          La <strong className="font-bold text-navy">Zone Nom</strong>, à gauche de la barre de formule : c'est là que tu lis ou que tu écris le nom d'une cellule.
+        </span>
+      </p>
+      {legende && (
+        <p className="mt-1 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{legende}</span>
+        </p>
+      )}
     </div>
   )
 }
@@ -1170,6 +1245,102 @@ function ImpressionApercu() {
   )
 }
 
+// Boîte « Style » (Nouveau style de cellule) : champ pour nommer le style + Format.
+function StyleNom() {
+  const props = [
+    ['Nombre', 'Standard'],
+    ['Alignement', 'Général'],
+    ['Police', 'Calibri 11'],
+    ['Bordure', 'Aucune'],
+    ['Remplissage', 'Aucun'],
+  ]
+  return (
+    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+        <span>Style</span>
+        <span className="text-navy/40">✕</span>
+      </div>
+      <div className="space-y-2 bg-white p-3">
+        <div className="flex items-center gap-2">
+          <span className="shrink-0 text-navy/60">Nom du style :</span>
+          <span className="flex-1 rounded-sm border border-navy/30 px-2 py-1 text-navy ring-1 ring-mint">Mon style devis<span className="animate-pulse">|</span></span>
+        </div>
+        <div className="rounded-sm border border-navy/15 p-2">
+          <p className="mb-1 text-[10px] uppercase tracking-wide text-navy/45">Le style inclut</p>
+          {props.map(([k, val], i) => (
+            <div key={i} className="flex justify-between text-[10px] text-navy/70">
+              <span>☑ {k}</span>
+              <span className="text-navy/40">{val}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center justify-between pt-0.5">
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Format…</span>
+          <span className="flex gap-2">
+            <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span>
+            <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Galerie de thèmes de document proposés (palette de couleurs + police).
+function Themes() {
+  const themes = [
+    { nom: 'Office', c: ['#0a335d', '#41c1ba', '#d97706', '#8b5cf6'] },
+    { nom: 'Berlin', c: ['#1f7a4d', '#e0c200', '#c0504d', '#4f81bd'] },
+    { nom: 'Vue', c: ['#8b5cf6', '#41c1ba', '#f59e0b', '#ef4444'] },
+    { nom: 'Ion', c: ['#b91c1c', '#f59e0b', '#0a335d', '#1f9d57'] },
+  ]
+  return (
+    <div className="mt-3">
+      <div className="grid grid-cols-4 gap-2">
+        {themes.map((t, i) => (
+          <div key={i} className="animate-fade-up overflow-hidden rounded-lg border border-navy/15 bg-white shadow-sm" style={{ animationDelay: `${i * 80}ms` }}>
+            <div className="flex">
+              {t.c.map((c, j) => (
+                <span key={j} className="h-5 flex-1" style={{ background: c }} />
+              ))}
+            </div>
+            <p className="text-center font-display text-base leading-tight text-navy">Aa</p>
+            <p className="pb-1 text-center text-[9px] text-navy/55">{t.nom}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[11px] text-navy/55">Survole un thème pour le prévisualiser, clique pour l'appliquer.</p>
+    </div>
+  )
+}
+
+// Petite boîte de dialogue avec des champs (ex. « Imprimer les titres », « Mise à l'échelle »).
+function Champs({ v }) {
+  const { titre, champs = [] } = v
+  return (
+    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      {titre && (
+        <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+          <span>{titre}</span>
+          <span className="text-navy/40">✕</span>
+        </div>
+      )}
+      <div className="space-y-2 bg-white p-3">
+        {champs.map((c, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <span className="shrink-0 text-navy/60">{c.l} :</span>
+            <span className={`flex-1 rounded-sm border px-2 py-1 text-navy ${c.actif ? 'border-navy/30 ring-1 ring-mint' : 'border-navy/20'}`}>{c.v || ' '}</span>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-end gap-2 bg-white px-3 pb-2">
+        <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span>
+        <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
+      </div>
+    </div>
+  )
+}
+
 // Double-clic interactif : l'élève double-clique LUI-MÊME le bord droit de l'en-tête B,
 // et la colonne s'ajuste au contenu le plus long. Curseur double-flèche ↔.
 function DoubleClic({ onResolu }) {
@@ -1228,26 +1399,70 @@ function CaptureInline({ c }) {
 }
 function Methode({ v }) {
   const { titre, blocs = [] } = v
+
+  // On regroupe les blocs : un groupe = une série d'étapes + la/les capture(s) et note
+  // qui la suivent, jusqu'à la prochaine série d'étapes. Permet de révéler « au fur et à mesure ».
+  const groupes = []
+  let cur = []
+  let curHasCapture = false
+  for (const b of blocs) {
+    if (b.etapes && curHasCapture) {
+      groupes.push(cur)
+      cur = []
+      curHasCapture = false
+    }
+    cur.push(b)
+    if (b.capture) curHasCapture = true
+  }
+  if (cur.length) groupes.push(cur)
+
+  const total = groupes.length
+  const progressif = total >= 3 // bouton « Voir la suite » seulement quand il y a beaucoup de captures
+  const depart = progressif ? 1 : total
+
+  // Révélation progressive sur la même page. On réinitialise quand on change de méthode.
+  const [prevBlocs, setPrevBlocs] = useState(blocs)
+  const [revele, setRevele] = useState(depart)
+  if (blocs !== prevBlocs) {
+    setPrevBlocs(blocs)
+    setRevele(depart)
+  }
+  const visibles = progressif ? groupes.slice(0, revele) : groupes
+
   let n = 0
+  const rendreBloc = (b, key) => {
+    if (b.etapes) {
+      const d = n + 1
+      n += b.etapes.length
+      return <EtapesListe key={key} items={b.etapes} depart={d} />
+    }
+    if (b.capture) return <CaptureInline key={key} c={b.capture} />
+    if (b.note)
+      return (
+        <p key={key} className="rounded-xl border border-mint/30 bg-mint/5 px-3 py-2 text-sm leading-relaxed text-navy/85">
+          <span className="font-bold text-mint">Astuce : </span>
+          {gras(b.note)}
+        </p>
+      )
+    return null
+  }
+
   return (
     <div className="mt-3 space-y-3">
       {titre && <p className="font-display text-lg leading-tight text-navy">{gras(titre)}</p>}
-      {blocs.map((b, i) => {
-        if (b.etapes) {
-          const depart = n + 1
-          n += b.etapes.length
-          return <EtapesListe key={i} items={b.etapes} depart={depart} />
-        }
-        if (b.capture) return <CaptureInline key={i} c={b.capture} />
-        if (b.note)
-          return (
-            <p key={i} className="rounded-xl border border-mint/30 bg-mint/5 px-3 py-2 text-sm leading-relaxed text-navy/85">
-              <span className="font-bold text-mint">Astuce : </span>
-              {gras(b.note)}
-            </p>
-          )
-        return null
-      })}
+      {visibles.map((g, gi) => (
+        <div key={gi} className={gi > 0 ? 'animate-fade-up space-y-3' : 'space-y-3'}>
+          {g.map((b, bi) => rendreBloc(b, gi + '-' + bi))}
+        </div>
+      ))}
+      {progressif && revele < total && (
+        <button
+          onClick={() => setRevele((r) => Math.min(r + 1, total))}
+          className="mx-auto flex items-center gap-1.5 rounded-full bg-mint/15 px-5 py-2 text-sm font-bold text-mint transition hover:bg-mint/25"
+        >
+          Voir la suite ({revele}/{total}) <span className="text-base leading-none">↓</span>
+        </button>
+      )}
     </div>
   )
 }
@@ -1279,9 +1494,19 @@ function Visuel({ v }) {
   if (v.type === 'apercuimpression') return <ApercuImpression v={v} />
   if (v.type === 'enteteperso') return <EntetePerso />
   if (v.type === 'impressionapercu') return <ImpressionApercu />
+  if (v.type === 'stylenom') return <StyleNom />
+  if (v.type === 'themes') return <Themes />
+  if (v.type === 'champs') return <Champs v={v} />
   if (v.type === 'barreformule') return <BarreFormule />
+  if (v.type === 'barrefx') return <BarreFx v={v} />
+  if (v.type === 'zonenom') return <ZoneNom v={v} />
   if (v.type === 'formule') {
-    return <div className="mt-3 animate-fade-up rounded-xl border border-navy/10 bg-[#ffffff] p-3 text-center font-mono text-lg">{coloreFormule(v.formule)}</div>
+    return (
+      <div className="mt-3 flex animate-fade-up items-center gap-2 rounded-xl border-2 border-mint/45 bg-mint/15 px-4 py-3 shadow-sm">
+        <span className="shrink-0 font-mono text-sm italic text-mint/70">fx</span>
+        <span className="font-mono text-lg text-navy">{coloreFormule(v.formule)}</span>
+      </div>
+    )
   }
   if (v.type === 'parties') {
     return (

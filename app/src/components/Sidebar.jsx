@@ -15,7 +15,8 @@ export default function Sidebar({ retourDojo, onConnexion }) {
     <aside className="hidden w-72 shrink-0 flex-col gap-5 border-r border-navy/10 bg-cream/50 p-6 lg:flex">
       <button onClick={retourDojo} className="text-left">
         <p className="text-[11px] font-bold uppercase tracking-[.3em] text-mint">L'Art du Digital</p>
-        <h1 className="font-display text-3xl leading-none text-navy">EXCEL DOJO</h1>
+        <h1 className="font-display text-3xl leading-none text-navy">EXCEL ACADÉMIE</h1>
+        <p className="mt-1.5 text-[11px] leading-snug text-navy/55">La méthode Shaolin pour maîtriser Excel</p>
       </button>
 
       <div className="flex items-center gap-3">
@@ -23,7 +24,7 @@ export default function Sidebar({ retourDojo, onConnexion }) {
           <Shifu humeur={derniere ? 'content' : 'accueil'} size={62} />
         </div>
         <p className="text-xs leading-relaxed text-navy/70">
-          {derniere ? "Continue l'entraînement, élève." : 'Bienvenue dans le dojo, jeune élève.'}
+          {derniere ? "Continue l'entraînement, élève." : "Bienvenue à l'académie, jeune élève."}
         </p>
       </div>
 

@@ -5,11 +5,11 @@ import { MannequinBois } from './icons'
 import { CEINTURES } from '../lib/belts'
 
 const ETAPES = [
-  { humeur: 'accueil', dit: 'Bienvenue dans ton **dojo Excel**. Ici, on n\'apprend pas Excel par cœur : on s\'entraîne, geste après geste.' },
+  { humeur: 'accueil', dit: 'Bienvenue à **Excel Académie**. Ici, on n\'apprend pas Excel par cœur : on s\'entraîne, geste après geste.' },
   { humeur: 'content', dit: 'Tu vas progresser comme un artiste martial : de la **ceinture blanche** à la **ceinture noire**. Chaque chapitre maîtrisé te fait gagner une ceinture.', voie: true },
-  { humeur: 'pensif', dit: '**Règle du dojo n°1 :** la régularité bat l\'intensité. Un petit entraînement chaque jour vaut mieux qu\'une longue séance une fois par mois.' },
-  { humeur: 'pensif', dit: '**Règle du dojo n°2 :** ici, aucun jugement. Chaque erreur te rapproche de la maîtrise, elle fait partie du chemin.' },
-  { humeur: 'fier', dit: '**Règle du dojo n°3 :** prends ton temps et savoure chaque étape. Le Shifu t\'accompagne à chaque pas. Prêt(e) à commencer ?' },
+  { humeur: 'pensif', dit: '**Règle de l\'académie n°1 :** la régularité bat l\'intensité. Un petit entraînement chaque jour vaut mieux qu\'une longue séance une fois par mois.' },
+  { humeur: 'pensif', dit: '**Règle de l\'académie n°2 :** ici, aucun jugement. Chaque erreur te rapproche de la maîtrise, elle fait partie du chemin.' },
+  { humeur: 'fier', dit: '**Règle de l\'académie n°3 :** prends ton temps et savoure chaque étape. Le Shifu t\'accompagne à chaque pas. Prêt(e) à commencer ?' },
 ]
 
 // La Voie : les 7 ceintures, de la blanche à la noire.
@@ -26,7 +26,7 @@ function Voie() {
   )
 }
 
-// Tunnel d'entrée : l'arrivée au dojo, la Voie, et les règles, avant la première leçon.
+// Tunnel d'entrée : l'arrivée à l'académie, la Voie, et les règles, avant la première leçon.
 export default function Onboarding({ onTerminer }) {
   const [etape, setEtape] = useState(0)
   const s = ETAPES[etape]
@@ -35,7 +35,7 @@ export default function Onboarding({ onTerminer }) {
 
   return (
     <div className="relative flex min-h-screen flex-1 flex-col overflow-hidden bg-cream px-5 py-8">
-      {/* Décor du dojo en filigrane */}
+      {/* Décor de l'académie en filigrane */}
       <div className="pointer-events-none absolute -right-12 top-12 text-navy/5">
         <MannequinBois size={230} />
       </div>
@@ -45,7 +45,8 @@ export default function Onboarding({ onTerminer }) {
 
       <div className="z-10 mb-4 text-center">
         <p className="font-display text-[11px] uppercase tracking-[0.25em] text-mint">L'Art du Digital</p>
-        <h1 className="font-display text-4xl text-navy">Excel Dojo</h1>
+        <h1 className="font-display text-4xl text-navy">Excel Académie</h1>
+        <p className="mt-1.5 text-sm font-bold text-navy/55">La méthode Shaolin pour maîtriser Excel</p>
       </div>
 
       <div className="z-10 mx-auto flex w-full max-w-xl flex-1 flex-col justify-center">
@@ -55,7 +56,7 @@ export default function Onboarding({ onTerminer }) {
         </div>
 
         <div className="mt-6">
-          <Bouton onClick={avancer}>{dernier ? 'Entrer dans le dojo 🥋' : 'Continuer'}</Bouton>
+          <Bouton onClick={avancer}>{dernier ? 'Entrer dans l\'académie 🥋' : 'Continuer'}</Bouton>
           {!dernier && (
             <button onClick={onTerminer} className="mt-3 block w-full text-center text-xs text-navy/40 transition hover:text-navy/70">
               Passer l'intro

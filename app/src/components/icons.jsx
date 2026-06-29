@@ -1,4 +1,4 @@
-// Petites icônes SVG maison pour l'univers du dojo.
+// Petites icônes SVG maison pour l'univers de l'académie.
 
 // Tête de ninja (encarts + "Entraînement")
 export function NinjaIcon({ size = 28, className = '' }) {

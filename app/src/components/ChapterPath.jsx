@@ -70,7 +70,7 @@ export default function ChapterPath({ ch, estFait, tousFaits, onOuvrir, onQuitte
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex items-center gap-3 px-5 py-3">
-        <button onClick={onQuitter} aria-label="Retour au dojo" className="text-2xl leading-none text-navy/60 hover:text-navy">
+        <button onClick={onQuitter} aria-label="Retour à l'académie" className="text-2xl leading-none text-navy/60 hover:text-navy">
           ×
         </button>
         <div className="min-w-0">

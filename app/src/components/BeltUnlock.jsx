@@ -34,7 +34,7 @@ function Confetti() {
   )
 }
 
-// Le pic émotionnel du dojo : le déblocage de ceinture. Cérémonie festive.
+// Le pic émotionnel de l'académie : le déblocage de ceinture. Cérémonie festive.
 export default function BeltUnlock({ recompense, onContinuer }) {
   const info = ceintureInfo(recompense.ceinture_debloquee)
   return (
@@ -77,7 +77,7 @@ export default function BeltUnlock({ recompense, onContinuer }) {
       </div>
 
       <div className="z-10 mt-6 w-full max-w-xs animate-fade-up" style={{ animationDelay: '.75s' }}>
-        <Bouton onClick={onContinuer}>Retour au dojo</Bouton>
+        <Bouton onClick={onContinuer}>Retour à l'académie</Bouton>
       </div>
     </div>
   )
