@@ -4,8 +4,9 @@ import chapitre1 from '../../../chapitre-1.json'
 import chapitre2 from '../../../chapitre-2.json'
 import chapitre3 from '../../../chapitre-3.json'
 import chapitre4 from '../../../chapitre-4.json'
+import chapitre5 from '../../../chapitre-5.json'
 
-export const chapitres = [chapitre1, chapitre2, chapitre3, chapitre4]
+export const chapitres = [chapitre1, chapitre2, chapitre3, chapitre4, chapitre5]
 
 export const getChapitre = (n) => chapitres.find((c) => c.chapitre === n)
 

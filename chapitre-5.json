@@ -1,0 +1,183 @@
+{
+  "chapitre": 5,
+  "titre": "Outils particuliers & Fonctions particulières",
+  "partie": 1,
+  "niveau": 5,
+  "ceinture": "bleue",
+  "objectif": "Gagner en productivité avec les outils Rechercher/Remplacer et Convertir, puis découvrir et utiliser les fonctions particulières d'Excel : arrondis (ARRONDI, ARRONDI.INF/SUP, TRONQUE), fonctions de date (ANNEE, MOIS, JOURSEM, DATEDIF, jours ouvrés), de texte (TEXTE, GAUCHE, DROITE, STXT) et financières (VPM, VA, NPM).",
+  "note_pedago": "Chapitre COMPLET (7 lecons) : rechercherremplacer, convertir, fonctionsparticulieres (outils/apercu) + arrondis (ARRONDI/INF/SUP/TRONQUE + difference ARRONDI/TRONQUE, Ex.34-37), fonctionsdate (ANNEE/MOIS/JOURSEM/DATEDIF/NB.JOURS.OUVRES.INTL/SERIE.JOURS.OUVRES, Ex.39), fonctionstexte (TEXTE/GAUCHE/DROITE/STXT), fonctionsfinancieres (VPM rappel skippable + VA + NPM + focus VC, Ex.45-47) + quiz (8) + checklist (10). Memes regles que ch.3-4.",
+  "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
+  "modules": [
+    {
+      "id": "ch5-rechercherremplacer",
+      "type": "narration",
+      "lecon": "rechercherremplacer",
+      "titre": "Rechercher & Remplacer",
+      "xp": 30
+    },
+    {
+      "id": "ch5-convertir",
+      "type": "narration",
+      "lecon": "convertir",
+      "titre": "Convertir : séparer une colonne",
+      "xp": 30
+    },
+    {
+      "id": "ch5-fonctionsparticulieres",
+      "type": "narration",
+      "lecon": "fonctionsparticulieres",
+      "titre": "Aperçu des fonctions",
+      "xp": 30
+    },
+    {
+      "id": "ch5-arrondis",
+      "type": "narration",
+      "lecon": "arrondis",
+      "titre": "Les arrondis & le tronquage",
+      "xp": 30
+    },
+    {
+      "id": "ch5-fonctionsdate",
+      "type": "narration",
+      "lecon": "fonctionsdate",
+      "titre": "Les fonctions de date",
+      "xp": 30
+    },
+    {
+      "id": "ch5-fonctionstexte",
+      "type": "narration",
+      "lecon": "fonctionstexte",
+      "titre": "Les fonctions de texte",
+      "xp": 30
+    },
+    {
+      "id": "ch5-fonctionsfinancieres",
+      "type": "narration",
+      "lecon": "fonctionsfinancieres",
+      "titre": "Les fonctions financières : VPM, VA, NPM",
+      "xp": 30
+    },
+    {
+      "id": "ch5-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 6,
+      "total": 8,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.5 p222-223 (8 questions). reponses_correctes = index corrects (0-3). Determinees a partir de faits Excel. A spot-checker par Sihem (notamment Q4 NB.JOURS.OUVRES.INTL vs NETWORKDAYS = meme fonction FR/EN, et Q5 multi GAUCHE/STXT).",
+      "questions": [
+        {
+          "id": "ch5-qcm-01",
+          "question": "Quel raccourci clavier ouvre la boîte « Rechercher et remplacer » ?",
+          "options": ["Ctrl + F", "Ctrl + H", "Alt + R", "Ctrl + R"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch5-qcm-02",
+          "question": "Dans Convertir, quel séparateur cocher pour un espace ?",
+          "options": ["Virgule", "Point-virgule", "Tabulation", "Espace"],
+          "reponses_correctes": [3]
+        },
+        {
+          "id": "ch5-qcm-03",
+          "question": "Quelle formule arrondit toujours vers le bas ?",
+          "options": ["ARRONDI()", "ARRONDI.SUP()", "ARRONDI.INF()", "TRONQUE()"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch5-qcm-04",
+          "question": "Quelle fonction compte les jours ouvrés ?",
+          "options": ["NB.JOURS.OUVRES.INTL", "SERIE.JOURS.OUVRES", "DAYS360", "NETWORKDAYS"],
+          "reponses_correctes": [0],
+          "a_valider": true,
+          "note": "NB.JOURS.OUVRES.INTL est le nom francais ; NETWORKDAYS est l'equivalent anglais de la meme famille. L'ebook enseigne NB.JOURS.OUVRES.INTL."
+        },
+        {
+          "id": "ch5-qcm-05",
+          "question": "Quelle(s) formule(s) extrai(en)t les 3 caractères de gauche de A2 ?",
+          "options": ["DROITE(A2;3)", "GAUCHE(A2;3)", "STXT(A2;1;3)", "MILIEU(A2;3;1)"],
+          "reponses_correctes": [1, 2],
+          "multi": true,
+          "a_valider": true,
+          "note": "GAUCHE(A2;3) extrait les 3 premiers caracteres ; STXT(A2;1;3) aussi (a partir de la position 1, 3 caracteres). MILIEU n'existe pas en francais (c'est STXT)."
+        },
+        {
+          "id": "ch5-qcm-06",
+          "question": "À quoi sert la fonction VPM ?",
+          "options": [
+            "Calculer le nombre de périodes nécessaires pour un prêt",
+            "Calculer la valeur actuelle d'un investissement",
+            "Calculer le montant des paiements périodiques d'un prêt à taux constant",
+            "Calculer la somme des paiements déjà effectués"
+          ],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch5-qcm-07",
+          "question": "Quelle option permet de spécifier les jours fériés à exclure dans NB.JOURS.OUVRES ?",
+          "options": [
+            "L'argument [weekend]",
+            "L'argument [jours_fériés]",
+            "Le code numérique du week-end",
+            "Aucune, Excel ne gère pas les jours fériés"
+          ],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch5-qcm-08",
+          "question": "À quoi sert la fonction NPM dans Excel ?",
+          "options": [
+            "Calculer le nombre de périodes d'un prêt ou d'un investissement",
+            "Calculer le montant des paiements périodiques",
+            "Calculer la valeur actuelle d'un investissement",
+            "Calculer le taux d'intérêt périodique"
+          ],
+          "reponses_correctes": [0]
+        }
+      ]
+    },
+    {
+      "id": "ch5-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist de l'ebook ch.5 (p224), reprise verbatim.",
+      "a_valider": false,
+      "items": [
+        "J'utilise Ctrl + H pour ouvrir Rechercher/Remplacer",
+        "Je sais paramétrer Rechercher et Remplacer, puis lancer « Remplacer tout » ou « Suivant/Remplacer »",
+        "J'utilise Données > Convertir pour séparer prénom et nom (séparateur Espace, virgule, etc.)",
+        "Je prépare des colonnes vides avant Convertir et je vérifie l'aperçu du découpage",
+        "Je maîtrise les fonctions d'arrondi : ARRONDI(), ARRONDI.INF(), ARRONDI.SUP() et TRONQUE()",
+        "Je sais extraire du texte avec GAUCHE(), DROITE() et STXT()",
+        "Je calcule les écarts de dates avec DATEDIF() et les jours ouvrés avec NB.JOURS.OUVRES.INTL()",
+        "Je sais insérer une fonction via le bouton fx et remplir ses arguments dans l'assistant",
+        "Je maîtrise les fonctions financières VPM, VA et NPM pour simuler mensualités, VA et durée de prêt",
+        "Je formate des nombres et des dates avec la fonction TEXTE(valeur; \"format\")"
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["rechercher", "remplacer", "ctrl h", "remplacer tout"],
+      "question": "Comment remplacer un mot dans tout mon tableau ?",
+      "reponse": "Ctrl + H (sur Mac : ⌘ + Maj + H) ouvre « Rechercher et remplacer ». Tape la valeur à trouver dans Rechercher, la nouvelle dans Remplacer par, puis clique sur « Remplacer tout ». Sinon, passe par Accueil > groupe Édition > la loupe > Remplacer."
+    },
+    {
+      "mots_cles": ["convertir", "séparer", "colonne", "prénom nom", "délimité"],
+      "question": "Comment séparer une colonne (prénom et nom) en deux ?",
+      "reponse": "Sélectionne la colonne, puis Données > Convertir > Délimité > coche le séparateur (Espace pour « paul dupont »). Vérifie l'aperçu, choisis une destination dans des colonnes vides (pour ne rien écraser), puis Terminer."
+    },
+    {
+      "mots_cles": ["fonction", "fx", "trouver", "catégorie", "bibliothèque"],
+      "question": "Où trouver les fonctions et comment choisir la bonne ?",
+      "reponse": "Onglet Formules > Bibliothèque de fonctions, classées par catégorie (Texte, Date, Logique, Financières…). Pas besoin de tout retenir : clique sur fx (Insérer une fonction), tape ce que tu veux faire, Excel propose la bonne fonction et te guide."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "bleue",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture bleue débloquée. Tu maîtrises les outils qui font gagner des heures et tu sais où piocher la bonne fonction. Tu deviens redoutable."
+  }
+}

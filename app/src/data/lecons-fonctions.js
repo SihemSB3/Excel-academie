@@ -1589,4 +1589,384 @@ const ARGUMENTSVPM = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM }
+// ======================================================================
+// CHAPITRE 5 — Outils particuliers & Fonctions particulières (ceinture bleue)
+// Construit en plusieurs temps. PARTIE 1 : les outils (Rechercher/Remplacer,
+// Convertir) + l'aperçu des fonctions. PARTIE 2 (à venir) : arrondis, dates,
+// texte, financières. Mêmes règles que ch.3-4 (un visuel par explication…).
+// ======================================================================
+const U5 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX5 = {
+  ex32: { titre: 'Exercice 32 · Outils Rechercher & Remplacer', url: U5('14vsQh2c4uGF2MnBamFbmw1fYtgM3zGCH') },
+  ex33: { titre: 'Exercice 33 · Outils Convertir', url: U5('1sur2I43EWLIEJ_JVD0EtIFZEtBY5S0P8') },
+  ex34: { titre: 'Exercice 34 · La formule ARRONDI', url: U5('1aMgQmQ7cDWDaAHdydk6BanjmEJvDpkkB') },
+  ex35: { titre: 'Exercice 35 · La formule ARRONDI.INF', url: U5('1G0BChNm5lJQhVl2eg8hCK8gR6PO1h-DN') },
+  ex36: { titre: 'Exercice 36 · La formule ARRONDI.SUP', url: U5('12v9bE2CBvo04swEH_hh8NulrTUW1TaZs') },
+  ex37: { titre: 'Exercice 37 · La formule TRONQUE', url: U5('1lv2z88X7R7aGxfVeR0Qpr8I5YaPoNnaE') },
+  ex39: { titre: 'Exercice 39 · Quelques fonctions dates', url: U5('16xVopbr8ckfE2xNjewwUMrtaTjAZme8O') },
+  ex45: { titre: 'Exercice 45 · La fonction VPM', url: U5('1Knkc-_HzjmKXvYCwv8r-Svi8VXcPd_Ed') },
+  ex46: { titre: 'Exercice 46 · La fonction VA', url: U5('1d-vITQUCEhKjJE6zFtYWafKbhj8I7pXy') },
+  ex47: { titre: 'Exercice 47 · La fonction NPM', url: U5('1cj0xGn9VA8AbM7w7uiOjlmW54c1CnDIN') },
+}
+
+// --- Leçon 1 : Rechercher & Remplacer ---
+const RR = { A1: { t: 'Élève', entete: true }, B1: { t: 'Note', entete: true }, A2: { t: 'Léa' }, B2: { t: '14', num: true }, A3: { t: 'Tom' }, B3: { t: '9,5', num: true }, A4: { t: 'Sam' }, B4: { t: '16', num: true }, A5: { t: 'Lou' }, B5: { t: '9,5', num: true } }
+const tabRR = (cells) => ({ type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { ...RR, ...cells } })
+
+const RECHERCHERREMPLACER = {
+  id: 'fn-rechercherremplacer',
+  titre: 'Rechercher & Remplacer',
+  exercices: [EX5.ex32],
+  narration: [
+    { humeur: 'accueil', dit: 'Quand un tableau est rempli de données (noms, notes, statuts…), tu peux avoir besoin de modifier plein de cellules d\'un coup. Plutôt que de les chercher une à une, Excel les trouve et les remplace en un clic.' },
+    {
+      humeur: 'pensif',
+      dit: 'À quoi ça sert, concrètement :',
+      visuel: { type: 'parties', items: [{ label: 'Corriger une erreur répétée dans une colonne' }, { label: 'Remplacer un mot par un autre (ex : « Non répondu » → « À relancer »)' }, { label: 'Harmoniser des libellés en une seule fois' }] },
+    },
+    { humeur: 'accueil', dit: 'Exemple : dans une colonne de notes, on veut remplacer toutes les notes « 9,5 » par « 10 ».', visuel: tabRR({ B3: { t: '9,5', num: true, ref: true }, B5: { t: '9,5', num: true, ref: true } }) },
+    {
+      humeur: 'pensif',
+      dit: 'On passe par le ruban, pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Via le ruban',
+        blocs: [
+          { etapes: ['Va dans l\'onglet **Accueil**', 'Clique sur la **loupe** (Rechercher & sélectionner) dans le groupe **Édition**', 'Choisis **Remplacer…**'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Édition', groupes: [{ icone: '∑', label: 'Somme' }, { icone: '⇅', label: 'Trier & filtrer' }, { icone: '🔍', label: 'Rechercher & sélectionner', actif: true }] } },
+          { etapes: ['Dans **Rechercher**, tape la valeur à trouver (9,5)', 'Dans **Remplacer par**, tape la nouvelle valeur (10)'], depart: 4 },
+          { capture: { type: 'champs', titre: 'Rechercher et remplacer', champs: [{ l: 'Rechercher', v: '9,5', actif: true }, { l: 'Remplacer par', v: '10' }] } },
+          { etapes: ['Clique sur **Remplacer tout** (si tu es sûr·e), ou **Suivant** puis **Remplacer** au cas par cas'], depart: 6 },
+          { capture: tabRR({ B3: { t: '10', num: true, vert: true }, B5: { t: '10', num: true, vert: true } }) },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le raccourci à retenir, le plus rapide :',
+      visuel: { type: 'encart', label: 'Astuce clavier', texte: '**Ctrl + H** ouvre directement « Rechercher et remplacer ». Sur **Mac** : **⌘ + Maj + H**.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quel raccourci ouvre « Rechercher et remplacer » ?',
+      visuel: { type: 'question', options: ['Ctrl + H', 'Ctrl + F'], bonne: 0, explication: 'Ctrl + H ouvre Remplacer. (Ctrl + F ouvre seulement Rechercher, sans le remplacement.)' },
+    },
+    { humeur: 'fier', dit: 'Tu corriges tout un tableau en un clic. Premier pas de la ceinture bleue. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : Convertir (séparer une colonne) ---
+const CONVERTIR = {
+  id: 'fn-convertir',
+  titre: 'Convertir : séparer une colonne',
+  exercices: [EX5.ex33],
+  narration: [
+    { humeur: 'accueil', dit: 'Tu as une colonne qui mélange deux infos, par exemple « paul dupont » (prénom + nom), et tu veux les séparer en deux colonnes ? L\'outil **Convertir** fait ça automatiquement. Parfait pour structurer un fichier client mal formaté.' },
+    { humeur: 'pensif', dit: 'Au départ, tout est collé dans une seule colonne :', visuel: { type: 'tableur', cols: ['A'], rows: [1, 2, 3], cells: { A1: { t: 'Nom complet', entete: true }, A2: { t: 'paul dupont' }, A3: { t: 'marie curie' } }, legende: 'Prénom et nom sont dans la même cellule.' } },
+    {
+      humeur: 'pensif',
+      dit: 'On sépare la colonne, pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Séparer une colonne avec Convertir',
+        blocs: [
+          { etapes: ['Sélectionne la colonne à découper', 'Va dans **Données > Convertir** (groupe **Outils de données**)'] },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🔀', label: 'Convertir', actif: true }, { icone: '🧹', label: 'Supprimer les doublons' }, { icone: '✓', label: 'Validation des données' }] } },
+          { etapes: ['Choisis **Délimité**, puis **Suivant**'], depart: 3 },
+          { capture: { type: 'listedialog', titre: 'Assistant Conversion (étape 1)', intro: 'Type de données d\'origine :', cases: [{ label: 'Délimité (séparé par des espaces, virgules…)', coche: true }, { label: 'Largeur fixe', coche: false }], ok: 'Suivant' } },
+          { etapes: ['Coche le **séparateur** (ici **Espace**) : un aperçu du découpage s\'affiche en direct', 'Clique sur **Suivant**'], depart: 4 },
+          { capture: { type: 'listedialog', titre: 'Assistant Conversion (étape 2)', intro: 'Séparateurs :', cases: [{ label: 'Tabulation', coche: false }, { label: 'Point-virgule', coche: false }, { label: 'Virgule', coche: false }, { label: 'Espace', coche: true }], ok: 'Suivant' } },
+          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'paul', vert: true }, B1: { t: 'dupont', vert: true }, A2: { t: 'marie', vert: true }, B2: { t: 'curie', vert: true } }, legende: 'Aperçu : le prénom d\'un côté, le nom de l\'autre.' } },
+          { etapes: ['Choisis la **Destination** (ex : $B$1 pour garder l\'original en colonne A), puis clique sur **Terminer**'], depart: 6 },
+          { capture: { type: 'champs', titre: 'Assistant Conversion (étape 3)', champs: [{ l: 'Destination', v: '=$B$1', actif: true }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Les pièges à éviter :',
+      visuel: { type: 'encart', label: 'Erreurs fréquentes', liste: ['Oublier de **prévoir des colonnes vides à droite** : tu risques d\'écraser des données existantes.', 'Cliquer sur **Suivant** trop vite, sans vérifier l\'aperçu du découpage.', 'Croire que Convertir **modifie** le texte : en réalité, il le **copie** dans d\'autres cellules.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour séparer « paul dupont » (un espace entre les deux), quel séparateur coches-tu ?',
+      visuel: { type: 'question', options: ['Espace', 'Point-virgule'], bonne: 0, explication: 'Le prénom et le nom sont séparés par un espace, donc on coche « Espace ». (Le point-virgule servirait pour « paul;dupont ».)' },
+    },
+    { humeur: 'fier', dit: 'Une colonne en bazar devient un tableau propre, en quelques clics. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : Aperçu des fonctions particulières ---
+const FONCTIONSPARTICULIERES = {
+  id: 'fn-fonctionsparticulieres',
+  titre: 'Aperçu des fonctions',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Les fonctions Excel automatisent, calculent, vérifient, comparent… Bref, elles te font gagner du temps et évitent les erreurs. Bonne nouvelle : avec quelques fonctions bien choisies, tu fais déjà beaucoup, sans être expert·e.' },
+    {
+      humeur: 'pensif',
+      dit: 'Où les trouver ? Toutes rangées par familles.',
+      visuel: {
+        type: 'methode',
+        titre: 'Où trouver les fonctions',
+        blocs: [
+          { etapes: ['Va dans l\'onglet **Formules**', 'Groupe **Bibliothèque de fonctions** : les fonctions y sont classées par catégorie'] },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer une fonction', actif: true }, { icone: '💰', label: 'Financières' }, { icone: '📅', label: 'Date & heure' }, { icone: '🔤', label: 'Texte' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Les grandes familles de fonctions :',
+      visuel: { type: 'parties', items: [{ label: '**Math & trigo** : arrondis, sommes conditionnelles…' }, { label: '**Texte** : extraire un mot, reformater du texte' }, { label: '**Date & heure** : plannings, durées, jours ouvrés' }, { label: '**Logique** : SI, ET, OU…' }, { label: '**Financières** : simuler un prêt, une mensualité' }, { label: '**Statistiques** : comptages, moyennes, médianes' }, { label: '**Recherche & référence** : RECHERCHEV, RECHERCHEX…' }] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Le plus rassurant :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Tu **n\'as pas besoin de retenir toutes les fonctions** ! Clique sur **fx** (Insérer une fonction), tape ce que tu veux faire (« moyenne », « arrondir »…), et Excel te propose la bonne fonction et t\'accompagne pas à pas.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Voici les fonctions à connaître, qu\'on va voir dans ce chapitre et les suivants :',
+      visuel: { type: 'encart', label: 'Les fonctions à connaître', liste: ['**Texte** : GAUCHE(), DROITE(), STXT(), TEXTE(), CONCAT()', '**Math** : ARRONDI(), ARRONDI.SUP(), ARRONDI.INF(), TRONQUE()', '**Logique** : SI(), SI.CONDITIONS(), ET(), OU()', '**Date & heure** : DATEDIF(), AUJOURDHUI(), NB.JOURS.OUVRES.INTL()', '**Recherche** : RECHERCHEV(), RECHERCHEX(), INDEX(), EQUIV()', '**Statistiques** : NB.SI(), SOMME.SI()', '**Financières** : VPM(), VA(), NPM()'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Tu ne te souviens plus du nom d\'une fonction. Que fais-tu ?',
+      visuel: { type: 'question', options: ['Je clique sur fx et je tape ce que je veux faire', 'J\'abandonne, c\'est trop dur'], bonne: 0, explication: 'Le bouton fx (Insérer une fonction) te laisse décrire ton besoin en mots, et Excel propose la bonne fonction. Pas besoin de tout retenir !' },
+    },
+    { humeur: 'fier', dit: 'Tu sais où chercher et comment te faire aider. Ta boîte à outils est ouverte. Bravo ! 🎉' },
+  ],
+}
+
+// ====================== CHAPITRE 5 — PARTIE 2 : les fonctions ======================
+
+// --- Leçon 4 : Les arrondis & le tronquage ---
+const tabArr5 = (valeur, formule, resultat, entete) => ({
+  type: 'tableur',
+  cols: ['A', 'B'],
+  rows: [1, 2],
+  cells: { A1: { t: 'Valeur', entete: true }, B1: { t: entete || 'Résultat', entete: true }, A2: { t: valeur, num: true, ...(formule && formule.includes('A2') ? { ref: true } : {}) }, ...(resultat ? { B2: resultat } : formule ? { B2: { t: formule } } : {}) },
+  actif: 'B2',
+  formule,
+})
+
+const ARRONDIS = {
+  id: 'fn-arrondis',
+  titre: 'Les arrondis & le tronquage',
+  exercices: [EX5.ex34, EX5.ex35, EX5.ex36, EX5.ex37],
+  narration: [
+    { humeur: 'accueil', dit: 'Arrondir ou tronquer un nombre, c\'est utile pour présenter des prix proprement, simplifier un résultat ou respecter une contrainte pro. Excel a une petite famille de fonctions pour ça.' },
+    { humeur: 'pensif', dit: '**ARRONDI** arrondit un nombre au plus proche, selon le nombre de décimales que tu choisis.', visuel: { type: 'formule', formule: '=ARRONDI(nombre ; no_chiffres)' } },
+    {
+      humeur: 'pensif',
+      dit: 'Le 2e argument, **no_chiffres**, décide où on arrondit :',
+      visuel: { type: 'encart', label: 'Le rôle de no_chiffres', liste: ['**no_chiffres > 0** : arrondi aux décimales (ex : 2 = deux chiffres après la virgule).', '**no_chiffres = 0** : arrondi à l\'entier le plus proche.', '**no_chiffres < 0** : arrondi à gauche de la virgule (ex : -2 = à la centaine).'] },
+    },
+    { humeur: 'fier', dit: 'Exemple : =ARRONDI(12,8 ; 0) donne 13 (12,8 est plus proche de 13 que de 12).', visuel: tabArr5('12,8', '=ARRONDI(A2;0)', { t: '13', num: true, vert: true }) },
+    { humeur: 'accueil', dit: '**ARRONDI.INF** arrondit **toujours vers le bas** (vers zéro). Pratique pour ne pas surestimer un résultat (budgets, prévisions prudentes).', visuel: { type: 'formule', formule: '=ARRONDI.INF(nombre ; no_chiffres)' } },
+    {
+      humeur: 'pensif',
+      dit: 'On la construit pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire ARRONDI.INF',
+        blocs: [
+          { etapes: ['Clique dans une cellule vide', 'Tape **=** puis les premières lettres', 'Clique sur la suggestion **ARRONDI.INF**'] },
+          { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=ARRONDI', items: [{ nom: 'ARRONDI', desc: 'Arrondit un nombre au nombre de chiffres indiqué.' }, { nom: 'ARRONDI.INF', desc: 'Arrondit un nombre en tendant vers zéro (vers le bas).' }, { nom: 'ARRONDI.SUP' }, { nom: 'ARRONDI.AU.MULTIPLE' }], selection: 1 } },
+          { etapes: ['Clique sur la cellule à arrondir, tape **;** puis le nombre de décimales (0)', 'Ferme la parenthèse, puis **Entrée**'], depart: 4 },
+          { capture: tabArr5('76,3', '=ARRONDI.INF(A2;0)', { t: '76', num: true, vert: true }) },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Trois exemples pour bien voir :',
+      visuel: { type: 'encart', label: 'ARRONDI.INF en exemples', liste: ['=ARRONDI.INF(76,3 ; 0) → **76** (entier juste en dessous).', '=ARRONDI.INF(3,14159 ; 3) → **3,141** (coupe après 3 décimales).', '=ARRONDI.INF(31415 ; -2) → **31400** (centaine inférieure).'] },
+    },
+    { humeur: 'accueil', dit: '**ARRONDI.SUP** fait l\'inverse : il arrondit **toujours vers le haut**. Idéal pour prévoir une marge (prix, temps, stocks).', visuel: { type: 'formule', formule: '=ARRONDI.SUP(nombre ; no_chiffres)' } },
+    {
+      humeur: 'pensif',
+      dit: 'Les mêmes valeurs, arrondies vers le haut :',
+      visuel: { type: 'encart', label: 'ARRONDI.SUP en exemples', liste: ['=ARRONDI.SUP(76,3 ; 0) → **77** (entier juste au-dessus).', '=ARRONDI.SUP(3,14159 ; 3) → **3,142** (vers le haut à la 3e décimale).', '=ARRONDI.SUP(31415 ; -2) → **31500** (centaine supérieure).'] },
+    },
+    { humeur: 'accueil', dit: '**TRONQUE** ne fait pas d\'arrondi du tout : il **coupe** simplement la partie qu\'on ne garde pas. Le résultat reste toujours inférieur ou égal à la valeur d\'origine.', visuel: { type: 'formule', formule: '=TRONQUE(nombre ; no_chiffres)' } },
+    {
+      humeur: 'pensif',
+      dit: 'Les mêmes valeurs, tronquées :',
+      visuel: { type: 'encart', label: 'TRONQUE en exemples', liste: ['=TRONQUE(76,3 ; 0) → **76** (supprime la décimale, sans arrondir).', '=TRONQUE(3,14159 ; 3) → **3,141** (coupe après 3 décimales).', '=TRONQUE(31415 ; -2) → **31400** (coupe à la centaine).'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La différence clé entre ARRONDI et TRONQUE :',
+      visuel: { type: 'encart', label: 'ARRONDI vs TRONQUE', liste: ['**ARRONDI** regarde la valeur et arrondit au plus proche : 12,8 → **13**.', '**TRONQUE** ne regarde rien, il coupe : 12,8 → **12**.', 'Pour un nombre positif, TRONQUE donne le même résultat qu\'ARRONDI.INF, mais c\'est une simple coupe, pas un arrondi.'] },
+    },
+    { humeur: 'accueil', dit: 'Côte à côte : la même valeur 12,8, traitée par les deux.', visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Valeur', entete: true }, B1: { t: 'ARRONDI', entete: true }, C1: { t: 'TRONQUE', entete: true }, A2: { t: '12,8', num: true }, B2: { t: '13', num: true, vert: true }, C2: { t: '12', num: true, vert: true } }, legende: 'ARRONDI(12,8;0) = 13, mais TRONQUE(12,8;0) = 12.' } },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle fonction arrondit **toujours vers le bas** ?',
+      visuel: { type: 'question', options: ['ARRONDI.INF', 'ARRONDI.SUP'], bonne: 0, explication: 'ARRONDI.INF arrondit toujours vers le bas (vers zéro). ARRONDI.SUP, lui, va toujours vers le haut.' },
+    },
+    { humeur: 'fier', dit: 'ARRONDI, ARRONDI.INF, ARRONDI.SUP, TRONQUE : tu choisis exactement comment présenter tes nombres. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 5 : Les fonctions de date ---
+const tabDate = (a2, formule, resultat, libA) => ({
+  type: 'tableur',
+  cols: ['A', 'B'],
+  rows: [1, 2],
+  cells: { A1: { t: libA || 'Date', entete: true }, B1: { t: 'Résultat', entete: true }, A2: { t: a2, ...(formule && formule.includes('A2') ? { ref: true } : {}) }, ...(resultat ? { B2: resultat } : formule ? { B2: { t: formule } } : {}) },
+  actif: 'B2',
+  formule,
+})
+
+const FONCTIONSDATE = {
+  id: 'fn-fonctionsdate',
+  titre: 'Les fonctions de date',
+  exercices: [EX5.ex39],
+  narration: [
+    { humeur: 'accueil', dit: 'Les fonctions de date servent à découper une date (année, mois, jour) ou à calculer des durées : ancienneté, délai, jours restants, jours ouvrés… Très utile pour les plannings et les suivis.' },
+    { humeur: 'pensif', dit: '**ANNEE** renvoie l\'année d\'une date, **MOIS** renvoie le numéro du mois (1 = janvier, 12 = décembre).', visuel: { type: 'formule', formule: '=ANNEE(date)   =MOIS(date)' } },
+    {
+      humeur: 'pensif',
+      dit: 'On construit ANNEE pas à pas (MOIS marche pareil).',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire ANNEE',
+        blocs: [
+          { etapes: ['Clique dans une cellule vide', 'Tape **=** puis les premières lettres, clique sur **ANNEE**', 'Clique sur la cellule qui contient la date (A2)', 'Ferme la parenthèse, puis **Entrée**'] },
+          { capture: tabDate('11/05/2025', '=ANNEE(A2)', { t: '2025', num: true, vert: true }) },
+          { note: 'Tu peux aussi saisir la date directement entre guillemets : =ANNEE("11/05/2025").' },
+        ],
+      },
+    },
+    { humeur: 'accueil', dit: '**JOURSEM** renvoie le jour de la semaine sous forme de chiffre. Le 2e argument, **type_retour**, choisit par quel jour commence la semaine.', visuel: { type: 'formule', formule: '=JOURSEM(date ; type_retour)' } },
+    {
+      humeur: 'pensif',
+      dit: 'Les valeurs de type_retour :',
+      visuel: { type: 'encart', label: 'L\'option type_retour', liste: ['**1** (ou vide) : 1 = dimanche … 7 = samedi.', '**2** : 1 = lundi … 7 = dimanche.', '**3** : 0 = lundi … 6 = dimanche.'] },
+    },
+    { humeur: 'accueil', dit: '**DATEDIF** calcule la durée entre deux dates (années, mois ou jours). Parfait pour une ancienneté ou un délai.', visuel: { type: 'formule', formule: '=DATEDIF(date_début ; date_fin ; "unité")' } },
+    {
+      humeur: 'pensif',
+      dit: 'L\'unité (entre guillemets) choisit ce que tu calcules :',
+      visuel: { type: 'encart', label: 'Les unités de DATEDIF', liste: ['**"Y"** : nombre d\'années entières.', '**"M"** : nombre de mois entiers.', '**"D"** : nombre total de jours.', '**"YM"**, **"MD"**, **"YD"** : le reste (mois ou jours) pour une durée détaillée, ex : « 35 ans, 3 mois et 2 jours ».'] },
+    },
+    { humeur: 'pensif', dit: 'Exemple : du 31/03/1990 au 03/07/2025, =DATEDIF(A2 ; B2 ; "Y") donne 35 années.', visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Début', entete: true }, B1: { t: 'Fin', entete: true }, C1: { t: 'Ancienneté', entete: true }, A2: { t: '31/03/1990', ref: true }, B2: { t: '03/07/2025', ref: true }, C2: { t: '35 ans', vert: true } }, formule: '=DATEDIF(A2;B2;"Y")', actif: 'C2' } },
+    {
+      humeur: 'pensif',
+      dit: 'Un détail à connaître sur DATEDIF :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Quand tu tapes =DATEDIF, **aucune suggestion ne s\'affiche**, c\'est normal : écris-la en entier. Combine-la avec **AUJOURDHUI()** pour une durée qui se met à jour toute seule.' },
+    },
+    { humeur: 'accueil', dit: '**NB.JOURS.OUVRES.INTL** compte les jours travaillés entre deux dates (hors week-ends et jours fériés).', visuel: { type: 'formule', formule: '=NB.JOURS.OUVRES.INTL(début ; fin ; [weekend] ; [fériés])' } },
+    {
+      humeur: 'pensif',
+      dit: 'Ses deux arguments facultatifs, bien pratiques :',
+      visuel: { type: 'encart', label: 'Les options', liste: ['**[weekend]** : adapte les jours non travaillés (utile si ton week-end est décalé, ex : vendredi-samedi).', '**[jours_fériés]** : une plage de cellules (ex : F2:F10) ou une liste de dates à exclure, pour un total plus juste.'] },
+    },
+    { humeur: 'accueil', dit: '**SERIE.JOURS.OUVRES** fait l\'inverse : à partir d\'une date, elle ajoute (ou retire) un nombre de jours ouvrés pour trouver une date d\'échéance ou de livraison.', visuel: { type: 'formule', formule: '=SERIE.JOURS.OUVRES(début ; nb_jours ; [fériés])' } },
+    {
+      humeur: 'pensif',
+      dit: 'Une astuce et des erreurs à éviter :',
+      visuel: { type: 'encart', label: 'À retenir', liste: ['Utilise un **nombre négatif** pour remonter dans le temps (ex : -10 = reculer de 10 jours ouvrés).', 'Vérifie que tes dates sont bien au **format date** (pas du texte), sinon le calcul est faussé.', 'Pense à exclure les **jours fériés**, sinon tes échéances seront décalées.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle fonction compte les jours ouvrés entre deux dates ?',
+      visuel: { type: 'question', options: ['NB.JOURS.OUVRES.INTL', 'ANNEE'], bonne: 0, explication: 'NB.JOURS.OUVRES.INTL compte les jours travaillés (hors week-ends et fériés). ANNEE, elle, extrait juste l\'année d\'une date.' },
+    },
+    { humeur: 'fier', dit: 'Années, mois, jours de la semaine, durées, jours ouvrés : tu pilotes le temps dans Excel. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 6 : Les fonctions de texte ---
+const tabTxt = (a2, formule, resultat, libA) => ({
+  type: 'tableur',
+  cols: ['A', 'B'],
+  rows: [1, 2],
+  cells: { A1: { t: libA || 'Texte', entete: true }, B1: { t: 'Résultat', entete: true }, A2: { t: a2, ...(formule && formule.includes('A2') ? { ref: true } : {}) }, ...(resultat ? { B2: resultat } : formule ? { B2: { t: formule } } : {}) },
+  actif: 'B2',
+  formule,
+})
+
+const FONCTIONSTEXTE = {
+  id: 'fn-fonctionstexte',
+  titre: 'Les fonctions de texte',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Les fonctions de texte servent à reformater ou découper du texte : afficher une date joliment, extraire un prénom, isoler un code… Pratique pour nettoyer un fichier.' },
+    { humeur: 'pensif', dit: '**TEXTE** affiche une valeur (date, nombre…) dans le format exact que tu veux, écrit entre guillemets.', visuel: { type: 'formule', formule: '=TEXTE(valeur ; "format")' } },
+    {
+      humeur: 'pensif',
+      dit: 'Le « format » est une **chaîne** (du texte entre guillemets). Pour une date, on combine ces lettres :',
+      visuel: { type: 'encart', label: 'Les codes de format de date', liste: ['**j / jj** : jour sans / avec le zéro (5 ou 05).', '**mmm / mmmm** : mois en abrégé (mar) / en entier (mars).', '**aa / aaaa** : année sur 2 / 4 chiffres (25 ou 2025).'] },
+    },
+    { humeur: 'fier', dit: 'Exemple : =TEXTE(A2 ; "jj mmmm aaaa") transforme 15/04/2025 en « 15 avril 2025 ».', visuel: tabTxt('15/04/2025', '=TEXTE(A2;"jj mmmm aaaa")', { t: '15 avril 2025', vert: true }) },
+    {
+      humeur: 'pensif',
+      dit: 'TEXTE ne sert pas qu\'aux dates :',
+      visuel: { type: 'encart', label: 'Autres usages', liste: ['=TEXTE(123 ; "00000") → « 00123 » (codes clients à longueur fixe).', '=TEXTE(2,5 ; "0,000 kg") → « 2,500 kg » (ajoute automatiquement l\'unité).'] },
+    },
+    { humeur: 'accueil', dit: '**GAUCHE** extrait les premiers caractères (par la gauche), **DROITE** les derniers (par la droite).', visuel: { type: 'formule', formule: '=GAUCHE(texte ; no_car)   =DROITE(texte ; no_car)' } },
+    {
+      humeur: 'pensif',
+      dit: 'On construit GAUCHE pas à pas (DROITE marche pareil).',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire GAUCHE',
+        blocs: [
+          { etapes: ['Clique dans la cellule cible', 'Tape **=GAUCHE(**, clique sur la cellule de texte (A2)', 'Tape **;** puis le nombre de caractères à garder', 'Ferme la parenthèse, puis **Entrée**'] },
+          { capture: tabTxt('FR-2025-001', '=GAUCHE(A2;2)', { t: 'FR', vert: true }, 'Code') },
+          { note: 'GAUCHE et DROITE sont parfaites pour isoler un préfixe (code pays, code produit) ou créer une clé pour un RECHERCHEV.' },
+        ],
+      },
+    },
+    { humeur: 'accueil', dit: '**STXT** extrait un morceau **au milieu** : tu indiques à quelle position commencer et combien de caractères prendre.', visuel: { type: 'formule', formule: '=STXT(texte ; position_départ ; nb_caractères)' } },
+    { humeur: 'pensif', dit: 'Exemple : dans « FR-2025-001 », =STXT(A2 ; 4 ; 4) prend 4 caractères à partir du 4e → « 2025 ».', visuel: tabTxt('FR-2025-001', '=STXT(A2;4;4)', { t: '2025', vert: true }, 'Code') },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour extraire les 3 premiers caractères de A2, tu écris...',
+      visuel: { type: 'question', options: ['=GAUCHE(A2;3)', '=DROITE(A2;3)'], bonne: 0, explication: 'GAUCHE part du début (la gauche) et prend le nombre de caractères demandé. DROITE, elle, part de la fin.' },
+    },
+    { humeur: 'fier', dit: 'TEXTE, GAUCHE, DROITE, STXT : tu mets en forme et tu découpes le texte comme tu veux. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 7 : Les fonctions financières ---
+const FONCTIONSFINANCIERES = {
+  id: 'fn-fonctionsfinancieres',
+  titre: 'Les fonctions financières : VPM, VA, NPM',
+  exercices: [EX5.ex45, EX5.ex46, EX5.ex47],
+  narration: [
+    { humeur: 'accueil', dit: 'Trois fonctions financières à connaître pour modéliser un prêt ou un investissement : **VPM** (la mensualité), **VA** (la valeur actuelle) et **NPM** (le nombre de paiements).' },
+    { humeur: 'pensif', dit: 'Tu connais déjà **VPM** (ceinture verte) : elle calcule la **mensualité** d\'un prêt. Petit rappel, et si tu maîtrises, utilise « Je connais, passer » en haut.', visuel: { type: 'formule', formule: '=VPM(taux ; nb_périodes ; valeur_actuelle)' } },
+    { humeur: 'pensif', dit: 'Exemple : 15 000 € à 5 % par an sur 120 mois → =VPM(5%/12 ; 120 ; -15000) ≈ -159,10 €/mois.', visuel: tabVPM(true) },
+    { humeur: 'accueil', dit: '**VA (Valeur Actuelle)** dit combien vaut **aujourd\'hui** une série de versements futurs. Utile pour estimer un flux de loyers, ou savoir combien investir pour atteindre un objectif.', visuel: { type: 'formule', formule: '=VA(taux ; n_périodes ; vpm ; [vc] ; [type])' } },
+    {
+      humeur: 'pensif',
+      dit: 'Ses arguments :',
+      visuel: { type: 'encart', label: 'Les arguments de VA', liste: ['**Taux** : taux d\'intérêt par période (taux annuel ÷ 12 pour du mensuel).', '**N_périodes** : nombre total de paiements.', '**VPM** : montant de chaque paiement (négatif si c\'est une sortie d\'argent).', '**[VC]** et **[Type]** : facultatifs (valeur finale visée ; paiement en début ou fin de période).'] },
+    },
+    { humeur: 'accueil', dit: '**NPM** calcule le **nombre de paiements** nécessaires pour rembourser un emprunt, quand tu connais la mensualité et le capital.', visuel: { type: 'formule', formule: '=NPM(taux ; vpm ; va ; [vc] ; [type])' } },
+    { humeur: 'pensif', dit: 'Exemple : un prêt de 10 000 € à 2 %/an, remboursé 102,45 €/mois → ≈ 107 mois.', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Capital', entete: true }, B1: { t: '10 000 €' }, A2: { t: 'Taux annuel', entete: true }, B2: { t: '2 %' }, A3: { t: 'Mensualité', entete: true }, B3: { t: '-102,45 €' }, A4: { t: 'Durée (mois)', entete: true }, B4: { t: '107', vert: true } }, formule: '=NPM(B2/12;B3;B1)', actif: 'B4' } },
+    {
+      humeur: 'pensif',
+      dit: 'Les erreurs à éviter sur VA et NPM :',
+      visuel: { type: 'encart', label: 'Erreurs à éviter', liste: ['Utiliser un **taux annuel non converti** : 2 % par an ÷ 12 pour du mensuel (2 % ≠ 2).', 'Oublier le **signe moins** sur la mensualité : sans lui, le résultat est faussé.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un argument commun aux trois (VPM, VA, NPM), bon à connaître :',
+      visuel: { type: 'encart', label: 'Focus : l\'argument VC (valeur future)', texte: '**VC** = ce qu\'il reste à la fin. Par défaut **VC = 0** (prêt soldé). Exemple : tu finances une voiture 20 000 € sur 48 mois mais comptes la revendre 8 000 € à la fin → =VPM(5%/12 ; 48 ; -20000 ; 8000). Tu ne finances alors que les 12 000 € de différence, donc une mensualité plus basse.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle fonction donne le **nombre de mois** pour rembourser un prêt ?',
+      visuel: { type: 'question', options: ['NPM', 'VPM'], bonne: 0, explication: 'NPM donne le Nombre de Périodes (de Mensualités). VPM, elle, donne le montant de la mensualité.' },
+    },
+    { humeur: 'fier', dit: 'VPM, VA, NPM : tu simules un prêt ou un investissement de A à Z. La ceinture bleue est à toi ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES }

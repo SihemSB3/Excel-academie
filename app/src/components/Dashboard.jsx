@@ -170,7 +170,7 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
       </button>
 
       <p className="mt-6 text-center text-[11px] text-navy/30">
-        Pilote, ceintures blanche, jaune, orange et verte. Progression sauvegardée sur ton compte.
+        Pilote, ceintures blanche à bleue. Progression sauvegardée sur ton compte.
       </p>
     </div>
   )
