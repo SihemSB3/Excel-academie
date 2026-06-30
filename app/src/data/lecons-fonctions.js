@@ -1520,7 +1520,8 @@ const tabVPM = (resultat) => ({
     B4: resultat ? { t: '-159,10 €', rouge: true } : { t: '=VPM(B2/12;B3;-B1)' },
   },
   actif: 'B4',
-  formule: resultat ? '=VPM(B2/12;B3;-B1)' : '=VPM(B2/12;B3;-B1)',
+  formule: '=VPM(B2/12;B3;-B1)',
+  refsCouleur: { B2: 'bleu', B3: 'ambre', B1: 'violet' },
 })
 
 // --- Leçon 5 : Fonctions à plusieurs arguments & VPM (NOUVEAU) ---
@@ -1643,8 +1644,8 @@ const RECHERCHERREMPLACER = {
     },
     {
       humeur: 'pensif',
-      dit: 'Le raccourci à retenir, le plus rapide :',
-      visuel: { type: 'encart', label: 'Astuce clavier', texte: '**Ctrl + H** ouvre directement « Rechercher et remplacer ». Sur **Mac** : **⌘ + Maj + H**.' },
+      dit: 'Les deux raccourcis à retenir :',
+      visuel: { type: 'encart', label: 'Astuce clavier', liste: ['**Ctrl + H** ouvre « Rechercher et remplacer » (Mac : **⌘ + Maj + H**).', '**Ctrl + F** ouvre juste « Rechercher » : pour **trouver** une valeur, sans la remplacer (Mac : **⌘ + F**).'] },
     },
     {
       humeur: 'accueil',
@@ -1728,7 +1729,7 @@ const FONCTIONSPARTICULIERES = {
     {
       humeur: 'pensif',
       dit: 'Voici les fonctions à connaître, qu\'on va voir dans ce chapitre et les suivants :',
-      visuel: { type: 'encart', label: 'Les fonctions à connaître', liste: ['**Texte** : GAUCHE(), DROITE(), STXT(), TEXTE(), CONCAT()', '**Math** : ARRONDI(), ARRONDI.SUP(), ARRONDI.INF(), TRONQUE()', '**Logique** : SI(), SI.CONDITIONS(), ET(), OU()', '**Date & heure** : DATEDIF(), AUJOURDHUI(), NB.JOURS.OUVRES.INTL()', '**Recherche** : RECHERCHEV(), RECHERCHEX(), INDEX(), EQUIV()', '**Statistiques** : NB.SI(), SOMME.SI()', '**Financières** : VPM(), VA(), NPM()'] },
+      visuel: { type: 'encart', label: 'Les fonctions à connaître', liste: ['**Texte** : GAUCHE(), DROITE(), STXT(), TEXTE(), CONCAT()', '**Math** : ARRONDI(), ARRONDI.SUP(), ARRONDI.INF(), TRONQUE()', '**Logique** : SI(), SI.CONDITIONS(), ET(), OU(), NON()', '**Date & heure** : DATEDIF(), AUJOURDHUI(), MOIS(), NB.JOURS.OUVRES.INTL()', '**Recherche** : RECHERCHEV(), RECHERCHEX(), INDEX(), EQUIV()', '**Statistiques** : NB(), NB.SI(), NB.SI.ENS(), SOMME.SI()', '**Financières** : VPM(), VA(), NPM()', '**Divers utiles** : CONVERTIR(), SIERREUR(), TRANSPOSE()'] },
     },
     {
       humeur: 'accueil',
@@ -1770,11 +1771,17 @@ const ARRONDIS = {
       dit: 'On la construit pas à pas.',
       visuel: {
         type: 'methode',
-        titre: 'Construire ARRONDI.INF',
+        titre: 'Construire ARRONDI.INF, pas à pas',
         blocs: [
-          { etapes: ['Clique dans une cellule vide', 'Tape **=** puis les premières lettres', 'Clique sur la suggestion **ARRONDI.INF**'] },
+          { etapes: ['Clique dans une cellule vide (ici B2) et tape **=**'] },
+          { capture: tabArr5('76,3', '=') },
+          { etapes: ['Tape les premières lettres, puis clique sur la suggestion **ARRONDI.INF**'], depart: 2 },
           { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=ARRONDI', items: [{ nom: 'ARRONDI', desc: 'Arrondit un nombre au nombre de chiffres indiqué.' }, { nom: 'ARRONDI.INF', desc: 'Arrondit un nombre en tendant vers zéro (vers le bas).' }, { nom: 'ARRONDI.SUP' }, { nom: 'ARRONDI.AU.MULTIPLE' }], selection: 1 } },
-          { etapes: ['Clique sur la cellule à arrondir, tape **;** puis le nombre de décimales (0)', 'Ferme la parenthèse, puis **Entrée**'], depart: 4 },
+          { etapes: ['Clique sur la cellule à arrondir (A2)'], depart: 3 },
+          { capture: tabArr5('76,3', '=ARRONDI.INF(A2') },
+          { etapes: ['Tape **;** puis le nombre de décimales voulu (0 pour un entier)'], depart: 4 },
+          { capture: tabArr5('76,3', '=ARRONDI.INF(A2;0') },
+          { etapes: ['Ferme la parenthèse **)**, puis appuie sur **Entrée**'], depart: 5 },
           { capture: tabArr5('76,3', '=ARRONDI.INF(A2;0)', { t: '76', num: true, vert: true }) },
         ],
       },
@@ -1787,10 +1794,42 @@ const ARRONDIS = {
     { humeur: 'accueil', dit: '**ARRONDI.SUP** fait l\'inverse : il arrondit **toujours vers le haut**. Idéal pour prévoir une marge (prix, temps, stocks).', visuel: { type: 'formule', formule: '=ARRONDI.SUP(nombre ; no_chiffres)' } },
     {
       humeur: 'pensif',
+      dit: 'On la construit de la même façon, en images.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire ARRONDI.SUP',
+        blocs: [
+          { etapes: ['Dans une cellule vide, tape **=** puis les premières lettres, et clique sur **ARRONDI.SUP**'] },
+          { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=ARRONDI', items: [{ nom: 'ARRONDI' }, { nom: 'ARRONDI.INF' }, { nom: 'ARRONDI.SUP', desc: 'Arrondit un nombre à l\'entier ou à la décimale supérieure (vers le haut).' }], selection: 2 } },
+          { etapes: ['Clique sur la cellule (A2), tape **;** le nombre de décimales (0)'], depart: 2 },
+          { capture: tabArr5('76,3', '=ARRONDI.SUP(A2;0') },
+          { etapes: ['Ferme la parenthèse **)**, puis **Entrée** : 76,3 monte à 77'], depart: 3 },
+          { capture: tabArr5('76,3', '=ARRONDI.SUP(A2;0)', { t: '77', num: true, vert: true }) },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Les mêmes valeurs, arrondies vers le haut :',
       visuel: { type: 'encart', label: 'ARRONDI.SUP en exemples', liste: ['=ARRONDI.SUP(76,3 ; 0) → **77** (entier juste au-dessus).', '=ARRONDI.SUP(3,14159 ; 3) → **3,142** (vers le haut à la 3e décimale).', '=ARRONDI.SUP(31415 ; -2) → **31500** (centaine supérieure).'] },
     },
     { humeur: 'accueil', dit: '**TRONQUE** ne fait pas d\'arrondi du tout : il **coupe** simplement la partie qu\'on ne garde pas. Le résultat reste toujours inférieur ou égal à la valeur d\'origine.', visuel: { type: 'formule', formule: '=TRONQUE(nombre ; no_chiffres)' } },
+    {
+      humeur: 'pensif',
+      dit: 'On la construit pas à pas, comme les arrondis.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire TRONQUE',
+        blocs: [
+          { etapes: ['Dans une cellule vide, tape **=** puis les premières lettres, et clique sur **TRONQUE**'] },
+          { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=TRON', items: [{ nom: 'TRONQUE', desc: 'Tronque un nombre en supprimant les décimales, sans arrondir.' }], selection: 0 } },
+          { etapes: ['Clique sur la cellule (A2), tape **;** le nombre de décimales à garder (0)'], depart: 2 },
+          { capture: tabArr5('76,3', '=TRONQUE(A2;0') },
+          { etapes: ['Ferme la parenthèse **)**, puis **Entrée** : 76,3 devient 76 (la décimale est juste coupée)'], depart: 3 },
+          { capture: tabArr5('76,3', '=TRONQUE(A2;0)', { t: '76', num: true, vert: true }) },
+        ],
+      },
+    },
     {
       humeur: 'pensif',
       dit: 'Les mêmes valeurs, tronquées :',
@@ -1812,6 +1851,16 @@ const ARRONDIS = {
 }
 
 // --- Leçon 5 : Les fonctions de date ---
+// Date du jour, recalculée à chaque ouverture de l'app (pour illustrer AUJOURDHUI()).
+const _auj = new Date()
+const dateAujFR = _auj.toLocaleDateString('fr-FR')
+const ansDepuis = (annee, mois, jour) => {
+  let a = _auj.getFullYear() - annee
+  const m = _auj.getMonth() + 1
+  const d = _auj.getDate()
+  if (m < mois || (m === mois && d < jour)) a--
+  return a
+}
 const tabDate = (a2, formule, resultat, libA) => ({
   type: 'tableur',
   cols: ['A', 'B'],
@@ -1820,6 +1869,21 @@ const tabDate = (a2, formule, resultat, libA) => ({
   actif: 'B2',
   formule,
 })
+// Tableur DATEDIF : Début (31/03/1990), Fin = AUJOURDHUI() (date du jour), Ancienneté en C2.
+const tabDdif = (cf, resultat) => {
+  const refsCouleur = {}
+  if (cf.includes('A2')) refsCouleur.A2 = 'bleu'
+  if (cf.includes('B2')) refsCouleur.B2 = 'ambre'
+  return {
+    type: 'tableur',
+    cols: ['A', 'B', 'C'],
+    rows: [1, 2],
+    cells: { A1: { t: 'Début', entete: true }, B1: { t: 'Fin (=AUJOURDHUI())', entete: true }, C1: { t: 'Ancienneté', entete: true }, A2: { t: '31/03/1990' }, B2: { t: dateAujFR }, ...(resultat ? { C2: resultat } : { C2: { t: cf } }) },
+    actif: 'C2',
+    formule: cf,
+    refsCouleur,
+  }
+}
 
 const FONCTIONSDATE = {
   id: 'fn-fonctionsdate',
@@ -1850,10 +1914,30 @@ const FONCTIONSDATE = {
     { humeur: 'accueil', dit: '**DATEDIF** calcule la durée entre deux dates (années, mois ou jours). Parfait pour une ancienneté ou un délai.', visuel: { type: 'formule', formule: '=DATEDIF(date_début ; date_fin ; "unité")' } },
     {
       humeur: 'pensif',
-      dit: 'L\'unité (entre guillemets) choisit ce que tu calcules :',
-      visuel: { type: 'encart', label: 'Les unités de DATEDIF', liste: ['**"Y"** : nombre d\'années entières.', '**"M"** : nombre de mois entiers.', '**"D"** : nombre total de jours.', '**"YM"**, **"MD"**, **"YD"** : le reste (mois ou jours) pour une durée détaillée, ex : « 35 ans, 3 mois et 2 jours ».'] },
+      dit: 'Le 3e argument, **l\'unité** (entre guillemets), choisit ce que tu calcules. Chacune avec un exemple :',
+      visuel: { type: 'encart', label: 'Les unités de DATEDIF', liste: ['**"Y"** : années entières. Ex : 35.', '**"M"** : mois entiers. Ex : 423.', '**"D"** : nombre total de jours. Ex : 12 878.', '**"YM"** : mois restants, une fois les années retirées. Ex : 3.', '**"MD"** : jours restants, une fois les mois retirés. Ex : 2.', '**"YD"** : jours écoulés sans tenir compte de l\'année.', 'En combinant **"Y" + "YM" + "MD"**, tu obtiens une durée lisible : « 35 ans, 3 mois et 2 jours ».'] },
     },
-    { humeur: 'pensif', dit: 'Exemple : du 31/03/1990 au 03/07/2025, =DATEDIF(A2 ; B2 ; "Y") donne 35 années.', visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Début', entete: true }, B1: { t: 'Fin', entete: true }, C1: { t: 'Ancienneté', entete: true }, A2: { t: '31/03/1990', ref: true }, B2: { t: '03/07/2025', ref: true }, C2: { t: '35 ans', vert: true } }, formule: '=DATEDIF(A2;B2;"Y")', actif: 'C2' } },
+    { humeur: 'accueil', dit: `Exemple concret : l'ancienneté entre le 31/03/1990 et aujourd'hui. En B2, on met **=AUJOURDHUI()** (la date du jour, ${dateAujFR}), et on construit DATEDIF qui pointe sur A2 et B2.` },
+    {
+      humeur: 'pensif',
+      dit: 'DATEDIF est un peu spéciale : Excel ne la suggère pas. On la tape donc en entier, pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire DATEDIF, pas à pas',
+        blocs: [
+          { etapes: ['Dans la cellule résultat (C2), tape **=DATEDIF(** en entier (aucune suggestion n\'apparaît, c\'est normal)'] },
+          { capture: tabDdif('=DATEDIF(') },
+          { etapes: ['Clique sur la **date de début** (A2), puis tape **;**'], depart: 2 },
+          { capture: tabDdif('=DATEDIF(A2;') },
+          { etapes: ['Clique sur la **date de fin** (B2), puis tape **;**'], depart: 3 },
+          { capture: tabDdif('=DATEDIF(A2;B2;') },
+          { etapes: ['Tape l\'unité entre guillemets : **"Y"** pour des années'], depart: 4 },
+          { capture: tabDdif('=DATEDIF(A2;B2;"Y"') },
+          { etapes: ['Ferme la parenthèse **)**, puis **Entrée**'], depart: 5 },
+          { capture: { ...tabDdif('=DATEDIF(A2;B2;"Y")', { t: `${ansDepuis(1990, 3, 31)} ans`, vert: true }), legende: `Comme B2 = AUJOURDHUI(), l'ancienneté (${ansDepuis(1990, 3, 31)} ans) se recalcule toute seule chaque jour.` } },
+        ],
+      },
+    },
     {
       humeur: 'pensif',
       dit: 'Un détail à connaître sur DATEDIF :',
@@ -1865,7 +1949,39 @@ const FONCTIONSDATE = {
       dit: 'Ses deux arguments facultatifs, bien pratiques :',
       visuel: { type: 'encart', label: 'Les options', liste: ['**[weekend]** : adapte les jours non travaillés (utile si ton week-end est décalé, ex : vendredi-samedi).', '**[jours_fériés]** : une plage de cellules (ex : F2:F10) ou une liste de dates à exclure, pour un total plus juste.'] },
     },
+    {
+      humeur: 'pensif',
+      dit: 'On la construit pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire NB.JOURS.OUVRES.INTL',
+        blocs: [
+          { etapes: ['Clique dans une cellule vide, tape **=** puis les premières lettres', 'Clique sur la suggestion **NB.JOURS.OUVRES.INTL**'] },
+          { capture: { type: 'autocomplete', cellule: 'C2', saisie: '=NB.JOURS', items: [{ nom: 'NB.JOURS' }, { nom: 'NB.JOURS.OUVRES' }, { nom: 'NB.JOURS.OUVRES.INTL', desc: 'Nombre de jours ouvrés entre deux dates (week-ends et fériés exclus).' }], selection: 2 } },
+          { etapes: ['Clique sur la **date de début** (A2), tape **;** puis clique sur la **date de fin** (B2)'], depart: 3 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Début', entete: true }, B1: { t: 'Fin', entete: true }, C1: { t: 'Jours ouvrés', entete: true }, A2: { t: '01/04/2025' }, B2: { t: '30/04/2025' }, C2: { t: '=NB.JOURS.OUVRES.INTL(A2;B2' } }, formule: '=NB.JOURS.OUVRES.INTL(A2;B2', actif: 'C2', refsCouleur: { A2: 'bleu', B2: 'ambre' } } },
+          { etapes: ['Si besoin, ajoute les **jours fériés** à exclure, ferme la parenthèse **)**, puis **Entrée**'], depart: 4 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Début', entete: true }, B1: { t: 'Fin', entete: true }, C1: { t: 'Jours ouvrés', entete: true }, A2: { t: '01/04/2025' }, B2: { t: '30/04/2025' }, C2: { t: '22', num: true, vert: true } }, formule: '=NB.JOURS.OUVRES.INTL(A2;B2)', actif: 'C2', refsCouleur: { A2: 'bleu', B2: 'ambre' }, legende: 'Du 1er au 30 avril 2025 : 22 jours ouvrés (week-ends exclus).' } },
+        ],
+      },
+    },
     { humeur: 'accueil', dit: '**SERIE.JOURS.OUVRES** fait l\'inverse : à partir d\'une date, elle ajoute (ou retire) un nombre de jours ouvrés pour trouver une date d\'échéance ou de livraison.', visuel: { type: 'formule', formule: '=SERIE.JOURS.OUVRES(début ; nb_jours ; [fériés])' } },
+    {
+      humeur: 'pensif',
+      dit: 'Pareil, pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire SERIE.JOURS.OUVRES',
+        blocs: [
+          { etapes: ['Clique dans une cellule vide, tape **=** puis les premières lettres, clique sur **SERIE.JOURS.OUVRES**'] },
+          { capture: { type: 'autocomplete', cellule: 'C2', saisie: '=SERIE', items: [{ nom: 'SERIE.JOUR' }, { nom: 'SERIE.JOURS.OUVRES', desc: 'Date située un nombre de jours ouvrés avant ou après une date.' }, { nom: 'SERIE.JOURS.OUVRES.INTL' }], selection: 1 } },
+          { etapes: ['Clique sur la **date de début** (A2), tape **;** puis le **nombre de jours ouvrés** à ajouter (B2)'], depart: 2 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Début', entete: true }, B1: { t: 'Jours ouvrés', entete: true }, C1: { t: 'Échéance', entete: true }, A2: { t: '01/04/2025' }, B2: { t: '10', num: true }, C2: { t: '=SERIE.JOURS.OUVRES(A2;B2' } }, formule: '=SERIE.JOURS.OUVRES(A2;B2', actif: 'C2', refsCouleur: { A2: 'bleu', B2: 'ambre' } } },
+          { etapes: ['Ferme la parenthèse **)**, puis **Entrée**'], depart: 3 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Début', entete: true }, B1: { t: 'Jours ouvrés', entete: true }, C1: { t: 'Échéance', entete: true }, A2: { t: '01/04/2025' }, B2: { t: '10', num: true }, C2: { t: '15/04/2025', vert: true } }, formule: '=SERIE.JOURS.OUVRES(A2;B2)', actif: 'C2', refsCouleur: { A2: 'bleu', B2: 'ambre' }, legende: '10 jours ouvrés après le 01/04/2025 → échéance le 15/04/2025.' } },
+        ],
+      },
+    },
     {
       humeur: 'pensif',
       dit: 'Une astuce et des erreurs à éviter :',
@@ -1902,7 +2018,19 @@ const FONCTIONSTEXTE = {
       dit: 'Le « format » est une **chaîne** (du texte entre guillemets). Pour une date, on combine ces lettres :',
       visuel: { type: 'encart', label: 'Les codes de format de date', liste: ['**j / jj** : jour sans / avec le zéro (5 ou 05).', '**mmm / mmmm** : mois en abrégé (mar) / en entier (mars).', '**aa / aaaa** : année sur 2 / 4 chiffres (25 ou 2025).'] },
     },
-    { humeur: 'fier', dit: 'Exemple : =TEXTE(A2 ; "jj mmmm aaaa") transforme 15/04/2025 en « 15 avril 2025 ».', visuel: tabTxt('15/04/2025', '=TEXTE(A2;"jj mmmm aaaa")', { t: '15 avril 2025', vert: true }) },
+    {
+      humeur: 'pensif',
+      dit: 'On la construit pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire TEXTE',
+        blocs: [
+          { etapes: ['Clique dans la cellule cible, tape **=TEXTE(**', 'Clique sur la cellule qui contient la valeur (A2)', 'Tape **;** puis le format entre guillemets : "jj mmmm aaaa"', 'Ferme la parenthèse, puis **Entrée**'] },
+          { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=TEX', items: [{ nom: 'TEXTE', desc: 'Convertit une valeur en texte, dans le format que tu choisis.' }, { nom: 'TEXTE.AVANT' }, { nom: 'TEXTE.APRES' }, { nom: 'TEXTEJOINDRE' }], selection: 0 } },
+          { capture: tabTxt('15/04/2025', '=TEXTE(A2;"jj mmmm aaaa")', { t: '15 avril 2025', vert: true }) },
+        ],
+      },
+    },
     {
       humeur: 'pensif',
       dit: 'TEXTE ne sert pas qu\'aux dates :',
@@ -1916,14 +2044,36 @@ const FONCTIONSTEXTE = {
         type: 'methode',
         titre: 'Construire GAUCHE',
         blocs: [
-          { etapes: ['Clique dans la cellule cible', 'Tape **=GAUCHE(**, clique sur la cellule de texte (A2)', 'Tape **;** puis le nombre de caractères à garder', 'Ferme la parenthèse, puis **Entrée**'] },
+          { etapes: ['Clique dans la cellule cible, tape **=GAUCHE(**', 'Clique sur la cellule de texte (A2)', 'Tape **;** puis le nombre de caractères à garder', 'Ferme la parenthèse, puis **Entrée**'] },
+          { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=GAU', items: [{ nom: 'GAUCHE', desc: 'Extrait les premiers caractères (à gauche) d\'un texte.' }, { nom: 'GAUCHEB' }], selection: 0 } },
           { capture: tabTxt('FR-2025-001', '=GAUCHE(A2;2)', { t: 'FR', vert: true }, 'Code') },
           { note: 'GAUCHE et DROITE sont parfaites pour isoler un préfixe (code pays, code produit) ou créer une clé pour un RECHERCHEV.' },
         ],
       },
     },
+    { humeur: 'accueil', dit: '**DROITE** marche exactement comme **GAUCHE**, sauf qu\'elle compte **à partir de la droite** : elle prend la **fin** du texte. Exemple : on récupère les 3 derniers caractères du code (le numéro de série).', visuel: tabTxt('FR-2025-001', '=DROITE(A2;3)', { t: '001', vert: true }, 'Code') },
     { humeur: 'accueil', dit: '**STXT** extrait un morceau **au milieu** : tu indiques à quelle position commencer et combien de caractères prendre.', visuel: { type: 'formule', formule: '=STXT(texte ; position_départ ; nb_caractères)' } },
-    { humeur: 'pensif', dit: 'Exemple : dans « FR-2025-001 », =STXT(A2 ; 4 ; 4) prend 4 caractères à partir du 4e → « 2025 ».', visuel: tabTxt('FR-2025-001', '=STXT(A2;4;4)', { t: '2025', vert: true }, 'Code') },
+    { humeur: 'accueil', dit: 'Notre but ici : dans le code **« FR-2025-001 »**, isoler **l\'année 2025**. Elle commence au **4e caractère** et fait **4 caractères** : c\'est exactement ce qu\'on va dire à STXT.', visuel: { type: 'tableur', cols: ['A'], rows: [1, 2], cells: { A1: { t: 'Code', entete: true }, A2: { t: 'FR-2025-001' } }, legende: 'F(1) R(2) -(3) 2(4) 0(5) 2(6) 5(7) : « 2025 » commence en position 4, sur 4 caractères.' } },
+    {
+      humeur: 'pensif',
+      dit: 'Maintenant, on la construit pas à pas pour isoler ce « 2025 ».',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire STXT, pas à pas',
+        blocs: [
+          { etapes: ['Dans la cellule cible, tape **=STXT(** (ou choisis-la dans la liste)'] },
+          { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=STXT', items: [{ nom: 'STXT', desc: 'Extrait des caractères au milieu d\'un texte, à partir d\'une position.' }, { nom: 'STXTB' }], selection: 0 } },
+          { etapes: ['Clique sur la cellule de texte (A2)'], depart: 2 },
+          { capture: tabTxt('FR-2025-001', '=STXT(A2', null, 'Code') },
+          { etapes: ['Tape **;** puis la **position de départ** (4 = on commence au 4e caractère)'], depart: 3 },
+          { capture: tabTxt('FR-2025-001', '=STXT(A2;4', null, 'Code') },
+          { etapes: ['Tape **;** puis le **nombre de caractères** à prendre (4)'], depart: 4 },
+          { capture: tabTxt('FR-2025-001', '=STXT(A2;4;4', null, 'Code') },
+          { etapes: ['Ferme la parenthèse **)**, puis **Entrée**'], depart: 5 },
+          { capture: tabTxt('FR-2025-001', '=STXT(A2;4;4)', { t: '2025', vert: true }, 'Code') },
+        ],
+      },
+    },
     {
       humeur: 'accueil',
       dit: 'À toi. Pour extraire les 3 premiers caractères de A2, tu écris...',
@@ -1934,6 +2084,23 @@ const FONCTIONSTEXTE = {
 }
 
 // --- Leçon 7 : Les fonctions financières ---
+// Tableur prêt pour NPM : Capital (B1), Taux annuel (B2), Mensualité (B3), Durée en B4.
+const tabNpm = (cf, resultat) => {
+  const rc = {}
+  if (cf.includes('B2')) rc.B2 = 'bleu'
+  if (cf.includes('B3')) rc.B3 = 'ambre'
+  if (cf.includes('B1')) rc.B1 = 'violet'
+  return {
+    type: 'tableur',
+    cols: ['A', 'B'],
+    rows: [1, 2, 3, 4],
+    cells: { A1: { t: 'Capital', entete: true }, B1: { t: '10 000 €' }, A2: { t: 'Taux annuel', entete: true }, B2: { t: '2 %' }, A3: { t: 'Mensualité', entete: true }, B3: { t: '-102,45 €' }, A4: { t: 'Durée (mois)', entete: true }, ...(resultat ? { B4: resultat } : { B4: { t: cf } }) },
+    actif: 'B4',
+    formule: cf,
+    refsCouleur: rc,
+  }
+}
+
 const FONCTIONSFINANCIERES = {
   id: 'fn-fonctionsfinancieres',
   titre: 'Les fonctions financières : VPM, VA, NPM',
@@ -1942,14 +2109,55 @@ const FONCTIONSFINANCIERES = {
     { humeur: 'accueil', dit: 'Trois fonctions financières à connaître pour modéliser un prêt ou un investissement : **VPM** (la mensualité), **VA** (la valeur actuelle) et **NPM** (le nombre de paiements).' },
     { humeur: 'pensif', dit: 'Tu connais déjà **VPM** (ceinture verte) : elle calcule la **mensualité** d\'un prêt. Petit rappel, et si tu maîtrises, utilise « Je connais, passer » en haut.', visuel: { type: 'formule', formule: '=VPM(taux ; nb_périodes ; valeur_actuelle)' } },
     { humeur: 'pensif', dit: 'Exemple : 15 000 € à 5 % par an sur 120 mois → =VPM(5%/12 ; 120 ; -15000) ≈ -159,10 €/mois.', visuel: tabVPM(true) },
-    { humeur: 'accueil', dit: '**VA (Valeur Actuelle)** dit combien vaut **aujourd\'hui** une série de versements futurs. Utile pour estimer un flux de loyers, ou savoir combien investir pour atteindre un objectif.', visuel: { type: 'formule', formule: '=VA(taux ; n_périodes ; vpm ; [vc] ; [type])' } },
+    { humeur: 'accueil', dit: '**VA (Valeur Actuelle)** répond à une question simple : « combien vaut **aujourd\'hui** de l\'argent que je vais recevoir (ou verser) plus tard ? » Car 100 € dans 5 ans valent moins que 100 € aujourd\'hui : avec les intérêts, l\'argent « perd de la valeur » avec le temps.' },
+    { humeur: 'pensif', dit: 'Exemple concret : on te promet **200 € par mois pendant 3 ans** (36 mois), avec un taux de 4 % par an. Combien vaut cette promesse aujourd\'hui ? Réponse de VA : environ **6 769 €**.', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Versement /mois', entete: true }, B1: { t: '200 €' }, A2: { t: 'Durée (mois)', entete: true }, B2: { t: '36' }, A3: { t: 'Taux annuel', entete: true }, B3: { t: '4 %' }, A4: { t: 'Valeur aujourd\'hui', entete: true }, B4: { t: '6 769 €', vert: true } }, formule: '=VA(B3/12;B2;-B1)', actif: 'B4', refsCouleur: { B3: 'bleu', B2: 'ambre', B1: 'violet' }, legende: 'Recevoir 200 €/mois pendant 3 ans, ça vaut ≈ 6 769 € aujourd\'hui.' } },
+    { humeur: 'pensif', dit: 'Sa structure :', visuel: { type: 'formule', formule: '=VA(taux ; n_périodes ; vpm ; [vc] ; [type])' } },
     {
       humeur: 'pensif',
       dit: 'Ses arguments :',
       visuel: { type: 'encart', label: 'Les arguments de VA', liste: ['**Taux** : taux d\'intérêt par période (taux annuel ÷ 12 pour du mensuel).', '**N_périodes** : nombre total de paiements.', '**VPM** : montant de chaque paiement (négatif si c\'est une sortie d\'argent).', '**[VC]** et **[Type]** : facultatifs (valeur finale visée ; paiement en début ou fin de période).'] },
     },
+    {
+      humeur: 'pensif',
+      dit: 'L\'erreur n°1 sur VA (et VPM, NPM) :',
+      visuel: { type: 'encart', label: 'Toujours diviser le taux par 12 !', texte: 'Le taux est donné **par an**, mais les paiements sont **par mois**. Il faut donc le taux **par mois** : on divise le taux annuel par 12 (ex : 4 % par an → **4%/12**). Si tu oublies, Excel calcule comme si tu payais 4 % **chaque mois** (soit 48 % par an !), et le résultat n\'a plus aucun sens.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'On la construit avec l\'assistant, pas à pas (c\'est une formule un peu costaude, autant être guidé·e).',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire VA avec l\'assistant',
+        blocs: [
+          { etapes: ['Clique sur la cellule du résultat, puis sur le bouton **fx**', 'Choisis la catégorie **Financières**, sélectionne **VA**, puis **OK**'] },
+          { capture: { type: 'assistant', categorie: 'Financières', fonctions: ['TAUX', 'VA', 'VAN', 'VC', 'VPM'], selection: 1, signature: 'VA(taux;npm;vpm;[vc];[type])', description: 'Renvoie la valeur actuelle : ce que vaut aujourd\'hui une série de versements futurs.', focus: 'liste' } },
+          { etapes: ['Renseigne les arguments (les **obligatoires** sont en gras), puis clique sur **OK**'], depart: 3 },
+          { capture: { type: 'arguments', fonction: 'VA', args: [{ label: 'Taux', ref: '4%/12', valeur: '0,00333', obligatoire: true }, { label: 'Npm', ref: '36', valeur: '36', obligatoire: true }, { label: 'Vpm', ref: '-200', valeur: '-200', obligatoire: true }, { label: 'Vc', ref: '', valeur: 'facultatif' }, { label: 'Type', ref: '', valeur: 'facultatif' }], apercu: '6 769 €', description: 'Renvoie la valeur actuelle d\'un investissement.', resultat: '6 769 €', encadre: true } },
+        ],
+      },
+    },
     { humeur: 'accueil', dit: '**NPM** calcule le **nombre de paiements** nécessaires pour rembourser un emprunt, quand tu connais la mensualité et le capital.', visuel: { type: 'formule', formule: '=NPM(taux ; vpm ; va ; [vc] ; [type])' } },
-    { humeur: 'pensif', dit: 'Exemple : un prêt de 10 000 € à 2 %/an, remboursé 102,45 €/mois → ≈ 107 mois.', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Capital', entete: true }, B1: { t: '10 000 €' }, A2: { t: 'Taux annuel', entete: true }, B2: { t: '2 %' }, A3: { t: 'Mensualité', entete: true }, B3: { t: '-102,45 €' }, A4: { t: 'Durée (mois)', entete: true }, B4: { t: '107', vert: true } }, formule: '=NPM(B2/12;B3;B1)', actif: 'B4' } },
+    { humeur: 'pensif', dit: 'Exemple : un prêt de 10 000 € à 2 %/an, remboursé 102,45 €/mois. On cherche la durée, en construisant NPM pas à pas.', visuel: tabNpm('') },
+    {
+      humeur: 'pensif',
+      dit: 'Étape par étape, dans la cellule B4 :',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire NPM, pas à pas',
+        blocs: [
+          { etapes: ['Dans la cellule résultat (B4), tape **=NPM(**'] },
+          { capture: tabNpm('=NPM(') },
+          { etapes: ['**Le taux par mois** : clique sur le taux annuel (B2) et divise-le par 12, puis tape **;**'], depart: 2 },
+          { capture: tabNpm('=NPM(B2/12;') },
+          { etapes: ['**La mensualité** : clique sur B3 (en négatif, c\'est une sortie d\'argent), puis tape **;**'], depart: 3 },
+          { capture: tabNpm('=NPM(B2/12;B3;') },
+          { etapes: ['**Le capital emprunté** : clique sur B1'], depart: 4 },
+          { capture: tabNpm('=NPM(B2/12;B3;B1') },
+          { etapes: ['Ferme la parenthèse **)**, puis **Entrée** : il faut **107 mois**'], depart: 5 },
+          { capture: tabNpm('=NPM(B2/12;B3;B1)', { t: '107', num: true, vert: true }) },
+        ],
+      },
+    },
     {
       humeur: 'pensif',
       dit: 'Les erreurs à éviter sur VA et NPM :',

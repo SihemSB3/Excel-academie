@@ -82,7 +82,7 @@ function coloreAvecRefs(formule, map) {
     return map[norm] ? (
       <span key={i} style={{ color: REF_COULEURS[map[norm]] || map[norm], fontWeight: 700 }}>{p}</span>
     ) : (
-      <span key={i} className="text-navy/80">{p}</span>
+      <span key={i}>{coloreFormule(p)}</span>
     )
   })
 }
