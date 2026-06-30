@@ -192,6 +192,9 @@ function AssistantDialog({ v }) {
 // Fenêtre « Arguments de la fonction ».
 function ArgumentsDialog({ v }) {
   const { fonction, args = [], apercu, resultat, description, encadre } = v
+  // Si la capture précise des arguments obligatoires, on les met en gras et les
+  // facultatifs en normal (comme dans le vrai assistant). Sinon, rendu uniforme.
+  const useGras = args.some((a) => a.obligatoire !== undefined)
   return (
     <div className="mx-auto mt-3 max-w-md animate-fade-up overflow-hidden rounded-lg border border-navy/25 shadow-xl">
       <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 text-[11px] font-semibold text-navy/80">
@@ -203,7 +206,7 @@ function ArgumentsDialog({ v }) {
         <div className="space-y-1">
           {args.map((a, i) => (
             <div key={i} className="flex items-center gap-2">
-              <span className="w-16 text-right font-semibold">{a.label}</span>
+              <span className={`w-16 text-right ${useGras ? (a.obligatoire ? 'font-bold text-navy' : 'font-normal text-navy/45') : 'font-semibold'}`}>{a.label}</span>
               <span className="flex items-center gap-2 rounded-sm border border-navy/25 px-2 py-0.5">
                 <span className="min-w-[56px] font-mono">{a.ref}</span>
                 <span className="text-navy/40">↑</span>
@@ -236,17 +239,17 @@ function ArgumentsDialog({ v }) {
 
 // Liste déroulante d'autocomplétion quand on tape le début d'une fonction.
 function AutoComplete({ v }) {
-  const { saisie = '=', items = [], selection = 0 } = v
+  const { saisie = '=', items = [], selection = 0, cellule = 'A1' } = v
+  const col = (cellule.match(/[A-Z]+/) || ['A'])[0]
+  const row = (cellule.match(/\d+/) || ['1'])[0]
   return (
     <div className="mx-auto mt-3 max-w-xs animate-fade-up text-[11px]">
       <div className="overflow-hidden rounded-t-md border border-navy/15 shadow-lg">
-        <div className="grid" style={{ gridTemplateColumns: '24px 1fr 1fr' }}>
+        <div className="grid" style={{ gridTemplateColumns: '24px 1fr' }}>
           <div className="bg-navy/10" />
-          <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">A</div>
-          <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">B</div>
-          <div className="bg-navy/10 py-1 text-center text-navy/50">1</div>
+          <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{col}</div>
+          <div className="bg-navy/10 py-1 text-center text-navy/50">{row}</div>
           <div className="border-b border-l border-navy/10 bg-white px-2 py-1 font-mono text-navy">{saisie}<span className="animate-pulse">|</span></div>
-          <div className="border-b border-l border-navy/10 bg-white" />
         </div>
       </div>
       <div className="ml-6 overflow-hidden rounded-b-md border border-t-0 border-navy/20 bg-white shadow-xl">
@@ -1437,13 +1440,15 @@ function Methode({ v }) {
       return <EtapesListe key={key} items={b.etapes} depart={d} />
     }
     if (b.capture) return <CaptureInline key={key} c={b.capture} />
-    if (b.note)
+    if (b.note) {
+      const lab = b.label === undefined ? 'Astuce' : b.label
       return (
         <p key={key} className="rounded-xl border border-mint/30 bg-mint/5 px-3 py-2 text-sm leading-relaxed text-navy/85">
-          <span className="font-bold text-mint">Astuce : </span>
+          {lab && <span className="font-bold text-mint">{lab} : </span>}
           {gras(b.note)}
         </p>
       )
+    }
     return null
   }
 
@@ -1463,6 +1468,82 @@ function Methode({ v }) {
           Voir la suite ({revele}/{total}) <span className="text-base leading-none">↓</span>
         </button>
       )}
+    </div>
+  )
+}
+
+// La vraie fenêtre « Gestionnaire de noms » : un tableau Nom / Valeur / Fait référence à,
+// une ligne sélectionnée, et les boutons (dont Supprimer surligné).
+function GestionnaireNoms({ v }) {
+  const { noms = [], selection = 0 } = v
+  return (
+    <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+        <span>Gestionnaire de noms</span>
+        <span className="text-navy/40">✕</span>
+      </div>
+      <div className="space-y-2 bg-white p-3">
+        <div className="flex gap-1.5">
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5">Nouveau…</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5">Modifier…</span>
+          <span className="rounded-sm border-2 border-mint bg-mint/15 px-2 py-0.5 font-bold text-navy">Supprimer</span>
+        </div>
+        <div className="overflow-hidden rounded-sm border border-navy/20">
+          <div className="grid bg-navy/10 text-navy/55" style={{ gridTemplateColumns: '1fr 0.8fr 1.4fr' }}>
+            <span className="px-2 py-1">Nom</span>
+            <span className="border-l border-navy/10 px-2 py-1">Valeur</span>
+            <span className="border-l border-navy/10 px-2 py-1">Fait référence à</span>
+          </div>
+          {noms.map((n, i) => (
+            <div key={i} className={`grid ${i === selection ? 'bg-[#cfe2ff]' : 'bg-white'}`} style={{ gridTemplateColumns: '1fr 0.8fr 1.4fr' }}>
+              <span className="border-t border-navy/10 px-2 py-1 font-mono text-navy">{n.nom}</span>
+              <span className="border-l border-t border-navy/10 px-2 py-1 text-navy/70">{n.valeur}</span>
+              <span className="border-l border-t border-navy/10 px-2 py-1 font-mono text-navy/70">{n.ref}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-end">
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-4 py-0.5">Fermer</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Petite fenêtre de sélection : soit une liste (ex. « Coller un nom »),
+// soit des cases à cocher (ex. « Créer des noms à partir de la sélection »).
+function ListeDialog({ v }) {
+  const { titre, intro, items, cases, selection = 0, ok = 'OK' } = v
+  return (
+    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+        <span>{titre}</span>
+        <span className="text-navy/40">✕</span>
+      </div>
+      <div className="space-y-2 bg-white p-3">
+        {intro && <p className="text-navy/60">{intro}</p>}
+        {items && (
+          <div className="max-h-28 overflow-hidden rounded-sm border border-navy/25">
+            {items.map((it, i) => (
+              <div key={i} className={`px-2 py-1 font-mono ${i === selection ? 'bg-[#0a63c9] text-white' : 'text-navy'}`}>{it}</div>
+            ))}
+          </div>
+        )}
+        {cases && (
+          <div className="space-y-1.5 py-0.5">
+            {cases.map((c, i) => (
+              <div key={i} className="flex items-center gap-2 text-navy/80">
+                <span className={`grid h-3.5 w-3.5 shrink-0 place-items-center rounded-sm border text-[9px] ${c.coche ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{c.coche ? '✓' : ''}</span>
+                {c.label}
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="flex justify-end gap-2">
+          <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">{ok}</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
+        </div>
+      </div>
     </div>
   )
 }
@@ -1497,6 +1578,8 @@ function Visuel({ v }) {
   if (v.type === 'stylenom') return <StyleNom />
   if (v.type === 'themes') return <Themes />
   if (v.type === 'champs') return <Champs v={v} />
+  if (v.type === 'gestionnairenoms') return <GestionnaireNoms v={v} />
+  if (v.type === 'listedialog') return <ListeDialog v={v} />
   if (v.type === 'barreformule') return <BarreFormule />
   if (v.type === 'barrefx') return <BarreFx v={v} />
   if (v.type === 'zonenom') return <ZoneNom v={v} />
@@ -1534,7 +1617,7 @@ function Visuel({ v }) {
   }
   if (v.type === 'operateurs') {
     return (
-      <div className="mt-3 grid grid-cols-2 gap-2">
+      <div className={`mt-3 grid gap-2 ${v.cols === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
         {(v.items || OPERATEURS).map((o, i) => (
           <div key={i} className="flex items-center gap-2 rounded-xl border border-navy/10 bg-navy/5 p-2 animate-fade-up" style={{ animationDelay: `${i * 70}ms` }}>
             <span className="font-mono text-lg font-bold text-mint">{o.s}</span>
@@ -1711,7 +1794,13 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
         <button onClick={onQuitter} aria-label="Quitter" className="text-2xl leading-none text-navy/60 hover:text-navy">
           ×
         </button>
-        <p className="truncate text-xs font-bold uppercase tracking-wide text-navy/50">{lecon.titre}</p>
+        <p className="flex-1 truncate text-xs font-bold uppercase tracking-wide text-navy/50">{lecon.titre}</p>
+        <button
+          onClick={() => (onTermine || onQuitter)()}
+          className="shrink-0 text-xs font-bold text-navy/40 transition hover:text-navy"
+        >
+          Je connais, passer ›
+        </button>
       </div>
 
       <div className="mx-auto w-full max-w-2xl flex-1 px-5 py-6">
