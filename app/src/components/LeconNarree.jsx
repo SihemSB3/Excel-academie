@@ -877,7 +877,7 @@ function ProtegerFeuilleDialog() {
 // Un tableau de données Excel « mis sous forme de tableau » : en-têtes colorés,
 // flèches de filtre, lignes en couleurs alternées (zébrées).
 function TableauDonnees({ v }) {
-  const { entetes = [], lignes = [], filtres = false, filtreCol = -1, legende, total, brut = false, selection = false, colSel = -1 } = v
+  const { entetes = [], lignes = [], filtres = false, filtreCol = -1, legende, total, brut = false, selection = false, colSel = -1, ligneSel = -1, ligneSelDepuis = 1 } = v
   return (
     <div className="mt-3">
       <div className={`animate-fade-up overflow-hidden rounded-lg border border-navy/15 shadow-lg ${selection ? 'ring-2 ring-[#1a73e8] ring-offset-1' : ''}`}>
@@ -897,9 +897,12 @@ function TableauDonnees({ v }) {
           <tbody>
             {lignes.map((row, ri) => (
               <tr key={ri} className={brut ? 'bg-white' : ri % 2 ? 'bg-navy/[0.04]' : 'bg-white'}>
-                {row.map((cell, ci) => (
-                  <td key={ci} className={`border-b border-navy/10 px-2 py-1 text-navy/85 ${colSel === ci ? 'bg-sky-500/15' : ''}`}>{cell}</td>
-                ))}
+                {row.map((cell, ci) => {
+                  const sel = ri === ligneSel && ci >= ligneSelDepuis
+                  return (
+                    <td key={ci} className={`border-b border-navy/10 px-2 py-1 text-navy/85 ${colSel === ci ? 'bg-sky-500/15' : ''} ${sel ? 'bg-sky-500/20 font-semibold ring-1 ring-inset ring-[#1a73e8]/60' : ''}`}>{cell}</td>
+                  )
+                })}
               </tr>
             ))}
             {total && (
@@ -2949,8 +2952,93 @@ function Sparklines() {
   )
 }
 
+// La fenêtre Excel ENTIÈRE (barre de titre + ruban + feuille avec le graphique) et, à droite,
+// le volet « Format de l'axe » docké comme dans le vrai Excel. volet=false : on montre où
+// double-cliquer l'axe (surligné) ; volet=true : le volet d'options ouvert à droite.
+function ClasseurAxe({ v }) {
+  const volet = v?.volet
+  const vals = [12, 19, 15, 24]
+  const cats = ['Jan', 'Fév', 'Mar', 'Avr']
+  const max = 25
+  const px = 30
+  const py = 10
+  const pw = 150
+  const ph = 88
+  const baseY = py + ph
+  const gw = pw / cats.length
+  return (
+    <div className="mx-auto mt-3 w-full max-w-md overflow-hidden rounded-md border border-navy/25 shadow-xl">
+      <div className="flex items-center bg-[#1f7a4d] px-2 py-1 text-[10px] text-white">
+        <span className="font-semibold">📗 Ventes.xlsx — Excel</span>
+        <span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span>
+      </div>
+      <div className="flex flex-wrap items-center gap-1.5 border-b border-navy/10 bg-[#f3f3f3] px-2 py-1 text-[9px]">
+        {['Accueil', 'Insertion', 'Création de graphique', 'Format'].map((o, i) => (
+          <span key={i} className={i === 3 ? 'rounded-t bg-white px-1 font-bold text-[#0a7a3d]' : 'text-navy/55'}>{o}</span>
+        ))}
+      </div>
+      <div className="flex bg-white">
+        <div className="flex-1 p-2">
+          <div className="rounded border border-navy/15 bg-white p-1 shadow-sm">
+            <svg viewBox="0 0 190 112" className="w-full">
+              <text x="95" y="9" textAnchor="middle" fontSize="8" fontWeight="700" fill="#0a335d">Ventes par mois</text>
+              {[0, 1, 2, 3, 4, 5].map((i) => {
+                const gy = baseY - (i / 5) * ph
+                return (
+                  <g key={i}>
+                    <line x1={px} y1={gy} x2={px + pw} y2={gy} stroke="#0a335d" strokeOpacity="0.1" />
+                    <text x={px - 3} y={gy + 3} textAnchor="end" fontSize="7" fill={!volet ? '#2fa39c' : '#0a335d'} fillOpacity={!volet ? 1 : 0.6} fontWeight={!volet ? 700 : 400}>{i * 5}</text>
+                  </g>
+                )
+              })}
+              {/* Axe Y : surligné en turquoise à l'étape « double-clic » */}
+              <line x1={px} y1={py} x2={px} y2={baseY} stroke={!volet ? '#41c1ba' : '#0a335d'} strokeWidth={!volet ? 2.5 : 1} strokeOpacity={!volet ? 1 : 0.4} />
+              <line x1={px} y1={baseY} x2={px + pw} y2={baseY} stroke="#0a335d" strokeWidth="1" strokeOpacity="0.4" />
+              {vals.map((val, i) => {
+                const h = (val / max) * ph
+                const bw = gw * 0.5
+                const x = px + gw * i + (gw - bw) / 2
+                return (
+                  <g key={i}>
+                    <rect x={x} y={baseY - h} width={bw} height={h} rx="1" fill="#41c1ba" />
+                    <text x={px + gw * (i + 0.5)} y={baseY + 9} textAnchor="middle" fontSize="7" fill="#0a335d" fillOpacity="0.7">{cats[i]}</text>
+                  </g>
+                )
+              })}
+              {!volet && (
+                <g>
+                  <rect x={px - 20} y={py - 2} width="20" height={ph + 4} rx="2" fill="none" stroke="#41c1ba" strokeWidth="1.2" strokeDasharray="3 2" />
+                  <text x={px + 6} y={py + 12} fontSize="7.5" fontWeight="700" fill="#2fa39c">↖ double-clic</text>
+                </g>
+              )}
+            </svg>
+          </div>
+        </div>
+        {volet && (
+          <div className="w-36 shrink-0 border-l border-navy/15 bg-[#fafafa] p-2 text-[10px]">
+            <div className="flex items-center justify-between font-semibold text-navy/80"><span>Format de l'axe</span><span className="text-navy/40">✕</span></div>
+            <p className="mt-1.5 font-bold text-navy/75">▾ Options d'axe</p>
+            <div className="mt-1 space-y-1">
+              {[['Minimum', '0,0'], ['Maximum', '25,0'], ['Unité princ.', '5,0'], ['Unité second.', '1,0']].map(([l, val], i) => (
+                <div key={i} className="flex items-center justify-between gap-1">
+                  <span className="text-navy/65">{l}</span>
+                  <span className={`w-12 rounded-sm border px-1 py-0.5 text-right text-navy ${i < 3 ? 'border-mint ring-1 ring-mint' : 'border-navy/25'}`}>{val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      <p className="bg-white px-2 pb-2 pt-1 text-center text-[10px] leading-snug text-navy/55">
+        {volet ? 'Le volet « Format de l\'axe » s\'ouvre à droite de la fenêtre : règle les limites (min/max) et les unités.' : 'Double-clique l\'axe vertical des valeurs (surligné en turquoise) dans ton classeur.'}
+      </p>
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
+  if (v.type === 'classeuraxe') return <ClasseurAxe v={v} />
   if (v.type === 'graphique') return <Graphique v={v} />
   if (v.type === 'typesgraphiques') return <TypesGraphiques />
   if (v.type === 'galeriegraphiques') return <GalerieGraphiques />
