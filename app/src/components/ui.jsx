@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { ceintureInfo } from '../lib/belts'
 
 // Bouton principal réutilisé partout
@@ -17,7 +18,10 @@ export function Bouton({ children, onClick, variant = 'primary', disabled = fals
 
 // Ceinture dessinée en SVG, colorée selon le niveau
 export function BeltGraphic({ ceinture = 'blanche', size = 130, anime = false }) {
-  const { couleur, bord } = ceintureInfo(ceinture)
+  const { couleur, couleur2, bord } = ceintureInfo(ceinture)
+  const bicolore = couleur2 && couleur2 !== couleur
+  const uid = useId()
+  const clip = `belt-${uid}`
   return (
     <svg
       width={size}
@@ -26,11 +30,29 @@ export function BeltGraphic({ ceinture = 'blanche', size = 130, anime = false })
       className={anime ? 'animate-glow' : ''}
       aria-hidden="true"
     >
-      <rect x="83" y="74" width="15" height="46" rx="4" fill={couleur} stroke={bord} strokeWidth="2" />
-      <rect x="102" y="74" width="15" height="46" rx="4" fill={couleur} stroke={bord} strokeWidth="2" />
-      <rect x="8" y="46" width="184" height="34" rx="6" fill={couleur} stroke={bord} strokeWidth="2" />
-      <rect x="78" y="40" width="44" height="48" rx="9" fill={couleur} stroke={bord} strokeWidth="2" />
+      {/* On découpe selon la forme de la ceinture, puis on remplit en deux moitiés (bicolore) */}
+      <defs>
+        <clipPath id={clip}>
+          <rect x="83" y="74" width="15" height="46" rx="4" />
+          <rect x="102" y="74" width="15" height="46" rx="4" />
+          <rect x="8" y="46" width="184" height="34" rx="6" />
+          <rect x="78" y="40" width="44" height="48" rx="9" />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${clip})`}>
+        <rect x="0" y="30" width="100" height="102" fill={couleur} />
+        <rect x="100" y="30" width="100" height="102" fill={bicolore ? couleur2 : couleur} />
+      </g>
+      {/* Contours par-dessus le remplissage */}
+      <g fill="none" stroke={bord} strokeWidth="2">
+        <rect x="83" y="74" width="15" height="46" rx="4" />
+        <rect x="102" y="74" width="15" height="46" rx="4" />
+        <rect x="8" y="46" width="184" height="34" rx="6" />
+        <rect x="78" y="40" width="44" height="48" rx="9" />
+      </g>
       <rect x="8" y="64" width="184" height="5" fill="rgba(0,0,0,.10)" />
+      {/* La couture centrale, qui sépare nettement les deux couleurs */}
+      {bicolore && <line x1="100" y1="40" x2="100" y2="120" stroke={bord} strokeWidth="2" />}
     </svg>
   )
 }

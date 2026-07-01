@@ -1,0 +1,200 @@
+{
+  "chapitre": 6,
+  "titre": "Lier des feuilles & Tableaux de synthèse",
+  "niveau": 6,
+  "ceinture": "orange-verte",
+  "objectif": "Transformer un classeur en tableau de bord clair et centralisé : gérer les feuilles (nommer, insérer, supprimer, déplacer, dupliquer, colorer), travailler sur plusieurs feuilles à la fois, lier des cellules entre feuilles et entre classeurs, consolider avec les calculs et références 3D, et protéger feuilles et classeur.",
+  "note_pedago": "Chapitre COMPLET (6 lecons) : gererfeuilles (nommer/inserer/supprimer/deplacer/dupliquer/couleur, Ex.48), lierfeuilles (lier meme feuille + entre 2 feuilles =Janvier!B5, Ex.51), groupefeuilles (groupe de travail Shift/Ctrl + deplacer/copier autre classeur), liaisonsclasseurs (liaison externe =[LIAISON.xlsx]Modele!$B$5, Donnees>Liaisons de classeur, collage special avec liaison), calculs3d (=SOMME(AIN!C10;Allier!C10) + reference 3D =SOMME(AIN:Cantal!C10) avec Shift), protegerfeuilles (Revision>Proteger, verrouillage par defaut, autorisations de plage, proteger classeur, masquer, Ex.49+Ex.50) + quiz (8) + checklist (10). Memes regles que ch.3-5. QCM = p262-263 verbatim ; checklist = p264 verbatim.",
+  "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
+  "modules": [
+    {
+      "id": "ch6-gererfeuilles",
+      "type": "narration",
+      "lecon": "gererfeuilles",
+      "titre": "Gérer les feuilles du classeur",
+      "xp": 30
+    },
+    {
+      "id": "ch6-lierfeuilles",
+      "type": "narration",
+      "lecon": "lierfeuilles",
+      "titre": "Lier des cellules & des feuilles",
+      "xp": 30
+    },
+    {
+      "id": "ch6-groupefeuilles",
+      "type": "narration",
+      "lecon": "groupefeuilles",
+      "titre": "Travailler sur plusieurs feuilles",
+      "xp": 30
+    },
+    {
+      "id": "ch6-liaisonsclasseurs",
+      "type": "narration",
+      "lecon": "liaisonsclasseurs",
+      "titre": "Les liaisons entre classeurs",
+      "xp": 30
+    },
+    {
+      "id": "ch6-calculs3d",
+      "type": "narration",
+      "lecon": "calculs3d",
+      "titre": "Les calculs 3D & références 3D",
+      "xp": 30
+    },
+    {
+      "id": "ch6-protegerfeuilles",
+      "type": "narration",
+      "lecon": "protegerfeuilles",
+      "titre": "Protéger une feuille ou un classeur",
+      "xp": 30
+    },
+    {
+      "id": "ch6-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 6,
+      "total": 8,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.6 p262-263 (8 questions), repris verbatim. reponses_correctes = index corrects (0-3).",
+      "questions": [
+        {
+          "id": "ch6-qcm-01",
+          "question": "Comment renommer rapidement une feuille ?",
+          "options": [
+            "Clic droit sur l'onglet → « Déplacer ou copier… »",
+            "Onglet « Révision » → « Protéger la feuille »",
+            "Double-clic sur l'onglet → saisie du nouveau nom → Entrée",
+            "Onglet « Accueil » → groupe « Cellules » → « Insérer »"
+          ],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch6-qcm-02",
+          "question": "Pour supprimer une feuille via le ruban, on va dans :",
+          "options": [
+            "Accueil > groupe Cellules > flèche de « Supprimer » > « Supprimer la feuille »",
+            "Révision > « Protéger le classeur »",
+            "Accueil > groupe Publipostage > « Supprimer la feuille »",
+            "Données > « Liaisons de classeur »"
+          ],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch6-qcm-03",
+          "question": "Quelle action crée une copie d'une feuille par glisser-déposer ?",
+          "options": [
+            "Maintenir Ctrl en glissant l'onglet",
+            "Maintenir Shift en glissant l'onglet",
+            "Glisser-déposer sans aucune touche",
+            "Clic droit sur l'onglet → « Renommer »"
+          ],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch6-qcm-04",
+          "question": "Pour déplacer ou copier une feuille dans un autre classeur, on utilise :",
+          "options": [
+            "Clic droit sur l'onglet → « Déplacer ou copier… » → choisir le classeur cible",
+            "Clic droit → « Renommer »",
+            "Onglet « Accueil » → « Collage spécial avec liaison »",
+            "Onglet « Affichage » → « Groupe fenêtre »"
+          ],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch6-qcm-05",
+          "question": "Quelle méthode permet de sélectionner plusieurs feuilles non adjacentes ?",
+          "options": [
+            "Ctrl + clic sur chaque onglet désiré",
+            "Shift + clic sur le premier et dernier onglet",
+            "Double-clic sur l'un des onglets",
+            "Ctrl + clic glissé"
+          ],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch6-qcm-06",
+          "question": "Quel onglet du ruban contient la gestion des liaisons externes ?",
+          "options": ["Accueil", "Données", "Révision", "Formules"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch6-qcm-07",
+          "question": "Quelle fonction consolide des cellules identiques sur plusieurs feuilles ?",
+          "options": [
+            "=3D(…)",
+            "=SOMME(Feuille2:Feuille6!A1)",
+            "=CONSOLIDER(…)",
+            "=LIEN([Classeur])"
+          ],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch6-qcm-08",
+          "question": "Comment masquer une feuille ?",
+          "options": [
+            "Clic droit sur l'onglet → « Masquer »",
+            "Onglet « Affichage » → « Grouper »",
+            "Onglet « Révision » → « Protéger la feuille »",
+            "Double-clic sur l'onglet"
+          ],
+          "reponses_correctes": [0]
+        }
+      ]
+    },
+    {
+      "id": "ch6-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist de l'ebook ch.6 (p264), reprise verbatim.",
+      "a_valider": false,
+      "items": [
+        "Je sais renommer chaque feuille selon son contenu.",
+        "Je sais supprimer ou archiver les feuilles inutiles.",
+        "Je sais organiser l'ordre des onglets pour refléter le processus de travail.",
+        "Je crée et identifie correctement les copies de feuilles (Ctrl + glisser).",
+        "Je sais protéger les feuilles critiques (ajout de mot de passe si nécessaire).",
+        "Je teste et vérifie les liaisons internes entre les feuilles.",
+        "Je sais mettre à jour les liaisons externes vers d'autres classeurs.",
+        "Je sais configurer les calculs 3D pour consolider les données sur plusieurs feuilles.",
+        "Je sais définir les plages autorisées quand une feuille est protégée.",
+        "Je communique aux utilisateurs finaux les protections et le mode Groupe de feuilles."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["renommer", "feuille", "onglet", "nom"],
+      "question": "Comment renommer une feuille ?",
+      "reponse": "Le plus rapide : double-clique sur l'onglet, tape le nouveau nom (31 caractères max), puis Entrée. Sinon, clic droit sur l'onglet > Renommer."
+    },
+    {
+      "mots_cles": ["lier", "cellule", "feuille", "synthèse", "janvier"],
+      "question": "Comment afficher dans une feuille la valeur d'une autre feuille ?",
+      "reponse": "Place-toi dans la cellule cible, tape =, clique sur l'onglet de la feuille source (ex. Janvier), clique la cellule (ex. B5) puis Entrée. Excel écrit =Janvier!B5. Si la source change, le lien se met à jour tout seul."
+    },
+    {
+      "mots_cles": ["liaison", "classeur", "externe", "autre fichier"],
+      "question": "Comment lier une cellule d'un autre fichier Excel ?",
+      "reponse": "Ouvre les deux classeurs. Dans le fichier cible, cellule cible, tape =, passe dans le fichier source (Affichage > Changer de fenêtre), clique la cellule source, Entrée. Excel écrit =[LIAISON.xlsx]Modèle!$B$5. Tu gères tout ça via Données > Liaisons de classeur."
+    },
+    {
+      "mots_cles": ["3d", "consolider", "plusieurs feuilles", "somme", "total"],
+      "question": "Comment additionner la même cellule sur plusieurs feuilles ?",
+      "reponse": "Si les feuilles sont côte à côte : =SOMME(PremièreFeuille:DernièreFeuille!Cellule), par exemple =SOMME(AIN:Cantal!C10), en cliquant la première feuille puis Shift + clic sur la dernière. Sinon, cite chaque feuille séparée par un point-virgule : =SOMME(AIN!C10;Allier!C10)."
+    },
+    {
+      "mots_cles": ["protéger", "verrouiller", "mot de passe", "feuille", "classeur", "masquer"],
+      "question": "Comment protéger ou masquer une feuille ?",
+      "reponse": "Onglet Révision > Protéger > Protéger la feuille (coche les actions autorisées et, au besoin, un mot de passe). Protéger le classeur verrouille la structure (les onglets). Pour cacher une feuille : clic droit sur l'onglet > Masquer ; combine masquer + protéger le classeur pour vraiment bloquer l'accès."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "orange-verte",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture orange-verte ! Tu transformes un classeur éparpillé en tableau de bord centralisé, et tu sais protéger ton travail."
+  }
+}

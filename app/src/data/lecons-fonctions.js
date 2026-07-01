@@ -2177,4 +2177,493 @@ const FONCTIONSFINANCIERES = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES }
+// ======================================================================
+// CHAPITRE 6 — Lier des feuilles & Tableaux de synthèse (ceinture marron)
+// PARTIE 1 : gérer les feuilles + lier des cellules/feuilles.
+// PARTIE 2 (à venir) : liaisons entre classeurs, calculs/références 3D, protection.
+// ======================================================================
+const U6 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX6 = {
+  ex48: { titre: 'Exercice 48 · Gérer les feuilles', url: U6('1lSbCb39V-BvhlHPToOJlByuAGAVyRxtu') },
+  ex49: { titre: 'Exercice 49 · Protéger les feuilles', url: U6('1BFYBd5KZemeTtWnh_dsRfhSlLGdCNJGK') },
+  ex50: { titre: 'Exercice 50 · Protéger et verrouiller les feuilles', url: U6('18tDrAmtYmebzRMk4w1XAKwjYerBK4kuZ') },
+  ex51: { titre: 'Exercice 51 · Les liaisons', url: U6('1NxxrVxepD465ZVXpB4KCOSXgR__Mlm8v') },
+}
+
+// --- Leçon 1 : Gérer les feuilles du classeur ---
+const GERERFEUILLES = {
+  id: 'fn-gererfeuilles',
+  titre: 'Gérer les feuilles du classeur',
+  exercices: [EX6.ex48],
+  narration: [
+    { humeur: 'accueil', dit: 'Un classeur Excel peut contenir plusieurs feuilles (les onglets, en bas). On va apprendre à les nommer, ajouter, supprimer, déplacer, copier et colorer, pour bien organiser ton travail.' },
+    {
+      humeur: 'pensif',
+      dit: 'Le petit lexique pour s\'y retrouver :',
+      visuel: { type: 'parties', items: [{ label: '**Feuille** : un onglet de calcul, en bas du classeur.' }, { label: '**Onglet** : l\'étiquette cliquable de la feuille (le mot « onglet » désigne aussi ceux du ruban : Accueil, Formules…).' }, { label: '**Classeur** : le fichier Excel (.xlsx) entier, qui contient une ou plusieurs feuilles.' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour **renommer** une feuille, le plus rapide : le double-clic.',
+      visuel: {
+        type: 'methode',
+        titre: 'Renommer : le double-clic',
+        blocs: [
+          { etapes: ['**Double-clique** sur l\'onglet de la feuille', 'Saisis le nouveau nom (31 caractères max)', 'Appuie sur **Entrée**'] },
+          { capture: { type: 'renommeronglet' } },
+          { note: 'Tu peux aussi faire **clic droit sur l\'onglet > Renommer**.' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour **ajouter** une feuille, le plus simple : le bouton **＋** en bas, à côté des onglets.',
+      visuel: { type: 'ajouteronglet' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Tu peux aussi insérer par le ruban ou le clic droit.',
+      visuel: {
+        type: 'methode',
+        titre: 'Insérer une feuille',
+        blocs: [
+          { etapes: ['**Via le ruban** : Accueil > groupe **Cellules** > **Insérer** > Insérer une feuille'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer', actif: true }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format' }] } },
+          { capture: { type: 'menu', items: [{ label: 'Insérer des cellules…' }, { label: 'Insérer des lignes dans la feuille' }, { label: 'Insérer des colonnes dans la feuille' }, { icone: '📄', label: 'Insérer une feuille', actif: true }] } },
+          { note: 'Ou **clic droit sur un onglet > Insérer**.' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour **supprimer** une feuille devenue inutile.',
+      visuel: {
+        type: 'methode',
+        titre: 'Supprimer une feuille',
+        blocs: [
+          { etapes: ['Sélectionne l\'onglet à supprimer', 'Accueil > groupe **Cellules** > la flèche de **Supprimer** > **Supprimer la feuille**'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer', actif: true }, { icone: '▤', label: 'Format' }] } },
+          { note: 'Ou **clic droit sur l\'onglet > Supprimer**.' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Une précaution avant de supprimer :',
+      visuel: { type: 'encart', label: 'Attention', texte: 'La suppression d\'une feuille est **définitive** : Ctrl + Z ne la récupère pas. Vérifie bien qu\'elle ne contient pas de données importantes avant de valider.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour **réorganiser** l\'ordre des feuilles : le glisser-déposer.',
+      visuel: {
+        type: 'methode',
+        titre: 'Déplacer une feuille',
+        blocs: [
+          { etapes: ['**Clique et maintiens** l\'onglet', 'Fais-le **glisser** à sa nouvelle position', 'Relâche la souris'] },
+          { capture: { type: 'deplaceronglet' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour **dupliquer** une feuille (garder l\'original et créer une copie).',
+      visuel: {
+        type: 'methode',
+        titre: 'Dupliquer une feuille',
+        blocs: [
+          { etapes: ['**Méthode rapide** : maintiens **Ctrl** et fais glisser l\'onglet (sur Mac : **⌥ Option** + glisser)'] },
+          { capture: { type: 'onglets', onglets: ['Janvier', 'Janvier (2)', 'Février'], actif: 'Janvier (2)', items: [], legende: 'Une copie « Janvier (2) » apparaît à côté de l\'original.' } },
+          { etapes: ['**Méthode clic droit** : clic droit sur l\'onglet, puis « Déplacer ou copier… »'], depart: 2 },
+          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { icone: '📑', label: 'Déplacer ou copier…', actif: true }] } },
+          { etapes: ['Dans la fenêtre, **coche « Créer une copie »**, choisis la position, puis **OK**'], depart: 3 },
+          { capture: { type: 'deplacercopier', feuilles: ['Janvier', 'Février', '(en dernier)'], selection: 0, copie: true } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour t\'y retrouver d\'un coup d\'œil, tu peux **colorer** les onglets.',
+      visuel: {
+        type: 'methode',
+        titre: 'Couleur d\'onglet',
+        blocs: [
+          { etapes: ['**Clic droit** sur l\'onglet, puis **Couleur d\'onglet**', 'Choisis une teinte dans la palette'] },
+          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { label: 'Couleur d\'onglet  ▸', actif: true }, '-', { label: 'Masquer' }] } },
+          { capture: { type: 'palette', selection: 4 } },
+          { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Synthèse'], actif: 'Synthèse', items: [], couleurs: { Janvier: '#41c1ba', Février: '#d97706', Synthèse: '#8b5cf6' }, legende: 'Résultat : des onglets colorés pour repérer tes feuilles en un instant.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Comment renommer le plus vite une feuille ?',
+      visuel: { type: 'question', options: ['Double-clic sur l\'onglet, puis je tape le nom', 'Onglet Révision > Protéger la feuille'], bonne: 0, explication: 'Le double-clic sur l\'onglet permet de taper directement le nouveau nom, puis Entrée. (Le clic droit > Renommer marche aussi.)' },
+    },
+    { humeur: 'fier', dit: 'Nommer, ajouter, supprimer, déplacer, copier, colorer : ton classeur est bien rangé. Premier pas de la ceinture marron. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : Lier des cellules & des feuilles ---
+const LIERFEUILLES = {
+  id: 'fn-lierfeuilles',
+  titre: 'Lier des cellules & des feuilles',
+  exercices: [EX6.ex51],
+  narration: [
+    { humeur: 'accueil', dit: 'Lier une cellule, c\'est afficher dans une cellule la valeur d\'une autre cellule, qu\'elle soit sur la même feuille ou sur une autre. L\'énorme avantage : si la source change, le lien se met à jour tout seul.' },
+    {
+      humeur: 'pensif',
+      dit: 'D\'abord, **lier dans la même feuille**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Lier dans la même feuille',
+        blocs: [
+          { etapes: ['Clique sur la cellule cible (celle qui affichera la valeur)', 'Tape **=**', 'Clique sur la cellule source, puis **Entrée**'] },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Article', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Rappel prix', entete: true }, A2: { t: 'Clavier' }, B2: { t: '30', num: true, ref: true }, C2: { t: '30', num: true, vert: true } }, formule: '=B2', actif: 'C2', legende: 'C2 affiche la valeur de B2. Si B2 change, C2 suit automatiquement.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Le plus utile : **lier entre deux feuilles**. Exemple : ramener le total de la feuille « Janvier » dans une feuille « Synthèse ».',
+      visuel: {
+        type: 'methode',
+        titre: 'Lier entre deux feuilles',
+        blocs: [
+          { etapes: ['Place-toi sur la feuille de **destination** (Synthèse), dans la cellule cible, et tape **=**'] },
+          { capture: { type: 'tableur', feuilles: ['Janvier', 'Février', 'Synthèse'], feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Mois', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'Janvier' }, B2: { t: '=' } }, formule: '=', actif: 'B2', legende: 'On est sur « Synthèse », dans la cellule cible B2 : on tape =.' } },
+          { etapes: ['Clique sur l\'**onglet** de la feuille **source** (Janvier)'], depart: 2 },
+          { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Synthèse'], actif: 'Janvier', items: [], legende: 'On clique sur l\'onglet « Janvier » : Excel bascule sur cette feuille.' } },
+          { etapes: ['Sur « Janvier », clique la **cellule source** (B5), puis **Entrée**'], depart: 3 },
+          { capture: { type: 'tableur', feuilles: ['Janvier', 'Février', 'Synthèse'], feuilleActive: 'Janvier', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Semaine', entete: true }, B1: { t: 'CA', entete: true }, A2: { t: 'S1' }, B2: { t: '2 000', num: true }, A3: { t: 'S2' }, B3: { t: '2 300', num: true }, A4: { t: 'S3' }, B4: { t: '4 500', num: true }, A5: { t: 'Total' }, B5: { t: '8 800', num: true, ref: true } }, formule: '=Janvier!B5', actif: 'B5', legende: 'On est passé sur « Janvier » : on clique la cellule source B5 (le total).' } },
+          { capture: { type: 'tableur', feuilles: ['Janvier', 'Février', 'Synthèse'], feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Mois', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'Janvier' }, B2: { t: '8 800', vert: true } }, formule: '=Janvier!B5', actif: 'B2', legende: 'De retour sur « Synthèse » : B2 affiche le total de Janvier, et se met à jour tout seul.' } },
+          { note: 'Excel écrit la référence sous la forme **NomDeLaFeuille!Cellule** (ex : =Janvier!B5). Le « ! » sépare la feuille de la cellule.' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pourquoi c\'est si pratique :',
+      visuel: { type: 'parties', items: [{ label: '**Automatisation** : si la cellule source change, le lien se met à jour partout, tout seul.' }, { label: '**Organisation** : tu centralises tes résultats dans une feuille « Synthèse », sans recopier à la main.' }, { label: '**Clarté** : tu vois toujours d\'où vient chaque chiffre.' }] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour afficher dans « Synthèse » la cellule B5 de la feuille « Janvier », Excel écrit...',
+      visuel: { type: 'question', options: ['=Janvier!B5', '=Janvier+B5'], bonne: 0, explication: 'Une référence à une autre feuille s\'écrit NomDeLaFeuille!Cellule, avec un point d\'exclamation : =Janvier!B5.' },
+    },
+    { humeur: 'fier', dit: 'Tes feuilles communiquent : une valeur saisie une fois, réutilisée partout. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : Travailler sur plusieurs feuilles à la fois ---
+const GROUPEFEUILLES = {
+  id: 'fn-groupefeuilles',
+  titre: 'Travailler sur plusieurs feuilles',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Parfois tu veux agir sur plusieurs feuilles d\'un coup (saisir, mettre en forme, imprimer les mêmes données), ou déplacer une feuille vers un autre fichier. Voyons les deux.' },
+    {
+      humeur: 'pensif',
+      dit: 'Le **groupe de travail** : tu sélectionnes plusieurs feuilles, et tout ce que tu fais s\'applique à toutes en même temps. Trois façons de sélectionner.',
+      visuel: {
+        type: 'methode',
+        titre: 'Sélectionner un groupe de feuilles',
+        blocs: [
+          { etapes: ['**Toutes les feuilles** : clic droit sur un onglet, puis « Sélectionner toutes les feuilles » (pas besoin d\'autre touche)'] },
+          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { label: 'Déplacer ou copier…' }, '-', { icone: '☑', label: 'Sélectionner toutes les feuilles', actif: true }] } },
+          { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Mars'], actifs: ['Janvier', 'Février', 'Mars'], items: [], legende: 'Résultat : les 3 feuilles sont sélectionnées (fond blanc), et [Groupe de travail] apparaît dans la barre de titre.' } },
+          { etapes: ['**Feuilles côte à côte** : clique la première, maintiens **Shift**, clique la dernière'], depart: 2 },
+          { capture: { type: 'touche', touches: ['⇧ Maj'], note: 'La touche Maj (aussi appelée Shift), tout en bas à gauche et à droite du clavier.' } },
+          { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Mars'], actifs: ['Janvier', 'Février', 'Mars'], items: [], legende: 'Shift prend la première, la dernière, ET tout ce qui est entre : ici les 3 feuilles.' } },
+          { etapes: ['**Feuilles séparées** : maintiens **Ctrl** et clique chaque onglet voulu (sur Mac : **⌘** + clic)'], depart: 3 },
+          { capture: { type: 'touche', touches: ['Ctrl'], note: 'La touche Ctrl (Contrôle), en bas du clavier. Sur Mac : la touche ⌘ Cmd.' } },
+          { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Mars'], actifs: ['Janvier', 'Mars'], items: [], legende: 'Ctrl prend SEULEMENT les feuilles cliquées : ici Janvier et Mars, pas Février.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Shift ou Ctrl, quelle différence ? C\'est important, ce n\'est pas la même chose :',
+      visuel: { type: 'encart', label: 'À retenir', liste: ['**Shift** = une **plage continue** : la première feuille, la dernière, et TOUT ce qui est entre les deux.', '**Ctrl** (⌘ sur Mac) = des feuilles **séparées** : seulement celles que tu cliques, une par une.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'À garder en tête quand tu es en groupe de travail :',
+      visuel: { type: 'encart', label: 'Attention', texte: 'Tant que le groupe est actif, **tout ce que tu tapes ou mets en forme se répercute sur toutes les feuilles sélectionnées**. Très pratique, mais à manier avec soin pour ne pas écraser une feuille par erreur.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour **sortir** du groupe de travail (dissocier les feuilles).',
+      visuel: {
+        type: 'methode',
+        titre: 'Dissocier les feuilles',
+        blocs: [
+          { etapes: ['**Clic droit** sur un onglet sélectionné, puis « Dissocier les feuilles »'] },
+          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { label: 'Déplacer ou copier…' }, '-', { label: 'Dissocier les feuilles', actif: true }] } },
+          { note: 'Ou plus rapide : **double-clique sur un onglet non sélectionné** (n\'importe lequel). Chaque feuille redevient indépendante.' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Enfin, pour **déplacer ou copier une feuille vers un autre classeur** (un autre fichier).',
+      visuel: {
+        type: 'methode',
+        titre: 'Déplacer ou copier vers un autre classeur',
+        blocs: [
+          { etapes: ['**Clic droit** sur l\'onglet, puis « Déplacer ou copier… »'] },
+          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, '-', { icone: '📑', label: 'Déplacer ou copier…', actif: true }] } },
+          { etapes: ['Dans la liste **« Dans le classeur »**, choisis le fichier de destination', 'Choisis la position, puis clique sur **OK**'], depart: 2 },
+          { capture: { type: 'champs', titre: 'Déplacer ou copier', champs: [{ l: 'Dans le classeur', v: 'Budget 2026.xlsx  ▾', actif: true }, { l: 'Avant la feuille', v: '(en dernier)' }] } },
+          { note: 'Coche **« Créer une copie »** pour garder l\'original dans le fichier de départ. Laisse décoché pour juste déplacer.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour sélectionner deux feuilles qui ne sont pas côte à côte, tu utilises...',
+      visuel: { type: 'question', options: ['Ctrl + clic sur chaque onglet', 'Un double-clic sur un onglet'], bonne: 0, explication: 'Ctrl + clic sélectionne des feuilles séparées (non adjacentes). Shift, lui, sélectionne tout entre deux onglets côte à côte.' },
+    },
+    { humeur: 'fier', dit: 'Tu sais travailler sur plusieurs feuilles d\'un coup et les faire voyager entre fichiers. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 4 : Lier des cellules entre deux classeurs (liaison externe) ---
+const LIAISONSCLASSEURS = {
+  id: 'fn-liaisonsclasseurs',
+  titre: 'Les liaisons entre classeurs',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Une liaison externe récupère la valeur d\'une cellule située dans un AUTRE fichier Excel. Idéal pour centraliser des synthèses même quand les données sont réparties dans plusieurs classeurs.' },
+    {
+      humeur: 'pensif',
+      dit: 'Créons une liaison entre deux fichiers, pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Créer une liaison externe',
+        blocs: [
+          { etapes: ['Ouvre les **deux classeurs** : le fichier **source** (la donnée) et le fichier **cible** (où l\'afficher)'] },
+          { capture: { type: 'deuxclasseurs', source: 'Ventes.xlsx', cible: 'Synthèse.xlsx' } },
+          { etapes: ['Dans le classeur **cible**, clique sur la cellule où tu veux la valeur, et tape **=**'], depart: 2 },
+          { capture: { type: 'tableur', classeur: 'Synthèse.xlsx', role: 'cible', feuilles: ['Synthèse'], feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Poste', entete: true }, B1: { t: 'Valeur', entete: true }, A2: { t: 'Total ventes' }, B2: { t: '=' } }, formule: '=', actif: 'B2', legende: 'On est dans le classeur CIBLE (Synthèse.xlsx), cellule B2 : on tape =.' } },
+          { etapes: ['Passe dans le classeur **source** : Affichage > **Changer de fenêtre**, puis choisis-le'], depart: 3 },
+          { capture: { type: 'ruban', actif: 'Affichage', groupeNom: 'Fenêtre', groupes: [{ icone: '⊞', label: 'Réorganiser\ntout' }, { icone: '🗗', label: 'Changer de\nfenêtre', actif: true }] } },
+          { etapes: ['Clique sur la **cellule source** (ex : B5), puis appuie sur **Entrée**'], depart: 4 },
+          { capture: { type: 'tableur', classeur: 'Ventes.xlsx', role: 'source', feuilles: ['Modèle'], feuilleActive: 'Modèle', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Poste', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'Ventes' }, B2: { t: '8 800', num: true, ref: true } }, formule: '=[Ventes.xlsx]Modèle!$B$5', actif: 'B2', legende: 'On est passé sur le classeur SOURCE (Ventes.xlsx) : on clique la cellule source.' } },
+          { capture: { type: 'tableur', classeur: 'Synthèse.xlsx', role: 'cible', feuilles: ['Synthèse'], feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Poste', entete: true }, B1: { t: 'Valeur', entete: true }, A2: { t: 'Total ventes' }, B2: { t: '8 800', vert: true } }, formule: '=[Ventes.xlsx]Modèle!$B$5', actif: 'B2', legende: 'De retour sur le classeur CIBLE : B2 affiche la valeur du fichier source, et se met à jour tout seul.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Décortiquons la formule qu\'Excel écrit : **=[Ventes.xlsx]Modèle!$B$5**',
+      visuel: { type: 'encart', label: 'Bon à savoir', liste: ['**[Ventes.xlsx]** entre crochets : le nom du classeur source.', '**Modèle** : la feuille dans ce classeur.', '**$B$5** : la cellule (les « $ » figent la référence).', 'Si le classeur source est fermé, Excel affiche en plus le chemin complet du fichier.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour **vérifier ou modifier** tes liaisons (par exemple si un fichier a été déplacé).',
+      visuel: {
+        type: 'methode',
+        titre: 'Gérer les liaisons',
+        blocs: [
+          { etapes: ['Va dans l\'onglet **Données** du ruban', 'Clique sur **« Liaisons de classeur »** (groupe Requêtes et connexions)'] },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Requêtes et connexions', groupes: [{ icone: '🔄', label: 'Actualiser\ntout' }, { icone: '🔗', label: 'Liaisons de\nclasseur', actif: true }] } },
+          { capture: { type: 'liaisonsdialog', fichiers: [{ nom: 'Ventes.xlsx', statut: 'OK' }] } },
+          { note: 'Pour chaque liaison, tu peux : **mettre à jour** les valeurs, **modifier la source** (changer de fichier), ou **rompre la liaison** (figer la valeur).', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Autre méthode pratique : le **collage spécial avec liaison**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Coller avec liaison',
+        blocs: [
+          { etapes: ['Copie la cellule source (**Ctrl + C**, sur Mac **⌘ + C**)', 'Dans le classeur cible, clique dans la cellule où coller'] },
+          { capture: { type: 'touche', touches: ['Ctrl', 'C'], note: 'Le raccourci pour copier (sur Mac : ⌘ + C).' } },
+          { etapes: ['**Clic droit** dans la cellule, puis **Collage spécial…**'], depart: 3 },
+          { capture: { type: 'menu', items: [{ icone: '✂️', label: 'Couper' }, { icone: '📋', label: 'Copier' }, { icone: '📋', label: 'Coller' }, '-', { label: 'Collage spécial…', actif: true }] } },
+          { etapes: ['Dans la fenêtre, clique sur **Coller avec liaison** (en bas à gauche)'], depart: 4 },
+          { capture: { type: 'collagespecialdialog' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Comment Excel note-t-il une cellule liée à un autre fichier ?',
+      visuel: { type: 'question', options: ['=[Ventes.xlsx]Modèle!$B$5', '=Ventes.xlsx + B5'], bonne: 0, explication: 'Le nom du classeur va entre crochets, suivi de la feuille, d\'un « ! » et de la cellule : =[Ventes.xlsx]Modèle!$B$5.' },
+    },
+    { humeur: 'fier', dit: 'Tes fichiers communiquent entre eux : une synthèse toujours à jour, sans copier-coller. Bravo ! 🎉' },
+  ],
+}
+
+// Helpers pour les captures 3D : une feuille par département (avec son total en C10) + la Synthèse.
+const feuillesDept = ['AIN', 'Allier', 'Hautes Alpes', 'Cantal', 'Synthèse']
+const rowsDept = [1, '⋮', 10]
+const cellsDept = (total) => ({ A1: { t: 'Mois', entete: true }, B1: { t: 'Zone', entete: true }, C1: { t: 'CA', entete: true }, A10: { t: 'Total' }, C10: { t: total, num: true, ref: true } })
+const cellsSynth = (val, vert) => ({ A1: { t: 'Zone', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'France' }, B2: vert ? { t: val, vert: true } : { t: val } })
+
+// --- Leçon 5 : Calculs 3D & références 3D ---
+const CALCULS3D = {
+  id: 'fn-calculs3d',
+  titre: 'Les calculs 3D & références 3D',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Un calcul 3D regroupe automatiquement les MÊMES cellules situées sur plusieurs feuilles d\'un même classeur. Parfait pour consolider des ventes mensuelles ou des dépenses par projet, sans recopier feuille par feuille.' },
+    {
+      humeur: 'pensif',
+      dit: 'Imaginons un classeur avec une feuille par département, et la cellule C10 (le total) à additionner sur chacune.',
+      visuel: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'AIN', cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 000'), legende: 'Chaque département (AIN, Allier…) a son total en C10. On va tous les additionner dans la feuille « Synthèse » (les onglets en bas).' },
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Méthode 1 : feuille par feuille.** Tu cliques chaque feuille et tu sépares par un point-virgule.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 1 : le séparateur ;',
+        blocs: [
+          { etapes: ['Dans la cellule cible (feuille « Synthèse »), tape **=SOMME(**'] },
+          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('=SOMME('), formule: '=SOMME(', actif: 'B2', legende: 'Sur « Synthèse », dans la cellule cible B2 : on tape =SOMME(' } },
+          { etapes: ['Clique l\'onglet de la **1re feuille** (AIN), puis sa cellule **C10**'], depart: 2 },
+          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'AIN', cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 000'), formule: '=SOMME(AIN!C10', actif: 'C10', legende: 'On est sur « AIN » : on clique sa cellule C10. La formule devient =SOMME(AIN!C10' } },
+          { etapes: ['Tape **;** puis clique la **feuille suivante** (Allier) et sa cellule **C10**'], depart: 3 },
+          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Allier', cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 500'), formule: '=SOMME(AIN!C10;Allier!C10', actif: 'C10', legende: 'On est passé sur « Allier » : on tape ; puis on clique sa cellule C10.' } },
+          { etapes: ['**Pareil pour les autres feuilles** (Hautes Alpes, Cantal), puis ferme la parenthèse **)** et **Entrée**'], depart: 4 },
+          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('12 500', true), formule: '=SOMME(AIN!C10;Allier!C10;\'Hautes Alpes\'!C10;Cantal!C10)', actif: 'B2', legende: 'De retour sur « Synthèse » : la formule complète additionne les 4 départements = 12 500.' } },
+          { note: 'Le point-virgule **;** sépare chaque feuille à additionner. La même méthode marche avec MOYENNE, MIN, MAX ou NB.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: '**Méthode 2 : la référence 3D.** Plus rapide quand les feuilles sont côte à côte : tu sélectionnes de la première à la dernière avec Shift.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 2 : la référence 3D (Shift)',
+        blocs: [
+          { etapes: ['Dans la cellule cible (feuille « Synthèse »), tape **=SOMME(**'] },
+          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('=SOMME('), formule: '=SOMME(', actif: 'B2', legende: 'Sur « Synthèse », dans la cellule cible B2 : on tape =SOMME(' } },
+          { etapes: ['Clique l\'onglet de la **première** feuille (AIN)'], depart: 2 },
+          { capture: { type: 'onglets', onglets: ['AIN', 'Allier', 'Hautes Alpes', 'Cantal', 'Synthèse'], actif: 'AIN', items: [], legende: 'On clique d\'abord l\'onglet « AIN » (la première feuille) : elle devient la feuille active.' } },
+          { etapes: ['Maintiens **Shift** et clique l\'onglet de la **dernière** feuille (Cantal)'], depart: 3 },
+          { capture: { type: 'onglets', onglets: ['AIN', 'Allier', 'Hautes Alpes', 'Cantal', 'Synthèse'], actifs: ['AIN', 'Allier', 'Hautes Alpes', 'Cantal'], items: [], legende: 'Shift sélectionne AIN, Cantal et toutes les feuilles entre les deux.' } },
+          { etapes: ['Clique la cellule **C10**, ferme la parenthèse **)** et **Entrée**'], depart: 4 },
+          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('12 500', true), formule: '=SOMME(AIN:Cantal!C10)', actif: 'B2', legende: 'Résultat sur « Synthèse » : la référence 3D =SOMME(AIN:Cantal!C10) additionne AIN à Cantal = 12 500.' } },
+          { note: 'Les feuilles doivent être **côte à côte** : toutes celles situées entre AIN et Cantal sont incluses. Pour en exclure une, réorganise les onglets ou utilise la méthode 1 (le point-virgule).', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Effet des modifications de feuilles sur une référence 3D, par exemple **=SOMME(Feuil2:Feuil6!C10)** :',
+      visuel: { type: 'encart', label: 'Bon à savoir', liste: ['Une feuille **ajoutée ou glissée ENTRE** Feuil2 et Feuil6 est automatiquement **incluse** dans le calcul.', 'Une feuille ajoutée **avant Feuil2 ou après Feuil6** n\'est **pas** prise en compte.', 'Déplacer une feuille **hors** de la plage la retire du calcul.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour additionner la cellule C10 de toutes les feuilles, de « Feuil2 » à « Feuil6 », on écrit...',
+      visuel: { type: 'question', options: ['=SOMME(Feuil2:Feuil6!C10)', '=SOMME(Feuil2+Feuil6+C10)'], bonne: 0, explication: 'Une référence 3D s\'écrit =SOMME(PremièreFeuille:DernièreFeuille!Cellule). Le « : » couvre toutes les feuilles entre les deux.' },
+    },
+    { humeur: 'fier', dit: 'Tu consolides des dizaines de feuilles en une seule formule. Redoutable. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 6 : Protéger une feuille ou un classeur ---
+const PROTEGERFEUILLES = {
+  id: 'fn-protegerfeuilles',
+  titre: 'Protéger une feuille ou un classeur',
+  exercices: [EX6.ex49, EX6.ex50],
+  narration: [
+    { humeur: 'accueil', dit: 'Protéger sert à empêcher les modifications : diffuser un modèle sans qu\'on casse sa structure, travailler à plusieurs sans tout altérer, sécuriser des données sensibles ou archiver un document final.' },
+    {
+      humeur: 'pensif',
+      dit: 'D\'abord un point important : dans Excel, **toutes les cellules sont « Verrouillées » par défaut**. Mais ça ne bloque rien tant que la feuille n\'est pas protégée. Vérifions-le.',
+      visuel: {
+        type: 'methode',
+        titre: 'Voir le verrouillage par défaut',
+        blocs: [
+          { etapes: ['Sélectionne une cellule (ex : **B3**)'] },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: {}, actif: 'B3', legende: 'On clique sur la cellule B3 pour la sélectionner.' } },
+          { etapes: ['Accueil > **Format** > **Format de cellule…**'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format', actif: true }] } },
+          { etapes: ['Va dans l\'onglet **Protection**'], depart: 3 },
+          { capture: { type: 'formatcellule', actif: 'Protection' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour **protéger une feuille** (verrouiller ses cellules).',
+      visuel: {
+        type: 'methode',
+        titre: 'Protéger la feuille',
+        blocs: [
+          { etapes: ['Va dans l\'onglet **Révision** du ruban', 'Clique sur **Protéger** > **Protéger la feuille**'] },
+          { capture: { type: 'ruban', actif: 'Révision', groupeNom: 'Protéger', groupes: [{ icone: '🛡', label: 'Protéger\nla feuille', actif: true }, { icone: '🔒', label: 'Protéger\nle classeur' }, { icone: '✎', label: 'Autoriser la\nmodif. de plage' }] } },
+          { etapes: ['Saisis un **mot de passe** (facultatif), coche les actions que tu autorises, puis **OK**'], depart: 3 },
+          { capture: { type: 'protegerfeuilledialog' } },
+          { note: 'Si tu mets un mot de passe, Excel te le redemande pour confirmer. Sans mot de passe, n\'importe qui pourra ôter la protection.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Tu veux laisser certaines cellules modifiables malgré la protection ? Utilise les **autorisations de plage** (facultatif).',
+      visuel: {
+        type: 'methode',
+        titre: 'Autoriser la modification d\'une plage',
+        blocs: [
+          { etapes: ['Avant de protéger : Révision > **Protéger** > **Autoriser la modification des plages**'] },
+          { capture: { type: 'ruban', actif: 'Révision', groupeNom: 'Protéger', groupes: [{ icone: '🛡', label: 'Protéger\nla feuille' }, { icone: '🔒', label: 'Protéger\nle classeur' }, { icone: '✎', label: 'Autoriser la\nmodif. des plages', actif: true }] } },
+          { etapes: ['Clique **Nouvelle…**, donne un titre à la plage et indique les cellules (et un mot de passe si besoin)'], depart: 2 },
+          { capture: { type: 'champs', titre: 'Nouvelle plage', champs: [{ l: 'Titre', v: 'Zone_de_saisie', actif: true }, { l: 'Fait référence aux cellules', v: '=$B$2:$B$10' }, { l: 'Mot de passe', v: '••••' }] } },
+          { etapes: ['Valide, puis **protège la feuille** comme vu juste avant'], depart: 3 },
+          { note: 'Ces cellules-là resteront modifiables ; tout le reste de la feuille sera verrouillé.' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Feuille ou classeur, que protège-t-on au juste ? Deux choses différentes :',
+      visuel: { type: 'encart', label: 'À retenir', liste: ['**Protéger la feuille** = verrouille les **cellules** d\'une feuille (on ne peut plus modifier son contenu).', '**Protéger le classeur** = verrouille la **structure** du fichier (on ne peut plus ajouter, supprimer, renommer ni déplacer les onglets).'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'La **protection du classeur**, elle, verrouille la structure du fichier (impossible d\'ajouter, supprimer ou déplacer des onglets).',
+      visuel: {
+        type: 'methode',
+        titre: 'Protéger le classeur',
+        blocs: [
+          { etapes: ['Onglet **Révision** > **Protéger le classeur**', 'Coche **Protéger la structure**, mets un mot de passe (facultatif), puis **OK**'] },
+          { capture: { type: 'listedialog', titre: 'Protéger la structure et les fenêtres', cases: [{ label: 'Structure', coche: true }, { label: 'Fenêtres', coche: false }] } },
+          { etapes: ['Pour **retirer** une protection : Révision > **Ôter la protection** (de la feuille ou du classeur)'], depart: 3 },
+          { capture: { type: 'ruban', actif: 'Révision', groupeNom: 'Protéger', groupes: [{ icone: '🔓', label: 'Ôter la protection\nde la feuille', actif: true }, { icone: '🔒', label: 'Protéger\nle classeur' }] } },
+          { note: 'Excel te redemande le mot de passe s\'il y en a un.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Enfin, pour **masquer** une feuille des regards.',
+      visuel: {
+        type: 'methode',
+        titre: 'Masquer une feuille',
+        blocs: [
+          { etapes: ['**Masquer** : clic droit sur l\'onglet > **Masquer**'] },
+          { capture: { type: 'onglets', onglets: ['Janvier', 'Confidentiel', 'Synthèse'], actif: 'Confidentiel', items: ['Renommer', 'Couleur d\'onglet', '-', { label: 'Masquer' }, 'Afficher…'] } },
+          { etapes: ['**Réafficher** : clic droit sur n\'importe quel onglet > **Afficher…**, puis choisis la feuille'], depart: 2 },
+          { capture: { type: 'onglets', onglets: ['Janvier', 'Synthèse'], actif: 'Janvier', items: ['Renommer', 'Couleur d\'onglet', '-', 'Masquer', { label: 'Afficher…' }] } },
+          { capture: { type: 'listedialog', titre: 'Afficher', intro: 'Afficher la feuille :', items: ['Confidentiel'], selection: 0 } },
+          { note: 'Pour vraiment empêcher l\'accès, combine **masquer + protéger le classeur** (avec mot de passe) : la feuille masquée ne pourra plus être réaffichée sans le mot de passe.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans quel onglet du ruban se trouve la protection d\'une feuille ?',
+      visuel: { type: 'question', options: ['Révision', 'Affichage'], bonne: 0, explication: 'La protection (feuille et classeur) est dans l\'onglet Révision, bouton Protéger.' },
+    },
+    { humeur: 'fier', dit: 'Tes feuilles sont sous bonne garde : structure protégée, données sensibles à l\'abri. Encore un cran vers la ceinture noire. Bravo ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES }

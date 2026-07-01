@@ -91,11 +91,18 @@ function coloreAvecRefs(formule, map) {
 // `poignee` = cellule avec la poignée de recopie (+). `refsCouleur` = cellules colorées comme Excel.
 // `animePoignee` = la poignée descend le long de la colonne.
 function Tableur({ v }) {
-  const { cols, rows, cells = {}, actif, formule, poignee, legende, refsCouleur, animePoignee } = v
+  const { cols, rows, cells = {}, actif, formule, poignee, legende, refsCouleur, animePoignee, feuilles, feuilleActive, classeur, role } = v
   const rendreFormule = (f) => (refsCouleur ? coloreAvecRefs(f, refsCouleur) : coloreFormule(f))
   return (
     <div className="mt-3">
       <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/10 bg-[#ffffff] shadow-lg">
+        {classeur && (
+          <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white">
+            <span className="font-semibold">📗 {classeur}</span>
+            {role && <span className="rounded-full bg-white/25 px-2 py-[1px] text-[9px] font-bold uppercase tracking-wide">{role}</span>}
+            <span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span>
+          </div>
+        )}
         <div className="flex items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1.5 text-xs">
           <span className="font-bold text-navy/50">fx</span>
           <span className="font-mono text-navy/90">{formule ? rendreFormule(formule) : <span className="text-navy/30">|</span>}</span>
@@ -137,6 +144,16 @@ function Tableur({ v }) {
             </div>
           ))}
         </div>
+        {feuilles && (
+          <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+            {feuilles.map((f) => (
+              <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>
+                {f}
+              </span>
+            ))}
+            <span className="px-1 text-navy/35">＋</span>
+          </div>
+        )}
       </div>
       {legende && (
         <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
@@ -456,24 +473,402 @@ function Glisser() {
 
 // Barre d'onglets de feuilles + menu « Déplacer ou copier » (pour copier vers une autre feuille).
 function Onglets({ v }) {
-  const { onglets = ['Feuil1', 'Feuil2', 'Feuil3'], actif = 'Feuil1' } = v
+  // `items` (optionnel) = menu contextuel personnalisé (sinon menu « Déplacer ou copier » par défaut).
+  // `items: []` = pas de menu (juste les onglets). `couleurs` = { 'Feuil1': '#...' } pour l'onglet coloré.
+  // `actifs` (tableau) = plusieurs onglets sélectionnés en même temps (groupe de travail).
+  const { onglets = ['Feuil1', 'Feuil2', 'Feuil3'], actif = 'Feuil1', actifs, items, couleurs = {}, legende } = v
+  const estSel = (o) => (actifs ? actifs.includes(o) : o === actif)
   return (
     <div className="mt-3">
       <div className="flex items-end gap-1 rounded-t-md border-t border-navy/15 bg-navy/5 px-2 pt-1 text-[11px]">
         {onglets.map((o) => (
-          <span key={o} className={`rounded-t px-3 py-1 ${o === actif ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/55'}`}>{o}</span>
+          <span key={o} className={`rounded-t px-3 py-1 ${estSel(o) ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/55'}`} style={couleurs[o] ? { boxShadow: `inset 0 -3px 0 ${couleurs[o]}` } : undefined}>
+            {o}
+          </span>
         ))}
         <span className="px-2 text-navy/40">＋</span>
       </div>
-      <div className="ml-2 mt-1 w-56 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-xs shadow-xl">
-        {['Insérer…', 'Supprimer', 'Renommer'].map((l) => (
-          <div key={l} className="px-3 py-1.5 text-navy/80">{l}</div>
-        ))}
-        <div className="flex items-center gap-2 bg-mint/20 px-3 py-1.5 font-semibold text-navy">
-          <span>📑</span>Déplacer ou copier…
+      {items === undefined ? (
+        <div className="ml-2 mt-1 w-56 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-xs shadow-xl">
+          {['Insérer…', 'Supprimer', 'Renommer'].map((l) => (
+            <div key={l} className="px-3 py-1.5 text-navy/80">{l}</div>
+          ))}
+          <div className="flex items-center gap-2 bg-mint/20 px-3 py-1.5 font-semibold text-navy">
+            <span>📑</span>Déplacer ou copier…
+          </div>
+          <div className="my-1 border-t border-navy/10" />
+          <div className="px-3 py-1.5 text-navy/70">☑ Créer une copie</div>
         </div>
-        <div className="my-1 border-t border-navy/10" />
-        <div className="px-3 py-1.5 text-navy/70">☑ Créer une copie</div>
+      ) : items.length > 0 ? (
+        <div className="ml-2 mt-1 w-60 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-xs shadow-xl">
+          {items.map((l, i) =>
+            l === '-' ? (
+              <div key={i} className="my-1 border-t border-navy/10" />
+            ) : typeof l === 'object' ? (
+              <div key={i} className="flex items-center gap-2 bg-mint/20 px-3 py-1.5 font-semibold text-navy">{l.label}</div>
+            ) : (
+              <div key={i} className="px-3 py-1.5 text-navy/80">{l}</div>
+            ),
+          )}
+        </div>
+      ) : null}
+      {legende && (
+        <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{legende}</span>
+        </p>
+      )}
+    </div>
+  )
+}
+
+// Un curseur souris (flèche) pour les animations de clic.
+function Pointeur({ className = '' }) {
+  return (
+    <svg viewBox="0 0 24 24" className={`h-5 w-5 ${className}`} style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,.35))' }}>
+      <path d="M5 2 L5 19 L9.5 14.5 L12.5 21 L15 20 L12 13.5 L18.5 13.5 Z" fill="#0a335d" stroke="#ffffff" strokeWidth="1.2" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+const BARRE_ONGLETS = 'flex items-end gap-1 rounded-t-md border-t border-navy/15 bg-navy/5 px-2 pt-1 text-[11px]'
+
+// Animation : on double-clique sur l'onglet, puis on tape le nom « Janvier ».
+function RenommerOnglet() {
+  const [p, setP] = useState(0) // 0 repos · 1 double-clic · 2 édition (vide) · 3 saisie « Janvier » · 4 fait
+  useEffect(() => {
+    const durees = [1100, 1000, 650, 1500, 1300]
+    const id = setTimeout(() => setP((x) => (x + 1) % durees.length), durees[p])
+    return () => clearTimeout(id)
+  }, [p])
+  const nom = p <= 1 ? 'Feuil1' : p === 2 ? '' : 'Janvier'
+  const edition = p === 2 || p === 3
+  return (
+    <div className="mt-3">
+      <div className="relative">
+        <div className={BARRE_ONGLETS}>
+          <span className={`rounded-t px-3 py-1 ${edition ? 'bg-white text-navy ring-2 ring-mint ring-inset' : 'bg-white font-bold text-navy'}`}>
+            {nom || ' '}
+            {edition && <span className="animate-pulse">|</span>}
+          </span>
+          <span className="rounded-t bg-navy/10 px-3 py-1 text-navy/55">Feuil2</span>
+          <span className="rounded-t bg-navy/10 px-3 py-1 text-navy/55">Feuil3</span>
+          <span className="px-2 text-navy/40">＋</span>
+        </div>
+        {p === 1 && (
+          <div className="pointer-events-none absolute left-9 top-4">
+            <span className="absolute left-0 top-0 h-6 w-6 animate-ping rounded-full bg-mint/50" />
+            <span className="absolute left-0 top-0 h-6 w-6 animate-ping rounded-full bg-mint/50" style={{ animationDelay: '.3s' }} />
+            <Pointeur className="relative" />
+          </div>
+        )}
+      </div>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>{p >= 3 ? 'On tape le nouveau nom, ici « Janvier », puis Entrée.' : 'Double-clique sur l\'onglet pour le renommer.'}</span>
+      </p>
+    </div>
+  )
+}
+
+// Animation : on clique sur le ＋ et un nouvel onglet apparaît.
+function AjouterOnglet() {
+  const [p, setP] = useState(0) // 0 repos · 1 clic sur ＋ · 2 nouvel onglet · 3 fait
+  useEffect(() => {
+    const durees = [1200, 950, 1500, 900]
+    const id = setTimeout(() => setP((x) => (x + 1) % durees.length), durees[p])
+    return () => clearTimeout(id)
+  }, [p])
+  const nouvel = p >= 2
+  return (
+    <div className="mt-3">
+      <div className={BARRE_ONGLETS}>
+        <span className="rounded-t bg-white px-3 py-1 font-bold text-navy">Janvier</span>
+        {nouvel && <span className="animate-pop rounded-t bg-white px-3 py-1 font-bold text-navy ring-2 ring-mint ring-inset">Feuil2</span>}
+        <span className="relative px-2 text-navy/40">
+          ＋
+          {p === 1 && (
+            <span className="pointer-events-none absolute -left-1 -top-1">
+              <span className="absolute left-0 top-0 h-6 w-6 animate-ping rounded-full bg-mint/50" />
+              <Pointeur className="relative" />
+            </span>
+          )}
+        </span>
+      </div>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>{nouvel ? 'Un nouvel onglet apparaît, prêt à être renommé.' : 'Clique sur le ＋ pour ajouter une feuille.'}</span>
+      </p>
+    </div>
+  )
+}
+
+// Animation : « Janvier » (au milieu) est attrapé et déplacé tout à gauche, et il Y RESTE.
+function DeplacerOnglet() {
+  const [bouge, setBouge] = useState(false)
+  const [cle, setCle] = useState(0) // incrémenté pour rejouer
+  useEffect(() => {
+    setBouge(false)
+    const id = setTimeout(() => setBouge(true), 850)
+    return () => clearTimeout(id)
+  }, [cle])
+  const slots = [8, 84, 160] // gauche · milieu · droite
+  const tab = 'absolute top-1 grid h-7 w-[72px] place-items-center rounded-t text-center'
+  const trans = { transition: 'left .8s cubic-bezier(.4,0,.2,1)' }
+  return (
+    <div className="mt-3">
+      <div className="relative h-10 rounded-t-md border-t border-navy/15 bg-navy/5" style={{ width: 262 }}>
+        <span className={`${tab} bg-navy/10 text-navy/55`} style={{ left: bouge ? slots[1] : slots[0], ...trans }}>Février</span>
+        <span className={`${tab} z-10 bg-white font-bold text-navy shadow-lg ring-1 ring-mint`} style={{ left: bouge ? slots[0] : slots[1], ...trans }}>
+          Janvier
+          <span className="pointer-events-none absolute -bottom-3 -right-2"><Pointeur /></span>
+        </span>
+        <span className={`${tab} bg-navy/10 text-navy/55`} style={{ left: slots[2] }}>Mars</span>
+        <span className="absolute top-2 text-navy/40" style={{ left: 240 }}>＋</span>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{bouge ? '« Janvier » est passé tout à gauche, et il y reste.' : 'On attrape « Janvier » (au milieu) et on le fait glisser à gauche.'}</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">
+          ↻ Rejouer
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// La palette « Couleur d'onglet » d'Excel (couleurs du thème + standard), une teinte choisie.
+function PaletteCouleurs({ v }) {
+  const theme = ['#ffffff', '#f2f0e6', '#0a335d', '#41c1ba', '#e8853a', '#4caf72', '#3f7fc4', '#8b5cf6']
+  const standard = ['#c0392b', '#e8853a', '#f4cf3f', '#4caf72', '#41c1ba', '#3f7fc4', '#8b5cf6', '#7a4a2b']
+  const sel = v?.selection ?? 4
+  return (
+    <div className="mx-auto mt-3 w-60 overflow-hidden rounded-md border border-navy/20 bg-white p-2.5 text-[10px] shadow-xl">
+      <p className="mb-1.5 font-semibold text-navy/75">Couleur d'onglet</p>
+      <p className="mb-1 text-navy/45">Couleurs du thème</p>
+      <div className="mb-2 flex gap-1">
+        {theme.map((c, i) => (
+          <span key={i} className="h-5 w-5 rounded-sm border border-navy/15" style={{ background: c }} />
+        ))}
+      </div>
+      <p className="mb-1 text-navy/45">Couleurs standard</p>
+      <div className="flex gap-1">
+        {standard.map((c, i) => (
+          <span key={i} className={`h-5 w-5 rounded-sm ${i === sel ? 'ring-2 ring-navy ring-offset-1' : 'border border-navy/15'}`} style={{ background: c }} />
+        ))}
+      </div>
+      <p className="mt-2 flex items-start gap-1 text-[9px] text-navy/45">
+        <span>↳</span>
+        <span>Clique la teinte de ton choix.</span>
+      </p>
+    </div>
+  )
+}
+
+// La vraie fenêtre « Déplacer ou copier » d'Excel (avec la case « Créer une copie »).
+function DeplacerCopierDialog({ v }) {
+  const { classeur = '(classeur actuel)', feuilles = ['Janvier', 'Février', '(en dernier)'], selection = 0, copie = true } = v
+  return (
+    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+        <span>Déplacer ou copier</span>
+        <span className="text-navy/40">✕</span>
+      </div>
+      <div className="space-y-2 bg-white p-3 text-navy">
+        <p className="text-navy/60">Déplacer les feuilles sélectionnées</p>
+        <div>
+          <p className="mb-1 text-navy/55">Dans le classeur :</p>
+          <span className="flex items-center justify-between rounded-sm border border-navy/25 px-2 py-1">
+            {classeur}
+            <span className="text-navy/40">▾</span>
+          </span>
+        </div>
+        <div>
+          <p className="mb-1 text-navy/55">Avant la feuille :</p>
+          <div className="h-20 overflow-hidden rounded-sm border border-navy/25">
+            {feuilles.map((f, i) => (
+              <div key={i} className={`px-2 py-0.5 ${i === selection ? 'bg-[#0a63c9] text-white' : 'text-navy'}`}>{f}</div>
+            ))}
+          </div>
+        </div>
+        <div className="flex items-center gap-2 pt-0.5">
+          <span className={`grid h-3.5 w-3.5 shrink-0 place-items-center rounded-sm border text-[9px] ${copie ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{copie ? '✓' : ''}</span>
+          <span className={copie ? 'font-bold text-navy' : 'text-navy/70'}>Créer une copie</span>
+        </div>
+        <div className="flex justify-end gap-2 pt-0.5">
+          <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Une (ou plusieurs) touche(s) de clavier dessinée(s), pour montrer « c'est CETTE touche ».
+function ToucheClavier({ v }) {
+  const { touches = [], note } = v
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="flex items-center gap-2">
+        {touches.map((t, i) => (
+          <span key={i} className="flex items-center gap-2">
+            {i > 0 && <span className="font-bold text-navy/50">+</span>}
+            <span className="inline-flex min-w-[52px] items-center justify-center rounded-lg border border-navy/25 bg-white px-3 py-2 text-sm font-bold text-navy shadow-[0_3px_0_rgba(10,51,93,0.22)] ring-2 ring-mint">
+              {t}
+            </span>
+          </span>
+        ))}
+      </div>
+      {note && (
+        <p className="flex max-w-xs items-start gap-1.5 text-center text-[11px] leading-snug text-navy/60">
+          <span className="font-bold text-mint">↑</span>
+          <span>{note}</span>
+        </p>
+      )}
+    </div>
+  )
+}
+
+// Deux fenêtres de classeur (fichiers) : le SOURCE (la donnée) et le CIBLE (où l'afficher).
+function DeuxClasseurs({ v }) {
+  const { source = 'Ventes.xlsx', cible = 'Synthèse.xlsx' } = v
+  const fenetres = [
+    { nom: source, role: 'Source', desc: 'contient la donnée', val: '8 800', ref: true },
+    { nom: cible, role: 'Cible', desc: 'où on affiche la valeur', val: '', ref: false },
+  ]
+  return (
+    <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:justify-center">
+      {fenetres.map((f, i) => (
+        <div key={i} className="flex-1 overflow-hidden rounded-md border border-navy/20 shadow-md">
+          <div className="flex items-center bg-[#1f7a4d] px-2 py-1 text-[10px] text-white">
+            <span className="font-semibold">📗 {f.nom}</span>
+            <span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span>
+          </div>
+          <div className="flex items-center justify-center gap-2 bg-white px-2 py-3 text-[11px]">
+            <span className="text-navy/60">Total :</span>
+            <span className={`min-w-[54px] rounded-sm border px-2 py-1 text-center ${f.ref ? 'border-sky-500/40 bg-sky-500/20 font-bold text-navy' : 'border-dashed border-navy/25 text-navy/35'}`}>{f.val || '…'}</span>
+          </div>
+          <div className="bg-mint/10 px-2 py-1 text-center text-[9px] font-bold uppercase tracking-wide text-mint">{f.role} — {f.desc}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// La fenêtre « Liaisons de classeur » (Données > Liaisons de classeur) : fichiers source + statut + actions.
+function LiaisonsDialog({ v }) {
+  const { fichiers = [{ nom: 'Ventes.xlsx', statut: 'OK' }] } = v
+  return (
+    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+        <span>Liaisons de classeur</span>
+        <span className="text-navy/40">✕</span>
+      </div>
+      <div className="space-y-2 bg-white p-3">
+        <p className="text-navy/55">Classeurs source :</p>
+        {fichiers.map((f, i) => (
+          <div key={i} className="flex items-center gap-2 rounded-sm border border-navy/20 px-2 py-1.5">
+            <span className="text-navy/75">📗 {f.nom}</span>
+            <span className="ml-auto flex items-center gap-1 text-[10px] font-semibold text-[#1f7a4d]">
+              <span className="h-2 w-2 rounded-full bg-[#1f9d57]" /> {f.statut}
+            </span>
+            <span className="text-navy/40">⋯</span>
+          </div>
+        ))}
+        <div className="rounded-md bg-navy/5 p-2 text-[10px] text-navy/70">
+          <p className="mb-1 font-semibold text-navy/60">Sur les « ⋯ », tu peux :</p>
+          <p>• Mettre à jour les valeurs</p>
+          <p>• Modifier la source</p>
+          <p>• Rompre la liaison</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// La fenêtre « Collage spécial » d'Excel, avec le bouton « Coller avec liaison » mis en avant.
+function CollageSpecialDialog() {
+  const opts = ['Tout', 'Formules', 'Valeurs', 'Formats']
+  return (
+    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+        <span>Collage spécial</span>
+        <span className="text-navy/40">✕</span>
+      </div>
+      <div className="space-y-2 bg-white p-3">
+        <p className="text-navy/55">Coller</p>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+          {opts.map((o, i) => (
+            <span key={o} className="flex items-center gap-1.5 text-navy/80">
+              <span className={`grid h-3 w-3 place-items-center rounded-full border ${i === 0 ? 'border-navy/60' : 'border-navy/30'}`}>
+                {i === 0 && <span className="h-1.5 w-1.5 rounded-full bg-navy/60" />}
+              </span>
+              {o}
+            </span>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 pt-0.5 text-navy/75">
+          <span className="h-3.5 w-3.5 shrink-0 rounded-sm border border-navy/40" /> Transposé
+        </div>
+        <div className="flex items-center justify-between border-t border-navy/10 pt-2">
+          <span className="rounded-sm border-2 border-mint bg-mint/15 px-2 py-0.5 font-bold text-navy">Coller avec liaison</span>
+          <span className="flex gap-2">
+            <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">OK</span>
+            <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// La vraie fenêtre « Protéger la feuille » : case en-tête + champ mot de passe + longue liste d'actions.
+function ProtegerFeuilleDialog() {
+  const actions = [
+    'Sélectionner les cellules verrouillées',
+    'Sélectionner les cellules déverrouillées',
+    'Format de cellule',
+    'Format de colonnes',
+    'Format de lignes',
+    'Insérer des colonnes',
+    'Insérer des lignes',
+    'Supprimer des colonnes',
+    'Supprimer des lignes',
+    'Trier',
+    'Utiliser le filtre automatique',
+    'Modifier les objets',
+  ]
+  const coches = 2
+  return (
+    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+        <span>Protéger la feuille</span>
+        <span className="text-navy/40">✕</span>
+      </div>
+      <div className="space-y-2 bg-white p-3">
+        <div className="flex items-start gap-2">
+          <span className="mt-0.5 grid h-3.5 w-3.5 shrink-0 place-items-center rounded-sm border border-mint bg-mint text-[9px] text-white">✓</span>
+          <span className="font-semibold text-navy">Protéger la feuille et le contenu des cellules verrouillées</span>
+        </div>
+        <div>
+          <p className="mb-1 text-navy/55">Mot de passe pour ôter la protection :</p>
+          <div className="rounded-sm border border-navy/30 px-2 py-1 tracking-widest text-navy/70 ring-1 ring-mint">••••••</div>
+        </div>
+        <p className="text-navy/55">Autoriser tous les utilisateurs de cette feuille à :</p>
+        <div className="max-h-32 overflow-hidden rounded-sm border border-navy/20">
+          {actions.map((a, i) => (
+            <div key={i} className="flex items-center gap-2 border-b border-navy/5 px-2 py-1 text-navy/80">
+              <span className={`grid h-3 w-3 shrink-0 place-items-center rounded-sm border text-[8px] ${i < coches ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{i < coches ? '✓' : ''}</span>
+              {a}
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-end gap-2 pt-0.5">
+          <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
+        </div>
       </div>
     </div>
   )
@@ -563,6 +958,18 @@ function FormatCellule({ v }) {
               <p className="mb-1 mt-3 text-navy/60">Aperçu :</p>
               <div className="mx-auto grid h-12 w-20 place-items-center border-2 border-navy/70 text-[9px] text-navy/40">Texte</div>
             </div>
+          </div>
+        ) : actif === 'Protection' ? (
+          <div className="space-y-2 bg-white p-3 text-navy/80">
+            <div className="flex items-center gap-2">
+              <span className="grid h-3.5 w-3.5 place-items-center rounded-sm border border-mint bg-mint text-[9px] text-white">✓</span>
+              <span className="font-semibold text-navy">Verrouillée</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="grid h-3.5 w-3.5 shrink-0 place-items-center rounded-sm border border-navy/40" />
+              <span>Masquée</span>
+            </div>
+            <p className="leading-snug text-navy/55">Toutes les cellules sont « Verrouillées » par défaut. Le verrouillage ne prend effet qu'une fois la feuille protégée (onglet Révision, bouton Protéger la feuille).</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-2 bg-white p-3">
@@ -1566,6 +1973,16 @@ function Visuel({ v }) {
   if (v.type === 'menu') return <MenuContextuel v={v} />
   if (v.type === 'glisser') return <Glisser />
   if (v.type === 'onglets') return <Onglets v={v} />
+  if (v.type === 'renommeronglet') return <RenommerOnglet />
+  if (v.type === 'ajouteronglet') return <AjouterOnglet />
+  if (v.type === 'deplaceronglet') return <DeplacerOnglet />
+  if (v.type === 'palette') return <PaletteCouleurs v={v} />
+  if (v.type === 'deplacercopier') return <DeplacerCopierDialog v={v} />
+  if (v.type === 'touche') return <ToucheClavier v={v} />
+  if (v.type === 'deuxclasseurs') return <DeuxClasseurs v={v} />
+  if (v.type === 'liaisonsdialog') return <LiaisonsDialog v={v} />
+  if (v.type === 'collagespecialdialog') return <CollageSpecialDialog />
+  if (v.type === 'protegerfeuilledialog') return <ProtegerFeuilleDialog />
   if (v.type === 'saisiecell') return <SaisieCell />
   if (v.type === 'formatcellule') return <FormatCellule v={v} />
   if (v.type === 'borduresfond') return <BorduresFond v={v} />

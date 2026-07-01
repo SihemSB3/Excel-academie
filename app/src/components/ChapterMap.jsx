@@ -107,7 +107,17 @@ export default function ChapterMap({ ch, estFait, tousFaits, onOuvrir, onQuitter
                 Réclame ta ceinture 🥋
               </button>
             ) : (
-              <p className="mt-1 text-xs text-navy/40">Termine toutes les étapes pour la débloquer.</p>
+              (() => {
+                const restants = ch.modules.filter((mm) => !estFait(mm))
+                return (
+                  <div className="mt-1 max-w-[17rem] text-center text-xs text-navy/45">
+                    <p className="font-semibold text-navy/55">
+                      Il te reste {restants.length} étape{restants.length > 1 ? 's' : ''} avant la ceinture :
+                    </p>
+                    <p className="mt-0.5">{restants.map((mm) => mm.titre).join(' · ')}</p>
+                  </div>
+                )
+              })()
             )}
           </li>
         </ol>

@@ -3,7 +3,7 @@
   "titre": "Les fonctions de calculs Excel",
   "partie": 1,
   "niveau": 4,
-  "ceinture": "verte",
+  "ceinture": "jaune-orange",
   "objectif": "Maîtriser les fonctions de calcul : reconnaître et écrire les fonctions simples (=Nom(plage)), construire les fonctions complexes (SI, ARRONDI) à la main ou avec l'assistant, recopier des formules (références relatives/absolues), nommer des cellules pour des formules lisibles, et utiliser les fonctions à plusieurs arguments comme VPM.",
   "note_pedago": "Même format que les ch.2-3 : lecons narrees (un visuel par explication), exercices Drive sur chaque lecon, fiche memo, quiz, checklist, deblocage ceinture verte. Le ch.2 (jaune) ayant deja enseigne l'assistant, les fonctions de base et les references, le ch.4 approfondit (fonctions simples/complexes, ARRONDI) et introduit le NEUF (noms dans les formules, fonctions a plusieurs arguments, VPM). Les sections de l'ebook marquees RAPPEL sont traitees comme de vrais rappels concis.",
   "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
@@ -300,9 +300,9 @@
     }
   ],
   "recompense": {
-    "ceinture_debloquee": "verte",
+    "ceinture_debloquee": "jaune-orange",
     "xp_bonus": 80,
     "ecran": "animation_deblocage_ceinture",
-    "message": "Ceinture verte débloquée. Les fonctions n'ont plus de secret pour toi : tu calcules, tu nommes, tu arrondis, tu simules un prêt. Tu passes de l'élève au pratiquant."
+    "message": "Ceinture jaune-orange ! Les fonctions n'ont plus de secret pour toi : tu calcules, tu nommes, tu arrondis, tu simules un prêt. Tu passes de l'élève au pratiquant."
   }
 }

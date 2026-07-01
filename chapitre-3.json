@@ -3,7 +3,7 @@
   "titre": "Mise en forme & mise en page",
   "partie": 1,
   "niveau": 3,
-  "ceinture": "orange",
+  "ceinture": "jaune",
   "objectif": "Rendre un tableau lisible et professionnel, puis le préparer pour l'impression : gérer lignes et colonnes, formater le contenu (couleurs, bordures, nombres), réutiliser une mise en forme (pinceau, styles), et maîtriser la mise en page (thèmes, marges, en-têtes, impression).",
   "note_pedago": "Même format que le ch.2 : 7 lecons narrees (un visuel par explication, comme les captures de l'ebook), exercices Drive sur chaque lecon, quiz, checklist, deblocage ceinture orange. Pas de fiche memo (l'ebook ch.3 n'en a pas).",
   "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
@@ -329,9 +329,9 @@
     }
   ],
   "recompense": {
-    "ceinture_debloquee": "orange",
+    "ceinture_debloquee": "jaune",
     "xp_bonus": 80,
     "ecran": "animation_deblocage_ceinture",
-    "message": "Ceinture orange débloquée. Tes tableaux sont nets, lisibles et prêts à imprimer. Le style, c'est de la discipline."
+    "message": "Ceinture jaune débloquée. Tes tableaux sont nets, lisibles et prêts à imprimer. Le style, c'est de la discipline."
   }
 }

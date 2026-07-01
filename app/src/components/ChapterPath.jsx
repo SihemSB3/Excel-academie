@@ -151,7 +151,17 @@ export default function ChapterPath({ ch, estFait, tousFaits, onOuvrir, onQuitte
                 Réclame ta ceinture 🥋
               </button>
             ) : (
-              <p className="text-[11px] text-navy/40">À débloquer</p>
+              (() => {
+                const restants = ch.modules.filter((mm) => !estFait(mm))
+                return (
+                  <div className="max-w-[13rem] text-center text-[11px] text-navy/45">
+                    <p className="font-semibold text-navy/55">
+                      Il reste {restants.length} étape{restants.length > 1 ? 's' : ''} :
+                    </p>
+                    <p>{restants.map((mm) => mm.titre).join(' · ')}</p>
+                  </div>
+                )
+              })()
             )}
           </div>
 

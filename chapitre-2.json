@@ -3,7 +3,7 @@
   "titre": "Réalisation de tableaux avec des calculs",
   "partie": 1,
   "niveau": 2,
-  "ceinture": "jaune",
+  "ceinture": "blanche-jaune",
   "objectif": "Manipuler Excel pour de vrai : saisir, calculer, recopier, créer des séries, utiliser les fonctions de base. C'est le premier chapitre avec de vrais exercices Google Sheet.",
   "note_pedago": "Chapitre central du pilote : boucle complete lecon narree -> exercice .xlsx (Drive) -> quiz -> deblocage ceinture jaune. 8 lecons narrees + fiche memo, exercices Drive branches sur chaque lecon.",
   "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
@@ -471,9 +471,9 @@
     }
   ],
   "recompense": {
-    "ceinture_debloquee": "jaune",
+    "ceinture_debloquee": "blanche-jaune",
     "xp_bonus": 80,
     "ecran": "animation_deblocage_ceinture",
-    "message": "Ceinture jaune débloquée. Tu ne lis plus Excel, tu le manies."
+    "message": "Ceinture blanche-jaune ! Tu ne lis plus Excel, tu le manies."
   }
 }

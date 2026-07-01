@@ -12,7 +12,7 @@ const ETAPES = [
   { humeur: 'fier', dit: '**Règle de l\'académie n°3 :** prends ton temps et savoure chaque étape. Le Shifu t\'accompagne à chaque pas. Prêt(e) à commencer ?' },
 ]
 
-// La Voie : les 7 ceintures, de la blanche à la noire.
+// La Voie : les 13 ceintures, de la blanche à la noire (une par chapitre).
 function Voie() {
   return (
     <div className="mt-4 flex flex-wrap items-end justify-center gap-x-2 gap-y-3">

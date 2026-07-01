@@ -3,7 +3,7 @@
   "titre": "Outils particuliers & Fonctions particulières",
   "partie": 1,
   "niveau": 5,
-  "ceinture": "bleue",
+  "ceinture": "orange",
   "objectif": "Gagner en productivité avec les outils Rechercher/Remplacer et Convertir, puis découvrir et utiliser les fonctions particulières d'Excel : arrondis (ARRONDI, ARRONDI.INF/SUP, TRONQUE), fonctions de date (ANNEE, MOIS, JOURSEM, DATEDIF, jours ouvrés), de texte (TEXTE, GAUCHE, DROITE, STXT) et financières (VPM, VA, NPM).",
   "note_pedago": "Chapitre COMPLET (7 lecons) : rechercherremplacer, convertir, fonctionsparticulieres (outils/apercu) + arrondis (ARRONDI/INF/SUP/TRONQUE + difference ARRONDI/TRONQUE, Ex.34-37), fonctionsdate (ANNEE/MOIS/JOURSEM/DATEDIF/NB.JOURS.OUVRES.INTL/SERIE.JOURS.OUVRES, Ex.39), fonctionstexte (TEXTE/GAUCHE/DROITE/STXT), fonctionsfinancieres (VPM rappel skippable + VA + NPM + focus VC, Ex.45-47) + quiz (8) + checklist (10). Memes regles que ch.3-4.",
   "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
@@ -175,9 +175,9 @@
     }
   ],
   "recompense": {
-    "ceinture_debloquee": "bleue",
+    "ceinture_debloquee": "orange",
     "xp_bonus": 80,
     "ecran": "animation_deblocage_ceinture",
-    "message": "Ceinture bleue débloquée. Tu maîtrises les outils qui font gagner des heures et tu sais où piocher la bonne fonction. Tu deviens redoutable."
+    "message": "Ceinture orange débloquée. Tu maîtrises les outils qui font gagner des heures et tu sais où piocher la bonne fonction. Tu deviens redoutable."
   }
 }
