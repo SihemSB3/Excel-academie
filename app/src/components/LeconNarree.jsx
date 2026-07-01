@@ -2354,8 +2354,616 @@ function ListeDialog({ v }) {
   )
 }
 
+// ---------- Chapitre 8 : les graphiques ----------
+const SERIE_COULEURS = ['#41c1ba', '#0a335d', '#e8853a', '#8b5cf6', '#4caf72']
+// Arrondit joliment le haut de l'axe des valeurs (25 pour un max de 24, etc.).
+function niceMax(m) {
+  if (m <= 0) return 10
+  const pow = Math.pow(10, Math.floor(Math.log10(m)))
+  for (const s of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) {
+    if (s * pow >= m) return s * pow
+  }
+  return 10 * pow
+}
+// Chemin d'un secteur de camembert.
+function arcPath(cx, cy, r, a0, a1) {
+  const p0 = [cx + r * Math.cos(a0), cy + r * Math.sin(a0)]
+  const p1 = [cx + r * Math.cos(a1), cy + r * Math.sin(a1)]
+  const large = a1 - a0 > Math.PI ? 1 : 0
+  return `M${cx},${cy} L${p0[0].toFixed(1)},${p0[1].toFixed(1)} A${r},${r} 0 ${large} 1 ${p1[0].toFixed(1)},${p1[1].toFixed(1)} Z`
+}
+
+// Un mini-histogramme réutilisé dans les cadres « feuille » (déplacer, redimensionner, imprimer, onglets).
+function MiniBarres({ w = 130, h = 84, titre = 'Ventes' }) {
+  const vals = [12, 19, 15, 24]
+  const max = 25
+  const px = 8
+  const pw = w - 16
+  const base = h - 12
+  const ph = base - 16
+  const gw = pw / vals.length
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="h-full w-full">
+      <text x={w / 2} y="10" textAnchor="middle" fontSize="8" fontWeight="700" fill="#0a335d">{titre}</text>
+      <line x1={px} y1={base} x2={px + pw} y2={base} stroke="#0a335d" strokeOpacity="0.3" />
+      {vals.map((val, i) => {
+        const bh = (val / max) * ph
+        const bw = gw * 0.6
+        return <rect key={i} x={px + gw * i + gw * 0.2} y={base - bh} width={bw} height={bh} rx="1" fill="#41c1ba" />
+      })}
+    </svg>
+  )
+}
+
+// Le coeur du chapitre : un vrai graphique dessiné en SVG (histogramme, courbe, secteurs
+// ou mixte), avec titre, axes, quadrillage, légende et animation d'apparition (barres qui
+// poussent, courbe qui se trace). NB : la forme du graphe est dans `forme` (pas `type`,
+// réservé au dispatcher des visuels).
+function Graphique({ v }) {
+  const {
+    forme = 'histogramme',
+    titre = 'Ventes par mois',
+    cats = ['Jan', 'Fév', 'Mar', 'Avr'],
+    series = [{ nom: 'Ventes', vals: [12, 19, 15, 24] }],
+    legende: cap,
+    montrerLegende = series.length > 1,
+    etiquettes = false,
+    quadrillage = true,
+    annoterAxes = false,
+    poignees = false,
+    anime = false,
+    surbrillance,
+    axeY,
+  } = v
+
+  const [grandi, setGrandi] = useState(!anime)
+  useEffect(() => {
+    if (!anime) return undefined
+    setGrandi(false)
+    let raf2
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => setGrandi(true))
+    })
+    return () => {
+      cancelAnimationFrame(raf1)
+      if (raf2) cancelAnimationFrame(raf2)
+    }
+  }, [anime, forme])
+
+  const top = titre ? 30 : 16
+  // Largeur du plot laissant une marge à droite pour l'axe secondaire (graphique mixte).
+  const plot = { x: 40, y: top, w: 244, h: 170 - top }
+  const baseY = plot.y + plot.h
+  // En mixte, l'axe principal (gauche) ne concerne que la 1re série (les barres) ; la 2e série
+  // (la courbe) a son propre axe secondaire à droite. Sinon on prend toutes les valeurs.
+  const echelleVals = forme === 'mixte' ? series[0].vals : series.flatMap((s) => s.vals)
+  const maxV = axeY?.max ?? niceMax(Math.max(...echelleVals, 1))
+  const minV = axeY?.min ?? 0
+  const yOf = (val) => baseY - ((val - minV) / (maxV - minV)) * plot.h
+  const groupW = plot.w / cats.length
+  const paliers = 5
+
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="w-full max-w-sm animate-fade-up rounded-lg border border-navy/15 bg-white p-2 shadow-lg">
+        <svg viewBox="0 0 300 210" className="w-full">
+          {poignees && (
+            <g>
+              <rect x="4" y="4" width="292" height="202" fill="none" stroke="#1a73e8" strokeWidth="1" strokeDasharray="4 3" />
+              {[[4, 4], [150, 4], [296, 4], [296, 105], [296, 206], [150, 206], [4, 206], [4, 105]].map(([hx, hy], i) => (
+                <rect key={i} x={hx - 3} y={hy - 3} width="6" height="6" fill="white" stroke="#1a73e8" strokeWidth="1" />
+              ))}
+            </g>
+          )}
+          {titre && <text x="150" y="18" textAnchor="middle" fontSize="12" fontWeight="700" fill="#0a335d">{titre}</text>}
+          {surbrillance === 'titre' && titre && <rect x="70" y="5" width="160" height="17" rx="3" fill="none" stroke="#41c1ba" strokeWidth="1.5" strokeDasharray="3 2" />}
+
+          {forme !== 'secteurs' && (
+            <g>
+              {Array.from({ length: paliers + 1 }).map((_, i) => {
+                const val = minV + (i / paliers) * (maxV - minV)
+                const gy = baseY - (i / paliers) * plot.h
+                return (
+                  <g key={i}>
+                    {quadrillage && <line x1={plot.x} y1={gy} x2={plot.x + plot.w} y2={gy} stroke="#0a335d" strokeOpacity="0.1" strokeWidth="1" />}
+                    <text x={plot.x - 5} y={gy + 3} textAnchor="end" fontSize="8" fill="#0a335d" fillOpacity="0.6">{Math.round(val)}</text>
+                  </g>
+                )
+              })}
+              <line x1={plot.x} y1={plot.y} x2={plot.x} y2={baseY} stroke={surbrillance === 'axeY' ? '#41c1ba' : '#0a335d'} strokeWidth={surbrillance === 'axeY' ? 2 : 1} strokeOpacity={surbrillance === 'axeY' ? 1 : 0.35} />
+              <line x1={plot.x} y1={baseY} x2={plot.x + plot.w} y2={baseY} stroke="#0a335d" strokeWidth="1" strokeOpacity="0.35" />
+              {cats.map((c, ci) => (
+                <text key={ci} x={plot.x + groupW * (ci + 0.5)} y={baseY + 13} textAnchor="middle" fontSize="9" fill="#0a335d" fillOpacity="0.75">{c}</text>
+              ))}
+            </g>
+          )}
+
+          {forme === 'histogramme' && cats.map((c, ci) => {
+            const nS = series.length
+            const bw = Math.min(24, (groupW * 0.72) / nS)
+            const gx = plot.x + groupW * ci + (groupW - bw * nS) / 2
+            return series.map((s, si) => {
+              const h = ((s.vals[ci] - minV) / (maxV - minV)) * plot.h
+              const col = s.couleur || SERIE_COULEURS[si % SERIE_COULEURS.length]
+              const x = gx + si * bw
+              return (
+                <g key={ci + '-' + si}>
+                  <rect x={x + 1} y={grandi ? baseY - h : baseY} width={bw - 2} height={grandi ? h : 0} rx="1.5" fill={col} style={{ transition: 'y .8s cubic-bezier(.2,.9,.3,1), height .8s cubic-bezier(.2,.9,.3,1)', transitionDelay: `${(ci * nS + si) * 70}ms` }} />
+                  {etiquettes && grandi && <text x={x + bw / 2} y={baseY - h - 3} textAnchor="middle" fontSize="8" fontWeight="700" fill={col}>{s.vals[ci]}</text>}
+                </g>
+              )
+            })
+          })}
+
+          {forme === 'courbe' && series.map((s, si) => {
+            const col = s.couleur || SERIE_COULEURS[si % SERIE_COULEURS.length]
+            const pts = s.vals.map((val, ci) => [plot.x + groupW * (ci + 0.5), yOf(val)])
+            const d = 'M' + pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' L')
+            return (
+              <g key={si}>
+                <path d={d} fill="none" stroke={col} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="600" strokeDashoffset={grandi ? 0 : 600} style={{ transition: 'stroke-dashoffset 1s ease-out' }} />
+                {pts.map((p, i) => (
+                  <circle key={i} cx={p[0]} cy={p[1]} r="2.6" fill="white" stroke={col} strokeWidth="1.6" style={{ opacity: grandi ? 1 : 0, transition: 'opacity .4s', transitionDelay: `${600 + i * 80}ms` }} />
+                ))}
+              </g>
+            )
+          })}
+
+          {forme === 'secteurs' && (() => {
+            const cx = 150
+            const cy = titre ? 110 : 100
+            const r = 68
+            const vals = series[0].vals
+            const tot = vals.reduce((a, b) => a + b, 0)
+            let ang = -Math.PI / 2
+            return vals.map((val, ci) => {
+              const a0 = ang
+              const a1 = ang + (val / tot) * Math.PI * 2
+              ang = a1
+              const col = SERIE_COULEURS[ci % SERIE_COULEURS.length]
+              const mid = (a0 + a1) / 2
+              const lx = cx + r * 0.62 * Math.cos(mid)
+              const ly = cy + r * 0.62 * Math.sin(mid)
+              return (
+                <g key={ci} style={{ opacity: grandi ? 1 : 0, transition: 'opacity .5s', transitionDelay: `${ci * 120}ms` }}>
+                  <path d={arcPath(cx, cy, r, a0, a1)} fill={col} stroke="white" strokeWidth="1.5" />
+                  <text x={lx} y={ly + 3} textAnchor="middle" fontSize="8" fontWeight="700" fill="white">{Math.round((val / tot) * 100)}%</text>
+                </g>
+              )
+            })
+          })()}
+
+          {forme === 'mixte' && (() => {
+            const s0 = series[0]
+            const s1 = series[1]
+            const max1 = niceMax(Math.max(...s1.vals, 1))
+            const y1 = (val) => baseY - (val / max1) * plot.h
+            const bw = Math.min(30, groupW * 0.5)
+            const pts = s1.vals.map((val, ci) => [plot.x + groupW * (ci + 0.5), y1(val)])
+            const d = 'M' + pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' L')
+            const col1 = s1.couleur || SERIE_COULEURS[2]
+            return (
+              <g>
+                {cats.map((c, ci) => {
+                  const h = (s0.vals[ci] / maxV) * plot.h
+                  const x = plot.x + groupW * ci + (groupW - bw) / 2
+                  return <rect key={ci} x={x} y={grandi ? baseY - h : baseY} width={bw} height={grandi ? h : 0} rx="1.5" fill={s0.couleur || SERIE_COULEURS[0]} style={{ transition: 'y .8s, height .8s', transitionDelay: `${ci * 70}ms` }} />
+                })}
+                <path d={d} fill="none" stroke={col1} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="600" strokeDashoffset={grandi ? 0 : 600} style={{ transition: 'stroke-dashoffset 1s ease-out .3s' }} />
+                {pts.map((p, i) => (
+                  <circle key={i} cx={p[0]} cy={p[1]} r="2.8" fill={col1} style={{ opacity: grandi ? 1 : 0, transition: 'opacity .4s', transitionDelay: `${800 + i * 80}ms` }} />
+                ))}
+                <line x1={plot.x + plot.w} y1={plot.y} x2={plot.x + plot.w} y2={baseY} stroke={col1} strokeWidth="1" strokeOpacity="0.5" />
+                {[0, max1].map((val, i) => (
+                  <text key={i} x={plot.x + plot.w + 4} y={y1(val) + 3} textAnchor="start" fontSize="8" fill={col1}>{val}</text>
+                ))}
+              </g>
+            )
+          })()}
+
+          {annoterAxes && (
+            <g>
+              <text x={plot.x + plot.w / 2} y={baseY + 26} textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#41c1ba">Axe X — catégories</text>
+              <text x={13} y={plot.y + plot.h / 2} textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#41c1ba" transform={`rotate(-90 13 ${plot.y + plot.h / 2})`}>Axe Y — valeurs</text>
+            </g>
+          )}
+        </svg>
+        {(montrerLegende || forme === 'secteurs') && (
+          <div className={`mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[9px] ${surbrillance === 'legende' ? 'rounded py-0.5 ring-1 ring-mint' : ''}`}>
+            {(forme === 'secteurs' ? cats : series.map((s) => s.nom)).map((lab, i) => (
+              <span key={i} className="flex items-center gap-1">
+                <span className="h-2.5 w-2.5 rounded-sm" style={{ background: forme === 'secteurs' ? SERIE_COULEURS[i % SERIE_COULEURS.length] : series[i].couleur || SERIE_COULEURS[i % SERIE_COULEURS.length] }} />
+                <span className="text-navy/70">{lab}</span>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+      {cap && (
+        <p className="flex max-w-sm items-start gap-1.5 text-center text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{cap}</span>
+        </p>
+      )}
+    </div>
+  )
+}
+
+// La grille « quel graphique pour quoi » (Insertion > Graphiques).
+function TypesGraphiques() {
+  const items = [
+    { nom: 'Histogramme', use: 'Comparer des valeurs', ic: 'histo' },
+    { nom: 'Courbe', use: 'Suivre une évolution', ic: 'ligne' },
+    { nom: 'Secteurs', use: 'Voir une répartition (%)', ic: 'pie' },
+    { nom: 'Barres', use: 'Classer (libellés longs)', ic: 'barres' },
+    { nom: 'Aires', use: 'Montrer un cumul', ic: 'aire' },
+    { nom: 'Nuage', use: 'Corréler deux mesures', ic: 'nuage' },
+  ]
+  const Icone = ({ t }) => {
+    if (t === 'histo') return <g><rect x="2" y="9" width="4" height="9" fill="#41c1ba" /><rect x="8" y="5" width="4" height="13" fill="#0a335d" /><rect x="14" y="11" width="4" height="7" fill="#e8853a" /></g>
+    if (t === 'ligne') return <polyline points="2,15 7,8 12,11 18,3" fill="none" stroke="#41c1ba" strokeWidth="2" />
+    if (t === 'pie') return <g><circle cx="10" cy="10" r="8" fill="#0a335d" /><path d="M10,10 L10,2 A8,8 0 0,1 17,13 Z" fill="#41c1ba" /></g>
+    if (t === 'barres') return <g><rect x="2" y="3" width="12" height="3" fill="#41c1ba" /><rect x="2" y="8" width="8" height="3" fill="#0a335d" /><rect x="2" y="13" width="15" height="3" fill="#e8853a" /></g>
+    if (t === 'aire') return <polygon points="2,18 2,12 8,7 13,10 18,4 18,18" fill="#41c1ba" fillOpacity="0.6" stroke="#41c1ba" />
+    return <g><circle cx="5" cy="13" r="1.6" fill="#0a335d" /><circle cx="9" cy="9" r="1.6" fill="#0a335d" /><circle cx="13" cy="11" r="1.6" fill="#0a335d" /><circle cx="16" cy="5" r="1.6" fill="#41c1ba" /></g>
+  }
+  return (
+    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+      {items.map((it, i) => (
+        <div key={i} className="flex animate-fade-up flex-col items-center gap-1 rounded-xl border border-navy/10 bg-navy/5 p-2 text-center" style={{ animationDelay: `${i * 70}ms` }}>
+          <svg viewBox="0 0 20 20" className="h-8 w-8"><Icone t={it.ic} /></svg>
+          <span className="text-[11px] font-bold text-navy">{it.nom}</span>
+          <span className="text-[10px] leading-tight text-navy/60">{it.use}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// La galerie des sous-types (dropdown Insertion > Histogramme), un sous-type surligné.
+function GalerieGraphiques() {
+  const sous = ['Groupé', 'Empilé', 'Empilé 100%', '3D groupé']
+  return (
+    <div className="mx-auto mt-3 w-60 overflow-hidden rounded-md border border-navy/20 bg-white p-2 text-[10px] shadow-xl">
+      <p className="mb-1.5 font-semibold text-navy/75">Histogramme</p>
+      <div className="grid grid-cols-4 gap-1.5">
+        {sous.map((s, i) => (
+          <div key={i} className={`flex flex-col items-center gap-0.5 rounded p-1 ${i === 0 ? 'bg-mint/15 ring-2 ring-mint' : 'ring-1 ring-navy/10'}`}>
+            <svg viewBox="0 0 24 18" className="h-5 w-6"><rect x="3" y="8" width="4" height="8" fill="#41c1ba" /><rect x="9" y="4" width="4" height="12" fill="#0a335d" /><rect x="15" y="10" width="4" height="6" fill="#e8853a" /></svg>
+            <span className="text-navy/60">{s}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 flex items-start gap-1 text-[9px] text-navy/50"><span>↳</span><span>Survole un sous-type pour l'aperçu, clique pour l'insérer.</span></p>
+    </div>
+  )
+}
+
+// Animation : on déplace le graphique (objet flottant) dans la feuille, curseur 4 flèches.
+function DeplacerGraphique() {
+  const [bouge, setBouge] = useState(false)
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setBouge(false)
+    const id = setTimeout(() => setBouge(true), 850)
+    return () => clearTimeout(id)
+  }, [cle])
+  return (
+    <div className="mt-3">
+      <div className="relative mx-auto h-44 w-full max-w-sm overflow-hidden rounded-md border border-navy/15 bg-white" style={{ backgroundImage: 'linear-gradient(#0a335d10 1px, transparent 1px), linear-gradient(90deg, #0a335d10 1px, transparent 1px)', backgroundSize: '40px 28px' }}>
+        <div className="absolute h-24 w-40 rounded border border-navy/20 bg-white shadow-lg ring-1 ring-mint" style={{ left: bouge ? 150 : 12, top: bouge ? 76 : 12, transition: 'left .9s cubic-bezier(.4,0,.2,1), top .9s cubic-bezier(.4,0,.2,1)' }}>
+          <MiniBarres />
+          <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-lg text-navy/70">✥</span>
+        </div>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{bouge ? 'Le graphique a été déposé plus bas à droite.' : 'Survole le bord jusqu\'au curseur ✥ (4 flèches), clique et fais glisser.'}</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
+      </div>
+    </div>
+  )
+}
+
+// Animation : on agrandit le graphique via une poignée d'angle (8 poignées, Shift = proportions).
+function RedimensionnerGraphique() {
+  const [grand, setGrand] = useState(false)
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setGrand(false)
+    const id = setTimeout(() => setGrand(true), 850)
+    return () => clearTimeout(id)
+  }, [cle])
+  const w = grand ? 190 : 120
+  const h = grand ? 120 : 80
+  const handles = [[0, 0], [0.5, 0], [1, 0], [1, 0.5], [1, 1], [0.5, 1], [0, 1], [0, 0.5]]
+  return (
+    <div className="mt-3">
+      <div className="relative mx-auto flex h-44 w-full max-w-sm items-center justify-center overflow-hidden rounded-md border border-navy/15 bg-white">
+        <div className="relative rounded border border-navy/20 bg-white shadow" style={{ width: w, height: h, transition: 'width .9s cubic-bezier(.4,0,.2,1), height .9s cubic-bezier(.4,0,.2,1)' }}>
+          <MiniBarres />
+          <div className="pointer-events-none absolute inset-0 rounded ring-1 ring-[#1a73e8]" />
+          {handles.map(([hx, hy], i) => (
+            <span key={i} className={`absolute h-2 w-2 -translate-x-1/2 -translate-y-1/2 border border-[#1a73e8] bg-white ${i === 4 ? 'ring-2 ring-mint' : ''}`} style={{ left: `${hx * 100}%`, top: `${hy * 100}%` }} />
+          ))}
+          <span className="pointer-events-none absolute -bottom-4 -right-3"><Pointeur /></span>
+        </div>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{grand ? 'Poignée d\'angle glissée : le graphique s\'agrandit. Avec Shift, les proportions sont gardées.' : 'Attrape une poignée d\'angle (surlignée) et fais-la glisser.'}</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
+      </div>
+    </div>
+  )
+}
+
+// Animation : les onglets contextuels « Création de graphique » et « Format » apparaissent
+// à la sélection du graphique, et disparaissent quand on clique ailleurs.
+function OngletsContextuels() {
+  const [sel, setSel] = useState(false)
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setSel(false)
+    const id = setTimeout(() => setSel(true), 900)
+    return () => clearTimeout(id)
+  }, [cle])
+  const base = ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données', 'Révision', 'Affichage']
+  return (
+    <div className="mt-3">
+      <div className="mx-auto max-w-md overflow-hidden rounded-md border border-navy/15 shadow-lg">
+        <div className="flex flex-wrap items-center gap-0.5 bg-[#f3f3f3] px-2 pt-1 text-[10px]">
+          {base.map((o) => (<span key={o} className="rounded-t px-1.5 py-1 text-navy/55">{o}</span>))}
+          {sel && (
+            <>
+              <span className="animate-fade-up rounded-t bg-[#107c41] px-1.5 py-1 font-bold text-white">Création de graphique</span>
+              <span className="animate-fade-up rounded-t bg-[#107c41]/80 px-1.5 py-1 font-bold text-white">Format</span>
+            </>
+          )}
+        </div>
+        <div className="flex items-center justify-center bg-white p-3">
+          <div className={`rounded border bg-white p-1 shadow ${sel ? 'ring-2 ring-[#1a73e8]' : 'border-navy/15'}`} style={{ width: 150, height: 92 }}>
+            <MiniBarres />
+          </div>
+        </div>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{sel ? 'Graphique sélectionné : les onglets « Création de graphique » et « Format » apparaissent à droite du ruban.' : 'Clique en dehors : les onglets contextuels disparaissent.'}</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
+      </div>
+    </div>
+  )
+}
+
+// Les trois boutons flottants à côté du graphique (＋ / pinceau / filtre) + le menu du « ＋ ».
+function BoutonsGraphique({ v }) {
+  const elements = v?.elements || [
+    { l: 'Titre du graphique', c: true },
+    { l: 'Étiquettes de données', c: false },
+    { l: 'Table de données', c: false },
+    { l: 'Quadrillage', c: true },
+    { l: 'Légende', c: true },
+    { l: 'Courbe de tendance', c: false },
+  ]
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="flex items-start gap-2">
+        <div className="rounded border border-navy/20 bg-white p-1 shadow" style={{ width: 140, height: 92 }}><MiniBarres /></div>
+        <div className="flex flex-col gap-1">
+          {[['＋', true], ['🖌', false], ['▽', false]].map(([ic, on], i) => (
+            <span key={i} className={`grid h-6 w-6 place-items-center rounded-full border bg-white text-[11px] shadow ${on ? 'border-mint text-navy ring-2 ring-mint' : 'border-navy/20 text-navy/60'}`}>{ic}</span>
+          ))}
+        </div>
+        <div className="w-44 overflow-hidden rounded-md border border-navy/20 bg-white text-[10px] shadow-xl">
+          <div className="border-b border-navy/10 bg-navy/5 px-2 py-1 font-semibold text-navy/75">Éléments de graphique</div>
+          {elements.map((e, i) => (
+            <div key={i} className="flex items-center gap-2 px-2 py-1">
+              <span className={`grid h-3 w-3 place-items-center rounded-sm border text-[8px] ${e.c ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{e.c ? '✓' : ''}</span>
+              <span className="text-navy/80">{e.l}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>Les trois icônes flottantes : <strong className="font-bold text-navy">＋</strong> (éléments, surligné), <strong className="font-bold text-navy">🖌</strong> (style/couleur), <strong className="font-bold text-navy">▽</strong> (filtre). Coche ou décoche un élément pour l'ajouter ou le retirer.
+      </p>
+    </div>
+  )
+}
+
+// Le volet « Format de l'axe » : Options d'axe (limites min/max + unités).
+function FormatAxe() {
+  const champs = [['Minimum', '0,0'], ['Maximum', '25,0'], ['Unité principale', '5,0'], ['Unité secondaire', '1,0']]
+  return (
+    <div className="mx-auto mt-3 w-56 overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Format de l'axe</span><span className="text-navy/40">✕</span></div>
+      <div className="bg-white p-3">
+        <p className="mb-2 font-bold text-navy/80">▸ Options d'axe</p>
+        <div className="space-y-1.5">
+          {champs.map(([l, val], i) => (
+            <div key={i} className="flex items-center justify-between gap-2">
+              <span className="text-navy/70">{l}</span>
+              <span className={`w-16 rounded-sm border px-2 py-0.5 text-right text-navy ${i < 3 ? 'border-mint ring-1 ring-mint' : 'border-navy/25'}`}>{val}</span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-2 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Les <strong className="text-navy">limites</strong> (min/max) et les <strong className="text-navy">unités</strong> règlent l'échelle.</span></p>
+      </div>
+    </div>
+  )
+}
+
+// La fenêtre « Sélectionner la source de données » : liste des séries + flèches d'ordre.
+function SelectionnerDonnees({ v }) {
+  const series = v?.series || ['Ebook Excel', 'Ebook Shaolin']
+  const sel = v?.selection ?? 0
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Sélectionner la source de données</span><span className="text-navy/40">✕</span></div>
+      <div className="bg-white p-3">
+        <div className="mb-2 flex justify-center"><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/80">⇄ Intervertir les lignes/colonnes</span></div>
+        <p className="mb-1 text-navy/55">Entrées de légende (Séries)</p>
+        <div className="flex gap-2">
+          <div className="flex-1 overflow-hidden rounded-sm border border-navy/25">
+            {series.map((s, i) => (
+              <div key={i} className={`flex items-center gap-1 px-2 py-1 ${i === sel ? 'bg-[#cfe2ff]' : 'bg-white'}`}>
+                <span className="grid h-3 w-3 place-items-center rounded-sm border border-mint bg-mint text-[8px] text-white">✓</span>
+                <span className="text-navy">{s}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col justify-center gap-1">
+            <span className="grid h-5 w-5 place-items-center rounded-sm border-2 border-mint bg-white font-bold text-navy">↑</span>
+            <span className="grid h-5 w-5 place-items-center rounded-sm border-2 border-mint bg-white font-bold text-navy">↓</span>
+          </div>
+        </div>
+        <p className="mt-2 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Les flèches <strong className="text-navy">↑ ↓</strong> changent l'ordre des séries.</span></p>
+      </div>
+    </div>
+  )
+}
+
+// Animation : Intervertir les lignes/colonnes bascule ce qui est en abscisse et ce qui devient série.
+function IntervertirGraphique() {
+  const [p, setP] = useState(0)
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setP(0)
+    const id = setTimeout(() => setP(1), 1400)
+    return () => clearTimeout(id)
+  }, [cle])
+  const A = { cats: ['T1', 'T2', 'T3'], series: [{ nom: 'Ebook Excel', couleur: '#41c1ba', vals: [12, 18, 24] }, { nom: 'Ebook Shaolin', couleur: '#0a335d', vals: [9, 15, 21] }] }
+  const B = { cats: ['Ebook Excel', 'Ebook Shaolin'], series: [{ nom: 'T1', couleur: '#41c1ba', vals: [12, 9] }, { nom: 'T2', couleur: '#0a335d', vals: [18, 15] }, { nom: 'T3', couleur: '#e8853a', vals: [24, 21] }] }
+  const cur = p === 0 ? A : B
+  return (
+    <div className="mt-3">
+      <div key={p} className="animate-fade-up"><Graphique v={{ forme: 'histogramme', titre: 'Ventes des ebooks', ...cur, montrerLegende: true }} /></div>
+      <div className="mt-1 flex items-center justify-center gap-2 text-[11px]">
+        <span className={p === 0 ? 'font-bold text-navy' : 'text-navy/45'}>Séries = Produits</span>
+        <span className="text-navy/40">⇄</span>
+        <span className={p === 1 ? 'font-bold text-navy' : 'text-navy/45'}>Séries = Trimestres</span>
+      </div>
+      <div className="mt-1 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>Création &gt; <strong className="font-bold text-navy">Intervertir les lignes/colonnes</strong> échange l'abscisse et les séries.</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
+      </div>
+    </div>
+  )
+}
+
+// La fenêtre « Déplacer le graphique » : Nouvelle feuille vs Objet dans.
+function DeplacerGraphiqueDialog({ v }) {
+  const sel = v?.selection ?? 0
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Déplacer le graphique</span><span className="text-navy/40">✕</span></div>
+      <div className="space-y-2 bg-white p-3 text-navy">
+        <p className="text-navy/60">Emplacement du graphique :</p>
+        <div className="flex items-center gap-2">
+          <span className={`grid h-3.5 w-3.5 place-items-center rounded-full border ${sel === 0 ? 'border-mint' : 'border-navy/40'}`}>{sel === 0 && <span className="h-1.5 w-1.5 rounded-full bg-mint" />}</span>
+          <span className={sel === 0 ? 'font-bold' : 'text-navy/70'}>Nouvelle feuille :</span>
+          <span className="rounded-sm border border-navy/25 px-2 py-0.5">Graph1</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`grid h-3.5 w-3.5 place-items-center rounded-full border ${sel === 1 ? 'border-mint' : 'border-navy/40'}`}>{sel === 1 && <span className="h-1.5 w-1.5 rounded-full bg-mint" />}</span>
+          <span className={sel === 1 ? 'font-bold' : 'text-navy/70'}>Objet dans :</span>
+          <span className="rounded-sm border border-navy/25 px-2 py-0.5">Feuil1 ▾</span>
+        </div>
+        <div className="flex justify-end gap-2 pt-0.5">
+          <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Aperçu d'impression d'un graphique seul (page A4 portrait).
+function ImprimerGraphique() {
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="rounded-sm bg-white p-3 shadow-lg ring-1 ring-navy/15" style={{ width: 190 }}>
+        <div className="mx-auto rounded border border-navy/15 p-1" style={{ height: 120 }}><MiniBarres w={168} h={110} titre="Ventes par mois" /></div>
+      </div>
+      <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>Fichier &gt; Imprimer. Si le <strong className="font-bold text-navy">graphique est sélectionné</strong>, seul le graphique s'imprime ; sinon, c'est toute la feuille active.
+      </p>
+    </div>
+  )
+}
+
+// Un tableau avec une colonne « Tendance » de sparklines (mini-graphiques dans une cellule).
+function Sparklines() {
+  const rows = [
+    { nom: 'Ebook Excel', vals: [8, 12, 10, 16, 22] },
+    { nom: 'Ebook Shaolin', vals: [20, 16, 17, 12, 9] },
+    { nom: 'Formations', vals: [10, 11, 10, 12, 13] },
+  ]
+  const spark = (vals) => {
+    const max = Math.max(...vals)
+    const min = Math.min(...vals)
+    const w = 64
+    const h = 18
+    const pts = vals.map((val, i) => [(i / (vals.length - 1)) * (w - 4) + 2, h - 2 - ((val - min) / (max - min || 1)) * (h - 4)])
+    const d = 'M' + pts.map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' L')
+    const last = pts[pts.length - 1]
+    return (
+      <svg viewBox={`0 0 ${w} ${h}`} className="h-4 w-16">
+        <path d={d} fill="none" stroke="#41c1ba" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx={last[0]} cy={last[1]} r="1.6" fill="#0a335d" />
+      </svg>
+    )
+  }
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="overflow-hidden rounded-md border border-navy/15 shadow">
+        <table className="border-collapse text-[11px]">
+          <thead>
+            <tr>{['Produit', 'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Tendance'].map((h) => (<th key={h} className="border-b-2 border-mint bg-mint/25 px-2 py-1 font-bold text-navy">{h}</th>))}</tr>
+          </thead>
+          <tbody>
+            {rows.map((r, ri) => (
+              <tr key={ri} className={ri % 2 ? 'bg-navy/[0.04]' : 'bg-white'}>
+                <td className="border-b border-navy/10 px-2 py-1 text-navy/85">{r.nom}</td>
+                {r.vals.map((val, ci) => (<td key={ci} className="border-b border-navy/10 px-2 py-1 text-center text-navy/70">{val}</td>))}
+                <td className="border-b border-l border-navy/10 px-2 py-1">{spark(r.vals)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>Un <strong className="font-bold text-navy">sparkline</strong> est un mini-graphique logé dans une seule cellule (colonne « Tendance ») : parfait pour un tableau de bord.
+      </p>
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
+  if (v.type === 'graphique') return <Graphique v={v} />
+  if (v.type === 'typesgraphiques') return <TypesGraphiques />
+  if (v.type === 'galeriegraphiques') return <GalerieGraphiques />
+  if (v.type === 'deplacergraphique') return <DeplacerGraphique />
+  if (v.type === 'redimensionnergraphique') return <RedimensionnerGraphique />
+  if (v.type === 'ongletscontextuels') return <OngletsContextuels />
+  if (v.type === 'boutonsgraphique') return <BoutonsGraphique v={v} />
+  if (v.type === 'formataxe') return <FormatAxe />
+  if (v.type === 'selectionnerdonnees') return <SelectionnerDonnees v={v} />
+  if (v.type === 'intervertirgraphique') return <IntervertirGraphique />
+  if (v.type === 'deplacergraphiquedialog') return <DeplacerGraphiqueDialog v={v} />
+  if (v.type === 'imprimergraphique') return <ImprimerGraphique />
+  if (v.type === 'sparklines') return <Sparklines />
   if (v.type === 'methode') return <Methode v={v} />
   if (v.type === 'recopieanim') return <RecopieAnim />
   if (v.type === 'reffiger') return <RefFiger />

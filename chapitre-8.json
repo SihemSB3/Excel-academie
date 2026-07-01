@@ -1,0 +1,154 @@
+{
+  "chapitre": 8,
+  "titre": "Les graphiques",
+  "niveau": 8,
+  "ceinture": "verte-bleue",
+  "objectif": "Transformer un tableau en visuel clair : créer un graphique et choisir le bon type, le déplacer/redimensionner, le personnaliser (onglets contextuels, style, titre, bouton +), régler les axes, gérer les séries et intervertir lignes/colonnes, déplacer sur une feuille dédiée, imprimer, supprimer, et aller plus loin avec les graphiques mixtes et les sparklines.",
+  "note_pedago": "Chapitre COMPLET (7 lecons) : creergraphique (selection Ctrl+A + Insertion > Graphiques + choisir le type, Ex.59), deplacergraphique (deplacer 4 fleches + redimensionner poignees/Shift, Ex.60), modifiergraphique (onglets contextuels + style + boutons flottants + titre, Ex.61), axesgraphique (axe X/Y + Format de l'axe limites/unites, Ex.62), seriesgraphique (series + Selectionner des donnees + intervertir lignes/colonnes, Ex.62+63), deplacerimprimer (Deplacer le graphique + imprimer + supprimer, Ex.64), mixtesparkline (graphique combine axe secondaire + sparklines, Ex.65+66) + quiz (12) + checklist (10). Nouveaux composants LeconNarree : graphique (SVG histogramme/courbe/secteurs/mixte anime), typesgraphiques, galeriegraphiques, deplacergraphique, redimensionnergraphique, ongletscontextuels, boutonsgraphique, formataxe, selectionnerdonnees, intervertirgraphique, deplacergraphiquedialog, imprimergraphique, sparklines. Memes regles que ch.3-7 (capture par etape, animations pour les gestes, raccourcis Mac, ton positif, mini-question a bonne variee).",
+  "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
+  "modules": [
+    { "id": "ch8-creergraphique", "type": "narration", "lecon": "creergraphique", "titre": "Créer un graphique", "xp": 30 },
+    { "id": "ch8-deplacergraphique", "type": "narration", "lecon": "deplacergraphique", "titre": "Déplacer & redimensionner", "xp": 30 },
+    { "id": "ch8-modifiergraphique", "type": "narration", "lecon": "modifiergraphique", "titre": "Onglets contextuels & style", "xp": 30 },
+    { "id": "ch8-axesgraphique", "type": "narration", "lecon": "axesgraphique", "titre": "Les axes", "xp": 30 },
+    { "id": "ch8-seriesgraphique", "type": "narration", "lecon": "seriesgraphique", "titre": "Les séries & intervertir", "xp": 30 },
+    { "id": "ch8-deplacerimprimer", "type": "narration", "lecon": "deplacerimprimer", "titre": "Déplacer, imprimer, supprimer", "xp": 30 },
+    { "id": "ch8-mixtesparkline", "type": "narration", "lecon": "mixtesparkline", "titre": "Graphiques mixtes & sparklines", "xp": 30 },
+    {
+      "id": "ch8-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 9,
+      "total": 12,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.8 p350-352 (12 questions), repris verbatim. reponses_correctes = index corrects (0-3).",
+      "questions": [
+        {
+          "id": "ch8-qcm-01",
+          "question": "Comment sélectionner rapidement la plage de données pour un graphique ?",
+          "options": ["Cliquer sur une cellule, puis [Ctrl + C]", "Sélectionner manuellement chaque cellule", "Cliquer dans le tableau puis [Ctrl + A]", "Cliquer sur l'onglet Insertion directement"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch8-qcm-02",
+          "question": "Quelle méthode utilise la touche [Shift] pour définir la plage de données ?",
+          "options": ["[Shift] + clic sur le coin opposé de la plage", "[Shift] + [Ctrl] + A", "[Shift] + double-clic sur la cellule", "[Shift] + glisser la souris"],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch8-qcm-03",
+          "question": "Où trouve-t-on la galerie des types de graphiques ?",
+          "options": ["Onglet Données → Graphiques", "Onglet Accueil → Styles", "Onglet Insertion → groupe Graphiques", "Menu Fichier → Options"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch8-qcm-04",
+          "question": "Quel type de graphique est le plus adapté pour comparer des valeurs entre séries ?",
+          "options": ["Histogramme", "Secteurs", "Nuage de points", "Aires"],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch8-qcm-05",
+          "question": "Pour déplacer un graphique, que devez-vous faire ?",
+          "options": ["Cliquer sur le bord jusqu'à voir les flèches à quatre directions, puis glisser", "Sélectionner l'onglet Mise en forme, puis Déplacer", "Double-cliquer sur le graphique et choisir Déplacer", "Cliquer droit → Couper, aller à l'endroit, Coller"],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch8-qcm-06",
+          "question": "Quelle touche maintenir pour redimensionner un graphique proportionnellement ?",
+          "options": ["[Ctrl]", "[Alt]", "[Shift]", "[Tab]"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch8-qcm-07",
+          "question": "L'onglet contextuel « Création » n'apparaît que lorsque…",
+          "options": ["Vous sélectionnez une cellule vide", "Vous cliquez en dehors de tout objet", "Vous sélectionnez un graphique", "Vous ouvrez le menu Fichier"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch8-qcm-08",
+          "question": "Dans la boîte de dialogue « Mettre en forme… » d'un axe, on peut régler :",
+          "options": ["Le style de police uniquement", "Les limites et les unités", "La couleur des barres", "L'échelle des pourcentages uniquement"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch8-qcm-09",
+          "question": "Qu'est-ce qu'une série de données dans un graphique ?",
+          "options": ["Un style de mise en forme", "Une série de valeurs extraites d'une même plage de cellules", "Un type de graphique", "Un raccourci clavier"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch8-qcm-10",
+          "question": "Pour inverser lignes et colonnes dans un graphique, on utilise…",
+          "options": ["Clic droit → Inverser", "Onglet Création → Intervertir les lignes/colonnes", "Onglet Mise en forme → Transposer", "Menu Fichier → Transposer"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch8-qcm-11",
+          "question": "Comment créer rapidement un graphique sparkline ?",
+          "options": ["Onglet Insertion → Sparklines, puis choisir type et plage", "Onglet Données → Sparklines", "Menu Affichage → Sparklines", "Cliquer droit sur une cellule vide → Insérer sparkline"],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch8-qcm-12",
+          "question": "Le bouton « + » à côté d'un graphique permet de…",
+          "options": ["Ajouter une nouvelle feuille", "Insérer un autre graphique", "Ajouter ou retirer des éléments du graphique", "Réinitialiser le graphique"],
+          "reponses_correctes": [2]
+        }
+      ]
+    },
+    {
+      "id": "ch8-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist de l'ebook ch.8 (p353), reprise verbatim.",
+      "a_valider": false,
+      "items": [
+        "Je sais sélectionner une plage de données contiguë avec Ctrl + A.",
+        "Je sais ajuster ma plage de données via Sélectionner des données.",
+        "Je trouve et j'insère le type de graphique approprié via l'onglet Insertion.",
+        "Je déplace et redimensionne un graphique en gardant ses proportions.",
+        "Je fais apparaître et j'utilise les onglets contextuels Création et Mise en forme.",
+        "Je modifie les limites et unités d'un axe via la boîte Mettre en forme….",
+        "Je gère les séries de données (ajout, suppression, ordre) dans la source de données.",
+        "J'inverse lignes et colonnes pour tester différentes dispositions.",
+        "Je crée et personnalise un sparkline dans une cellule.",
+        "J'ajoute ou retire des éléments (titre, légende, étiquettes) avec le raccourci +."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["créer", "graphique", "insérer", "type", "histogramme"],
+      "question": "Comment créer un graphique à partir de mon tableau ?",
+      "reponse": "Clique une cellule dans ton tableau, sélectionne toute la plage avec Ctrl + A (⌘ + A sur Mac), puis onglet Insertion > groupe Graphiques : choisis un type (Histogramme pour comparer, Courbe pour une évolution, Secteurs pour une répartition) et un sous-type. Le graphique apparaît sur ta feuille. Si tu hésites, Insertion > Graphique recommandé te propose les plus adaptés."
+    },
+    {
+      "mots_cles": ["déplacer", "redimensionner", "taille", "poignées", "proportions"],
+      "question": "Comment déplacer ou agrandir un graphique ?",
+      "reponse": "Pour le déplacer : survole son bord jusqu'au curseur à 4 flèches, puis clique-glisse. Pour le redimensionner : attrape une poignée d'angle et fais-la glisser ; maintiens Shift pour garder les proportions. Pour une taille précise : onglet Format > groupe Taille > Hauteur et Largeur."
+    },
+    {
+      "mots_cles": ["axe", "échelle", "limites", "minimum", "maximum", "unités"],
+      "question": "Comment régler l'échelle d'un axe ?",
+      "reponse": "Double-clique l'axe vertical (les valeurs) pour ouvrir le volet Format de l'axe, puis Options d'axe : règle le Minimum, le Maximum et les Unités (principale, secondaire). Monter le minimum « zoome » sur les écarts entre les valeurs."
+    },
+    {
+      "mots_cles": ["série", "séries", "sélectionner des données", "intervertir", "lignes", "colonnes"],
+      "question": "Comment gérer les séries ou intervertir lignes et colonnes ?",
+      "reponse": "Onglet Création de graphique > Sélectionner des données : la fenêtre liste les séries, avec les flèches ↑ ↓ pour les réordonner et les boutons Ajouter/Modifier/Supprimer. Le bouton Intervertir les lignes/colonnes (aussi dans l'onglet Création) échange ce qui est en abscisse et ce qui devient une série : pratique pour changer de point de vue."
+    },
+    {
+      "mots_cles": ["mixte", "combiné", "axe secondaire", "sparkline", "cellule"],
+      "question": "C'est quoi un graphique mixte ou un sparkline ?",
+      "reponse": "Un graphique mixte (combiné) superpose deux types (ex. colonnes + courbe) avec un axe secondaire pour une série d'échelle différente : Insertion > Graphique combiné, puis choisis le type de chaque série et coche Axe secondaire. Un sparkline est un mini-graphique logé dans une seule cellule (Insertion > Sparklines > Courbe/Histogramme) : idéal pour un tableau de bord de KPI."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "verte-bleue",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture verte-bleue débloquée. Tes chiffres deviennent des images qui parlent : tu crées, personnalises et combines des graphiques. Un vrai storytelling de données."
+  }
+}

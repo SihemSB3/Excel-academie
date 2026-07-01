@@ -3128,4 +3128,352 @@ const SOUSTOTAUX = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX }
+// ===================== CHAPITRE 8 : LES GRAPHIQUES (ceinture verte-bleue) =====================
+const U8 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX8 = {
+  ex59: { titre: 'Exercice 59 · Les graphiques simples', url: U8('1uDZv2IHm9cJLabXOjyKnUkn3NdirIMDS') },
+  ex60: { titre: 'Exercice 60 · Ajuster et déplacer les graphiques', url: U8('1uU4Wzf713BPAL4aole3v0MH9WJKIOjhO') },
+  ex61: { titre: 'Exercice 61 · Modifier un graphique', url: U8('1S0UsABE9xqY0CrmGslOaofp3NjhKDigf') },
+  ex62: { titre: 'Exercice 62 · Modifier les axes et les séries', url: U8('1vy7yz5epg9rKDu1FXUXsKOmIjdwyoIfd') },
+  ex63: { titre: 'Exercice 63 · Intervertir les lignes/colonnes', url: U8('16gROGvwigLzb0CUmzhAQDTfyZbmm0T2X') },
+  ex64: { titre: 'Exercice 64 · Déplacer et imprimer un graphique', url: U8('19rVXC94sgEj7M8Q-9nUjfn6j83v1S6-7') },
+  ex65: { titre: 'Exercice 65 · Les graphiques mixtes ou combinés', url: U8('12ORIQGPvwm-b5C7ZQPezBz-rPns3vM1Y') },
+  ex66: { titre: 'Exercice 66 · Les graphiques Sparklines', url: U8('1-Yyh64VoGeTuVboK9LHictSDi-jexdQZ') },
+}
+const GRAPH_MOIS = { cats: ['Jan', 'Fév', 'Mar', 'Avr'], series: [{ nom: 'Ventes', vals: [12, 19, 15, 24] }] }
+const GRAPH_PRODUITS = { cats: ['T1', 'T2', 'T3'], series: [{ nom: 'Ebook Excel', couleur: '#41c1ba', vals: [12, 18, 24] }, { nom: 'Ebook Shaolin', couleur: '#0a335d', vals: [9, 15, 21] }] }
+const GRAPH_MIXTE = { cats: ['T1', 'T2', 'T3'], series: [{ nom: 'CA (k€)', couleur: '#41c1ba', vals: [12, 18, 24] }, { nom: 'Nb ventes', couleur: '#e8853a', vals: [40, 55, 72] }] }
+const TABLE_MOIS_LIGNES = [['Jan', '12 000 €'], ['Fév', '19 000 €'], ['Mar', '15 000 €'], ['Avr', '24 000 €']]
+
+// --- Leçon 1 : Créer un graphique ---
+const CREERGRAPHIQUE = {
+  id: 'fn-creergraphique',
+  titre: 'Créer un graphique',
+  exercices: [EX8.ex59],
+  narration: [
+    { humeur: 'accueil', dit: 'Un **graphique** transforme un tableau de chiffres en image claire : on voit tout de suite les tendances. Voici la table de départ, elle deviendra un graphique.', visuel: { type: 'tableaudonnees', brut: true, entetes: ['Mois', 'Ventes'], lignes: TABLE_MOIS_LIGNES, legende: 'Ces 4 chiffres deviennent 4 barres : plus la barre est haute, plus la vente est grande.' } },
+    {
+      humeur: 'pensif',
+      dit: 'Première étape : **sélectionner les données** à représenter, en-têtes compris.',
+      visuel: {
+        type: 'methode',
+        titre: 'Sélectionner la plage',
+        blocs: [
+          { etapes: ['Clique une cellule **à l\'intérieur** de ton tableau.'] },
+          { etapes: ['Appuie sur **Ctrl + A** (Mac : **⌘ + A**) : toute la plage collée se sélectionne.'], depart: 2 },
+          { capture: { type: 'touche', touches: ['Ctrl', 'A'], note: 'Sur Mac : ⌘ + A. Sélectionne d\'un coup toute la plage de données autour de la cellule.' } },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: ['Mois', 'Ventes'], lignes: TABLE_MOIS_LIGNES, legende: 'La plage entière est sélectionnée (contour bleu), titres inclus.' } },
+          { note: 'À la main : clique la 1re cellule, puis **Shift + clic** sur le coin opposé de la plage.', label: 'Astuce' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Deuxième étape : **insérer** le graphique depuis le ruban.',
+      visuel: {
+        type: 'methode',
+        titre: 'Insérer le graphique',
+        blocs: [
+          { etapes: ['Va dans l\'onglet **Insertion**, groupe **Graphiques**.'] },
+          { capture: { type: 'ruban', actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Histogramme', actif: true }, { icone: '📈', label: 'Courbe' }, { icone: '🥧', label: 'Secteurs' }, { icone: '⭐', label: 'Graphique\nrecommandé' }] } },
+          { etapes: ['Clique le **type** voulu, puis un **sous-type** dans la galerie (ex. Histogramme groupé).'], depart: 2 },
+          { capture: { type: 'galeriegraphiques' } },
+          { etapes: ['Le graphique **apparaît** sur ta feuille, prêt à personnaliser.'], depart: 3 },
+          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', etiquettes: true, anime: true, legende: 'Et voilà ton histogramme, créé à partir du tableau.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Comment choisir le **bon type** ? Chaque graphique raconte une histoire différente.',
+      visuel: { type: 'typesgraphiques' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pas sûre du type ? Excel propose **Insertion > Graphique recommandé** : il analyse tes données et suggère les plus adaptés.',
+      visuel: { type: 'encart', label: 'Astuce', texte: 'Le bouton **Graphique recommandé** (groupe Graphiques) est parfait quand tu débutes : tu choisis parmi des propositions déjà pertinentes.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quel raccourci sélectionne d\'un coup toute la plage de données autour de ta cellule ?',
+      visuel: { type: 'question', options: ['Ctrl + C (Mac : ⌘ + C)', 'Ctrl + A (Mac : ⌘ + A)', 'Ctrl + P (Mac : ⌘ + P)'], bonne: 1, explication: 'Ctrl + A (⌘ + A sur Mac), depuis une cellule du tableau, sélectionne toute la plage collée. Ctrl + C copie, Ctrl + P imprime.' } },
+    { humeur: 'fier', dit: 'Tu sais créer un graphique et choisir le bon type. C\'est le point de départ de toute belle visualisation. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : Déplacer & redimensionner ---
+const DEPLACERGRAPHIQUE = {
+  id: 'fn-deplacergraphique',
+  titre: 'Déplacer & redimensionner',
+  exercices: [EX8.ex60],
+  narration: [
+    { humeur: 'accueil', dit: 'Un graphique est un **objet flottant** posé sur ta feuille : tu peux le déplacer et l\'agrandir librement, sans toucher aux données.' },
+    {
+      humeur: 'pensif',
+      dit: 'Pour le **déplacer** : attrape-le par son bord.',
+      visuel: {
+        type: 'methode',
+        titre: 'Déplacer le graphique',
+        blocs: [
+          { etapes: ['Survole le **bord** du graphique jusqu\'à voir le curseur à **4 flèches** (✥).'] },
+          { etapes: ['Clique et **fais glisser** où tu veux, puis relâche.'], depart: 2 },
+          { capture: { type: 'deplacergraphique' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour le **redimensionner** : utilise les poignées.',
+      visuel: {
+        type: 'methode',
+        titre: 'Redimensionner le graphique',
+        blocs: [
+          { etapes: ['Clique le graphique : **8 poignées** apparaissent sur son cadre.'] },
+          { etapes: ['Attrape une **poignée d\'angle** et fais-la glisser pour agrandir ou réduire.'], depart: 2 },
+          { capture: { type: 'redimensionnergraphique' } },
+          { etapes: ['Maintiens **Shift** pendant le glissement pour garder les **proportions**.'], depart: 3 },
+          { capture: { type: 'touche', touches: ['Shift'], note: 'Maintenue pendant le glissement d\'une poignée d\'angle, la touche Shift garde le graphique bien proportionné (pas déformé).' } },
+          { note: 'Pour une taille précise : onglet **Format** > groupe **Taille** > saisis la **Hauteur** et la **Largeur**.', label: 'Astuce' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle touche maintenir pendant le glissement pour redimensionner sans déformer le graphique ?',
+      visuel: { type: 'question', options: ['Alt (Mac : ⌥)', 'Ctrl (Mac : ⌘)', 'Shift', 'Tab'], bonne: 2, explication: 'Shift, maintenue en glissant une poignée d\'angle, conserve les proportions du graphique.' },
+    },
+    { humeur: 'fier', dit: 'Ton graphique se place et se dimensionne exactement où tu veux. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : Onglets contextuels & style ---
+const MODIFIERGRAPHIQUE = {
+  id: 'fn-modifiergraphique',
+  titre: 'Onglets contextuels & style',
+  exercices: [EX8.ex61],
+  narration: [
+    {
+      humeur: 'accueil',
+      dit: 'Dès que tu **sélectionnes** un graphique, deux onglets spéciaux apparaissent dans le ruban : **Création de graphique** et **Format**. Ils disparaissent quand tu cliques ailleurs.',
+      visuel: { type: 'ongletscontextuels' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Change l\'allure d\'un clic avec un **style prédéfini**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Changer le style',
+        blocs: [
+          { etapes: ['Sélectionne le graphique, onglet **Création de graphique** > groupe **Styles du graphique**.'] },
+          { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'], actif: 'Création de graphique', groupeNom: 'Styles du graphique', groupes: [{ icone: '▤', label: 'Style 1' }, { icone: '▥', label: 'Style 2', actif: true }, { icone: '▦', label: 'Style 3' }, { icone: '🎨', label: 'Modifier les\ncouleurs' }] } },
+          { etapes: ['Survole les vignettes pour l\'aperçu, clique pour appliquer.'], depart: 2 },
+          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', legende: 'Le style change couleurs, bordures et effets d\'un coup.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Trois boutons flottants apparaissent à côté du graphique sélectionné. Le plus utile : le **＋**, pour ajouter ou retirer des éléments.',
+      visuel: { type: 'boutonsgraphique' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le **titre** se modifie directement.',
+      visuel: {
+        type: 'methode',
+        titre: 'Modifier le titre',
+        blocs: [
+          { etapes: ['**Double-clique** le titre du graphique.'] },
+          { etapes: ['Tape ton nouveau texte, puis clique ailleurs pour valider.'], depart: 2 },
+          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', surbrillance: 'titre', legende: 'Le titre (encadré) devient modifiable au double-clic.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Les onglets « Création de graphique » et « Format » apparaissent seulement quand...',
+      visuel: { type: 'question', options: ['tu ouvres le menu Fichier', 'tu sélectionnes une cellule vide', 'tu sélectionnes un graphique'], bonne: 2, explication: 'Ce sont des onglets contextuels : ils ne s\'affichent que lorsqu\'un graphique est sélectionné, et disparaissent dès que tu cliques ailleurs.' },
+    },
+    { humeur: 'fier', dit: 'Tu maîtrises les onglets contextuels, les styles et le bouton ＋. Ton graphique devient vraiment le tien. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 4 : Les axes ---
+const AXESGRAPHIQUE = {
+  id: 'fn-axesgraphique',
+  titre: 'Les axes',
+  exercices: [EX8.ex62],
+  narration: [
+    { humeur: 'accueil', dit: 'Un graphique a deux **axes** : l\'axe **X** (horizontal) porte les catégories, l\'axe **Y** (vertical) porte les valeurs.', visuel: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', annoterAxes: true, legende: 'Axe X en bas (les mois), axe Y à gauche (les euros).' } },
+    {
+      humeur: 'pensif',
+      dit: 'Tu peux régler l\'**échelle** de l\'axe des valeurs pour mieux voir les écarts.',
+      visuel: {
+        type: 'methode',
+        titre: 'Modifier l\'échelle d\'un axe',
+        blocs: [
+          { etapes: ['**Double-clique** l\'axe vertical (les chiffres) : le volet **Format de l\'axe** s\'ouvre.'] },
+          { etapes: ['Ouvre **Options d\'axe**, puis règle **Minimum**, **Maximum** et **Unités**.'], depart: 2 },
+          { capture: { type: 'formataxe' } },
+          { note: 'Monter le **Minimum** (ex. démarrer à 10 au lieu de 0) « zoome » sur les écarts. Baisser l\'**Unité** ajoute des graduations.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans la boîte « Format de l\'axe », que peux-tu régler ?',
+      visuel: { type: 'question', options: ['La couleur des barres uniquement', 'Le style de police uniquement', 'Les limites (min/max) et les unités'], bonne: 2, explication: 'Les Options d\'axe règlent surtout les limites (minimum, maximum) et les unités (principale, secondaire), c\'est-à-dire l\'échelle.' },
+    },
+    { humeur: 'fier', dit: 'Tu contrôles l\'échelle de tes axes : tes graphiques disent exactement ce que tu veux montrer. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 5 : Les séries & intervertir ---
+const SERIESGRAPHIQUE = {
+  id: 'fn-seriesgraphique',
+  titre: 'Les séries & intervertir',
+  exercices: [EX8.ex62, EX8.ex63],
+  narration: [
+    { humeur: 'accueil', dit: 'Une **série** est une suite de valeurs issues d\'une même plage : ici, chaque ebook est une série, comparée trimestre par trimestre.', visuel: { type: 'graphique', ...GRAPH_PRODUITS, titre: 'Ventes des ebooks', montrerLegende: true, legende: 'Deux séries (Ebook Excel en turquoise, Ebook Shaolin en bleu) sur 3 trimestres.' } },
+    {
+      humeur: 'pensif',
+      dit: 'Pour ajouter, retirer ou **réordonner** les séries : la source de données.',
+      visuel: {
+        type: 'methode',
+        titre: 'Sélectionner des données',
+        blocs: [
+          { etapes: ['Onglet **Création de graphique** > **Sélectionner des données** (ou clic droit > Sélectionner des données).'] },
+          { capture: { type: 'selectionnerdonnees', series: ['Ebook Excel', 'Ebook Shaolin'], selection: 0 } },
+          { etapes: ['Utilise les flèches **↑ ↓** pour changer l\'ordre des séries.'], depart: 2 },
+          { note: 'Les boutons **Ajouter** / **Modifier** / **Supprimer** gèrent les séries une à une.', label: 'Astuce' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un clic magique : **intervertir les lignes et les colonnes** pour changer de point de vue.',
+      visuel: { type: 'intervertirgraphique' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Tu peux aussi changer le **type d\'une série** : clic droit dessus > **Modifier le type de graphique de série**.',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Changer le type d\'une seule série (ex. la passer en courbe) est le premier pas vers un **graphique mixte**, qu\'on verra au dernier module.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour échanger ce qui est en abscisse et ce qui devient une série, on utilise...',
+      visuel: { type: 'question', options: ['Clic droit > Inverser', 'Création > Intervertir les lignes/colonnes', 'Menu Fichier > Transposer'], bonne: 1, explication: 'Onglet Création de graphique > Intervertir les lignes/colonnes échange les catégories (abscisse) et les séries.' },
+    },
+    { humeur: 'fier', dit: 'Tu gères tes séries et tu changes de point de vue en un clic. Analyse de pro. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 6 : Déplacer dans une feuille, imprimer, supprimer ---
+const DEPLACERIMPRIMER = {
+  id: 'fn-deplacerimprimer',
+  titre: 'Déplacer dans une feuille, imprimer, supprimer',
+  exercices: [EX8.ex64],
+  narration: [
+    {
+      humeur: 'accueil',
+      dit: 'Tu peux sortir le graphique sur sa **propre feuille**, pour le présenter en grand.',
+      visuel: {
+        type: 'methode',
+        titre: 'Déplacer dans une autre feuille',
+        blocs: [
+          { etapes: ['Sélectionne le graphique, onglet **Création de graphique** > **Déplacer le graphique**.'] },
+          { etapes: ['Choisis **Nouvelle feuille** (une page dédiée) ou **Objet dans** (une autre feuille existante), puis **OK**.'], depart: 2 },
+          { capture: { type: 'deplacergraphiquedialog', selection: 0 } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour **imprimer** un graphique seul.',
+      visuel: {
+        type: 'methode',
+        titre: 'Imprimer un graphique',
+        blocs: [
+          { etapes: ['**Sélectionne** le graphique (clique son bord).'] },
+          { etapes: ['**Fichier > Imprimer** : l\'aperçu ne montre que le graphique.'], depart: 2 },
+          { capture: { type: 'imprimergraphique' } },
+          { note: 'Si **aucun** graphique n\'est sélectionné, Excel imprime **toute la feuille active** (données + graphique).', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour **supprimer** un graphique.',
+      visuel: {
+        type: 'methode',
+        titre: 'Supprimer un graphique',
+        blocs: [
+          { etapes: ['Clique le **bord** du graphique pour le sélectionner en entier.'] },
+          { etapes: ['Appuie sur **Suppr**.'], depart: 2 },
+          { capture: { type: 'touche', touches: ['Suppr'], note: 'Clique d\'abord le bord (tout le graphique). Si tu cliques un élément interne, Suppr n\'enlève que cet élément (ex. la légende).' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Que fait « Déplacer le graphique > Nouvelle feuille » ?',
+      visuel: { type: 'question', options: ['Il place le graphique sur sa propre feuille dédiée', 'Il supprime le graphique', 'Il change la couleur des barres'], bonne: 0, explication: '« Déplacer le graphique > Nouvelle feuille » sort le graphique sur une feuille à lui seul, idéale pour une présentation en grand.' },
+    },
+    { humeur: 'fier', dit: 'Déplacer sur une feuille dédiée, imprimer, supprimer : tu gères le cycle de vie complet d\'un graphique. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 7 : Graphiques mixtes & sparklines ---
+const MIXTESPARKLINE = {
+  id: 'fn-mixtesparkline',
+  titre: 'Graphiques mixtes & sparklines',
+  exercices: [EX8.ex65, EX8.ex66],
+  narration: [
+    { humeur: 'accueil', dit: 'Dernière étape : deux graphiques spéciaux. D\'abord le **graphique mixte** (ou combiné) : il superpose deux types, avec un **axe secondaire** pour une grandeur d\'échelle différente.', visuel: { type: 'graphique', forme: 'mixte', ...GRAPH_MIXTE, titre: 'CA et volume', montrerLegende: true, anime: true, legende: 'Barres = CA en k€ (axe gauche), courbe = nombre de ventes (axe droit orange).' } },
+    {
+      humeur: 'pensif',
+      dit: 'On le crée en un geste depuis le ruban.',
+      visuel: {
+        type: 'methode',
+        titre: 'Créer un graphique mixte',
+        blocs: [
+          { etapes: ['Sélectionne tout le tableau, onglet **Insertion** > **Graphique combiné**.'] },
+          { capture: { type: 'ruban', actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Histogramme' }, { icone: '📈', label: 'Courbe' }, { icone: '🔀', label: 'Graphique\ncombiné', actif: true }] } },
+          { etapes: ['Pour chaque série, choisis le **type** (colonne, courbe…) et coche **Axe secondaire** pour celle qui a une autre unité (€, %).'], depart: 2 },
+          { capture: { type: 'champs', titre: 'Type de graphique combiné', champs: [{ l: 'CA (k€) · Histogramme groupé', v: 'Axe principal', actif: true }, { l: 'Nb ventes · Courbe', v: 'Axe secondaire ✓', actif: true }] } },
+          { etapes: ['Clique **OK** : les deux séries cohabitent proprement.'], depart: 3 },
+          { capture: { type: 'graphique', forme: 'mixte', ...GRAPH_MIXTE, titre: 'CA et volume', montrerLegende: true, legende: 'Chaque série lit son propre axe : plus d\'écrasement.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Deuxième spécialité : le **sparkline**, un mini-graphique logé dans **une seule cellule**.',
+      visuel: { type: 'sparklines' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'On l\'insère en quelques clics.',
+      visuel: {
+        type: 'methode',
+        titre: 'Créer un sparkline',
+        blocs: [
+          { etapes: ['Sélectionne la plage de valeurs (ex. B2:F2).'] },
+          { etapes: ['Onglet **Insertion** > **Sparklines** > **Courbe** (ou Histogramme).'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Insertion', groupeNom: 'Sparklines', groupes: [{ icone: '〰', label: 'Courbe', actif: true }, { icone: '▁▃▅', label: 'Histogramme' }, { icone: '±', label: 'Conclusion' }] } },
+          { etapes: ['Indique la **plage de données** et la **cellule de destination**, puis **OK**.'], depart: 3 },
+          { capture: { type: 'champs', titre: 'Créer des Sparklines', champs: [{ l: 'Plage de données', v: 'B2:F2', actif: true }, { l: 'Emplacement', v: '$G$2', actif: true }] } },
+          { note: 'Étire la **poignée de recopie** vers le bas pour l\'appliquer aux autres lignes, puis personnalise via l\'onglet **Sparkline**.', label: 'Astuce' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Comment crée-t-on rapidement un sparkline ?',
+      visuel: { type: 'question', options: ['Menu Affichage > Sparklines', 'Onglet Insertion > Sparklines, puis choisir le type et la plage', 'Clic droit sur une cellule vide > Insérer sparkline', 'Onglet Données > Sparklines'], bonne: 1, explication: 'Onglet Insertion > Sparklines > Courbe/Histogramme/Conclusion, puis on indique la plage et l\'emplacement.' },
+    },
+    { humeur: 'fier', dit: 'Graphiques mixtes et sparklines : tu vas au-delà du graphique classique. La ceinture verte-bleue est à ta portée. Bravo ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE }
