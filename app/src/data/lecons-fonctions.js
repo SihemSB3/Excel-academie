@@ -2666,4 +2666,466 @@ const PROTEGERFEUILLES = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES }
+// ======================================================================
+// CHAPITRE 7 — Exploiter une liste (ceinture verte)
+// ======================================================================
+const EX7 = {
+  ex52: { titre: 'Exercice 52 · Figer/Libérer les volets', url: U6('18bvVTJ6qBCIcIL48V-QaGKFwa7BHntDa') },
+  ex53: { titre: 'Exercice 53 · Les sauts de page', url: U6('1PnBhb4XI95uE2S-zhzwS6TO14Rdz-d-F') },
+  ex54: { titre: 'Exercice 54 · Création de tableaux', url: U6('1rw9kW9D4pnqd2pquIE6MCiJFrPf2cYBF') },
+  ex55: { titre: 'Exercice 55 · Le formulaire', url: U6('1sXHA54yo5MpbIB8ZHD4hDsKMqZ8ZUMGK') },
+  ex56: { titre: 'Exercice 56 · Tris et filtres', url: U6('1Uj9AmixGKi9HUgyyIXOZS5f4SCyZXjD2') },
+  ex57: { titre: 'Exercice 57 · Les sous-totaux', url: U6('1RM6WsBhY3nYP0l_Ho0ibyHG8H_kviq1q') },
+  ex58: { titre: 'Exercice 58 · La fonction SOUS.TOTAL', url: U6('1Uc3I_2N2Sc-8OO6ucHbkCZB7RterbBVl') },
+}
+const LISTE_ENTETES = ['Vendeur', 'Ville', 'CA']
+const LISTE_LIGNES = [['Marie', 'Lyon', '8 200 €'], ['Karim', 'Paris', '12 500 €'], ['Léa', 'Lyon', '6 400 €'], ['Tom', 'Marseille', '9 100 €']]
+
+// --- Leçon 1 : Une liste bien construite + figer les volets ---
+const REGLESLISTE = {
+  id: 'fn-reglesliste',
+  titre: 'Une liste bien construite',
+  exercices: [EX7.ex52],
+  narration: [
+    { humeur: 'accueil', dit: 'Une **liste**, c\'est une suite d\'informations rangée en colonnes, avec une ligne d\'en-tête en haut. Avant de la trier, la filtrer ou la totaliser, elle doit être « propre ». Voici un exemple :', visuel: { type: 'tableaudonnees', brut: true, entetes: ['Date', 'Vendeur', 'Ville', 'CA'], lignes: [['05/03', 'Marie', 'Lyon', '8 200 €'], ['06/03', 'Karim', 'Paris', '12 500 €'], ['07/03', 'Léa', 'Lyon', '6 400 €'], ['08/03', 'Tom', 'Marseille', '9 100 €']], legende: 'Une ligne d\'en-tête (Date, Vendeur, Ville, CA), puis une ligne par enregistrement.' } },
+    {
+      humeur: 'pensif',
+      dit: 'Les 3 règles d\'une liste exploitable :',
+      visuel: { type: 'parties', items: [{ label: '**Aucune ligne ni colonne entièrement vide** : Excel prend une ligne/colonne vide pour la fin du tableau.' }, { label: '**Les en-têtes sur une seule ligne** (ex : A1:C1), sans rien au-dessus : Excel repère la 1re ligne comme titres.' }, { label: '**Jamais de cellules fusionnées** dans le tableau : ça casse les tris automatiques.' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pourquoi c\'est si important :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Une ligne ou une colonne vide **coupe** ta liste en deux : tris et filtres ne s\'appliqueront qu\'à la partie au-dessus. Une seule cellule vide par ligne est tolérée, mais jamais une ligne ou colonne entière.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Sur une longue liste, les titres disparaissent quand tu fais défiler. La solution : **figer les volets** pour garder les en-têtes à l\'écran.',
+      visuel: {
+        type: 'methode',
+        titre: 'Figer les volets',
+        blocs: [
+          { etapes: ['Clique dans la liste, puis onglet **Affichage** > groupe **Fenêtre** > **Figer les volets**'] },
+          { capture: { type: 'ruban', actif: 'Affichage', groupeNom: 'Fenêtre', groupes: [{ icone: '🗔', label: 'Nouvelle\nfenêtre' }, { icone: '⊟', label: 'Figer les\nvolets', actif: true }, { icone: '🗗', label: 'Changer de\nfenêtre' }] } },
+          { capture: { type: 'menu', items: [{ label: 'Figer les volets', actif: true }, { label: 'Figer la ligne supérieure' }, { label: 'Figer la première colonne' }] } },
+          { capture: { type: 'figervolets' } },
+          { note: '**Figer les volets** = bloque tout ce qui est au-dessus et à gauche de la cellule active. **Figer la ligne supérieure** = juste la 1re ligne. **Figer la première colonne** = juste la 1re colonne.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour tout débloquer, c\'est au même endroit.',
+      visuel: {
+        type: 'methode',
+        titre: 'Libérer les volets',
+        blocs: [
+          { etapes: ['Onglet **Affichage** > groupe **Fenêtre** > **Figer les volets**'] },
+          { capture: { type: 'ruban', actif: 'Affichage', groupeNom: 'Fenêtre', groupes: [{ icone: '🗔', label: 'Nouvelle\nfenêtre' }, { icone: '⊟', label: 'Figer les\nvolets', actif: true }, { icone: '🗗', label: 'Changer de\nfenêtre' }] } },
+          { etapes: ['Clique **Libérer les volets**'], depart: 2 },
+          { capture: { type: 'menu', items: [{ label: 'Libérer les volets', actif: true }, { label: 'Figer la ligne supérieure' }, { label: 'Figer la première colonne' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pourquoi ne jamais laisser une colonne entièrement vide dans une liste ?',
+      visuel: { type: 'question', options: ['Pour figer les volets', 'Pour conserver la continuité du tableau'], bonne: 1, explication: 'Une colonne (ou ligne) entièrement vide coupe la liste : Excel croit que le tableau s\'arrête là, et tes tris/filtres ne prennent qu\'une partie des données.' },
+    },
+    { humeur: 'fier', dit: 'Ta liste est propre et tes en-têtes restent visibles. La base d\'un bon tableau. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : Imprimer une longue liste (rappels) ---
+const IMPRIMERLISTE = {
+  id: 'fn-imprimerliste',
+  titre: 'Imprimer une longue liste',
+  exercices: [EX7.ex53],
+  narration: [
+    { humeur: 'accueil', dit: 'Une longue liste sur plusieurs pages pose deux soucis : les titres n\'apparaissent que sur la 1re page, et les coupures tombent mal. On règle ça.' },
+    {
+      humeur: 'pensif',
+      dit: 'Pour que les **titres de colonnes se répètent** sur chaque page imprimée.',
+      visuel: {
+        type: 'methode',
+        titre: 'Répéter les titres à l\'impression',
+        blocs: [
+          { etapes: ['Onglet **Mise en page** > **Imprimer les titres**'] },
+          { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '🔲', label: 'Zone\nd\'impression' }, { icone: '📄', label: 'Imprimer\nles titres', actif: true }, { icone: '✂', label: 'Sauts de\npage' }] } },
+          { etapes: ['Dans la fenêtre, remplis **Lignes à répéter en haut** (ex : $1:$1)'], depart: 2 },
+          { capture: { type: 'champs', titre: 'Mise en page', champs: [{ l: 'Lignes à répéter en haut', v: '$1:$1', actif: true }, { l: 'Colonnes à répéter à gauche', v: '' }] } },
+          { capture: { type: 'apercutitres' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour voir et régler les coupures : le **mode Aperçu des sauts de page**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Gérer les sauts de page',
+        blocs: [
+          { etapes: ['Onglet **Affichage** > **Aperçu des sauts de page**'] },
+          { capture: { type: 'ruban', actif: 'Affichage', groupeNom: 'Modes d\'affichage', groupes: [{ icone: '▦', label: 'Normal' }, { icone: '⧉', label: 'Aperçu des\nsauts de page', actif: true }, { icone: '📃', label: 'Mise en\npage' }] } },
+          { capture: { type: 'sautspage' } },
+          { etapes: ['Pour insérer, supprimer ou tout réinitialiser : Mise en page > **Sauts de page**'], depart: 2 },
+          { capture: { type: 'menu', items: [{ label: 'Insérer un saut de page', actif: true }, { label: 'Supprimer le saut de page' }, { label: 'Réinitialiser tous les sauts de page' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Enfin, pour n\'imprimer qu\'une partie : la **zone d\'impression**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Définir la zone d\'impression',
+        blocs: [
+          { etapes: ['Sélectionne la plage à imprimer'] },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: ['Date', 'Vendeur', 'Ville', 'CA'], lignes: [['05/03', 'Marie', 'Lyon', '8 200 €'], ['06/03', 'Karim', 'Paris', '12 500 €']], legende: 'On sélectionne d\'abord les cellules à imprimer (contour bleu).' } },
+          { etapes: ['Mise en page > **Zone d\'impression** > **Définir**'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '🔲', label: 'Zone\nd\'impression', actif: true }, { icone: '📄', label: 'Imprimer\nles titres' }, { icone: '✂', label: 'Sauts de\npage' }] } },
+          { etapes: ['Vérifie avec **Fichier > Imprimer** : l\'aperçu montre exactement ce qui sortira'], depart: 3 },
+          { capture: { type: 'impressionapercu' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour répéter les titres de colonnes à l\'impression, on utilise...',
+      visuel: { type: 'question', options: ['Mise en page > Imprimer les titres', 'Affichage > Figer les volets'], bonne: 0, explication: 'Figer les volets sert à l\'écran ; pour l\'impression, c\'est Mise en page > Imprimer les titres (lignes à répéter en haut).' },
+    },
+    { humeur: 'fier', dit: 'Tes longues listes s\'impriment proprement, titres compris. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : Créer un tableau de données ---
+const CREERTABLEAU = {
+  id: 'fn-creertableau',
+  titre: 'Créer un tableau de données',
+  exercices: [EX7.ex54],
+  narration: [
+    { humeur: 'accueil', dit: 'Transformer ta liste en « tableau de données » officiel te donne d\'un coup : mise en forme automatique, flèches de tri/filtre, et une extension qui suit tes ajouts. Voyons comment.' },
+    {
+      humeur: 'pensif',
+      dit: 'Mettre ta liste sous forme de tableau, pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'Mettre sous forme de tableau',
+        blocs: [
+          { etapes: ['Sélectionne tes données, **titres compris** (Ctrl + A à l\'intérieur, ⌘ + A sur Mac)'] },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: LISTE_ENTETES, lignes: LISTE_LIGNES, legende: 'On sélectionne toute la liste, en-têtes inclus (contour bleu).' } },
+          { etapes: ['Accueil > groupe **Styles** > **Mettre sous forme de tableau**, choisis un modèle'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme\nconditionnelle' }, { icone: '▧', label: 'Mettre sous\nforme de tableau', actif: true }, { icone: '🎨', label: 'Styles de\ncellules' }] } },
+          { etapes: ['Vérifie la plage, coche **« Mon tableau comporte des en-têtes »**, puis **OK**'], depart: 3 },
+          { capture: { type: 'champs', titre: 'Créer un tableau', champs: [{ l: 'Où sont les données de votre tableau ?', v: '=$A$1:$C$5', actif: true }, { l: 'Mon tableau comporte des en-têtes', check: true }] } },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: LISTE_LIGNES, filtres: true, legende: 'Résultat : lignes en couleurs alternées et flèches de filtre dans chaque en-tête.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dès que tu cliques dans le tableau, un **onglet contextuel** apparaît à droite du ruban.',
+      visuel: {
+        type: 'methode',
+        titre: 'L\'onglet « Création de tableau »',
+        blocs: [
+          { etapes: ['Clique dans le tableau : l\'onglet **Création de tableau** apparaît à droite du ruban (il disparaît dès que tu cliques en dehors)'] },
+          { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Données', 'Création de tableau'], actif: 'Création de tableau', groupeNom: 'Styles de tableau', groupes: [{ icone: '✎', label: 'Nom du\ntableau' }, { icone: '🗑', label: 'Supprimer les\ndoublons' }, { icone: '▧', label: 'Styles de\ntableau', actif: true }] } },
+          { note: 'Il donne accès à : les **styles de tableau**, le **nom du tableau** (réutilisable dans les formules), **supprimer les doublons**, et les **options de style** (ligne d\'en-tête, ligne de total, bandes de couleur).', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Le gros avantage : l\'**extension automatique**. Une nouvelle ligne saisie juste en dessous s\'intègre toute seule au tableau, avec la même mise en forme.',
+      visuel: { type: 'extensiontableau' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Que se produit-il quand on met une plage « sous forme de tableau » ?',
+      visuel: { type: 'question', options: ['Les lignes fusionnées sont conservées', 'Excel ajoute une mise en forme alternée et des flèches de filtre'], bonne: 1, explication: 'Le tableau applique une mise en forme en couleurs alternées et ajoute automatiquement les flèches de tri/filtre dans chaque en-tête.' },
+    },
+    { humeur: 'fier', dit: 'Ta liste est devenue un vrai tableau vivant, prêt à trier et filtrer. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 4 : Saisir plus vite (semi-auto, liste déroulante, formulaire) ---
+const SAISIRLISTE = {
+  id: 'fn-saisirliste',
+  titre: 'Saisir plus vite dans une liste',
+  exercices: [EX7.ex55],
+  narration: [
+    { humeur: 'accueil', dit: 'Remplir une liste à la main, c\'est répétitif et source de fautes. Excel a trois aides : la saisie semi-automatique, la liste déroulante, et le formulaire.' },
+    {
+      humeur: 'pensif',
+      dit: 'La **saisie semi-automatique** : dès que tu tapes le début d\'un mot déjà présent dans la colonne, Excel te le propose en gris.',
+      visuel: {
+        type: 'methode',
+        titre: 'La saisie semi-automatique',
+        blocs: [
+          { etapes: ['Dans une cellule vide de la colonne, commence à taper un mot déjà utilisé plus haut', 'Excel affiche la suite en gris : appuie sur **Entrée** pour valider'] },
+          { capture: { type: 'saisieauto' } },
+          { note: 'Ça marche seulement si le mot existe déjà plus haut dans la MÊME colonne.' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Ou la **liste déroulante** des valeurs déjà saisies, pour choisir au lieu de taper.',
+      visuel: {
+        type: 'methode',
+        titre: 'La liste déroulante de choix',
+        blocs: [
+          { etapes: ['Place-toi dans une cellule vide de la colonne'] },
+          { etapes: ['Ouvre la liste : **clic droit** dans la cellule > **Liste déroulante de choix**'], depart: 2 },
+          { capture: { type: 'menu', items: [{ icone: '✂️', label: 'Couper' }, { icone: '📋', label: 'Copier' }, '-', { label: 'Liste déroulante de choix', actif: true }] } },
+          { note: 'Plus rapide au clavier : **Alt + ↓** (sur Mac : **⌥ + ↓**).', label: 'Astuce' },
+          { etapes: ['Choisis une valeur dans la liste qui apparaît'], depart: 3 },
+          { capture: { type: 'menu', items: [{ label: 'Marie' }, { label: 'Karim' }, { label: 'Léa', actif: true }, { label: 'Tom' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour une longue liste, le **Formulaire** transforme ton tableau en mini-application de saisie. D\'abord, ajoute-le à la barre d\'accès rapide.',
+      visuel: {
+        type: 'methode',
+        titre: 'Ajouter le Formulaire à la barre d\'accès rapide',
+        blocs: [
+          { etapes: ['Repère la **barre d\'accès rapide** (tout en haut) et clique son **chevron ▾**, puis **Autres commandes…**'] },
+          { capture: { type: 'barreaccesrapide' } },
+          { capture: { type: 'menu', items: [{ label: 'Enregistrer' }, { label: 'Annuler la frappe' }, { label: 'Rétablir la frappe' }, '-', { label: 'Autres commandes…', actif: true }] } },
+          { etapes: ['Choisis **Toutes les commandes**, sélectionne **Formulaire…**, clique **Ajouter**, puis **OK**'], depart: 2 },
+          { capture: { type: 'listedialog', titre: 'Options Excel', intro: 'Choisir les commandes : Toutes les commandes', items: ['Fractionner', 'Formulaire…', 'Formules'], selection: 1 } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Ensuite, place-toi dans le tableau et clique sur l\'icône **Formulaire** : chaque colonne devient un champ. Ce que tu saisis s\'ajoute en bas du tableau.',
+      visuel: {
+        type: 'methode',
+        titre: 'Saisir avec le formulaire',
+        blocs: [
+          { etapes: ['Clique **Nouveau**, remplis les champs (ils reprennent tes en-têtes), puis valide'] },
+          { capture: { type: 'formulaire', champs: [{ l: 'Date', v: '09/03/2025' }, { l: 'Vendeur', v: 'Nina' }, { l: 'Ville', v: 'Paris' }, { l: 'CA', v: '7 300' }], index: 5, total: 5 } },
+          { etapes: ['La nouvelle ligne s\'ajoute automatiquement à la fin du tableau'], depart: 2 },
+          { capture: { type: 'tableaudonnees', entetes: ['Date', 'Vendeur', 'Ville', 'CA'], lignes: [['05/03', 'Marie', 'Lyon', '8 200 €'], ['06/03', 'Karim', 'Paris', '12 500 €'], ['07/03', 'Léa', 'Lyon', '6 400 €'], ['09/03', 'Nina', 'Paris', '7 300 €']], filtres: true, legende: 'La ligne « Nina » saisie au formulaire ci-dessus apparaît en bas du tableau.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dans le formulaire tu peux tout faire sans descendre dans la grille :',
+      visuel: { type: 'encart', label: 'Bon à savoir', liste: ['**Nouveau** : ajoute un enregistrement (il se colle à la fin du tableau).', '**Précédente / Suivante** : navigue entre les lignes.', '**Supprimer** : efface la ligne affichée.', '**Critères** : tape un critère et ne navigue que parmi les lignes correspondantes (mini-recherche).'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. La saisie semi-automatique s\'active dès que...',
+      visuel: { type: 'question', options: ['Tu appuies sur Alt + ↓', 'Tu commences à taper un terme déjà présent dans la colonne'], bonne: 1, explication: 'La saisie semi-automatique se déclenche quand tu tapes le début d\'un mot déjà saisi plus haut dans la colonne. (Alt + ↓, lui, ouvre la liste déroulante.)' },
+    },
+    { humeur: 'fier', dit: 'Tu saisis plus vite et sans fautes, même sur de longues listes. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 5 : Trier les données ---
+const TRIERLISTE = {
+  id: 'fn-trierliste',
+  titre: 'Trier les données',
+  exercices: [EX7.ex56],
+  narration: [
+    { humeur: 'accueil', dit: 'Trier, c\'est mettre en avant tes meilleurs clients/produits, repérer les valeurs extrêmes, ou préparer un filtre ou un graphique. Deux niveaux : simple et personnalisé.' },
+    {
+      humeur: 'pensif',
+      dit: 'Le **tri simple** sur une colonne.',
+      visuel: {
+        type: 'methode',
+        titre: 'Trier sur une colonne',
+        blocs: [
+          { etapes: ['Clique dans une cellule de la **colonne à trier** (ici la colonne **CA**)'] },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: LISTE_LIGNES, filtres: true, colSel: 2, legende: 'On clique dans la colonne CA (surlignée) : c\'est elle qu\'on va trier.' } },
+          { etapes: ['Données > groupe **Trier et filtrer** > **A→Z** (croissant) ou **Z→A** (décroissant)'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: 'A↓', label: 'Trier de\nA à Z', actif: true }, { icone: 'Z↓', label: 'Trier de\nZ à A' }, { icone: '▽', label: 'Filtrer' }] } },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: [['Karim', 'Paris', '12 500 €'], ['Tom', 'Marseille', '9 100 €'], ['Marie', 'Lyon', '8 200 €'], ['Léa', 'Lyon', '6 400 €']], filtres: true, filtreCol: 2, legende: 'Trié par CA décroissant : Karim en tête. La flèche de la colonne triée change d\'aspect.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Le **tri personnalisé** combine plusieurs colonnes, avec un ordre de priorité.',
+      visuel: {
+        type: 'methode',
+        titre: 'Trier sur plusieurs colonnes',
+        blocs: [
+          { etapes: ['Données > groupe **Trier et filtrer** > **Trier**'] },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: '⇅', label: 'Trier', actif: true }, { icone: '▽', label: 'Filtrer' }, { icone: '⌫', label: 'Effacer' }] } },
+          { etapes: ['Dans la fenêtre, clique **Ajouter un niveau** pour chaque critère'], depart: 2 },
+          { capture: { type: 'tridialog', niveaux: [{ colonne: 'Ville', ordre: 'De A à Z' }, { colonne: 'CA', ordre: 'Du plus grand au plus petit' }] } },
+          { note: 'Chaque **niveau** est un critère, par ordre de **priorité** (une hiérarchie) : le Niveau 1 (Ville) trie d\'abord ; le Niveau 2 (CA) ne départage que les lignes de MÊME ville. Tu peux aussi choisir un ordre personnalisé (mois, jours) via Ordre > Liste personnalisée.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour revenir en arrière :',
+      visuel: { type: 'encart', label: 'Astuce', liste: ['**Ctrl + Z** (⌘ + Z) juste après le tri annule immédiatement.', 'Données > Trier et filtrer > **Effacer** (l\'entonnoir barré) retire tris et filtres d\'un coup.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle option permet de combiner plusieurs critères de tri ?',
+      visuel: { type: 'question', options: ['Données > Trier > Ajouter un niveau', 'Données > Trier A→Z'], bonne: 0, explication: 'Le A→Z simple ne trie qu\'une colonne. Pour combiner plusieurs critères, on ouvre Données > Trier et on clique « Ajouter un niveau ».' },
+    },
+    { humeur: 'fier', dit: 'Tu ranges tes données comme tu veux, sur un ou plusieurs critères. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 6 : Filtrer les données ---
+const FILTRERLISTE = {
+  id: 'fn-filtrerliste',
+  titre: 'Filtrer les données',
+  exercices: [EX7.ex56],
+  narration: [
+    { humeur: 'accueil', dit: 'Filtrer, c\'est n\'afficher que les lignes qui t\'intéressent, sans rien supprimer. Tu peux revenir en arrière et combiner plusieurs conditions à tout moment.' },
+    {
+      humeur: 'pensif',
+      dit: 'Sur une liste classique (non mise en tableau), il faut **activer les filtres** toi-même.',
+      visuel: {
+        type: 'methode',
+        titre: 'Activer les filtres',
+        blocs: [
+          { etapes: ['Clique dans une cellule de la liste', 'Données > groupe **Trier et filtrer** > **Filtrer**'] },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: 'A↓', label: 'Trier de\nA à Z' }, { icone: 'Z↓', label: 'Trier de\nZ à A' }, { icone: '▽', label: 'Filtrer', actif: true }] } },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: LISTE_LIGNES, filtres: true, legende: 'Une flèche de filtre apparaît dans chaque en-tête.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Clique sur la flèche d\'un en-tête pour ouvrir le menu du filtre.',
+      visuel: {
+        type: 'methode',
+        titre: 'Filtrer une colonne',
+        blocs: [
+          { etapes: ['Clique la **flèche ▾** de l\'en-tête de la colonne (ex : **Ville**)'] },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: LISTE_LIGNES, filtres: true, filtreCol: 1, legende: 'On clique la petite flèche de l\'en-tête « Ville » (surlignée) pour ouvrir son filtre.' } },
+          { etapes: ['Dans le menu, décoche/coche les valeurs à afficher, puis **OK**'], depart: 2 },
+          { capture: { type: 'filtremenu', colonne: 'Ville', valeurs: [{ label: 'Lyon', coche: true }, { label: 'Marseille', coche: false }, { label: 'Paris', coche: false }] } },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: [['Marie', 'Lyon', '8 200 €'], ['Léa', 'Lyon', '6 400 €']], filtres: true, filtreCol: 1, legende: 'On ne garde que Lyon : les autres lignes sont masquées (pas supprimées).' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le menu s\'adapte au **type** de la colonne. Selon les cas :',
+      visuel: {
+        type: 'methode',
+        titre: 'Des filtres adaptés au type',
+        blocs: [
+          { etapes: ['**Colonne texte** : les cases à cocher, ou « Filtres textuels » (contient, commence par…)'] },
+          { capture: { type: 'menu', items: [{ label: 'Filtres textuels', actif: true }, '-', { label: 'Est égal à…' }, { label: 'Contient…' }, { label: 'Commence par…' }] } },
+          { etapes: ['**Colonne nombre** : « Filtres numériques » (supérieur, inférieur, entre…)'], depart: 2 },
+          { capture: { type: 'menu', items: [{ label: 'Filtres numériques', actif: true }, '-', { label: 'Est supérieur à…' }, { label: 'Entre…' }, { label: '10 premiers…' }] } },
+          { etapes: ['**Colonne date** : « Filtres chronologiques » (ce mois-ci, cette année, une période…)'], depart: 3 },
+          { capture: { type: 'menu', items: [{ label: 'Filtres chronologiques', actif: true }, '-', { label: 'Ce mois-ci' }, { label: 'Cette année' }, { label: 'Entre…' }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Une colonne filtrée se repère à son **icône d\'entonnoir**. Pour tout retirer : Données > **Effacer**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Repérer et retirer un filtre',
+        blocs: [
+          { etapes: ['La colonne filtrée affiche un **entonnoir** à la place de la flèche'] },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: [['Marie', 'Lyon', '8 200 €'], ['Léa', 'Lyon', '6 400 €']], filtres: true, filtreCol: 1, legende: 'La colonne « Ville » est filtrée : son en-tête montre l\'entonnoir ▽ (pas la flèche ▾).' } },
+          { etapes: ['Pour tout retrouver : Données > groupe **Trier et filtrer** > **Effacer**'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: 'A↓', label: 'Trier de\nA à Z' }, { icone: '▽', label: 'Filtrer' }, { icone: '⌫', label: 'Effacer', actif: true }] } },
+          { note: 'Le filtre **masque** les lignes, il ne les supprime pas : Effacer retrouve tout instantanément.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Sur une liste classique, comment fais-tu apparaître les flèches de filtre ?',
+      visuel: { type: 'question', options: ['Données > Trier et filtrer > Filtrer', 'Affichage > Figer les volets'], bonne: 0, explication: 'La commande Données > Filtrer ajoute les flèches de filtre dans chaque en-tête. (Un tableau de données, lui, les ajoute automatiquement.)' },
+    },
+    { humeur: 'fier', dit: 'Tu isoles n\'importe quelle information en deux clics, sans jamais abîmer tes données. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 7 : Les sous-totaux & la fonction SOUS.TOTAL ---
+const SOUSTOTAUX = {
+  id: 'fn-soustotaux',
+  titre: 'Les sous-totaux',
+  exercices: [EX7.ex57, EX7.ex58],
+  narration: [
+    { humeur: 'accueil', dit: 'Les sous-totaux regroupent tes lignes par critère (par ville, par vendeur…) et calculent automatiquement un total à chaque changement de groupe. Fini les calculs à la main.' },
+    {
+      humeur: 'pensif',
+      dit: 'Insérer des sous-totaux, pas à pas. Astuce : **trie d\'abord** par la colonne de regroupement.',
+      visuel: {
+        type: 'methode',
+        titre: 'Insérer des sous-totaux',
+        blocs: [
+          { etapes: ['**Trie d\'abord** la liste par le critère de regroupement (ici **Ville**)'] },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: [['Léa', 'Lyon', '6 400 €'], ['Marie', 'Lyon', '8 200 €'], ['Tom', 'Marseille', '9 100 €'], ['Karim', 'Paris', '12 500 €']], filtres: true, colSel: 1, legende: 'Triée par Ville (colonne surlignée) : les villes identiques sont regroupées.' } },
+          { etapes: ['Clique dans le tableau, puis Données > groupe **Plan** > **Sous-total**'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Plan', groupes: [{ icone: '⊞', label: 'Grouper' }, { icone: '⊟', label: 'Dissocier' }, { icone: 'Σ', label: 'Sous-total', actif: true }] } },
+          { etapes: ['Choisis la colonne de regroupement, la fonction et la colonne à totaliser, puis **OK**'], depart: 3 },
+          { capture: { type: 'soustotaldialog', changement: 'Ville', fonction: 'Somme', colonnes: ['CA'] } },
+          { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: [['Léa', 'Lyon', '6 400 €'], ['Marie', 'Lyon', '8 200 €'], ['', 'Total Lyon', '14 600 €'], ['Tom', 'Marseille', '9 100 €'], ['', 'Total Marseille', '9 100 €'], ['Karim', 'Paris', '12 500 €'], ['', 'Total Paris', '12 500 €']], total: ['', 'Total général', '36 200 €'], legende: 'Excel insère un sous-total à chaque changement de ville, plus le total général.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'À gauche apparaissent les **boutons de plan** (1, 2, 3) pour changer de niveau de détail. Regarde :',
+      visuel: { type: 'plan' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Ce que fait chaque bouton :',
+      visuel: { type: 'encart', label: 'À retenir', liste: ['**Bouton 1** : uniquement le **total général** (vue d\'ensemble).', '**Bouton 2** : les **sous-totaux** de chaque groupe + le total général.', '**Bouton 3** : **tout le détail**, ligne par ligne, avec les sous-totaux.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour tout enlever : Données > Plan > Sous-total > **Supprimer tout**.',
+      visuel: { type: 'encart', label: 'Astuce', texte: 'Tu retrouves ta liste d\'origine, sans les lignes de sous-total ni le plan.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Il existe aussi une **fonction** dédiée : SOUS.TOTAL. Sa force : elle peut **ignorer les lignes masquées par un filtre**, contrairement à SOMME qui additionne tout.',
+      visuel: { type: 'formule', formule: '=SOUS.TOTAL(no_fonction;plage)' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le 1er argument (**no_fonction**) choisit le calcul ET s\'il inclut ou non les lignes masquées :',
+      visuel: { type: 'parties', items: [{ label: '**1 à 11** : inclut les lignes masquées (ex : SOMME = **9**, MOYENNE = 1, NB = 2, MAX = 4).' }, { label: '**101 à 111** : ignore les lignes masquées (ex : SOMME = **109**, MOYENNE = 101, MAX = 104).' }] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Exemple : sommer uniquement les lignes visibles après un filtre.',
+      visuel: {
+        type: 'methode',
+        titre: 'Utiliser SOUS.TOTAL',
+        blocs: [
+          { etapes: ['Dans la cellule du résultat, tape **=SOUS.TOTAL(**'] },
+          { capture: { type: 'autocomplete', cellule: 'E2', saisie: '=SOUS.TOTAL(', items: [{ nom: 'SOUS.TOTAL', desc: 'Renvoie un sous-total dans une liste (ignore les lignes masquées selon le code choisi).' }] } },
+          { etapes: ['Mets **109** (la somme qui ignore les lignes masquées), puis **;**'], depart: 2 },
+          { capture: { type: 'tableur', cols: ['D', 'E'], rows: [1, 2], cells: { D1: { t: 'Total participants', entete: true }, E1: { t: '', entete: true }, D2: { t: 'Visibles' }, E2: { t: '=SOUS.TOTAL(109;' } }, formule: '=SOUS.TOTAL(109;', actif: 'E2', legende: '109 = la somme, mais uniquement sur les lignes visibles.' } },
+          { etapes: ['Sélectionne la **plage** (ex : E5:E15), ferme la parenthèse **)** et **Entrée**'], depart: 3 },
+          { capture: { type: 'tableur', cols: ['D', 'E'], rows: [1, 2], cells: { D1: { t: 'Total participants', entete: true }, E1: { t: '', entete: true }, D2: { t: 'Visibles' }, E2: { t: '820', num: true, vert: true } }, formule: '=SOUS.TOTAL(109;E5:E15)', actif: 'E2', legende: 'Si tu filtres par région, le total se recalcule tout seul avec les seules lignes visibles.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quel numéro de fonction fait une SOMME qui ignore les lignes masquées ?',
+      visuel: { type: 'question', options: ['9', '109'], bonne: 1, explication: 'Les codes 101 à 111 ignorent les lignes masquées : la somme, c\'est 109. Le code 9 (1 à 11) additionnerait aussi les lignes masquées.' },
+    },
+    { humeur: 'fier', dit: 'Tu synthétises tes listes en un clic et tu maîtrises SOUS.TOTAL. Tu décroches la ceinture verte. Bravo ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX }

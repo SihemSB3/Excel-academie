@@ -1,0 +1,156 @@
+{
+  "chapitre": 7,
+  "titre": "Exploiter une liste",
+  "niveau": 7,
+  "ceinture": "verte",
+  "objectif": "Transformer une liste brute en outil d'analyse : construire une liste propre, figer les volets et l'imprimer, la mettre sous forme de tableau de données, saisir plus vite (semi-auto, liste déroulante, formulaire), trier, filtrer, et synthétiser avec les sous-totaux et la fonction SOUS.TOTAL.",
+  "note_pedago": "Chapitre COMPLET (7 lecons) : reglesliste (regles d'une liste + figer les volets, Ex.52), imprimerliste (repeter titres/sauts de page/zone impression, Ex.53), creertableau (mettre sous forme de tableau + onglet contextuel + extension auto, Ex.54), saisirliste (semi-auto + liste deroulante + formulaire, Ex.55), trierliste (tri simple + personnalise, Ex.56), filtrerliste (filtres auto + options + effacer, Ex.56), soustotaux (sous-totaux + plan + fonction SOUS.TOTAL 1-11/101-111, Ex.57+Ex.58) + quiz (12) + checklist (10). Nouveaux composants LeconNarree : tableaudonnees, filtremenu, tridialog, soustotaldialog, formulaire. Memes regles que ch.3-6.",
+  "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
+  "modules": [
+    { "id": "ch7-reglesliste", "type": "narration", "lecon": "reglesliste", "titre": "Une liste bien construite", "xp": 30 },
+    { "id": "ch7-imprimerliste", "type": "narration", "lecon": "imprimerliste", "titre": "Imprimer une longue liste", "xp": 30 },
+    { "id": "ch7-creertableau", "type": "narration", "lecon": "creertableau", "titre": "Créer un tableau de données", "xp": 30 },
+    { "id": "ch7-saisirliste", "type": "narration", "lecon": "saisirliste", "titre": "Saisir plus vite dans une liste", "xp": 30 },
+    { "id": "ch7-trierliste", "type": "narration", "lecon": "trierliste", "titre": "Trier les données", "xp": 30 },
+    { "id": "ch7-filtrerliste", "type": "narration", "lecon": "filtrerliste", "titre": "Filtrer les données", "xp": 30 },
+    { "id": "ch7-soustotaux", "type": "narration", "lecon": "soustotaux", "titre": "Les sous-totaux", "xp": 30 },
+    {
+      "id": "ch7-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 9,
+      "total": 12,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.7 p307-309 (12 questions), repris verbatim. reponses_correctes = index corrects (0-3).",
+      "questions": [
+        {
+          "id": "ch7-qcm-01",
+          "question": "Pourquoi ne doit-on jamais laisser une colonne entièrement vide dans un tableau Excel ?",
+          "options": ["Pour éviter les sauts de page", "Pour conserver la continuité du tableau", "Pour figer les volets", "Pour utiliser la liste déroulante"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch7-qcm-02",
+          "question": "Que se passe-t-il si vos en-têtes sont sur deux lignes ?",
+          "options": ["Excel fusionne les cellules automatiquement", "La mise en forme conditionnelle s'applique", "Les tris et filtres sont désactivés", "Les sous-totaux ne fonctionnent plus"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch7-qcm-03",
+          "question": "Quelle commande permet de figer simultanément une ligne et une colonne ?",
+          "options": ["Affichage > Figer la ligne supérieure", "Affichage > Figer les volets", "Affichage > Figer la première colonne", "Données > Figer les volets"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch7-qcm-04",
+          "question": "Pour répéter les titres de colonnes à l'impression, on utilise :",
+          "options": ["Données > Zone d'impression", "Mise en page > Imprimer les titres", "Affichage > Figer les volets", "Fichier > Aperçu avec saut de page"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch7-qcm-05",
+          "question": "Dans l'aperçu « Saut de page », les cadres bleus représentent :",
+          "options": ["Les zones figées", "La zone d'impression", "Les différentes pages à imprimer", "Les liens vers les feuilles externes"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch7-qcm-06",
+          "question": "Quelle méthode supprime tous les sauts de page insérés ?",
+          "options": ["Affichage > Aperçu saut de page", "Mise en page > Sauts de page > Supprimer un saut", "Mise en page > Zone d'impression > Effacer", "Mise en page > Sauts de page > Réinitialiser tous les sauts de page"],
+          "reponses_correctes": [3]
+        },
+        {
+          "id": "ch7-qcm-07",
+          "question": "Que se produit-il lorsqu'on met une plage sous forme de « Tableau de données » ?",
+          "options": ["Les formules sont automatiquement recalculées", "Excel ajoute une mise en forme alternée et des flèches de filtre", "Les lignes fusionnées sont conservées", "Les sauts de page sont désactivés"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch7-qcm-08",
+          "question": "La saisie semi-automatique d'Excel s'active dès que :",
+          "options": ["Vous appuyez sur Alt ↓", "Vous commencez à taper un terme déjà présent dans la colonne", "Vous créez un formulaire", "Vous définissez une zone d'impression"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch7-qcm-09",
+          "question": "Pour ajouter la commande « Formulaire… » à la barre d'accès rapide, on passe par :",
+          "options": ["Accueil > Style > Mettre sous forme de tableau", "Affichage > Figer les volets", "Chevrons (🔽) de la barre d'accès rapide > Autres commandes > Formulaire…", "Données > Plan > Sous-total"],
+          "reponses_correctes": [2],
+          "a_valider": true,
+          "note": "L'ebook enseigne la methode par le chevron de la barre d'acces rapide. Fichier > Options > Barre d'acces rapide mene au meme endroit (option ecartee ici)."
+        },
+        {
+          "id": "ch7-qcm-10",
+          "question": "Quel bouton de plan affiche uniquement le total général, sans détail ?",
+          "options": ["Bouton 1", "Bouton 2", "Bouton 3", "Bouton 4"],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch7-qcm-11",
+          "question": "Pour effacer simultanément tous les tris et filtres appliqués, on utilise :",
+          "options": ["Données > Effacer", "Accueil > Effacer > Tout effacer", "Affichage > Mode Liste", "Mise en page > Supprimer tri"],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch7-qcm-12",
+          "question": "Quelle option permet de combiner plusieurs critères de tri ?",
+          "options": ["Données > Trier A→Z", "Données > Trier Z→A", "Données > Trier > Ajouter un niveau (Tri personnalisé)", "Données > Effacer"],
+          "reponses_correctes": [2]
+        }
+      ]
+    },
+    {
+      "id": "ch7-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist de l'ebook ch.7 (p310), reprise verbatim.",
+      "a_valider": false,
+      "items": [
+        "Tes données ne contiennent aucune colonne ni ligne entièrement vide.",
+        "Tous tes en-têtes sont sur une seule ligne, sans cellule vide au-dessus.",
+        "Tu as activé et vérifié le filtre automatique sur chaque en-tête.",
+        "Tu sais figer les volets (ligne supérieure et/ou première colonne) selon tes besoins.",
+        "Tu as défini et répété tes titres d'impression (Mise en page > Imprimer les titres).",
+        "Tu as inséré et/ou supprimé correctement les sauts de page (Mise en page > Sauts de page).",
+        "La saisie semi-automatique fonctionne pour accélérer l'entrée de données répétitives.",
+        "Tu as ajouté la commande Formulaire… à ta barre d'accès rapide et testé son utilisation.",
+        "Tu distingues les codes 1–11 et 101–111 de SOUS.TOTAL.",
+        "Tu peux expliquer à un pair l'intérêt de SOUS.TOTAL vs. SOMME."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["figer", "volets", "en-têtes", "titres", "défiler"],
+      "question": "Comment garder les titres visibles quand je fais défiler ?",
+      "reponse": "Clique dans la liste, puis Affichage > groupe Fenêtre > Figer les volets. « Figer la ligne supérieure » garde la 1re ligne ; « Figer les volets » bloque tout ce qui est au-dessus et à gauche de la cellule active. Pour tout débloquer : Figer les volets > Libérer les volets."
+    },
+    {
+      "mots_cles": ["tableau", "mettre sous forme", "données", "filtre automatique"],
+      "question": "Comment transformer ma liste en tableau de données ?",
+      "reponse": "Sélectionne tes données (titres compris), puis Accueil > Styles > Mettre sous forme de tableau, choisis un modèle, coche « Mon tableau comporte des en-têtes » et OK. Tu obtiens la mise en forme alternée, les flèches de tri/filtre, et l'extension automatique quand tu ajoutes une ligne."
+    },
+    {
+      "mots_cles": ["trier", "tri", "plusieurs colonnes", "personnalisé", "A→Z"],
+      "question": "Comment trier sur plusieurs colonnes ?",
+      "reponse": "Pour un tri simple : clique dans la colonne, Données > Trier et filtrer > A→Z ou Z→A. Pour combiner des critères : Données > Trier, puis « Ajouter un niveau » (ex. par Ville puis par CA décroissant)."
+    },
+    {
+      "mots_cles": ["filtrer", "filtre", "isoler", "entonnoir", "afficher"],
+      "question": "Comment n'afficher que certaines lignes ?",
+      "reponse": "Données > Trier et filtrer > Filtrer pour ajouter les flèches. Clique la flèche d'un en-tête, coche/décoche les valeurs (ou utilise les filtres par nombre/date), puis OK. Le filtre masque les lignes sans les supprimer ; Données > Effacer retire tout."
+    },
+    {
+      "mots_cles": ["sous-total", "sous.total", "regrouper", "109", "somme"],
+      "question": "Comment faire des totaux par groupe ?",
+      "reponse": "Trie d'abord par le critère (ex. Ville), puis Données > Plan > Sous-total : choisis la colonne de regroupement, la fonction (Somme…) et la colonne à totaliser. Les boutons 1/2/3 à gauche changent le niveau de détail. La fonction =SOUS.TOTAL(109;plage) somme uniquement les lignes visibles (les codes 101 à 111 ignorent les lignes masquées, contrairement à SOMME)."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "verte",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture verte débloquée. Tu transformes n'importe quelle liste brute en outil d'analyse : tri, filtres, sous-totaux. Tu penses désormais comme un analyste."
+  }
+}

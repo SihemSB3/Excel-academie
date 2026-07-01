@@ -143,3 +143,21 @@ body {
   width: 54px;
   animation: elargir-auto 2.6s ease-in-out infinite alternate;
 }
+
+/* Figer les volets : le corps du tableau défile pendant que l'en-tête reste fixe */
+@keyframes defile {
+  0%,
+  8% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-104px);
+  }
+  92%,
+  100% {
+    transform: translateY(0);
+  }
+}
+.animate-defile {
+  animation: defile 5s ease-in-out infinite;
+}

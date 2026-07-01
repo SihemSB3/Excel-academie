@@ -6,8 +6,9 @@ import chapitre3 from '../../../chapitre-3.json'
 import chapitre4 from '../../../chapitre-4.json'
 import chapitre5 from '../../../chapitre-5.json'
 import chapitre6 from '../../../chapitre-6.json'
+import chapitre7 from '../../../chapitre-7.json'
 
-export const chapitres = [chapitre1, chapitre2, chapitre3, chapitre4, chapitre5, chapitre6]
+export const chapitres = [chapitre1, chapitre2, chapitre3, chapitre4, chapitre5, chapitre6, chapitre7]
 
 export const getChapitre = (n) => chapitres.find((c) => c.chapitre === n)
 

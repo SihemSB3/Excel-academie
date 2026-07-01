@@ -874,6 +874,398 @@ function ProtegerFeuilleDialog() {
   )
 }
 
+// Un tableau de données Excel « mis sous forme de tableau » : en-têtes colorés,
+// flèches de filtre, lignes en couleurs alternées (zébrées).
+function TableauDonnees({ v }) {
+  const { entetes = [], lignes = [], filtres = false, filtreCol = -1, legende, total, brut = false, selection = false, colSel = -1 } = v
+  return (
+    <div className="mt-3">
+      <div className={`animate-fade-up overflow-hidden rounded-lg border border-navy/15 shadow-lg ${selection ? 'ring-2 ring-[#1a73e8] ring-offset-1' : ''}`}>
+        <table className="w-full border-collapse text-[11px]">
+          <thead>
+            <tr>
+              {entetes.map((h, i) => (
+                <th key={i} className={`px-2 py-1.5 text-left font-bold ${brut ? 'border-b border-navy/15 bg-navy/10 text-navy/70' : 'border-b-2 border-mint bg-mint/25 text-navy'}`}>
+                  <span className="flex items-center justify-between gap-1">
+                    {h}
+                    {filtres && <span className={i === filtreCol ? 'text-mint' : 'text-navy/45'}>{i === filtreCol ? '▽' : '▾'}</span>}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {lignes.map((row, ri) => (
+              <tr key={ri} className={brut ? 'bg-white' : ri % 2 ? 'bg-navy/[0.04]' : 'bg-white'}>
+                {row.map((cell, ci) => (
+                  <td key={ci} className={`border-b border-navy/10 px-2 py-1 text-navy/85 ${colSel === ci ? 'bg-sky-500/15' : ''}`}>{cell}</td>
+                ))}
+              </tr>
+            ))}
+            {total && (
+              <tr className="bg-mint/15 font-bold text-navy">
+                {total.map((cell, ci) => (
+                  <td key={ci} className="border-t-2 border-mint px-2 py-1">{cell}</td>
+                ))}
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      {legende && (
+        <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{legende}</span>
+        </p>
+      )}
+    </div>
+  )
+}
+
+// Le menu déroulant d'un filtre automatique (Trier A→Z / Z→A + cases à cocher des valeurs).
+function FiltreMenu({ v }) {
+  const { colonne = 'Ville', valeurs = [], typeFiltre = 'textuels' } = v
+  return (
+    <div className="mx-auto mt-3 max-w-[15rem] overflow-hidden rounded-md border border-navy/25 bg-white text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-navy/5 px-2 py-1 font-semibold text-navy/70">
+        {colonne} <span className="text-mint">▽</span>
+      </div>
+      <div className="space-y-1 px-2 py-1.5 text-navy/70">
+        <p>⬆ Trier de A à Z</p>
+        <p>⬇ Trier de Z à A</p>
+        <p className="text-navy/45">Filtres {typeFiltre} ▸</p>
+      </div>
+      <div className="border-t border-navy/10 px-2 py-1.5">
+        {valeurs.map((val, i) => (
+          <div key={i} className="flex items-center gap-2 py-0.5 text-navy/80">
+            <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] ${val.coche === false ? 'border-navy/40' : 'border-mint bg-mint text-white'}`}>{val.coche === false ? '' : '✓'}</span>
+            {val.label}
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-end gap-2 border-t border-navy/10 px-2 py-1.5">
+        <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-3 py-0.5">OK</span>
+        <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5">Annuler</span>
+      </div>
+    </div>
+  )
+}
+
+// La boîte de dialogue « Trier » (tri personnalisé sur plusieurs niveaux).
+function TriDialog({ v }) {
+  const { niveaux = [] } = v
+  return (
+    <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Trier</span><span className="text-navy/40">✕</span></div>
+      <div className="space-y-2 bg-white p-3">
+        <div className="flex gap-1.5">
+          <span className="rounded-sm border-2 border-mint bg-mint/15 px-2 py-0.5 font-bold text-navy">＋ Ajouter un niveau</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5 text-navy/60">✕ Supprimer un niveau</span>
+        </div>
+        <div className="overflow-hidden rounded-sm border border-navy/20">
+          <div className="grid grid-cols-[1.4fr_1fr_1.2fr] bg-navy/10 text-navy/55">
+            <span className="px-2 py-1">Colonne</span>
+            <span className="border-l border-navy/15 px-2 py-1">Trier sur</span>
+            <span className="border-l border-navy/15 px-2 py-1">Ordre</span>
+          </div>
+          {niveaux.map((n, i) => (
+            <div key={i} className="grid grid-cols-[1.4fr_1fr_1.2fr] border-t border-navy/10 bg-white">
+              <span className="px-2 py-1 text-navy/80">{i === 0 ? 'Trier par' : 'Puis par'} <strong className="font-semibold text-navy">{n.colonne}</strong></span>
+              <span className="border-l border-navy/10 px-2 py-1 text-navy/60">Valeurs</span>
+              <span className="border-l border-navy/10 px-2 py-1 text-navy/80">{n.ordre}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-end gap-2"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+      </div>
+    </div>
+  )
+}
+
+// La boîte de dialogue « Sous-total ».
+function SousTotalDialog({ v }) {
+  const { changement = 'Vendeur', fonction = 'Somme', colonnes = ['CA'] } = v
+  return (
+    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Sous-total</span><span className="text-navy/40">✕</span></div>
+      <div className="space-y-2 bg-white p-3 text-navy">
+        <div>
+          <p className="mb-1 text-navy/55">À chaque changement de :</p>
+          <span className="flex items-center justify-between rounded-sm border border-navy/25 px-2 py-1">{changement}<span className="text-navy/40">▾</span></span>
+        </div>
+        <div>
+          <p className="mb-1 text-navy/55">Utiliser la fonction :</p>
+          <span className="flex items-center justify-between rounded-sm border border-navy/25 px-2 py-1">{fonction}<span className="text-navy/40">▾</span></span>
+        </div>
+        <div>
+          <p className="mb-1 text-navy/55">Ajouter un sous-total à :</p>
+          <div className="space-y-1 rounded-sm border border-navy/25 p-1.5">
+            {colonnes.map((c, i) => (
+              <div key={i} className="flex items-center gap-2 text-navy/80">
+                <span className="grid h-3.5 w-3.5 place-items-center rounded-sm border border-mint bg-mint text-[9px] text-white">✓</span>{c}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="flex justify-end gap-2 pt-0.5"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+      </div>
+    </div>
+  )
+}
+
+// La boîte « Formulaire » d'Excel : un champ par colonne + boutons de navigation.
+function Formulaire({ v }) {
+  const { champs = [], index = 4, total = 12 } = v
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Feuil1</span><span className="text-navy/40">✕</span></div>
+      <div className="flex gap-3 bg-white p-3">
+        <div className="flex-1 space-y-1.5">
+          {champs.map((c, i) => (
+            <div key={i} className="flex items-center gap-2">
+              <span className="w-16 shrink-0 text-right text-navy/60">{c.l} :</span>
+              <span className="flex-1 rounded-sm border border-navy/25 px-2 py-0.5 text-navy">{c.v}</span>
+            </div>
+          ))}
+          <p className="pt-1 text-right text-[10px] text-navy/45">{index} sur {total}</p>
+        </div>
+        <div className="flex w-24 shrink-0 flex-col gap-1">
+          {['Nouveau', 'Supprimer', 'Précédente', 'Suivante', 'Critères', 'Fermer'].map((b) => (
+            <span key={b} className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5 text-center text-navy/80">{b}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Figer les volets, animé : l'en-tête reste fixe pendant que les lignes défilent.
+function FigerVolets() {
+  const entetes = ['Date', 'Vendeur', 'Ville', 'CA']
+  const lignes = [
+    ['05/03', 'Marie', 'Lyon', '8 200 €'],
+    ['06/03', 'Karim', 'Paris', '12 500 €'],
+    ['07/03', 'Léa', 'Lyon', '6 400 €'],
+    ['08/03', 'Tom', 'Marseille', '9 100 €'],
+    ['09/03', 'Nina', 'Paris', '7 300 €'],
+    ['10/03', 'Sam', 'Lyon', '5 900 €'],
+    ['11/03', 'Ana', 'Nice', '10 400 €'],
+    ['12/03', 'Ben', 'Paris', '8 800 €'],
+  ]
+  return (
+    <div className="mt-3">
+      <div className="overflow-hidden rounded-lg border border-navy/15 shadow-lg">
+        {/* En-tête FIGÉE : elle ne bouge pas */}
+        <div className="grid grid-cols-4 border-b-2 border-mint bg-mint/25 text-[11px] font-bold text-navy">
+          {entetes.map((h) => (
+            <span key={h} className="px-2 py-1.5">{h}</span>
+          ))}
+        </div>
+        {/* Corps qui défile */}
+        <div className="relative h-24 overflow-hidden">
+          <div className="animate-defile absolute inset-x-0 top-0">
+            {lignes.map((row, ri) => (
+              <div key={ri} className={`grid grid-cols-4 text-[11px] ${ri % 2 ? 'bg-navy/[0.04]' : 'bg-white'}`}>
+                {row.map((c, ci) => (
+                  <span key={ci} className="border-b border-navy/10 px-2 py-1 text-navy/85">{c}</span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>Même quand les lignes défilent, la ligne d'en-tête (Date, Vendeur, Ville, CA) reste visible : elle est figée.</span>
+      </p>
+    </div>
+  )
+}
+
+// Aperçu des sauts de page : une grille découpée en pages par des lignes bleues.
+function SautsPage() {
+  const cols = 6
+  const rows = 5
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="relative overflow-hidden rounded-sm bg-white p-3 shadow ring-1 ring-navy/15">
+        <div className="grid" style={{ gridTemplateColumns: `repeat(${cols}, 30px)`, gridTemplateRows: `repeat(${rows}, 20px)` }}>
+          {Array.from({ length: cols * rows }).map((_, i) => {
+            const c = i % cols
+            return <div key={i} className={`border border-navy/10 ${c === 3 ? 'border-l-[3px] border-l-[#2f6fed]' : ''} ${i < cols ? 'bg-navy/10' : ''}`} />
+          })}
+        </div>
+        <span className="pointer-events-none absolute left-[58px] top-[54px] text-xl font-black text-[#2f6fed]/25">1</span>
+        <span className="pointer-events-none absolute right-[58px] top-[54px] text-xl font-black text-[#2f6fed]/25">2</span>
+      </div>
+      <p className="max-w-md text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>Chaque cadre bleu est une page à imprimer. Glisse une ligne bleue pour déplacer la coupure.
+      </p>
+    </div>
+  )
+}
+
+// Extension automatique d'un tableau, animée : la nouvelle ligne saisie est absorbée
+// dans le tableau, avec la même mise en forme.
+function ExtensionTableau() {
+  const [p, setP] = useState(0) // 0 = on tape la nouvelle ligne · 1 = elle est absorbée
+  useEffect(() => {
+    const durees = [1700, 2300]
+    const id = setTimeout(() => setP((x) => (x + 1) % 2), durees[p])
+    return () => clearTimeout(id)
+  }, [p])
+  const base = [['Marie', 'Lyon', '8 200 €'], ['Karim', 'Paris', '12 500 €'], ['Léa', 'Lyon', '6 400 €']]
+  return (
+    <div className="mt-3">
+      <div className="overflow-hidden rounded-lg border border-navy/15 shadow-lg">
+        <table className="w-full border-collapse text-[11px]">
+          <thead>
+            <tr>{['Vendeur', 'Ville', 'CA'].map((h) => (<th key={h} className="border-b-2 border-mint bg-mint/25 px-2 py-1.5 text-left font-bold text-navy">{h}</th>))}</tr>
+          </thead>
+          <tbody>
+            {base.map((row, ri) => (
+              <tr key={ri} className={ri % 2 ? 'bg-navy/[0.04]' : 'bg-white'}>
+                {row.map((c, ci) => (<td key={ci} className="border-b border-navy/10 px-2 py-1 text-navy/85">{c}</td>))}
+              </tr>
+            ))}
+            <tr className={p === 1 ? 'animate-fade-up bg-navy/[0.04]' : 'bg-white'}>
+              {['Nina', 'Paris', '7 300 €'].map((c, ci) => (
+                <td key={ci} className={`px-2 py-1 text-navy/85 ${p === 1 ? 'border-b border-navy/10' : 'ring-1 ring-mint ring-inset'}`}>
+                  {c}{p === 0 && ci === 0 && <span className="animate-pulse">|</span>}
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>{p === 0 ? 'On tape « Nina » juste sous la dernière ligne, puis Entrée…' : '…et la ligne rejoint le tableau toute seule, avec la même mise en forme (couleur alternée, bordures).'}</span>
+      </p>
+    </div>
+  )
+}
+
+// Saisie semi-automatique, animée : on tape le début d'un mot déjà présent,
+// Excel propose la suite en gris, puis Entrée valide.
+function SaisieAuto() {
+  const [p, setP] = useState(0) // 0 tape « Ma » · 1 suggestion « rie » en gris · 2 validé « Marie »
+  useEffect(() => {
+    const d = [1000, 1500, 1400]
+    const id = setTimeout(() => setP((x) => (x + 1) % 3), d[p])
+    return () => clearTimeout(id)
+  }, [p])
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="overflow-hidden rounded-md border border-navy/15 shadow">
+        <div className="grid" style={{ gridTemplateColumns: '28px 130px' }}>
+          <div className="bg-navy/10" />
+          <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-xs text-navy/50">Vendeur</div>
+          {['Marie', 'Karim', 'Léa'].map((v, i) => (
+            <div key={i} className="contents">
+              <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-xs text-navy/50">{i + 2}</div>
+              <div className="border-b border-l border-navy/10 px-2 py-1 text-sm text-navy/85">{v}</div>
+            </div>
+          ))}
+          <div className="bg-navy/10 py-1 text-center text-xs text-navy/50">5</div>
+          <div className="border-l border-navy/10 px-2 py-1 text-sm ring-2 ring-mint ring-inset">
+            {p === 0 ? (
+              <span className="text-navy">Ma<span className="animate-pulse">|</span></span>
+            ) : p === 1 ? (
+              <span className="text-navy">Ma<span className="text-navy/35">rie</span><span className="animate-pulse">|</span></span>
+            ) : (
+              <span className="font-medium text-navy">Marie</span>
+            )}
+          </div>
+        </div>
+      </div>
+      <p className="max-w-xs text-center text-[11px] leading-snug text-navy/60">
+        {p === 1 ? 'Excel propose « rie » en gris : appuie sur Entrée pour valider.' : p === 2 ? '✓ Validé : « Marie ».' : 'On tape le début d\'un mot déjà présent dans la colonne…'}
+      </p>
+    </div>
+  )
+}
+
+// Le plan (outline) des sous-totaux : les boutons de niveau 1/2/3 + la liste groupée.
+function Plan() {
+  const rows = [
+    { t: 'Léa · Lyon · 6 400 €', lvl: 2 },
+    { t: 'Marie · Lyon · 8 200 €', lvl: 2 },
+    { t: 'Total Lyon · 14 600 €', lvl: 1, bold: true },
+    { t: 'Tom · Marseille · 9 100 €', lvl: 2 },
+    { t: 'Total Marseille · 9 100 €', lvl: 1, bold: true },
+    { t: 'Total général · 36 200 €', lvl: 0, bold: true },
+  ]
+  return (
+    <div className="mt-3">
+      <div className="overflow-hidden rounded-md border border-navy/15 shadow">
+        {/* Les boutons de plan, en haut à gauche comme dans Excel */}
+        <div className="flex items-center gap-1 border-b border-navy/15 bg-navy/5 px-2 py-1">
+          {[1, 2, 3].map((n) => (
+            <span key={n} className="grid h-4 w-4 place-items-center rounded-sm border border-navy/35 bg-white text-[9px] font-bold text-navy/70">{n}</span>
+          ))}
+          <span className="ml-1 text-[9px] text-navy/40">← niveaux de détail</span>
+        </div>
+        <div className="text-[11px]">
+          {rows.map((r, i) => (
+            <div key={i} className={`border-b border-navy/10 py-1 pr-2 ${r.bold ? 'bg-mint/10 font-bold text-navy' : 'text-navy/80'}`} style={{ paddingLeft: `${8 + r.lvl * 14}px` }}>{r.t}</div>
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>Clique les boutons <strong className="font-bold text-navy">1 / 2 / 3</strong> (en haut à gauche) pour passer du total général au détail complet.</span>
+      </p>
+    </div>
+  )
+}
+
+// La barre d'accès rapide d'Excel, tout en haut, avec le chevron ▾ mis en avant.
+function BarreAccesRapide() {
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="w-full max-w-md overflow-hidden rounded-md border border-navy/20 shadow">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-2 py-1 text-white">
+          <span className="text-[12px]">💾</span>
+          <span className="text-[12px]">↶</span>
+          <span className="text-[12px]">↷</span>
+          <span className="grid h-4 w-5 place-items-center rounded-sm bg-white/25 text-[10px] ring-2 ring-mint">▾</span>
+          <span className="ml-2 text-[10px] opacity-80">Classeur1 — Excel</span>
+        </div>
+      </div>
+      <p className="max-w-xs text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>La barre d'accès rapide est tout en haut de la fenêtre. Le chevron <strong className="font-bold text-navy">▾</strong> (surligné) ouvre « Autres commandes… ».
+      </p>
+    </div>
+  )
+}
+
+// Aperçu impression sur 2 pages, montrant que la ligne de titres se répète sur chaque page.
+function ApercuTitres() {
+  const Page = ({ lignes, n }) => (
+    <div className="bg-white p-2 shadow ring-1 ring-navy/15" style={{ width: 132 }}>
+      <div className="overflow-hidden rounded-sm border border-navy/10 text-[8px]">
+        <div className="bg-mint/25 px-1 py-0.5 font-bold text-navy/75">Date · Vendeur · Ville</div>
+        {lignes.map((r, i) => (
+          <div key={i} className="border-t border-navy/10 px-1 py-0.5 text-navy/60">{r}</div>
+        ))}
+      </div>
+      <div className="mt-1 text-center text-[8px] text-navy/40">Page {n}</div>
+    </div>
+  )
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="flex gap-3">
+        <Page n={1} lignes={['05/03 · Marie · Lyon', '06/03 · Karim · Paris', '07/03 · Léa · Lyon']} />
+        <Page n={2} lignes={['08/03 · Tom · Marseille', '09/03 · Nina · Paris', '10/03 · Sam · Lyon']} />
+      </div>
+      <p className="max-w-md text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>La ligne de titres (Date, Vendeur, Ville) réapparaît en haut de <strong className="font-bold text-navy">chaque</strong> page.
+      </p>
+    </div>
+  )
+}
+
 // Le geste de saisie : on tape dans une cellule, puis Entrée.
 function SaisieCell() {
   return (
@@ -1736,12 +2128,19 @@ function Champs({ v }) {
         </div>
       )}
       <div className="space-y-2 bg-white p-3">
-        {champs.map((c, i) => (
-          <div key={i} className="flex items-center gap-2">
-            <span className="shrink-0 text-navy/60">{c.l} :</span>
-            <span className={`flex-1 rounded-sm border px-2 py-1 text-navy ${c.actif ? 'border-navy/30 ring-1 ring-mint' : 'border-navy/20'}`}>{c.v || ' '}</span>
-          </div>
-        ))}
+        {champs.map((c, i) =>
+          c.check !== undefined ? (
+            <div key={i} className="flex items-center gap-2 text-navy/80">
+              <span className={`grid h-3.5 w-3.5 shrink-0 place-items-center rounded-sm border text-[9px] ${c.check ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{c.check ? '✓' : ''}</span>
+              {c.l}
+            </div>
+          ) : (
+            <div key={i} className="flex items-center gap-2">
+              <span className="shrink-0 text-navy/60">{c.l} :</span>
+              <span className={`flex-1 rounded-sm border px-2 py-1 text-navy ${c.actif ? 'border-navy/30 ring-1 ring-mint' : 'border-navy/20'}`}>{c.v || ' '}</span>
+            </div>
+          ),
+        )}
       </div>
       <div className="flex justify-end gap-2 bg-white px-3 pb-2">
         <span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span>
@@ -1827,7 +2226,7 @@ function Methode({ v }) {
   if (cur.length) groupes.push(cur)
 
   const total = groupes.length
-  const progressif = total >= 3 // bouton « Voir la suite » seulement quand il y a beaucoup de captures
+  const progressif = total >= 2 // bouton « Voir la suite » dès qu'il y a plusieurs groupes étapes+captures
   const depart = progressif ? 1 : total
 
   // Révélation progressive sur la même page. On réinitialise quand on change de méthode.
@@ -1983,6 +2382,18 @@ function Visuel({ v }) {
   if (v.type === 'liaisonsdialog') return <LiaisonsDialog v={v} />
   if (v.type === 'collagespecialdialog') return <CollageSpecialDialog />
   if (v.type === 'protegerfeuilledialog') return <ProtegerFeuilleDialog />
+  if (v.type === 'tableaudonnees') return <TableauDonnees v={v} />
+  if (v.type === 'filtremenu') return <FiltreMenu v={v} />
+  if (v.type === 'tridialog') return <TriDialog v={v} />
+  if (v.type === 'soustotaldialog') return <SousTotalDialog v={v} />
+  if (v.type === 'formulaire') return <Formulaire v={v} />
+  if (v.type === 'figervolets') return <FigerVolets />
+  if (v.type === 'sautspage') return <SautsPage />
+  if (v.type === 'extensiontableau') return <ExtensionTableau />
+  if (v.type === 'saisieauto') return <SaisieAuto />
+  if (v.type === 'plan') return <Plan />
+  if (v.type === 'barreaccesrapide') return <BarreAccesRapide />
+  if (v.type === 'apercutitres') return <ApercuTitres />
   if (v.type === 'saisiecell') return <SaisieCell />
   if (v.type === 'formatcellule') return <FormatCellule v={v} />
   if (v.type === 'borduresfond') return <BorduresFond v={v} />
