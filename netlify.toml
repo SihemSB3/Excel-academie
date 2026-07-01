@@ -1,5 +1,17 @@
-# Configuration de déploiement Netlify pour Excel Académie
+# Configuration de déploiement Netlify pour Excel Académie.
+# Le code de l'app est dans le sous-dossier app/ (Vite). Les chapitres JSON
+# sont à la racine du dépôt (un niveau au-dessus de app/), importés par l'app.
+
 [build]
-  base = "app"
-  command = "npm run build"
-  publish = "dist"
+  base = "app"               # Netlify lance le build dans app/
+  command = "npm run build"  # Vite compile vers app/dist
+  publish = "dist"           # dossier publié (relatif à base = app/dist)
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Single Page App : tout passe par index.html (pas de routage serveur).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
