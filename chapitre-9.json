@@ -1,0 +1,152 @@
+{
+  "chapitre": 9,
+  "titre": "Les tableaux de synthèse par la consolidation",
+  "niveau": 9,
+  "ceinture": "bleue",
+  "objectif": "Centraliser des données dispersées en une vue d'ensemble : rappeler la référence 3D, consolider par position (mêmes structure et disposition), consolider par catégorie (regroupement par libellés), et consolider avec un tableau croisé dynamique multi-tables (tables nommées, modèle de données, relations, glisser-déposer).",
+  "note_pedago": "Chapitre COMPLET (5 lecons) : rappel3d (reference 3D + effet des modifs de feuilles, pas d'exo), consoposition (Donnees > Consolider par position + boutons de plan, Ex.67+68), consocategorie (consolidation par categorie avec Ligne du haut/Colonne de gauche, Ex.69), tcdtables (transformer chaque plage en Table nommee, pas d'exo dedie), tcdrelations (creer le TCD via le modele de donnees + Gerer les relations + glisser les champs, Ex.70+correction) + quiz (12) + checklist (10). Nouveaux composants LeconNarree : consoliderdialog, champstcd, relationdialog, gererrelations, glisserchamptcd (animation glisser-deposer). Reutilise tableur multi-feuilles (feuillesDept), touche, ruban, tableaudonnees, champs. Memes regles que ch.3-8 (capture par etape, animations pour les gestes, ton positif, mini-question a bonne variee, raccourcis Mac).",
+  "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
+  "modules": [
+    { "id": "ch9-rappel3d", "type": "narration", "lecon": "rappel3d", "titre": "Rappel : la référence 3D", "xp": 30 },
+    { "id": "ch9-consoposition", "type": "narration", "lecon": "consoposition", "titre": "La consolidation par position", "xp": 30 },
+    { "id": "ch9-consocategorie", "type": "narration", "lecon": "consocategorie", "titre": "La consolidation par catégorie", "xp": 30 },
+    { "id": "ch9-tcdtables", "type": "narration", "lecon": "tcdtables", "titre": "TCD multi-tables : préparer les tables", "xp": 30 },
+    { "id": "ch9-tcdrelations", "type": "narration", "lecon": "tcdrelations", "titre": "TCD multi-tables : créer le TCD & les relations", "xp": 30 },
+    {
+      "id": "ch9-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 9,
+      "total": 12,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.9 p390-392 (12 questions), repris verbatim. reponses_correctes = index corrects (0-3).",
+      "questions": [
+        {
+          "id": "ch9-qcm-01",
+          "question": "Qu'est-ce qu'une référence 3D dans Excel ?",
+          "options": ["Une formule pointant vers une plage dans une seule feuille", "Une formule qui fait référence à des cellules situées sur plusieurs feuilles consécutives", "Une formule dont les arguments sont 3 fois plus longs", "Une macro VBA intégrée pour naviguer en 3 dimensions"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch9-qcm-02",
+          "question": "Quelle formule permet de faire la somme de la cellule C10 entre les feuilles « AIN » et « Cantal » ?",
+          "options": ["=SOMME(AIN;Cantal!C10)", "=SOMME(AIN:Cantal!C10)", "=SOMME(AIN:Cantal!C10:C10)", "=SOMME(AIN:Cantal!C10:Cantal!C10)"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch9-qcm-03",
+          "question": "Quelle méthode permet d'exclure une feuille d'une référence 3D sans changer la formule ?",
+          "options": ["Supprimer la feuille", "La renommer en « Archivée »", "La déplacer en dehors des bornes Feuil2:Feuil6", "Mettre la feuille en mode Masqué"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch9-qcm-04",
+          "question": "La consolidation par position nécessite que :",
+          "options": ["Les tableaux sources aient des structures différentes", "Les en-têtes soient identiques et placés aux mêmes coordonnées sur chaque feuille", "On copie-colle manuellement chaque total", "On ouvre une macro VBA prédéfinie"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch9-qcm-05",
+          "question": "Quel avantage offre la consolidation par catégorie par rapport à la consolidation par position ?",
+          "options": ["Elle ne permet que la somme des données", "Elle ne fonctionne que sur des classeurs distincts", "Les tableaux sources peuvent avoir des dispositions différentes"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch9-qcm-06",
+          "question": "Dans une consolidation par catégorie, que se passe-t-il si une catégorie est absente ?",
+          "options": ["Elle génère une erreur #N/A", "Elle est ignorée et laisse la cellule vide dans le résultat", "Elle crée une ligne « Autres » automatiquement", "Elle duplique la catégorie depuis les autres sources"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch9-qcm-07",
+          "question": "La consolidation par TCD multi-tables nécessite :",
+          "options": ["Que chaque table ait une clé partagée et soit ajoutée au modèle de données", "Que les tables soient fusionnées manuellement avant", "Que les plages soient strictement contiguës sur une même feuille", "Que toutes les tables aient exactement le même nombre de colonnes"],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch9-qcm-08",
+          "question": "Quelle étape n'est pas nécessaire pour créer un TCD multi-tables ?",
+          "options": ["Transformer chaque plage en Tableau (Insertion > Tableau)", "Renommer chaque tableau (ex. T_ventes)", "Cliquer sur Données > Consolidation", "Utiliser « Modèle de données » lors de la création du TCD"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch9-qcm-09",
+          "question": "Les boutons « + » et « – » sur le côté d'une consolidation par position représentent :",
+          "options": ["L'ajout ou la suppression de feuilles sources", "Les niveaux de plan (développement ou masquage des groupes de lignes)", "Le tri croissant ou décroissant des résultats", "L'affichage ou non des totaux généraux"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch9-qcm-10",
+          "question": "Que se passe-t-il si on renomme l'une des feuilles bornes Feuil2 ou Feuil6 ?",
+          "options": ["La formule 3D échoue immédiatement", "Excel met à jour automatiquement la référence pour suivre le nouveau nom", "Il faut recréer la formule manuellement", "La feuille renommée est exclue du calcul"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch9-qcm-11",
+          "question": "Pour insérer un Tableau Croisé Dynamique, on utilise :",
+          "options": ["Données > Consolider", "Insertion > Tableau Croisé Dynamique", "Données > Analyse de données", "Insertion > Graphique"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch9-qcm-12",
+          "question": "Pour créer un TCD multi-tables, il est impératif de :",
+          "options": ["Définir des relations entre chaque table dans le Modèle de données avant de créer le TCD", "Fusionner manuellement les différentes plages de données", "Placer toutes les données dans la même feuille", "Utiliser uniquement des plages nommées sans créer de tableau"],
+          "reponses_correctes": [0]
+        }
+      ]
+    },
+    {
+      "id": "ch9-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist de l'ebook ch.9 (p393), reprise verbatim.",
+      "a_valider": false,
+      "items": [
+        "Je sais créer une formule 3D (SOMME, MOYENNE, etc.) entre deux feuilles.",
+        "Je maîtrise l'insertion, la suppression et le déplacement de feuilles dans une plage 3D.",
+        "Je sais que renommer une feuille met à jour ma référence 3D.",
+        "Je suis capable de concevoir une consolidation par position avec liaison aux données sources.",
+        "Je construis un tableau « Synthèse » aux mêmes étiquettes et positions que mes feuilles sources.",
+        "Je paramètre une consolidation par catégorie et gère correctement les étiquettes de ligne et de colonne.",
+        "Je sais activer la liaison automatique pour mettre à jour mes données consolidées.",
+        "Je prépare plusieurs plages issues de feuilles ou de classeurs différents pour les consolider.",
+        "Je sais créer un TCD multi-tables.",
+        "Je configure un TCD multi-tables en définissant les relations entre mes tableaux."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["référence 3D", "3d", "plusieurs feuilles", "somme", "onglets"],
+      "question": "Comment additionner la même cellule sur plusieurs feuilles ?",
+      "reponse": "Dans la cellule cible, tape =SOMME( puis clique l'onglet de la 1re feuille, maintiens Shift, clique l'onglet de la dernière, clique la cellule (ex. C10), ferme la parenthèse et Entrée. Excel écrit une référence 3D du type =SOMME(AIN:Cantal!C10). Elle reste vivante : ajouter, supprimer ou déplacer une feuille entre les bornes met le total à jour ; renommer une borne est suivi automatiquement."
+    },
+    {
+      "mots_cles": ["consolidation", "consolider", "position", "outils de données"],
+      "question": "Comment consolider des tableaux identiques (par position) ?",
+      "reponse": "Sur la feuille de destination, clique la 1re cellule de résultat, puis Données > Outils de données > Consolider. Choisis la fonction (Somme…), clique dans Référence, sélectionne chaque tableau source puis Ajouter, coche « Lier aux données source » et OK. La consolidation par position exige des en-têtes identiques placés aux mêmes emplacements sur chaque feuille."
+    },
+    {
+      "mots_cles": ["catégorie", "libellés", "dispositions différentes", "étiquettes"],
+      "question": "Mes tableaux n'ont pas le même ordre, comment les consolider ?",
+      "reponse": "Utilise la consolidation par catégorie : Données > Consolider, ajoute chaque tableau AVEC ses titres, puis coche « Ligne du haut » et « Colonne de gauche » pour qu'Excel regroupe par libellés. Les tableaux peuvent avoir des dispositions et un nombre de lignes différents ; une catégorie absente d'une feuille laisse simplement une cellule vide."
+    },
+    {
+      "mots_cles": ["tcd", "tableau croisé dynamique", "multi-tables", "modèle de données", "relations"],
+      "question": "Comment consolider plusieurs tables avec un tableau croisé dynamique ?",
+      "reponse": "Transforme chaque plage en Tableau nommé (Accueil > Mettre sous forme de tableau, ou Ctrl+L ; renomme via Création de tableau > Nom du tableau). Insère le TCD (Insertion > Tableau croisé dynamique) en cochant « Ajouter au modèle de données ». Dans Analyse du TCD > Relations, crée les liens entre tables via une colonne commune (clé partagée). Puis glisse tes champs dans les zones Lignes et Valeurs."
+    },
+    {
+      "mots_cles": ["lier", "liaison", "mise à jour", "plan", "boutons"],
+      "question": "Comment mettre à jour ma consolidation et gérer le plan ?",
+      "reponse": "Coche « Lier aux données source » dans la fenêtre Consolider : le résultat se met à jour automatiquement quand une source change (les zones source et destination doivent être sur des feuilles différentes). Les petits boutons + et – à gauche du résultat sont le plan : niveau 1 = total global, niveau 2 = totaux intermédiaires + global. « + » développe le détail, « – » le masque."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "bleue",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture bleue débloquée. Tu centralises des données éparpillées en une synthèse claire : référence 3D, consolidation par position, par catégorie, et par tableau croisé dynamique multi-tables. Tu vois désormais la vue d'ensemble."
+  }
+}

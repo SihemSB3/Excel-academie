@@ -3036,8 +3036,181 @@ function ClasseurAxe({ v }) {
   )
 }
 
+// ---------- Chapitre 9 : consolidation & TCD multi-tables ----------
+
+// La vraie fenêtre « Consolider » (Données > Outils de données > Consolider).
+function ConsoliderDialog({ v }) {
+  const { fonction = 'Somme', reference = '', refs = [], ligneHaut = false, colGauche = false, lier = false, focus } = v
+  const ring = (f) => (focus === f ? 'ring-2 ring-mint' : '')
+  const Case = ({ l, c }) => (
+    <div className="flex items-center gap-2">
+      <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] ${c ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{c ? '✓' : ''}</span>
+      <span className={c ? 'font-semibold text-navy' : 'text-navy/75'}>{l}</span>
+    </div>
+  )
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Consolider</span><span className="text-navy/40">✕</span></div>
+      <div className="space-y-2 bg-white p-3 text-navy">
+        <div>
+          <p className="mb-1 text-navy/55">Fonction :</p>
+          <span className={`flex items-center justify-between rounded-sm border border-navy/25 px-2 py-1 ${ring('fonction')}`}>{fonction}<span className="text-navy/40">▾</span></span>
+        </div>
+        <div>
+          <p className="mb-1 text-navy/55">Référence :</p>
+          <div className="flex gap-1">
+            <span className={`flex-1 rounded-sm border border-navy/25 px-2 py-1 font-mono ${ring('reference')}`}>{reference || ' '}</span>
+            <span className="shrink-0 rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-1">Parcourir…</span>
+          </div>
+        </div>
+        <div>
+          <p className="mb-1 text-navy/55">Toutes les références :</p>
+          <div className="h-14 overflow-hidden rounded-sm border border-navy/25 bg-white">
+            {refs.length === 0 ? <div className="px-2 py-1 italic text-navy/30">(vide)</div> : refs.map((r, i) => (<div key={i} className="px-2 py-0.5 font-mono text-[10px] text-navy/80">{r}</div>))}
+          </div>
+          <div className="mt-1 flex gap-1">
+            <span className={`rounded-sm border-2 px-3 py-0.5 ${focus === 'ajouter' ? 'border-mint bg-mint/15 font-bold' : 'border-navy/25 bg-[#f0f0f0]'}`}>Ajouter</span>
+            <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Supprimer</span>
+          </div>
+        </div>
+        <div className="space-y-1 border-t border-navy/10 pt-1.5">
+          <p className="text-navy/55">Étiquettes dans :</p>
+          <Case l="Ligne du haut" c={ligneHaut} />
+          <Case l="Colonne de gauche" c={colGauche} />
+          <Case l="Lier aux données source" c={lier} />
+        </div>
+        <div className="flex justify-end gap-2 pt-0.5"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Fermer</span></div>
+      </div>
+    </div>
+  )
+}
+
+// Le volet « Champs de tableau croisé dynamique » : liste des tables/champs + 4 zones.
+function ChampsTCD({ v }) {
+  const { tables = [], lignes = [], valeurs = [], colonnes = [], filtres = [] } = v
+  const Zone = ({ nom, items }) => (
+    <div className="rounded-sm border border-navy/20 bg-[#fafafa] p-1">
+      <p className="mb-0.5 text-[9px] font-semibold text-navy/50">{nom}</p>
+      <div className="min-h-[18px] space-y-0.5">
+        {items.map((it, i) => (<span key={i} className="block rounded-sm bg-mint/20 px-1.5 py-0.5 text-[10px] text-navy ring-1 ring-mint/40">{it}</span>))}
+      </div>
+    </div>
+  )
+  return (
+    <div className="mx-auto mt-3 w-60 overflow-hidden rounded-lg border border-navy/25 text-[10px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Champs de tableau croisé dynamique</span><span className="text-navy/40">✕</span></div>
+      <div className="bg-white p-2">
+        <div className="mb-1 flex gap-3 border-b border-navy/10 pb-1 text-[9px]"><span className="font-bold text-[#0a7a3d]">Tous</span><span className="text-navy/45">Actifs</span></div>
+        <div className="mb-2 space-y-1">
+          {tables.map((t, i) => (
+            <div key={i}>
+              <p className="font-semibold text-navy/70">▾ {t.nom}</p>
+              {t.champs.map((c, j) => (<div key={j} className="ml-2 flex items-center gap-1 text-navy/75"><span className={`grid h-3 w-3 place-items-center rounded-sm border text-[8px] ${c.coche ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{c.coche ? '✓' : ''}</span>{c.nom}</div>))}
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-2 gap-1">
+          <Zone nom="▽ Filtres" items={filtres} />
+          <Zone nom="▥ Colonnes" items={colonnes} />
+          <Zone nom="☰ Lignes" items={lignes} />
+          <Zone nom="Σ Valeurs" items={valeurs} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// La fenêtre « Créer une relation » (Analyse du TCD > Relations > Nouveau).
+function RelationDialog({ v }) {
+  const { table = 'T_ventes', colonne = 'Zones Vente', tableAssociee = 'T_zones', colonneAssociee = 'Zones Vente' } = v
+  const Champ = ({ label, val }) => (
+    <div><p className="mb-0.5 text-navy/55">{label}</p><span className="flex items-center justify-between rounded-sm border border-navy/25 px-2 py-1 font-mono text-[10px]">{val}<span className="text-navy/40">▾</span></span></div>
+  )
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Créer une relation</span><span className="text-navy/40">✕</span></div>
+      <div className="space-y-2 bg-white p-3 text-navy">
+        <p className="text-navy/60">Choisis les tables et les colonnes à relier :</p>
+        <div className="grid grid-cols-2 gap-2">
+          <Champ label="Table :" val={table} />
+          <Champ label="Colonne (externe) :" val={colonne} />
+          <Champ label="Table associée :" val={tableAssociee} />
+          <Champ label="Colonne associée :" val={colonneAssociee} />
+        </div>
+        <div className="flex justify-end gap-2 pt-0.5"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+      </div>
+    </div>
+  )
+}
+
+// La fenêtre « Gérer les relations » (liste des liaisons + boutons).
+function GererRelations({ v }) {
+  const { relations = [] } = v
+  return (
+    <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Gérer les relations</span><span className="text-navy/40">✕</span></div>
+      <div className="bg-white p-3">
+        <div className="overflow-hidden rounded-sm border border-navy/25">
+          <div className="bg-navy/10 px-2 py-1 text-[10px] text-navy/55">Table (colonne externe) → Table associée (colonne principale)</div>
+          {relations.length === 0 ? <div className="px-2 py-2 italic text-navy/30">(aucune relation pour l'instant)</div> : relations.map((r, i) => (<div key={i} className="border-t border-navy/10 px-2 py-1 font-mono text-[10px] text-navy/80">{r}</div>))}
+        </div>
+        <div className="mt-2 flex flex-wrap gap-1">
+          <span className="rounded-sm border-2 border-mint bg-mint/15 px-3 py-0.5 font-bold">Nouveau…</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Modifier…</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Supprimer</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Détection automatique…</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Animation : on glisse un champ (Vendeurs) de la liste vers la zone Lignes du TCD.
+function GlisserChampTCD() {
+  const [pose, setPose] = useState(false)
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setPose(false)
+    const id = setTimeout(() => setPose(true), 900)
+    return () => clearTimeout(id)
+  }, [cle])
+  return (
+    <div className="mt-3">
+      <div className="relative mx-auto flex h-36 w-full max-w-xs gap-2 rounded-md border border-navy/15 bg-white p-2">
+        <div className="w-1/2">
+          <p className="text-[9px] font-semibold text-navy/50">Champs</p>
+          <div className="mt-1"><span className="block w-24 rounded-sm border border-navy/20 bg-[#f0f0f0] px-1.5 py-0.5 text-[10px] text-navy/70">Montant</span></div>
+        </div>
+        <div className="w-1/2 space-y-1">
+          <div className={`rounded-sm border-2 border-dashed p-1 transition-colors ${pose ? 'border-mint bg-mint/5' : 'border-navy/25 bg-[#fafafa]'}`}>
+            <p className="text-[9px] font-semibold text-navy/50">☰ Lignes</p>
+            <div className="min-h-[18px]" />
+          </div>
+          <div className="rounded-sm border-2 border-dashed border-navy/25 bg-[#fafafa] p-1">
+            <p className="text-[9px] font-semibold text-navy/50">Σ Valeurs</p>
+            <div className="min-h-[18px]" />
+          </div>
+        </div>
+        <span className="absolute z-10 rounded-sm bg-mint/30 px-1.5 py-0.5 text-[10px] font-medium text-navy shadow ring-1 ring-mint" style={{ left: pose ? '56%' : 12, top: pose ? 38 : 28, transition: 'left .9s cubic-bezier(.4,0,.2,1), top .9s cubic-bezier(.4,0,.2,1)' }}>Vendeurs</span>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{pose ? '« Vendeurs » est déposé dans la zone Lignes : chaque vendeur devient une ligne du rapport.' : 'Glisse un champ (ex. Vendeurs) depuis la liste vers une zone (Lignes).'}</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
+      </div>
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
+  if (v.type === 'consoliderdialog') return <ConsoliderDialog v={v} />
+  if (v.type === 'champstcd') return <ChampsTCD v={v} />
+  if (v.type === 'relationdialog') return <RelationDialog v={v} />
+  if (v.type === 'gererrelations') return <GererRelations v={v} />
+  if (v.type === 'glisserchamptcd') return <GlisserChampTCD />
   if (v.type === 'classeuraxe') return <ClasseurAxe v={v} />
   if (v.type === 'graphique') return <Graphique v={v} />
   if (v.type === 'typesgraphiques') return <TypesGraphiques />

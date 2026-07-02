@@ -3495,4 +3495,229 @@ const MIXTESPARKLINE = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE }
+// ===================== CHAPITRE 9 : CONSOLIDATION (ceinture bleue) =====================
+const U9 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX9 = {
+  ex67: { titre: 'Exercice 67 · La consolidation par position', url: U9('10pBsvSA3QfN-3BvARSWVf5mpc-3CY_05') },
+  ex68: { titre: 'Exercice 68 · La consolidation par position', url: U9('1PXBbM1_qLtBxprYf9CzNNkD8oz-OKuzA') },
+  ex69: { titre: 'Exercice 69 · La consolidation par catégorie', url: U9('1QZ11MHMtcHo8LL35SNHWPOb_nLXPTkyF') },
+  ex70: { titre: 'Exercice 70 · La consolidation par TCD multi-tables', url: U9('16VhY98IzS703g0_-thhe6d7_OaZ4iyGU') },
+  ex70c: { titre: 'Exercice 70 · TCD multi-tables — Correction', url: U9('1lQ8RwFBBSNEm--jGjSpWuEhLEWgwrCYQ') },
+}
+const CONSO_ENTETES = ['Produit', 'CA']
+const CONSO_JAN = [['Ebook Excel', '12'], ['Ebook Shaolin', '9'], ['Formations', '7']]
+const CONSO_VIDE = [['Ebook Excel', ''], ['Ebook Shaolin', ''], ['Formations', '']]
+const CONSO_TOTAL = [['Ebook Excel', '45'], ['Ebook Shaolin', '33'], ['Formations', '25']]
+
+// --- Leçon 1 : Rappel, la référence 3D ---
+const RAPPEL3D = {
+  id: 'fn-rappel3d',
+  titre: 'Rappel : la référence 3D',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Avant de consolider, un **rappel**. La **référence 3D** additionne (ou moyenne, compte…) la **même cellule** sur **plusieurs feuilles côte à côte**. C\'est la base de la consolidation.', visuel: { type: 'encart', label: 'Pourquoi c\'est utile', liste: ['**Consolider** des chiffres répartis sur plusieurs onglets (ventes mensuelles, dépenses…).', '**Une seule formule** au lieu de recopier feuille par feuille.', '**Mise à jour auto** : si une cellule source change, le total 3D suit.'] } },
+    {
+      humeur: 'pensif',
+      dit: 'On la construit **pas à pas**, en cliquant les onglets.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire une référence 3D',
+        blocs: [
+          { etapes: ['Sur la feuille **Synthèse**, dans la cellule cible, tape **=SOMME(**'] },
+          { capture: { type: 'tableur', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('=SOMME('), formule: '=SOMME(', actif: 'B2', legende: 'Sur « Synthèse », on démarre la formule =SOMME(' } },
+          { etapes: ['Clique l\'onglet de la **1re feuille** (AIN), maintiens **Shift**, clique l\'onglet de la **dernière** (Cantal).'], depart: 2 },
+          { capture: { type: 'touche', touches: ['⇧ Maj'], note: 'Shift = plage CONTINUE : AIN, Cantal et toutes les feuilles entre les deux sont incluses.' } },
+          { etapes: ['Clique la **cellule** (C10), ferme la parenthèse et **Entrée**.'], depart: 3 },
+          { capture: { type: 'tableur', feuilles: feuillesDept, feuilleActive: 'AIN', cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 000'), formule: '=SOMME(AIN:Cantal!C10', actif: 'C10', legende: 'On clique C10 : Excel écrit tout seul la plage 3D AIN:Cantal.' } },
+          { capture: { type: 'tableur', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('12 500', true), formule: '=SOMME(AIN:Cantal!C10)', actif: 'B2', legende: 'Résultat sur « Synthèse » : =SOMME(AIN:Cantal!C10) additionne les 4 feuilles = 12 500.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La formule 3D reste **vivante** quand tu bouges des feuilles :',
+      visuel: { type: 'encart', label: 'Effet des modifications de feuilles', liste: ['**Ajouter / copier** une feuille **entre** les bornes (AIN…Cantal) : elle est **incluse** automatiquement.', '**Déplacer une feuille hors** des bornes : elle est **retirée** du calcul.', '**Supprimer** une feuille entre les bornes : ses valeurs **sortent** du total.', '**Renommer une borne** (AIN ou Cantal) : Excel **met à jour** la référence tout seul.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle formule additionne la cellule C10 de la feuille AIN à la feuille Cantal ?',
+      visuel: { type: 'question', options: ['=SOMME(AIN;Cantal!C10)', '=SOMME(AIN:Cantal!C10)', '=SOMME(AIN:Cantal!C10:C10)'], bonne: 1, explication: 'Le deux-points entre les onglets (AIN:Cantal) fait la plage 3D, puis !C10 désigne la cellule. Le point-virgule, lui, sert à lister des feuilles non côte à côte.' } },
+    { humeur: 'fier', dit: 'La référence 3D n\'a plus de secret pour toi. Direction la consolidation ! Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : La consolidation par position ---
+const CONSOPOSITION = {
+  id: 'fn-consoposition',
+  titre: 'La consolidation par position',
+  exercices: [EX9.ex67, EX9.ex68],
+  narration: [
+    { humeur: 'accueil', dit: 'La **consolidation** fusionne plusieurs tableaux en une vue d\'ensemble. La version **par position** marche quand tes tableaux ont la **même structure** et la **même disposition** : seules les **valeurs** changent.', visuel: { type: 'tableaudonnees', brut: true, entetes: CONSO_ENTETES, lignes: CONSO_JAN, legende: 'Feuille « Janvier ». Février et Mars ont exactement la même forme, avec d\'autres chiffres.' } },
+    {
+      humeur: 'pensif',
+      dit: 'Bon à savoir avant de commencer :',
+      visuel: { type: 'encart', label: 'Contexte', liste: ['Les en-têtes de **lignes et colonnes** doivent être **identiques** et **aux mêmes emplacements** sur chaque feuille.', 'Les sources peuvent être sur des **feuilles** différentes, plusieurs **classeurs** ouverts, ou une même feuille.', '**Sans liaison** : résultat figé. **Avec liaison** : mise à jour auto quand les sources changent.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La méthode, **pas à pas**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Consolider par position',
+        blocs: [
+          { etapes: ['Sur la feuille **Synthèse**, prépare un tableau **vide** aux mêmes étiquettes et au même endroit, et clique la 1re cellule de résultat.'] },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: CONSO_ENTETES, lignes: CONSO_VIDE, legende: 'Feuille « Synthèse » : mêmes produits, colonne CA vide, prête à recevoir le total.' } },
+          { etapes: ['Onglet **Données** > groupe **Outils de données** > **Consolider**.'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir' }, { icone: '⧉', label: 'Consolider', actif: true }, { icone: '🔗', label: 'Liaisons' }] } },
+          { etapes: ['Dans la fenêtre, choisis la **Fonction** (Somme).'], depart: 3 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', focus: 'fonction' } },
+          { etapes: ['Clique dans **Référence**, sélectionne le 1er tableau source, puis **Ajouter**. Répète pour chaque feuille.'], depart: 4 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', reference: 'Mars!$B$2:$B$4', refs: ['Janvier!$B$2:$B$4', 'Février!$B$2:$B$4', 'Mars!$B$2:$B$4'], focus: 'ajouter' } },
+          { etapes: ['Coche **Lier aux données source** (recommandé), puis **OK**.'], depart: 5 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', refs: ['Janvier!$B$2:$B$4', 'Février!$B$2:$B$4', 'Mars!$B$2:$B$4'], lier: true } },
+          { capture: { type: 'tableaudonnees', entetes: CONSO_ENTETES, lignes: CONSO_TOTAL, legende: 'Ton tableau consolidé apparaît sur « Synthèse » : la somme des 3 mois, produit par produit.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Deux détails pratiques :',
+      visuel: { type: 'encart', label: 'Bon à savoir', liste: ['Pas besoin de préparer le tableau vide : sur une feuille vierge, coche **Ligne du haut** et **Colonne de gauche** pour que les titres apparaissent tout seuls.', 'Les petits boutons **+ / –** à gauche du résultat sont le **plan** : ils développent (+) ou masquent (–) le détail. Niveau **1** = total global, niveau **2** = totaux intermédiaires + global.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. La consolidation par position exige que...',
+      visuel: { type: 'question', options: ['les tableaux sources aient des structures différentes', 'les en-têtes soient identiques et placés aux mêmes coordonnées sur chaque feuille', 'on copie-colle manuellement chaque total'], bonne: 1, explication: 'Par position, Excel additionne « case par case » : il faut donc des en-têtes identiques, aux mêmes emplacements sur chaque feuille.' } },
+    { humeur: 'fier', dit: 'Tu fusionnes des tableaux identiques en un clin d\'œil. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : La consolidation par catégorie ---
+const CONSOCATEGORIE = {
+  id: 'fn-consocategorie',
+  titre: 'La consolidation par catégorie',
+  exercices: [EX9.ex69],
+  narration: [
+    { humeur: 'accueil', dit: 'La consolidation **par catégorie** est plus souple : elle regroupe des tableaux dont les données ne sont **pas au même endroit** et qui peuvent avoir un **nombre de lignes/colonnes différent**. Excel regroupe par **libellés** (les titres).', visuel: { type: 'encart', label: 'Quand l\'utiliser', texte: 'Tes feuilles n\'ont pas les mêmes produits, ni dans le même ordre ? La consolidation par catégorie s\'appuie sur les **noms** (en-têtes) pour tout regrouper correctement.' } },
+    {
+      humeur: 'pensif',
+      dit: 'La méthode ressemble à la précédente, avec **deux cases en plus**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Consolider par catégorie',
+        blocs: [
+          { etapes: ['Clique une cellule vide (feuille **Synthèse**), puis **Données** > **Consolider**.'] },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir' }, { icone: '⧉', label: 'Consolider', actif: true }, { icone: '🔗', label: 'Liaisons' }] } },
+          { etapes: ['Choisis la **Fonction**, puis ajoute chaque tableau **avec ses titres** (ex. Janvier A1:B5), via **Référence** puis **Ajouter**.'], depart: 2 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', reference: 'Mars!$A$1:$B$5', refs: ['Janvier!$A$1:$B$5', 'Février!$A$1:$B$5', 'Mars!$A$1:$B$5'], focus: 'ajouter' } },
+          { etapes: ['Coche **Ligne du haut** et **Colonne de gauche** (ce sont les catégories), puis **Lier aux données source** et **OK**.'], depart: 3 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', refs: ['Janvier!$A$1:$B$5', 'Février!$A$1:$B$5', 'Mars!$A$1:$B$5'], ligneHaut: true, colGauche: true, lier: true } },
+          { capture: { type: 'tableaudonnees', entetes: CONSO_ENTETES, lignes: [['Ebook Excel', '45'], ['Ebook Shaolin', '33'], ['Formations', '25'], ['Coaching', '']], legende: 'Résultat : toutes les catégories des 3 feuilles. « Coaching », présent dans une seule feuille, apparaît quand même ; les cases sans donnée restent vides.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans une consolidation par catégorie, que se passe-t-il si une catégorie est absente d\'une feuille ?',
+      visuel: { type: 'question', options: ['Elle génère une erreur #N/A', 'Elle est ignorée et laisse la cellule vide dans le résultat', 'Elle crée une ligne « Autres » automatiquement'], bonne: 1, explication: 'La catégorie apparaît quand même dans le résultat ; pour la feuille qui ne l\'a pas, la cellule reste simplement vide (pas d\'erreur).' } },
+    { humeur: 'fier', dit: 'Même des tableaux en désordre, tu sais les réunir proprement. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 4 : TCD multi-tables, préparer les tables ---
+const TCDTABLES = {
+  id: 'fn-tcdtables',
+  titre: 'TCD multi-tables : préparer les tables',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Troisième méthode de consolidation : le **tableau croisé dynamique (TCD) multi-tables**. Il relie plusieurs tables grâce à une **colonne commune** (une « clé »), puis résume tout dans un rapport interactif.', visuel: { type: 'parties', items: [{ label: 'Table **Ventes** : Zones Vente + Montant.' }, { label: 'Table **Zones Vente** : chaque zone (Ohio, Texas…) et son bureau.' }, { label: 'Table **Vendeurs** : chaque vendeur, sa date d\'entrée, son grade.' }, { label: 'La **clé partagée** (Zones Vente, Vendeurs) relie ces tables entre elles.' }] } },
+    {
+      humeur: 'pensif',
+      dit: 'Étape indispensable : transformer chaque plage en **vrai Tableau** nommé.',
+      visuel: {
+        type: 'methode',
+        titre: 'Transforme chaque plage en Table',
+        blocs: [
+          { etapes: ['Sélectionne le tableau (feuille **Ventes**).'] },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: ['Zones Vente', 'Montant'], lignes: [['Ohio', '8 200 €'], ['Texas', '12 500 €'], ['Ohio', '6 400 €']], legende: 'On sélectionne la plage entière, titres compris.' } },
+          { etapes: ['Onglet **Accueil** > **Mettre sous forme de tableau** (ou **Ctrl + L**, Mac **⌘ + L**), coche **« Ma table comporte des en-têtes »**.'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme\nconditionnelle' }, { icone: '▧', label: 'Mettre sous\nforme de tableau', actif: true }, { icone: '🎨', label: 'Styles de\ncellules' }] } },
+          { capture: { type: 'champs', titre: 'Créer un tableau', champs: [{ l: 'Où sont les données de votre tableau ?', v: '=$A$1:$B$4', actif: true }, { l: 'Ma table comporte des en-têtes', check: true }] } },
+          { etapes: ['Renomme la table via l\'onglet **Création de tableau** > **Nom du tableau** (ex. **T_ventes**).'], depart: 3 },
+          { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de tableau'], actif: 'Création de tableau', groupeNom: 'Propriétés', groupes: [{ icone: '🏷', label: 'Nom du\ntableau', actif: true }] } },
+          { capture: { type: 'champs', titre: 'Propriétés', champs: [{ l: 'Nom du tableau', v: 'T_ventes', actif: true }] } },
+          { note: 'Répète pour les deux autres feuilles : **T_zones** et **T_vendeurs**. Des noms clairs rendent les relations bien plus faciles à créer ensuite.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Parmi ces étapes, laquelle n\'est **pas** nécessaire pour un TCD multi-tables ?',
+      visuel: { type: 'question', options: ['Transformer chaque plage en Tableau', 'Renommer chaque tableau (ex. T_ventes)', 'Cliquer sur Données > Consolider', 'Utiliser le « Modèle de données » à la création du TCD'], bonne: 2, explication: '« Données > Consolider », c\'est l\'autre méthode (par position/catégorie). Pour un TCD multi-tables, on passe par des Tables nommées + le Modèle de données, pas par Consolider.' } },
+    { humeur: 'fier', dit: 'Tes tables sont prêtes et bien nommées. On peut maintenant les relier. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 5 : TCD multi-tables, créer le TCD & les relations ---
+const TCDRELATIONS = {
+  id: 'fn-tcdrelations',
+  titre: 'TCD multi-tables : créer le TCD & les relations',
+  exercices: [EX9.ex70, EX9.ex70c],
+  narration: [
+    {
+      humeur: 'pensif',
+      dit: 'On crée le TCD en l\'ajoutant au **modèle de données** (c\'est lui qui permet de relier plusieurs tables).',
+      visuel: {
+        type: 'methode',
+        titre: 'Créer le TCD à partir du modèle de données',
+        blocs: [
+          { etapes: ['Place-toi dans la cellule cible, puis **Insertion** > **Tableau croisé dynamique** > **À partir d\'un tableau/plage**.'] },
+          { capture: { type: 'ruban', actif: 'Insertion', groupeNom: 'Tableaux', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique', actif: true }, { icone: '📋', label: 'Tableau' }] } },
+          { etapes: ['Sélectionne une table (T_ventes), coche **« Ajouter ces données au modèle de données »**, puis **OK**.'], depart: 2 },
+          { capture: { type: 'champs', titre: 'Tableau croisé dynamique', champs: [{ l: 'Table/plage', v: 'T_ventes', actif: true }, { l: 'Feuille de calcul existante', check: true }, { l: 'Ajouter ces données au modèle de données', check: true }] } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'On récupère les 3 tables, puis on ouvre la **gestion des relations**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Relier les tables',
+        blocs: [
+          { etapes: ['Dans le volet **Champs de tableau croisé dynamique**, clique **Tous** : tes 3 tables apparaissent.'] },
+          { capture: { type: 'champstcd', tables: [{ nom: 'T_ventes', champs: [{ nom: 'Zones Vente' }, { nom: 'Montant' }] }, { nom: 'T_zones', champs: [{ nom: 'Zones Vente' }, { nom: 'Bureau' }] }, { nom: 'T_vendeurs', champs: [{ nom: 'Vendeurs' }, { nom: 'Grade' }] }] } },
+          { etapes: ['Sélectionne le TCD, onglet **Analyse du tableau croisé dynamique** > groupe **Calcul** > **Relations**.'], depart: 2 },
+          { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], actif: 'Analyse du TCD', groupeNom: 'Calculs', groupes: [{ icone: '🔗', label: 'Relations', actif: true }, { icone: 'ƒ', label: 'Champs,\néléments' }] } },
+          { etapes: ['Dans **Gérer les relations**, clique **Nouveau**.'], depart: 3 },
+          { capture: { type: 'gererrelations', relations: [] } },
+          { etapes: ['Définis la relation : **Table** (T_ventes) → **Colonne (externe)** (Zones Vente) → **Table associée** (T_zones) → **Colonne associée** (Zones Vente), puis **OK**.'], depart: 4 },
+          { capture: { type: 'relationdialog', table: 'T_ventes', colonne: 'Zones Vente', tableAssociee: 'T_zones', colonneAssociee: 'Zones Vente' } },
+          { note: 'La clé partagée doit contenir les **mêmes valeurs** des deux côtés (ex. « Ohio », « Texas »). Astuce : **Détection automatique** laisse Excel proposer les liens à partir des noms de colonnes identiques.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dernière étape, la plus satisfaisante : **construire la vue** en glissant les champs.',
+      visuel: {
+        type: 'methode',
+        titre: 'Construire ta vue consolidée',
+        blocs: [
+          { etapes: ['Glisse le champ **Vendeurs** (de T_vendeurs) dans la zone **Lignes**.'] },
+          { capture: { type: 'glisserchamptcd' } },
+          { etapes: ['Glisse le champ **Montant** (de T_ventes) dans la zone **Valeurs** (Excel calcule la **Somme de Montant**).'], depart: 2 },
+          { capture: { type: 'champstcd', tables: [{ nom: 'T_ventes', champs: [{ nom: 'Zones Vente' }, { nom: 'Montant', coche: true }] }, { nom: 'T_vendeurs', champs: [{ nom: 'Vendeurs', coche: true }, { nom: 'Grade' }] }], lignes: ['Vendeurs'], valeurs: ['Somme de Montant'] } },
+          { capture: { type: 'tableaudonnees', entetes: ['Étiquettes de lignes', 'Somme de Montant'], lignes: [['Karim', '18 700 €'], ['Léa', '14 600 €'], ['Marie', '8 200 €']], total: ['Total général', '41 500 €'], legende: 'Le rapport relie chaque vendeur à ses ventes via la relation : Excel va chercher les montants tout seul.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour créer un TCD multi-tables, il est impératif de...',
+      visuel: { type: 'question', options: ['définir des relations entre les tables dans le Modèle de données avant de créer le TCD', 'fusionner manuellement les plages avant', 'placer toutes les données dans la même feuille'], bonne: 0, explication: 'Le TCD multi-tables s\'appuie sur le Modèle de données et les relations entre tables (via une clé partagée) : c\'est ce qui lui permet de combiner les sources.' } },
+    { humeur: 'fier', dit: 'Tu relies plusieurs tables et tu bâtis un rapport consolidé interactif. La ceinture bleue est à toi ! Bravo ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS }
