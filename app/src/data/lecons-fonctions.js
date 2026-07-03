@@ -2665,6 +2665,11 @@ const GERERFEUILLES = {
       visuel: { type: 'encart', label: 'Attention', texte: 'La suppression d\'une feuille est **définitive** : Ctrl + Z ne la récupère pas. Vérifie bien qu\'elle ne contient pas de données importantes avant de valider.' },
     },
     {
+      humeur: 'pensif',
+      dit: 'Un réflexe de prudence. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si tu supprimes une feuille par erreur, Ctrl + Z la récupère.', bonne: false, explication: 'Non : la suppression d\'une feuille est définitive, Ctrl + Z ne la ramène pas. Vérifie toujours son contenu avant de la supprimer.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'Pour **réorganiser** l\'ordre des feuilles : le glisser-déposer.',
       visuel: {
@@ -2694,6 +2699,11 @@ const GERERFEUILLES = {
     },
     {
       humeur: 'accueil',
+      dit: 'À toi. Tu fais clic droit sur un onglet pour le dupliquer. **Clique l\'entrée qui ouvre la copie.**',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Déplacer ou copier… »', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { icone: '📑', label: 'Déplacer ou copier…' }, { label: 'Couleur d\'onglet ▸' }], cible: 3, explication: 'Dans la fenêtre qui s\'ouvre, coche « Créer une copie » pour dupliquer sans toucher à l\'original.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Pour t\'y retrouver d\'un coup d\'œil, tu peux **colorer** les onglets.',
       visuel: {
         type: 'methode',
@@ -2705,6 +2715,11 @@ const GERERFEUILLES = {
           { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Synthèse'], actif: 'Synthèse', items: [], couleurs: { Janvier: '#41c1ba', Février: '#d97706', Synthèse: '#8b5cf6' }, legende: 'Résultat : des onglets colorés pour repérer tes feuilles en un instant.' } },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un dernier réflexe pratique. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Maintenir Ctrl (⌥ Option sur Mac) en faisant glisser un onglet crée une copie de la feuille.', bonne: true, explication: 'Vrai : Ctrl + glisser (⌥ + glisser sur Mac) duplique la feuille en un geste. Sans la touche, tu la déplaces seulement.' },
     },
     {
       humeur: 'accueil',
@@ -2722,6 +2737,7 @@ const LIERFEUILLES = {
   exercices: [EX6.ex51],
   narration: [
     { humeur: 'accueil', dit: 'Lier une cellule, c\'est afficher dans une cellule la valeur d\'une autre cellule, qu\'elle soit sur la même feuille ou sur une autre. L\'énorme avantage : si la source change, le lien se met à jour tout seul.' },
+    { humeur: 'accueil', dit: 'On veut afficher un rappel du prix dans la colonne « Rappel prix ». **Clique la cellule qui va recevoir le lien.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule « Rappel prix » du clavier', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Article', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Rappel prix', entete: true }, A2: { t: 'Clavier' }, B2: { t: '30', num: true } }, cible: 'C2', explication: 'Oui, C2 : on y tapera =B2 pour afficher (et suivre) le prix de B2.' } },
     {
       humeur: 'pensif',
       dit: 'D\'abord, **lier dans la même feuille**.',
@@ -2756,6 +2772,11 @@ const LIERFEUILLES = {
       humeur: 'pensif',
       dit: 'Pourquoi c\'est si pratique :',
       visuel: { type: 'parties', items: [{ label: '**Automatisation** : si la cellule source change, le lien se met à jour partout, tout seul.' }, { label: '**Organisation** : tu centralises tes résultats dans une feuille « Synthèse », sans recopier à la main.' }, { label: '**Clarté** : tu vois toujours d\'où vient chaque chiffre.' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le grand intérêt du lien. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si tu modifies le total sur la feuille « Janvier », la cellule liée dans « Synthèse » se met à jour toute seule.', bonne: true, explication: 'Vrai : un lien pointe vers la source. Dès que la source change, toutes les cellules liées suivent, sans rien retoucher. C\'est tout l\'intérêt.' },
     },
     {
       humeur: 'accueil',
@@ -2793,6 +2814,11 @@ const GROUPEFEUILLES = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Tu fais clic droit sur un onglet pour tout sélectionner d\'un coup. **Clique la bonne entrée.**',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Sélectionner toutes les feuilles »', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { label: 'Déplacer ou copier…' }, '-', { icone: '☑', label: 'Sélectionner toutes les feuilles' }], cible: 5, explication: 'Toutes les feuilles passent en groupe de travail : ce que tu tapes ou mets en forme s\'applique alors à toutes en même temps.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Shift ou Ctrl, quelle différence ? C\'est important, ce n\'est pas la même chose :',
       visuel: { type: 'encart', label: 'À retenir', liste: ['**Shift** = une **plage continue** : la première feuille, la dernière, et TOUT ce qui est entre les deux.', '**Ctrl** (⌘ sur Mac) = des feuilles **séparées** : seulement celles que tu cliques, une par une.'] },
@@ -2801,6 +2827,11 @@ const GROUPEFEUILLES = {
       humeur: 'pensif',
       dit: 'À garder en tête quand tu es en groupe de travail :',
       visuel: { type: 'encart', label: 'Attention', texte: 'Tant que le groupe est actif, **tout ce que tu tapes ou mets en forme se répercute sur toutes les feuilles sélectionnées**. Très pratique, mais à manier avec soin pour ne pas écraser une feuille par erreur.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le piège du groupe de travail. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'En groupe de travail, si tu tapes une valeur dans une cellule, elle ne s\'écrit que sur la feuille visible.', bonne: false, explication: 'Non : elle s\'écrit sur TOUTES les feuilles du groupe, à la même cellule. C\'est puissant pour saisir en une fois, mais attention à ne pas écraser des données. Pense à dissocier après.' },
     },
     {
       humeur: 'accueil',
@@ -2871,6 +2902,11 @@ const LIAISONSCLASSEURS = {
       visuel: { type: 'encart', label: 'Bon à savoir', liste: ['**[Ventes.xlsx]** entre crochets : le nom du classeur source.', '**Modèle** : la feuille dans ce classeur.', '**$B$5** : la cellule (les « $ » figent la référence).', 'Si le classeur source est fermé, Excel affiche en plus le chemin complet du fichier.'] },
     },
     {
+      humeur: 'pensif',
+      dit: 'Décodons la syntaxe. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans =[Ventes.xlsx]Modèle!$B$5, la partie entre crochets [Ventes.xlsx] désigne le nom du CLASSEUR source.', bonne: true, explication: 'Vrai : les crochets encadrent le fichier source, « Modèle » est la feuille, et « !$B$5 » la cellule. Si le fichier est fermé, Excel ajoute même son chemin complet.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'Pour **vérifier ou modifier** tes liaisons (par exemple si un fichier a été déplacé).',
       visuel: {
@@ -2883,6 +2919,11 @@ const LIAISONSCLASSEURS = {
           { note: 'Pour chaque liaison, tu peux : **mettre à jour** les valeurs, **modifier la source** (changer de fichier), ou **rompre la liaison** (figer la valeur).', label: 'Bon à savoir' },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour gérer tes liaisons, dans l\'onglet **Données**, **clique le bouton Liaisons de classeur.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Liaisons de classeur', actif: 'Données', groupeNom: 'Requêtes et connexions', groupes: [{ icone: '🔄', label: 'Actualiser tout' }, { icone: '🔗', label: 'Liaisons de classeur' }], cible: 'Liaisons de classeur', explication: 'De là, tu peux mettre à jour, modifier la source (si le fichier a bougé), ou rompre une liaison pour figer la valeur.' },
     },
     {
       humeur: 'accueil',
@@ -2967,6 +3008,11 @@ const CALCULS3D = {
     },
     {
       humeur: 'pensif',
+      dit: 'Une limite de la méthode 2 (Shift). **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'La référence 3D =SOMME(AIN:Cantal!C10) additionne uniquement les feuilles AIN et Cantal, pas celles entre les deux.', bonne: false, explication: 'Non : le « : » couvre AIN, Cantal ET toutes les feuilles situées entre les deux. Pour en exclure une, utilise la méthode 1 (le point-virgule) ou réorganise les onglets.' },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Effet des modifications de feuilles sur une référence 3D, par exemple **=SOMME(Feuil2:Feuil6!C10)** :',
       visuel: { type: 'encart', label: 'Bon à savoir', liste: ['Une feuille **ajoutée ou glissée ENTRE** Feuil2 et Feuil6 est automatiquement **incluse** dans le calcul.', 'Une feuille ajoutée **avant Feuil2 ou après Feuil6** n\'est **pas** prise en compte.', 'Déplacer une feuille **hors** de la plage la retire du calcul.'] },
     },
@@ -3023,6 +3069,11 @@ const PROTEGERFEUILLES = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Dans l\'onglet **Révision**, **clique le bouton qui protège la feuille.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Protéger la feuille', actif: 'Révision', groupeNom: 'Protéger', groupes: [{ icone: '🛡', label: 'Protéger la feuille' }, { icone: '🔒', label: 'Protéger le classeur' }, { icone: '✎', label: 'Autoriser plages' }], cible: 'Protéger la feuille', explication: 'Tu choisis alors les actions autorisées et, si tu veux, un mot de passe. Sans mot de passe, n\'importe qui peut ôter la protection.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Tu veux laisser certaines cellules modifiables malgré la protection ? Utilise les **autorisations de plage** (facultatif).',
       visuel: {
@@ -3042,6 +3093,11 @@ const PROTEGERFEUILLES = {
       humeur: 'pensif',
       dit: 'Feuille ou classeur, que protège-t-on au juste ? Deux choses différentes :',
       visuel: { type: 'encart', label: 'À retenir', liste: ['**Protéger la feuille** = verrouille les **cellules** d\'une feuille (on ne peut plus modifier son contenu).', '**Protéger le classeur** = verrouille la **structure** du fichier (on ne peut plus ajouter, supprimer, renommer ni déplacer les onglets).'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Ne confondons pas les deux. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour empêcher qu\'on ajoute, supprime ou renomme des onglets, il faut « Protéger le classeur » (pas « Protéger la feuille »).', bonne: true, explication: 'Vrai : protéger le CLASSEUR verrouille la structure (les onglets). Protéger la FEUILLE verrouille le contenu des cellules. Deux protections complémentaires.' },
     },
     {
       humeur: 'accueil',
@@ -3073,6 +3129,11 @@ const PROTEGERFEUILLES = {
           { note: 'Pour vraiment empêcher l\'accès, combine **masquer + protéger le classeur** (avec mot de passe) : la feuille masquée ne pourra plus être réaffichée sans le mot de passe.', label: 'Bon à savoir' },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Sur la vraie sécurité. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Masquer une feuille suffit à empêcher les autres d\'y accéder.', bonne: false, explication: 'Non : n\'importe qui peut faire clic droit > Afficher… et la retrouver. Pour vraiment la bloquer, combine masquer + protéger le classeur avec un mot de passe.' },
     },
     {
       humeur: 'accueil',
