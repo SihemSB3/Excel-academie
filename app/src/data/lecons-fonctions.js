@@ -3747,6 +3747,11 @@ const CREERGRAPHIQUE = {
     },
     {
       humeur: 'accueil',
+      dit: 'À toi. Dans l\'onglet **Insertion > groupe Graphiques**, **clique le bouton Histogramme** (des barres verticales).',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Histogramme', actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Histogramme' }, { icone: '📈', label: 'Courbe' }, { icone: '🥧', label: 'Secteurs' }, { icone: '⭐', label: 'Graphique recommandé' }], cible: 'Histogramme', explication: 'L\'histogramme (barres verticales) est parfait pour comparer des valeurs. Un clic ouvre ses sous-types (groupé, empilé…).' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Excel propose plusieurs **catégories** de graphiques. Chacune raconte une histoire différente :',
       visuel: { type: 'typesgraphiques' },
     },
@@ -3769,6 +3774,11 @@ const CREERGRAPHIQUE = {
           { note: 'Parfait quand tu débutes : tu choisis parmi des propositions déjà adaptées à tes données.', label: 'Bon à savoir' },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Sur l\'option qui aide les débutants. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '« Graphique recommandé » analyse tes données et te propose les types de graphiques les mieux adaptés.', bonne: true, explication: 'Vrai : Excel regarde ta plage et suggère 3 à 5 graphiques pertinents. Idéal quand tu débutes : tu choisis parmi des propositions déjà adaptées.' },
     },
     {
       humeur: 'accueil',
@@ -3818,6 +3828,11 @@ const DEPLACERGRAPHIQUE = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Sur les poignées. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Les poignées d\'angle redimensionnent largeur ET hauteur ensemble ; les poignées latérales, une seule dimension.', bonne: true, explication: 'Vrai : un coin change les deux dimensions à la fois (et, avec Shift, garde les proportions). Une poignée du milieu d\'un côté ne change qu\'une dimension.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Quelle touche maintenir pendant le glissement pour redimensionner sans déformer le graphique ?',
       visuel: { type: 'question', options: ['Alt (Mac : ⌥)', 'Ctrl (Mac : ⌘)', 'Shift', 'Tab'], bonne: 2, explication: 'Shift, maintenue en glissant une poignée d\'angle, conserve les proportions du graphique.' },
@@ -3844,6 +3859,11 @@ const MODIFIERGRAPHIQUE = {
     },
     {
       humeur: 'pensif',
+      dit: 'Distinguons les deux onglets. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour changer le TYPE de graphique (histogramme → courbe…), on va dans l\'onglet « Création de graphique ».', bonne: true, explication: 'Vrai : « Création de graphique » gère le type, la source de données, la disposition. L\'onglet « Format » (Mise en forme) s\'occupe des couleurs, styles et de l\'allure des éléments.' },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Pour modifier **un élément précis** (une série, un axe, le titre…), voici le chemin complet.',
       visuel: {
         type: 'methode',
@@ -3861,6 +3881,11 @@ const MODIFIERGRAPHIQUE = {
           { capture: { type: 'graphique', cats: ['Jan', 'Fév', 'Mar', 'Avr'], series: [{ nom: 'Ventes', couleur: '#e8853a', vals: [12, 19, 15, 24] }], titre: 'Ventes par mois', legende: 'APRÈS : la série a pris le remplissage orange choisi dans le volet. Compare avec le départ !' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Tu as ouvert la liste « Sélection active » et tu veux mettre en forme les barres. **Clique l\'élément à sélectionner.**',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Série « Ventes » » (les barres)', items: [{ label: 'Zone de graphique' }, { label: 'Zone de traçage' }, { label: 'Série « Ventes »' }, { label: 'Axe vertical (Valeurs)' }, { label: 'Titre du graphique' }, { label: 'Légende' }], cible: 2, explication: 'La série « Ventes », ce sont les barres. Une fois sélectionnée, « Mise en forme de la sélection » ouvre le volet pour changer leur couleur.' },
     },
     {
       humeur: 'pensif',
@@ -3918,6 +3943,11 @@ const MODIFIERGRAPHIQUE = {
     },
     {
       humeur: 'pensif',
+      dit: 'Le rôle du bouton ＋. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Le bouton ＋ à côté du graphique sert à ajouter (ou retirer) des éléments : titre, légende, étiquettes de données, quadrillage…', bonne: true, explication: 'Vrai : le ＋ liste tous les éléments du graphique. Tu coches ce que tu veux afficher (étiquettes, table de données, courbe de tendance…) et décoches le reste.' },
+    },
+    {
+      humeur: 'pensif',
       dit: 'La 2e icône flottante, le **🖌 pinceau**, change le look en un clin d\'œil, sans quitter le graphique.',
       visuel: {
         type: 'methode',
@@ -3945,6 +3975,11 @@ const MODIFIERGRAPHIQUE = {
           { capture: { type: 'graphique', cats: ['Jan', 'Fév', 'Mar'], series: [{ nom: 'Ventes', vals: [12, 19, 15] }], titre: 'Ventes par mois', legende: 'APRÈS : « Avr » est masqué du graphique (avant, il y avait 4 barres ; les données sources n\'ont pas bougé).' } },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Ce que fait vraiment le filtre. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Décocher « Avr » dans le filtre du graphique supprime la ligne « Avr » de ton tableau de données.', bonne: false, explication: 'Non : le filtre du graphique MASQUE seulement « Avr » de l\'affichage. Tes données sources restent intactes ; recoche-le et la barre revient.' },
     },
     {
       humeur: 'pensif',
@@ -4011,6 +4046,11 @@ const AXESGRAPHIQUE = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Dans la liste « Sélection active », **clique l\'élément qui correspond à l\'échelle des valeurs.**',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Axe vertical (Valeurs) »', items: [{ label: 'Zone de graphique' }, { label: 'Zone de traçage' }, { label: 'Axe horizontal (Catégories)' }, { label: 'Axe vertical (Valeurs)' }, { label: 'Titre du graphique' }, { label: 'Légende' }], cible: 3, explication: 'L\'axe vertical porte les valeurs (les euros). Le sélectionner ainsi évite de le rater à la souris, car c\'est un élément très fin.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Un dernier point sur l\'échelle. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'Monter le Minimum de l\'axe (ex. démarrer à 10 au lieu de 0) permet de « zoomer » sur les écarts entre les barres.', bonne: true, explication: 'En partant de plus haut, la même différence occupe plus de hauteur : les écarts sautent aux yeux. À manier honnêtement, car ça amplifie visuellement les différences !' },
@@ -4060,6 +4100,16 @@ const SERIESGRAPHIQUE = {
           { capture: { type: 'intervertirgraphique' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans **Création de graphique > groupe Données**, **clique le bouton qui échange lignes et colonnes.**',
+      visuel: { type: 'cliquecible', support: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'], consigne: 'Clique « Intervertir les lignes/colonnes »', actif: 'Création de graphique', groupeNom: 'Données', groupes: [{ icone: '🔁', label: 'Intervertir lignes/colonnes' }, { icone: '⊞', label: 'Sélectionner données' }], cible: 'Intervertir lignes/colonnes', explication: 'D\'un clic, ce qui était en série (les produits) devient les catégories, et inversement. Un autre point de vue sur les mêmes chiffres.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le bon réflexe. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '« Intervertir les lignes/colonnes » modifie tes données sources dans le tableau.', bonne: false, explication: 'Non : ça change seulement la façon de LIRE le graphique (produits en séries ou en catégories). Le tableau de données, lui, ne bouge pas.' },
     },
     {
       humeur: 'pensif',
@@ -4139,6 +4189,11 @@ const DEPLACERIMPRIMER = {
     },
     {
       humeur: 'pensif',
+      dit: 'Un piège fréquent à l\'impression. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si tu lances l\'impression SANS avoir sélectionné le graphique, Excel imprime toute la feuille (données comprises), pas seulement le graphique.', bonne: true, explication: 'Vrai : pour n\'imprimer QUE le graphique, sélectionne-le d\'abord, puis vérifie « Imprimer la sélection ». Sinon, c\'est « Imprimer les feuilles actives » (toute la feuille).' },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Pour **supprimer** un graphique.',
       visuel: {
         type: 'methode',
@@ -4185,6 +4240,16 @@ const MIXTESPARKLINE = {
           { capture: { type: 'graphique', forme: 'mixte', ...GRAPH_MIXTE, titre: 'CA et volume', montrerLegende: true, legende: 'Chaque série lit son propre axe : plus d\'écrasement.' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour superposer deux types de graphiques, dans l\'onglet **Insertion**, **clique le bouton Graphique combiné.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Graphique combiné', actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Histogramme' }, { icone: '📈', label: 'Courbe' }, { icone: '🔀', label: 'Graphique combiné' }], cible: 'Graphique combiné', explication: 'Le graphique combiné mélange les types (barres + courbe) et permet l\'axe secondaire, pour deux grandeurs d\'échelles très différentes.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le rôle de l\'axe secondaire. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans un graphique mixte, l\'axe secondaire sert quand les deux séries ont des échelles très différentes (ex. un CA en milliers et un nombre de ventes).', bonne: true, explication: 'Vrai : sans lui, la petite série serait écrasée. L\'axe secondaire (à droite) lui donne sa propre échelle, et les deux séries se lisent bien.' },
     },
     {
       humeur: 'accueil',
