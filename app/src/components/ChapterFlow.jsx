@@ -17,7 +17,7 @@ import { LECONS_FONCTIONS } from '../data/lecons-fonctions'
 // Un chapitre = un parcours. Mobile : carte verticale. PC : chemin horizontal animé.
 export default function ChapterFlow({ chapitre, onQuitter }) {
   const ch = getChapitre(chapitre)
-  const { etat, debloquerCeinture, validerEcran } = useProgressCtx()
+  const { etat, debloquerCeinture, validerEcran, enregistrerKata } = useProgressCtx()
   const [actif, setActif] = useState(null)
   const [celebration, setCelebration] = useState(false)
   const [kataFini, setKataFini] = useState(null)
@@ -68,6 +68,8 @@ export default function ChapterFlow({ chapitre, onQuitter }) {
         titre={kataFini.titre}
         xp={kataFini.xp}
         dejaFait={kataFini.dejaFait}
+        stats={kataFini.stats}
+        streak={etat.streak?.serie || 0}
         fait={ch.modules.filter(estFait).length}
         total={ch.modules.length}
         ceinture={ch.recompense.ceinture_debloquee}
@@ -117,10 +119,11 @@ export default function ChapterFlow({ chapitre, onQuitter }) {
       <LeconNarree
         lecon={LECONS_FONCTIONS[m.lecon]}
         onQuitter={retour}
-        onTermine={() => {
+        onTermine={(stats) => {
           const dejaFait = Boolean(etat.ecransValides[m.id])
           validerEcran(m.id, m.xp || 0)
-          setKataFini({ titre: LECONS_FONCTIONS[m.lecon].titre, xp: m.xp || 0, dejaFait })
+          enregistrerKata(m.id, stats)
+          setKataFini({ titre: LECONS_FONCTIONS[m.lecon].titre, xp: m.xp || 0, dejaFait, stats })
           window.scrollTo({ top: 0 })
         }}
       />

@@ -7,6 +7,21 @@ const DEFAUT = {
   ceintures: [], // ex: ['blanche']
   ecransValides: {}, // ex: { 'ch1-lex-01': true }
   chapitresTermines: [], // ex: [1]
+  // Journal d'apprentissage : la mémoire du Shifu. Par kata : nombre de passages,
+  // erreurs cumulées et du dernier passage, temps passé (secondes), date du dernier passage.
+  journal: {}, // ex: { 'ch7-m2': { fois: 2, erreursTotal: 3, dernierErreurs: 0, dureeTotale: 240, dernierLe: '2026-07-02' } }
+  streak: { jour: null, serie: 0 }, // série de jours consécutifs avec au moins un kata terminé
+}
+
+// 'AAAA-MM-JJ' en heure locale (toISOString basculerait de jour selon le fuseau)
+function jourLocal(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+function estVeille(jour, aujourdhui) {
+  const d = new Date(`${aujourdhui}T12:00:00`)
+  d.setDate(d.getDate() - 1)
+  return jour === jourLocal(d)
 }
 
 function charger() {
@@ -55,7 +70,36 @@ export function useProgress() {
     })
   }, [])
 
+  // Consigne un passage de kata dans le journal + met à jour la série de jours.
+  // stats = { erreurs, duree } (duree en secondes), fournies par LeconNarree.
+  const enregistrerKata = useCallback((id, stats = {}) => {
+    const erreurs = Math.max(0, stats.erreurs || 0)
+    const duree = Math.max(0, stats.duree || 0)
+    setEtat((s) => {
+      const avant = s.journal[id] || { fois: 0, erreursTotal: 0, dernierErreurs: 0, dureeTotale: 0, dernierLe: null }
+      const auj = jourLocal()
+      let streak = s.streak
+      if (streak.jour !== auj) {
+        streak = { jour: auj, serie: estVeille(streak.jour, auj) ? streak.serie + 1 : 1 }
+      }
+      return {
+        ...s,
+        journal: {
+          ...s.journal,
+          [id]: {
+            fois: avant.fois + 1,
+            erreursTotal: avant.erreursTotal + erreurs,
+            dernierErreurs: erreurs,
+            dureeTotale: avant.dureeTotale + duree,
+            dernierLe: auj,
+          },
+        },
+        streak,
+      }
+    })
+  }, [])
+
   const reinitialiser = useCallback(() => setEtat({ ...DEFAUT }), [])
 
-  return { etat, validerEcran, estValide, debloquerCeinture, reinitialiser }
+  return { etat, validerEcran, estValide, debloquerCeinture, enregistrerKata, reinitialiser }
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Bouton } from './ui'
 import { ShifuDit } from './Shifu'
 import { coloreFormule } from '../lib/excel'
@@ -4129,8 +4129,79 @@ function ErreursExcel({ v }) {
   )
 }
 
+// Deux tableaux liés par une clé commune (le décor des fonctions de recherche, ch.11).
+// t1/t2 : { titre, entetes, lignes, cle (index de colonne), valeur (index) }.
+// horizontal:true sur t2 = tableau en lignes (clé sur la 1re LIGNE, pour RECHERCHEH).
+function DeuxTableaux({ v }) {
+  const { t1, t2, legende } = v
+  const Table = ({ t, horizontal }) => (
+    <div className="min-w-0">
+      <p className="mb-1 text-center text-[10px] font-black uppercase tracking-wide text-navy/45">{t.titre}</p>
+      <div className="overflow-hidden rounded-md border border-navy/15 bg-white shadow">
+        <table className="w-full border-collapse text-[10.5px]">
+          <tbody>
+            {[t.entetes, ...t.lignes].map((row, r) => (
+              <tr key={r}>
+                {row.map((cell, c) => {
+                  const estEntete = horizontal ? c === 0 : r === 0
+                  const estCle = horizontal ? r === t.cle : c === t.cle
+                  const estVal = t.valeur != null && (horizontal ? r === t.valeur : c === t.valeur)
+                  return (
+                    <td key={c} className={`border-b border-navy/10 px-2 py-1 ${estEntete ? 'bg-navy/5 font-bold text-navy' : 'text-navy/80'} ${estCle ? 'bg-mint/20' : ''} ${estVal ? 'bg-amber-400/20' : ''}`}>{cell || ' '}</td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-1 flex justify-center gap-2 text-[9px] font-bold">
+        <span className="rounded-full bg-mint/20 px-2 py-0.5 text-mint-dark">🔑 clé commune</span>
+        {t.valeur != null && <span className="rounded-full bg-amber-400/20 px-2 py-0.5 text-amber-700">→ valeur à extraire</span>}
+      </div>
+    </div>
+  )
+  return (
+    <div className="mt-3">
+      <div className="grid gap-3 sm:grid-cols-2 sm:items-start">
+        <Table t={t1} horizontal={t1.horizontal} />
+        <Table t={t2} horizontal={t2.horizontal} />
+      </div>
+      {legende && <p className="mt-2 text-center text-xs text-navy/60">{legende}</p>}
+    </div>
+  )
+}
+
+// La fenêtre « Nouveau nom » (Formules > Définir un nom, ou clic droit > Définir un nom).
+function DefinirNom({ v }) {
+  const { nom = 'PrixHT', zone = 'Classeur', reference = '=Feuil1!$B$2:$B$11', focus } = v
+  const Champ = ({ label, valeur, cle, deroulant }) => (
+    <div className="grid items-center gap-2" style={{ gridTemplateColumns: '90px 1fr' }}>
+      <span className="text-right text-navy/70">{label}</span>
+      <span className={`flex items-center justify-between rounded-sm border bg-white px-2 py-1 font-mono ${focus === cle ? 'border-2 border-mint ring-1 ring-mint' : 'border-navy/25'}`}>
+        <span>{valeur}</span>
+        {deroulant && <span className="text-navy/40">▾</span>}
+      </span>
+    </div>
+  )
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Nouveau nom</span><span className="text-navy/40">✕</span></div>
+      <div className="space-y-1.5 bg-white p-3">
+        <Champ label="Nom :" valeur={nom} cle="nom" />
+        <Champ label="Zone :" valeur={zone} cle="zone" deroulant />
+        <Champ label="Fait référence à :" valeur={reference} cle="reference" />
+        <div className="mt-2 flex justify-end gap-2"><span className={`rounded-sm px-4 py-0.5 ${focus === 'ok' ? 'border-2 border-mint bg-mint/15 font-bold' : 'border-2 border-[#0a63c9] bg-[#f0f0f0]'}`}>OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+      </div>
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
+  if (v.type === 'deuxtableaux') return <DeuxTableaux v={v} />
+  if (v.type === 'definirnom') return <DefinirNom v={v} />
+  if (v.type === 'gestionnairenoms') return <GestionnaireNoms v={v} />
   if (v.type === 'mfctableau') return <MFCTableau v={v} />
   if (v.type === 'mfcmenu') return <MFCMenu v={v} />
   if (v.type === 'mfcdialog') return <MFCDialog v={v} />
@@ -4221,7 +4292,6 @@ function Visuel({ v }) {
   if (v.type === 'stylenom') return <StyleNom />
   if (v.type === 'themes') return <Themes />
   if (v.type === 'champs') return <Champs v={v} />
-  if (v.type === 'gestionnairenoms') return <GestionnaireNoms v={v} />
   if (v.type === 'listedialog') return <ListeDialog v={v} />
   if (v.type === 'barreformule') return <BarreFormule />
   if (v.type === 'barrefx') return <BarreFx v={v} />
@@ -4328,7 +4398,7 @@ const ENCOURAGEMENTS_Q = ['Pas celle-là… observe bien et retente ! 🧘', 'Pr
 
 // « Trouve l'erreur » : l'élève doit CLIQUER la cellule fautive dans le tableau.
 // Après 2 essais ratés, l'indice s'affiche. Bloque le bouton Continuer jusqu'à trouver.
-function TrouveErreur({ v, onResolu }) {
+function TrouveErreur({ v, onResolu, onErreur }) {
   const { entetes = [], lignes = [], erreur, indice, explication, consigne } = v
   const [essais, setEssais] = useState([])
   const [trouve, setTrouve] = useState(false)
@@ -4340,6 +4410,7 @@ function TrouveErreur({ v, onResolu }) {
       onResolu && onResolu()
     } else if (!essais.includes(cle(r, c))) {
       setEssais((e) => [...e, cle(r, c)])
+      onErreur && onErreur()
     }
   }
   return (
@@ -4380,7 +4451,7 @@ function TrouveErreur({ v, onResolu }) {
 
 // « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
 // (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
-function ChoixTableau({ v, onResolu }) {
+function ChoixTableau({ v, onResolu, onErreur }) {
   const { options = [], bonne = 0, explication } = v
   const [essais, setEssais] = useState([])
   const [trouve, setTrouve] = useState(false)
@@ -4391,6 +4462,7 @@ function ChoixTableau({ v, onResolu }) {
       onResolu && onResolu()
     } else if (!essais.includes(i)) {
       setEssais((e) => [...e, i])
+      onErreur && onErreur()
     }
   }
   return (
@@ -4435,7 +4507,7 @@ function ChoixTableau({ v, onResolu }) {
 }
 
 // « Vrai ou faux ? » : une affirmation, deux gros boutons. Se trompe ? Il retente.
-function VraiFaux({ v, onResolu }) {
+function VraiFaux({ v, onResolu, onErreur }) {
   const { affirmation, bonne, explication } = v
   const [choix, setChoix] = useState(null)
   const [trouve, setTrouve] = useState(false)
@@ -4448,6 +4520,7 @@ function VraiFaux({ v, onResolu }) {
       onResolu && onResolu()
     } else {
       setRate(true)
+      onErreur && onErreur()
     }
   }
   return (
@@ -4480,7 +4553,7 @@ function VraiFaux({ v, onResolu }) {
   )
 }
 
-function Question({ q, onResolu }) {
+function Question({ q, onResolu, onErreur }) {
   const [essais, setEssais] = useState([])
   const [trouve, setTrouve] = useState(false)
   const clic = (i) => {
@@ -4490,6 +4563,7 @@ function Question({ q, onResolu }) {
       onResolu && onResolu()
     } else if (!essais.includes(i)) {
       setEssais((e) => [...e, i])
+      onErreur && onErreur()
     }
   }
   return (
@@ -4585,6 +4659,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
     : lecon.narration
   const [etape, setEtape] = useState(0)
   const [resolu, setResolu] = useState(false)
+  // Pour le journal d'apprentissage : erreurs sur les interactions + temps passé.
+  const erreursRef = useRef(0)
+  const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
   const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux'].includes(s.visuel?.type) && !resolu
@@ -4594,8 +4671,17 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
     window.scrollTo({ top: 0 })
   }, [etape])
 
+  const noterErreur = () => {
+    erreursRef.current += 1
+  }
+  const stats = (passe = false) => ({
+    erreurs: erreursRef.current,
+    duree: Math.round((Date.now() - debutRef.current) / 1000),
+    passe,
+  })
+
   const avancer = () => {
-    if (dernier) (onTermine || onQuitter)()
+    if (dernier) (onTermine || onQuitter)(stats())
     else setEtape((e) => e + 1)
   }
   const reculer = () => setEtape((e) => Math.max(0, e - 1))
@@ -4608,7 +4694,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
         </button>
         <p className="flex-1 truncate text-xs font-bold uppercase tracking-wide text-navy/50">{lecon.titre}</p>
         <button
-          onClick={() => (onTermine || onQuitter)()}
+          onClick={() => (onTermine || onQuitter)(stats(true))}
           className="shrink-0 text-xs font-bold text-navy/40 transition hover:text-navy"
         >
           Je connais, passer ›
@@ -4619,17 +4705,17 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
         <div className="flex min-h-[320px] flex-col" key={etape}>
           <ShifuDit message={s.dit} humeur={s.humeur || 'accueil'} size={72} />
           {s.visuel?.type === 'question' ? (
-            <Question q={s.visuel} onResolu={() => setResolu(true)} />
+            <Question q={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'elargir' ? (
             <Elargir v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'doubleclic' ? (
             <DoubleClic onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'trouvererreur' ? (
-            <TrouveErreur v={s.visuel} onResolu={() => setResolu(true)} />
+            <TrouveErreur v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'choixtableau' ? (
-            <ChoixTableau v={s.visuel} onResolu={() => setResolu(true)} />
+            <ChoixTableau v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'vraifaux' ? (
-            <VraiFaux v={s.visuel} onResolu={() => setResolu(true)} />
+            <VraiFaux v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : (
             <Visuel v={s.visuel} />
           )}

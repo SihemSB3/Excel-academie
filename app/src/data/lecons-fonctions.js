@@ -151,6 +151,11 @@ const CALCULS = {
     },
     { humeur: 'accueil', dit: 'Exemple : dans =5+2*3, on calcule d\'abord 2×3 = 6, puis on ajoute 5 → 11. Avec des parenthèses, =(5+2)*3 fait d\'abord 5+2 = 7, puis ×3 → 21.', visuel: { type: 'formule', formule: '=5+2*3' } },
     {
+      humeur: 'pensif',
+      dit: 'Petit réflexe à vérifier. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Une formule commence toujours par le signe =.', bonne: true, explication: 'Sans le =, Excel range ce que tu tapes comme du simple texte. Avec lui, il comprend « calcule-moi ça ».' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Combien fait =2+3*4 ?',
       visuel: { type: 'question', options: ['14', '20'], bonne: 0, explication: '× passe avant + : on fait d\'abord 3×4 = 12, puis on ajoute 2 = 14.' },
@@ -790,6 +795,19 @@ const NOMBRES = {
       visuel: { type: 'encart', label: 'Erreurs fréquentes', liste: ['Oublier le format « % » : un 0,45 sera mal interprété (0,45 au lieu de 45 %).', 'Mélanger les formats dans une même colonne (du nombre et du texte).', 'Mettre trop de décimales : une surcharge visuelle inutile.'] },
     },
     {
+      humeur: 'pensif',
+      dit: 'À toi de jouer : un prix a été saisi **sans le bon format**. **Clique-le !**',
+      visuel: {
+        type: 'trouvererreur',
+        consigne: 'Trouve le prix qui n\'est pas au format monétaire',
+        entetes: ['Produit', 'Prix'],
+        lignes: [['Clavier', '45,00 €'], ['Écran', '1500'], ['Souris', '12,50 €']],
+        erreur: { ligne: 1, col: 1 },
+        indice: 'Compare l\'affichage des trois prix : lequel n\'a ni séparateur de milliers ni € ?',
+        explication: '« 1500 » est un nombre brut : applique le format Monétaire (Accueil > groupe Nombre) pour obtenir « 1 500,00 € », lisible et cohérent avec le reste de la colonne.',
+      },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Tu as 0,75 dans une cellule et tu veux afficher 75 %. Tu appliques le format...',
       visuel: { type: 'question', options: ['Pourcentage', 'Monétaire'], bonne: 0, explication: 'Le format Pourcentage transforme 0,75 en 75 %. Le format Monétaire, lui, ajoute le symbole € (ou $).' },
@@ -1181,6 +1199,11 @@ const FONCTIONSSIMPLES = {
           { note: 'une erreur de syntaxe. Vérifie les parenthèses, les points-virgules (;) et la plage de cellules.', label: 'Autre cause possible' },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Réfléchis bien. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '=MOYENNE(B2:B4) donne exactement le même résultat que =SOMME(B2:B4)/3.', bonne: true, explication: 'La moyenne, c\'est la somme divisée par le nombre de valeurs. MOYENNE fait les deux d\'un coup, et s\'adapte toute seule si la plage grandit.' },
     },
     {
       humeur: 'accueil',
@@ -1841,6 +1864,11 @@ const ARRONDIS = {
       visuel: { type: 'encart', label: 'ARRONDI vs TRONQUE', liste: ['**ARRONDI** regarde la valeur et arrondit au plus proche : 12,8 → **13**.', '**TRONQUE** ne regarde rien, il coupe : 12,8 → **12**.', 'Pour un nombre positif, TRONQUE donne le même résultat qu\'ARRONDI.INF, mais c\'est une simple coupe, pas un arrondi.'] },
     },
     { humeur: 'accueil', dit: 'Côte à côte : la même valeur 12,8, traitée par les deux.', visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Valeur', entete: true }, B1: { t: 'ARRONDI', entete: true }, C1: { t: 'TRONQUE', entete: true }, A2: { t: '12,8', num: true }, B2: { t: '13', num: true, vert: true }, C2: { t: '12', num: true, vert: true } }, legende: 'ARRONDI(12,8;0) = 13, mais TRONQUE(12,8;0) = 12.' } },
+    {
+      humeur: 'pensif',
+      dit: 'Attention au piège. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '=ARRONDI(2,4 ; 0) donne 3.', bonne: false, explication: 'ARRONDI ne passe au-dessus qu\'à partir de ,5 : 2,4 devient 2. Pour forcer vers le haut quoi qu\'il arrive, c\'est ARRONDI.SUP.' },
+    },
     {
       humeur: 'accueil',
       dit: 'À toi. Quelle fonction arrondit **toujours vers le bas** ?',
@@ -2559,6 +2587,11 @@ const CALCULS3D = {
       visuel: { type: 'encart', label: 'Bon à savoir', liste: ['Une feuille **ajoutée ou glissée ENTRE** Feuil2 et Feuil6 est automatiquement **incluse** dans le calcul.', 'Une feuille ajoutée **avant Feuil2 ou après Feuil6** n\'est **pas** prise en compte.', 'Déplacer une feuille **hors** de la plage la retire du calcul.'] },
     },
     {
+      humeur: 'pensif',
+      dit: 'Voyons si la formule 3D n\'a plus de secret. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Une feuille ajoutée ENTRE « AIN » et « Cantal » entre automatiquement dans =SOMME(AIN:Cantal!C10).', bonne: true, explication: 'La référence 3D est vivante : tout ce qui se glisse entre les deux bornes est compté ; tout ce qui en sort est retiré.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Pour additionner la cellule C10 de toutes les feuilles, de « Feuil2 » à « Feuil6 », on écrit...',
       visuel: { type: 'question', options: ['=SOMME(Feuil2:Feuil6!C10)', '=SOMME(Feuil2+Feuil6+C10)'], bonne: 0, explication: 'Une référence 3D s\'écrit =SOMME(PremièreFeuille:DernièreFeuille!Cellule). Le « : » couvre toutes les feuilles entre les deux.' },
@@ -3060,6 +3093,11 @@ const FILTRERLISTE = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Une croyance à vérifier. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Filtrer une liste supprime les lignes qui ne correspondent pas au critère.', bonne: false, explication: 'Les lignes sont seulement MASQUÉES, jamais supprimées. Données > Effacer, et elles réapparaissent toutes.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Sur une liste classique, comment fais-tu apparaître les flèches de filtre ?',
       visuel: { type: 'question', options: ['Données > Trier et filtrer > Filtrer', 'Affichage > Figer les volets'], bonne: 0, explication: 'La commande Données > Filtrer ajoute les flèches de filtre dans chaque en-tête. (Un tableau de données, lui, les ajoute automatiquement.)' },
@@ -3461,6 +3499,11 @@ const AXESGRAPHIQUE = {
           { note: 'Ce volet **Mettre en forme…** marche pour **n\'importe quel élément** (série, axe, titre, légende) : remplissage, bordure, effets. C\'est aussi comme ça qu\'on personnalise le **style** en profondeur.', label: 'Bon à savoir' },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un dernier point sur l\'échelle. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Monter le Minimum de l\'axe (ex. démarrer à 10 au lieu de 0) permet de « zoomer » sur les écarts entre les barres.', bonne: true, explication: 'En partant de plus haut, la même différence occupe plus de hauteur : les écarts sautent aux yeux. À manier honnêtement, car ça amplifie visuellement les différences !' },
     },
     {
       humeur: 'accueil',
@@ -3993,6 +4036,11 @@ const TCDRELATIONS = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Tu as vu la magie opérer. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Sans les relations entre les tables, ce TCD n\'aurait pu totaliser les montants que par zone de vente, pas par vendeur.', bonne: true, explication: 'Le Montant vit dans T_ventes, qui ne connaît que la zone. C\'est la relation (clé Zones Vente) qui fait le pont jusqu\'aux vendeurs.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Pour créer un TCD multi-tables, il est impératif de...',
       visuel: { type: 'question', options: ['définir des relations entre les tables dans le Modèle de données avant de créer le TCD', 'fusionner manuellement les plages avant', 'placer toutes les données dans la même feuille'], bonne: 0, explication: 'Le TCD multi-tables s\'appuie sur le Modèle de données et les relations entre tables (via une clé partagée) : c\'est ce qui lui permet de combiner les sources.' } },
@@ -4417,6 +4465,11 @@ const NBSIENS = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Vérifions ta logique. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'NB.SI.ENS compte les lignes qui remplissent AU MOINS UN des critères.', bonne: false, explication: 'NB.SI.ENS exige TOUS les critères en même temps (une logique ET). Jean compte s\'il est homme ET célibataire ET gagne plus de 50 000 €.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. La fonction **NB.SI.ENS** sert à...',
       visuel: { type: 'question', options: ['additionner toutes les valeurs d\'une colonne', 'compter les cellules selon plusieurs critères', 'appliquer une mise en forme conditionnelle'], bonne: 1, explication: 'NB.SI.ENS compte le nombre de lignes qui satisfont plusieurs critères. Pour additionner, c\'est SOMME.SI.ENS.' },
@@ -4523,4 +4576,539 @@ const SIERREUR = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR }
+// ===================== CHAPITRE 11 : LES FONCTIONS DE RECHERCHE (ceinture marron) =====================
+const U11 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX11 = {
+  ex77: { titre: 'Exercice 77 · La recherche V', url: U11('1ImjZcJYdbLED6cFJ-uYLdgsGtdSa8Rr-') },
+  ex78: { titre: 'Exercice 78 · La recherche V', url: U11('1cEVDpasec3uz9h1uI95VPW_JTW-dmJJ4') },
+  ex79: { titre: 'Exercice 79 · La recherche V', url: U11('1pOTcfkh3AsDBJMMMp2stssvWj7NNkLli') },
+  ex80: { titre: 'Exercice 80 · La recherche X', url: U11('1mlK1qB-GuQ7JOz9cepQl2R4ghcO0QdHJ') },
+  ex81: { titre: 'Exercice 81 · La recherche X à 2 critères', url: U11('1UsDUnk-UGJ9rapkepMLemeWaPXFNR04N') },
+  ex82: { titre: 'Exercice 82 · La recherche H', url: U11('1dkTbFnEUwAMPnrSIy_WfnQYAjxc-0qX6') },
+}
+
+// Les deux tableaux fil rouge du chapitre : Commandes (principal) + Stock (référentiel).
+const T11_COMMANDES = {
+  titre: 'Tableau 1 · feuille Commandes',
+  entetes: ['Code article', 'Produit', 'Prix'],
+  lignes: [
+    ['A1001', 'Clavier sans fil', '24,90 €'],
+    ['A1002', 'Souris ergonomique', '39,90 €'],
+    ['A1003', 'Écran 24 pouces', '149,00 €'],
+  ],
+  cle: 0,
+}
+const T11_STOCK = {
+  titre: 'Tableau 2 · feuille Stock',
+  entetes: ['Code article', 'Quantité'],
+  lignes: [
+    ['A1001', '5'],
+    ['A1003', '12'],
+    ['A1004', '8'],
+    ['A1005', '20'],
+  ],
+  cle: 0,
+  valeur: 1,
+}
+
+// --- Leçon 1 : Rappels — références & noms au service des recherches ---
+const RAPPELSRECHERCHE = {
+  id: 'fn-rappelsrecherche',
+  titre: 'Rappels : références & noms',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Avec les fonctions de recherche, Excel devient un **véritable détective** : il parcourt tes tableaux pour retrouver la bonne information en un éclair. Avant l\'enquête, deux rappels d\'échauffement : les **références** et les **noms**.', visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Code', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true } }, legende: 'Tout le chapitre consiste à retrouver des infos comme celle-ci, automatiquement.' }, plus: ['Avec les fonctions de recherche, Excel devient un véritable détective : il parcourt tes tableaux pour retrouver la bonne information en un éclair.', 'Dans ce chapitre, tu vas travailler la RECHERCHEV, RECHERCHEX et RECHERCHEH, comprendre comment définir tes critères, et découvrir des astuces pour croiser tes données de manière fiable et rapide.', 'Idéal pour éviter les recherches manuelles interminables et travailler comme un(e) pro, même sur de gros fichiers. C\'est parti !'] },
+    {
+      humeur: 'pensif',
+      dit: '**Les références relatives :** quand tu copies une formule, les cellules utilisées s\'ajustent automatiquement selon la nouvelle position.',
+      visuel: {
+        type: 'methode',
+        titre: 'Recopier une formule',
+        blocs: [
+          { etapes: ['En **D2**, mets **=B2*C2** pour calculer le total de ventes d\'un produit', 'Tire la **poignée** vers le bas : Excel adapte la formule automatiquement'] },
+          { capture: { type: 'tableur', cols: ['B', 'C', 'D'], rows: [2, 3, 4], cells: { B2: { t: '10', num: true }, C2: { t: '24,90 €', num: true }, D2: { t: '=B2*C2', ref: true }, B3: { t: '4', num: true }, C3: { t: '39,90 €', num: true }, D3: { t: '=B3*C3', vert: true }, B4: { t: '2', num: true }, C4: { t: '149,00 €', num: true }, D4: { t: '=B4*C4', vert: true } }, legende: 'D3 devient =B3*C3, D4 devient =B4*C4 : les lignes suivent la recopie.' } },
+          { note: 'Vers le **bas** : la ligne change (=B2 → =B3, =B4…). Vers la **droite** : la colonne change (=B2 → =C2, =D2…).', label: 'À retenir' },
+        ],
+      },
+      plus: ['Quand tu copies une formule dans Excel (avec la poignée ou en copier-coller), les cellules utilisées dans la formule s\'ajustent automatiquement selon la nouvelle position. C\'est ce qu\'on appelle une référence relative.', 'Si tu copies vers le bas : les lignes changent, mais la colonne reste la même. Exemple : =B2 devient =B3, puis =B4, etc.', 'Si tu copies vers la droite : les colonnes changent, mais la ligne reste la même. Exemple : =B2 devient =C2, puis =D2, etc.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un point à connaître si tes formules semblent immobiles :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Si le mode de calcul d\'Excel est défini sur **manuel**, les formules ne se recalculent pas automatiquement. **La solution :** va dans **Formules > Options de calcul > Automatique**.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Les références absolues :** parfois, une cellule doit rester **figée**. Exemple : tu veux calculer un pourcentage basé sur la cellule G10. En H2, tu écris =G2/G10… et en recopiant vers le bas, tu obtiens =G4/G11. Excel a tout décalé !',
+      visuel: { type: 'tableur', cols: ['G', 'H'], rows: [2, 3, 4], cells: { G2: { t: '12 500', num: true }, H2: { t: '=G2/G10' }, G3: { t: '9 800', num: true }, H3: { t: '=G3/G11' }, G4: { t: '7 200', num: true }, H4: { t: '=G4/G12' } }, formule: '=G4/G12', actif: 'H4', legende: 'AVANT : G10 est devenu G11 puis G12, le diviseur a glissé à chaque ligne. Ce n\'est pas ce qu\'on veut !' },
+      plus: ['Une référence absolue reste fixe, même si tu copies la formule ailleurs. C\'est utile quand tu veux toujours faire référence à la même cellule, comme un taux de TVA, un seuil, ou une valeur constante.', 'Tu veux calculer un pourcentage basé sur la cellule G10. En H2 : =G2/G10. Si tu recopies vers H4, tu obtiens =G4/G11. Ce n\'est pas ce qu\'on veut ! Solution : figer G10 → =G2/$G$10.'],
+    },
+    {
+      humeur: 'content',
+      dit: '**La solution :** figer G10 avec des dollars → **=G2/$G$10**. Les $ indiquent que ni la colonne G ni la ligne 10 ne doivent changer.',
+      visuel: {
+        type: 'methode',
+        titre: 'Figer avec F4',
+        blocs: [
+          { etapes: ['Dans la formule, clique sur la référence **G10**', 'Appuie sur **F4** : Excel transforme G10 en **$G$10** (Mac : **⌘ + T**, ou **Fn + F4** sur certains claviers)'] },
+          { capture: { type: 'touche', touches: ['F4'], note: 'Sur Mac : ⌘ + T (ou Fn + F4). La cellule ne bougera plus, où que tu copies la formule.' } },
+          { capture: { type: 'tableur', cols: ['G', 'H'], rows: [2, 3, 4], cells: { G2: { t: '12 500', num: true }, H2: { t: '=G2/$G$10' }, G3: { t: '9 800', num: true }, H3: { t: '=G3/$G$10', vert: true }, G4: { t: '7 200', num: true }, H4: { t: '=G4/$G$10', vert: true } }, legende: 'APRÈS : G2 s\'adapte à chaque ligne, $G$10 reste figé. Exactement ce qu\'on veut.' } },
+        ],
+      },
+      plus: ['$B$1 : les $ indiquent que ni la colonne B ni la ligne 1 ne doivent changer.', 'Appuie sur la touche F4 : Excel transforme B1 en $B$1. Si F4 ne fonctionne pas, essaye FN + F4 (sur certains claviers portables).'],
+    },
+    { humeur: 'pensif', dit: 'Ces références seront **cruciales** au moment d\'étirer tes formules de recherche : la plage du tableau de référence devra toujours être **verrouillée en absolu** ($A$2:$B$5). Garde ce réflexe, on s\'en sert tout le chapitre.', visuel: { type: 'reffiger' } },
+    {
+      humeur: 'pensif',
+      dit: 'Deuxième rappel : **les noms**. Plutôt que d\'écrire =A1+B1, tu peux écrire **=Prix+Quantité**. Trois méthodes pour nommer une cellule ou une plage :',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 1 : la zone Nom',
+        blocs: [
+          { etapes: ['Sélectionne la cellule ou la plage à nommer', 'Clique dans la **zone Nom** (à gauche de la barre de formule)', 'Tape le nom (respecte la syntaxe, on la voit juste après)', 'Appuie sur **Entrée**'] },
+          { capture: { type: 'zonenom', nom: 'PrixHT', saisie: true, formule: '24,90', legende: 'On tape « PrixHT » dans la zone Nom, puis Entrée : la cellule s\'appelle désormais PrixHT.' } },
+          { note: 'Les pièges classiques : oublier d\'appuyer sur **Entrée** après avoir tapé le nom, mettre un **espace** dans le nom, ou reprendre un mot déjà utilisé par Excel (comme SOMME).', label: 'Erreurs à éviter' },
+        ],
+      },
+      plus: ['Utiliser un nom dans une formule rend le fichier plus lisible. Plutôt que d\'écrire =A1+B1, tu peux écrire =Prix+Quantité. Cela facilite la compréhension, surtout si d\'autres personnes utilisent ton fichier.', '1. Sélectionne la cellule ou la plage à nommer. 2. Clique dans la zone Nom (à gauche de la barre de formule). 3. Tape le nom (respecte la syntaxe). 4. Appuie sur Entrée.', 'Erreurs à éviter : oublier d\'appuyer sur [Entrée] après avoir tapé un nom. Utiliser un espace dans le nom (Prix unitaire → erreur). Nommer une cellule avec un mot déjà utilisé dans Excel (comme SOMME).'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Méthode 2 :** par le ruban, avec la fenêtre « Nouveau nom ». Elle permet en plus de choisir si le nom vaut pour **tout le classeur** ou pour **une seule feuille**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Méthode 2 : Définir un nom',
+        blocs: [
+          { etapes: ['Va dans l\'onglet **Formules > groupe Noms définis**', 'Clique sur **Définir un nom**'] },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom', actif: true }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection' }] } },
+          { etapes: ['Renseigne le **Nom** (respecte la syntaxe)', 'Choisis la **Zone** : classeur ou feuille', 'Vérifie la plage dans **Fait référence à**', 'Valide avec **OK**'], depart: 3 },
+          { capture: { type: 'definirnom', nom: 'PrixHT', zone: 'Classeur', reference: '=Stock!$B$2:$B$5', focus: 'nom' } },
+        ],
+      },
+      plus: ['1. Va dans l\'onglet Formules > groupe Noms définis. 2. Clique sur Créer un nom ou Définir un nom. 3. Renseigne : le Nom (respecte la syntaxe), le Champ (classeur ou feuille), la Zone (la plage à laquelle ce nom s\'applique). 4. Valide avec OK.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Méthode 3 :** à la souris, avec le clic droit.',
+      visuel: {
+        type: 'menu',
+        titre: 'Méthode 3 : le clic droit',
+        etapes: ['Sélectionne la cellule ou la plage à nommer', 'Fais un **clic droit** sur la sélection', 'Choisis **Définir un nom** dans le menu', 'Donne un nom explicite (ex : PrixHT), vérifie la référence, puis **OK**'],
+        items: [{ icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }, { icone: '📋', label: 'Coller' }, '-', { icone: '🔖', label: 'Définir un nom…', actif: true }, { icone: '🔗', label: 'Lien…' }],
+      },
+      plus: ['1. Sélectionne la cellule ou la plage que tu veux nommer. 2. Fais un clic droit sur la sélection. 3. Choisis Définir un nom dans le menu contextuel (ou « Nommer une plage » selon ta version d\'Excel). 4. Dans la fenêtre qui s\'ouvre : donne un nom explicite (ex : PrixHT), vérifie que la référence est correcte. Clique sur OK.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La syntaxe des noms**, les règles à suivre :',
+      visuel: { type: 'parties', items: [{ label: 'Commence par une lettre : TotalVentes ✓, 1Ventes ✗' }, { label: 'Pas d\'espace : Prix_Unitaire ✓, Prix Unitaire ✗' }, { label: 'Pas une adresse de cellule : CA_mensuel ✓, A1 ✗' }, { label: 'Longueur max : 255 caractères, c\'est suffisant !' }, { label: 'Pas de doublon dans un classeur' }] },
+      plus: ['Syntaxe des noms, les règles à suivre : le nom d\'une cellule doit commencer par une lettre. Pas d\'espace. Ne pas utiliser de référence (l\'adresse d\'une cellule). Longueur max : 255 caractères, c\'est suffisant ! Pas de doublon dans un classeur.', 'Astuce pratique : utilise des noms courts mais parlants : TVA, Client, Montant. Pour un tableau complexe, crée un tableau structuré avant de nommer les plages. Tu peux gérer tous les noms via l\'onglet Formules > Gestionnaire de noms.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour **supprimer un nom** (ou vérifier tous tes noms d\'un coup), direction le **Gestionnaire de noms**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Supprimer un nom',
+        blocs: [
+          { etapes: ['Va dans l\'onglet **Formules > groupe Noms définis**', 'Clique sur **Gestionnaire de noms**'] },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms', actif: true }, { icone: '⊞', label: 'Créer depuis sélection' }] } },
+          { etapes: ['La fenêtre affiche **tous les noms du classeur**', 'Sélectionne le nom à supprimer', 'Clique sur **Supprimer**, puis confirme si une alerte s\'affiche'], depart: 3 },
+          { capture: { type: 'gestionnairenoms', noms: [{ nom: 'PrixHT', ref: '=Stock!$B$2:$B$5', etendue: 'Classeur' }, { nom: 'Ancien_Tarif', ref: '=Stock!$D$2:$D$5', etendue: 'Classeur' }], selection: 1, focus: 'supprimer' } },
+          { note: 'Si une formule utilise ce nom, elle renverra **#NOM ?** après la suppression. Vérifie que le nom n\'est plus utilisé avant de le supprimer.', label: 'Attention' },
+        ],
+      },
+      plus: ['1. Va dans l\'onglet Formules > groupe Noms définis. 2. Clique sur Gestionnaire de noms. 3. Une fenêtre s\'ouvre : elle affiche tous les noms du classeur. 4. Sélectionne le nom que tu veux supprimer. 5. Clique sur le bouton Supprimer. 6. Confirme si une alerte s\'affiche.', 'Si une formule utilise ce nom, elle renverra une erreur (#NOM ?) après suppression. Vérifie que le nom n\'est plus utilisé avant de le supprimer.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Et pour **réutiliser** un nom au quotidien : naviguer, coller dans une formule, ou taper ses premières lettres.',
+      visuel: {
+        type: 'methode',
+        titre: 'Réutiliser un nom',
+        blocs: [
+          { etapes: ['**Naviguer :** clique la flèche de la **zone Nom**, choisis le nom, Excel t\'emmène directement à la plage'] },
+          { capture: { type: 'zonenom', nom: 'PrixHT', fleche: true, liste: ['PrixHT', 'Quantites', 'Table_Stock'], legende: 'La flèche ouvre la liste de tous tes noms : un clic et Excel t\'y conduit.' } },
+          { etapes: ['**Dans une formule :** tape **=**, appuie sur **F3**, la boîte « Coller un nom » s\'affiche, choisis le nom puis **OK**'], depart: 2 },
+          { capture: { type: 'listedialog', titre: 'Coller un nom', intro: 'Nom collé :', items: ['PrixHT', 'Quantites', 'Table_Stock'], selection: 0 } },
+          { etapes: ['**Encore plus rapide :** tape = puis les **premières lettres** du nom (ex : =P), Excel propose fonctions + noms, double-clique sur le nom voulu'], depart: 3 },
+          { note: 'Tes noms personnalisés apparaissent dans la liste juste après les fonctions Excel. Tu les reconnais facilement, surtout s\'ils sont bien nommés !', label: 'À savoir' },
+        ],
+      },
+      plus: ['Les noms te permettent d\'atteindre rapidement une cellule ou une plage de cellules. 1. Clique sur la flèche de la zone Nom (à gauche de la barre de formule). 2. Choisis le nom dans la liste déroulante. 3. Excel te conduit automatiquement à la cellule ou la plage correspondante.', 'Méthode 1 avec le raccourci [F3] : 1. Tape = pour commencer une formule. 2. Appuie sur la touche [F3]. 3. Une boîte « Coller un nom » s\'affiche. 4. Clique sur le nom voulu > clique sur OK.', 'Méthode 2 en tapant les premières lettres : 1. Tape = puis les premières lettres du nom (ex : =C). 2. Excel affiche une liste de propositions (fonctions + noms). 3. Double-clique sur le nom souhaité.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dernier réflexe : Excel peut créer des noms **tout seul** à partir des titres de ton tableau.',
+      visuel: {
+        type: 'methode',
+        titre: 'Créer des noms depuis les étiquettes',
+        blocs: [
+          { etapes: ['Sélectionne **tout le tableau**, y compris les titres de colonnes ou de lignes', 'Va dans **Formules > Noms définis**', 'Clique sur **Créer à partir de la sélection**'] },
+          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection', actif: true }] } },
+          { etapes: ['Coche **Ligne du haut** si les titres sont en haut (ou **Colonne de gauche** s\'ils sont à gauche)', 'Clique sur **OK**'], depart: 4 },
+          { capture: { type: 'listedialog', titre: 'Créer des noms à partir de la sélection', intro: 'Créer les noms à partir des valeurs de :', cases: [{ label: 'Ligne du haut', coche: true }, { label: 'Colonne de gauche', coche: false }, { label: 'Ligne du bas', coche: false }, { label: 'Colonne de droite', coche: false }] } },
+        ],
+      },
+      plus: ['Lorsque tu travailles avec un tableau bien structuré, Excel peut automatiquement créer des noms en se basant sur les titres de colonnes ou de lignes. C\'est rapide, clair, et très pratique !', '1. Sélectionne l\'ensemble du tableau, y compris les titres de colonnes ou de lignes. 2. Va dans l\'onglet Formules > groupe Noms définis. 3. Clique sur le bouton Créer à partir de la sélection. 4. Une boîte de dialogue s\'ouvre : coche la case Ligne du haut si les titres sont en haut, ou Colonne de gauche si les titres sont à gauche. 5. Puis clique sur OK.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Lequel de ces noms de plage est **valide** ?',
+      visuel: { type: 'question', options: ['Prix Unitaire', '1Ventes', 'CA_mensuel', 'A1'], bonne: 2, explication: 'CA_mensuel commence par une lettre et remplace l\'espace par un underscore. « Prix Unitaire » contient un espace, « 1Ventes » commence par un chiffre, et « A1 » est déjà une adresse de cellule.' },
+    },
+    { humeur: 'fier', dit: 'Références verrouillées, noms maîtrisés : ton matériel de détective est prêt. Place à la **RECHERCHEV** ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : La RECHERCHEV ---
+const RECHERCHEV = {
+  id: 'fn-recherchev',
+  titre: 'La RECHERCHEV',
+  exercices: [EX11.ex77, EX11.ex78, EX11.ex79],
+  narration: [
+    { humeur: 'accueil', dit: 'La fonction **RECHERCHEV** (Recherche **V**erticale) cherche une **valeur-clé** dans la **première colonne** d\'un tableau, puis renvoie une donnée située **sur la même ligne**, à partir d\'un numéro de colonne donné. Sa syntaxe :', visuel: { type: 'formule', formule: '=RECHERCHEV(valeur_cherchée; table_matrice; no_index_colonne; [valeur_proche])' }, plus: ['La fonction RECHERCHEV (Recherche verticale) permet de chercher une valeur-clé dans la première colonne d\'un tableau, puis de renvoyer une donnée située dans la même ligne, à partir d\'un numéro de colonne donné.'] },
+    {
+      humeur: 'pensif',
+      dit: '**Ses 4 arguments**, un par un :',
+      visuel: { type: 'parties', items: [{ label: 'valeur_cherchée : la donnée clé commune aux 2 tableaux (ex. un code article)' }, { label: 'table_matrice : la plage contenant à la fois la clé ET les valeurs à récupérer' }, { label: 'no_index_colonne : le numéro de la colonne où se trouve la donnée à renvoyer (1 = clé, 2 = 1ʳᵉ valeur associée…)' }, { label: '[valeur_proche] : facultatif. VRAI ou omis = recherche approximative ; FAUX = correspondance exacte' }] },
+      plus: ['Valeur_cherchée : la donnée clé commune aux 2 tableaux (ex. un code article).', 'Table_matrice : la plage de cellules contenant à la fois la clé et les valeurs à récupérer.', 'No_index_colonne : le numéro de la colonne dans table_matrice où se trouve la donnée à renvoyer (1 = clé, 2 = 1ᵉ valeur associée, etc.)', 'Valeur_proche : (facultatif) VRAI ou omis pour une recherche approximative ; FAUX pour une correspondance exacte.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Voici la situation type : **deux tableaux** qui partagent la même clé (le Code article). Je veux rapatrier la colonne **Quantité** du deuxième tableau dans le premier.',
+      visuel: { type: 'deuxtableaux', t1: T11_COMMANDES, t2: T11_STOCK, legende: 'La clé commune (Code article) fait le pont entre les deux tableaux.' },
+      plus: ['Voici deux tableaux partageant la même clé (Code article) ; leurs autres colonnes diffèrent. Pour rapatrier la colonne « Quantité » du deuxième tableau dans le premier, j\'utilise la fonction RECHERCHEV.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Les conditions d\'utilisation.** À toi de les découvrir : pour retrouver la Quantité à partir du Code article, lequel de ces deux tableaux peut servir de **table_matrice** ?',
+      visuel: {
+        type: 'choixtableau',
+        options: [
+          { titre: 'Tableau A', tableau: { entetes: ['Code article', 'Quantité'], lignes: [['A1001', '5'], ['A1003', '12'], ['A1004', '8']] } },
+          { titre: 'Tableau B', tableau: { entetes: ['Quantité', 'Code article'], lignes: [['5', 'A1001'], ['12', 'A1003'], ['8', 'A1004']] } },
+        ],
+        bonne: 0,
+        explication: 'Pour RECHERCHEV, la colonne de la clé (Code article) doit être la PREMIÈRE à gauche de la plage, et la valeur à extraire doit se trouver à sa droite. Dans le tableau B, la Quantité est à gauche de la clé : RECHERCHEV ne pourrait pas la récupérer.',
+      },
+      plus: ['1. Clé unique et commune : les deux tableaux doivent partager une colonne ou une ligne où chaque valeur n\'apparaît qu\'une seule fois (par exemple un « Code article » ou un « Matricule »).', '2. Position de la clé : pour RECHERCHEV, la colonne contenant la clé de recherche doit être la première à gauche du tableau cible.'],
+    },
+    {
+      humeur: 'content',
+      dit: 'Deux règles à retenir donc : **une clé unique et commune** aux deux tableaux, et **la clé en première colonne** de la table_matrice. Maintenant, la méthode complète, argument par argument.',
+      visuel: { type: 'parties', items: [{ label: '1. Clé unique et commune : chaque code n\'apparaît qu\'une seule fois dans le référentiel' }, { label: '2. Position de la clé : la colonne clé doit être la première à gauche du tableau cible' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: '**On prépare le terrain.** Ouvre les deux tableaux, repère la clé commune, et ajoute la colonne qui va accueillir les données.',
+      visuel: {
+        type: 'methode',
+        titre: 'Étapes 1 à 4 : préparer',
+        blocs: [
+          { etapes: ['**Ouvre** les deux tableaux', '**Identifie la clé commune :** repère la colonne « Code article » dans chaque tableau, et assure-toi que chaque code est **unique** dans le référentiel', 'Ajoute une colonne **Quantité** dans ton tableau principal', 'Sélectionne la cellule où le résultat doit apparaître : **D2**'] },
+          { capture: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '' }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true } }, actif: 'D2', legende: 'La colonne D « Quantité » est prête, le curseur est en D2.' } },
+        ],
+      },
+      plus: ['1. Ouvrir les deux tableaux. 2. Identifier la clé commune : repère la colonne « Code article » dans chaque tableau. Assure-toi que chaque code est unique dans le référentiel. 3. Ajoute une colonne dans ton tableau principal pour y importer les données issues du second tableau. 4. Sélectionne la cellule où le résultat doit apparaître (D2).'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Étape 5 :** tape **=RECHERCHEV(** pour ouvrir la fonction.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '=RECHERCHEV(' } }, formule: '=RECHERCHEV(', actif: 'D2' },
+      plus: ['5. Tape =RECHERCHEV(.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Étapes 6 et 7 :** clique sur la cellule du code article, **A2**. C\'est ta **valeur_cherchée**, et elle doit se trouver **sur la même ligne** que ta formule. Puis verrouille l\'argument avec un **point-virgule**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001', ref: true }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '=RECHERCHEV(A2;' } }, formule: '=RECHERCHEV(A2;', actif: 'D2', refsCouleur: { A2: 'bleu' }, legende: 'A2 (la clé de cette ligne) s\'affiche en bleu dans la formule.' },
+      plus: ['6. Clique sur la cellule du code article (A2). C\'est ta valeur_cherchée et elle doit se trouver sur la même ligne où tu vas entrer la formule RECHERCHEV. 7. Verrouille l\'argument avec un point-virgule.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Étape 8 :** direction le deuxième tableau ! Sur la feuille **Stock**, sélectionne la plage qui inclut la **colonne de la clé** ET la **colonne de la valeur** à rapatrier : A2:B5.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Stock', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Quantité', entete: true }, A2: { t: 'A1001', sel: true }, B2: { t: '5', num: true, sel: true }, A3: { t: 'A1003', sel: true }, B3: { t: '12', num: true, sel: true }, A4: { t: 'A1004', sel: true }, B4: { t: '8', num: true, sel: true }, A5: { t: 'A1005', sel: true }, B5: { t: '20', num: true, sel: true } }, formule: '=RECHERCHEV(A2;Stock!A2:B5', actif: 'D2', legende: 'On est passé sur la feuille Stock : la plage A2:B5 est sélectionnée, clé en premier.' },
+      plus: ['8. Dans le deuxième tableau, sélectionne la plage incluant la colonne de la clé commune (Code article) ainsi que la colonne contenant la valeur à rapatrier.', 'N\'oublie pas : commence toujours par sélectionner la colonne de la clé commune, et assure-toi que la colonne contenant la valeur à rapatrier se trouve obligatoirement à droite de cette clé.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Tu remarques le **Stock!** devant la plage ? Quand ta table_matrice se trouve sur un **autre onglet**, Excel préfixe la référence par le nom de cet onglet suivi d\'un **point d\'exclamation**.',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: '**Stock!A2:B5** signifie « regarde la plage A2:B5 sur l\'onglet Stock ». Sans ce préfixe, Excel chercherait A2:B5 dans l\'onglet où tu es, et le résultat ne correspondrait pas.' },
+      plus: ['Lorsque ta plage de recherche (table_matrice) se trouve sur un autre onglet que le tableau principal, Excel préfixe la référence par le nom de cet onglet, suivi d\'un point d\'exclamation : Feuil2!B1:C6 ← table_matrice située sur l\'onglet « Feuil2 ». Feuil2! indique donc « regarde sur l\'onglet Feuil2 ». Sans ce préfixe, Excel chercherait B1:C6 dans l\'onglet où tu es, et renverrait une erreur si la plage n\'existe pas.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Étapes 9 à 12 :** ajoute un **point-virgule** pour valider la matrice. Puis **compte les colonnes** depuis la clé jusqu\'à la valeur à extraire : Code article = colonne **1**, Quantité = colonne **2**. Place ce **2** dans la formule, puis un point-virgule.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Stock', cols: ['A', 'B'], rows: [1, 2, 3], cells: { A1: { t: 'Code article ①', entete: true }, B1: { t: 'Quantité ②', entete: true }, A2: { t: 'A1001' }, B2: { t: '5', num: true }, A3: { t: 'A1003' }, B3: { t: '12', num: true } }, formule: '=RECHERCHEV(A2;Stock!A2:B5;2;', actif: 'D2', legende: 'On compte : ① la clé, ② la Quantité. Le no_index_colonne est donc 2.' },
+      plus: ['9. Ajoute un point-virgule pour valider la matrice. 10. Compte les colonnes depuis la sélection jusqu\'à la colonne portant la valeur à extraire : ici, on compte 2 colonnes. 11. Place le numéro de colonne correspondant dans l\'argument de ta fonction c\'est-à-dire 2. 12. Insère un point-virgule pour verrouiller l\'argument.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Étapes 13 à 15 :** tape **FAUX** pour une correspondance **exacte**, ferme la **parenthèse**, et appuie sur **Entrée**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001', ref: true }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '=RECHERCHEV(A2;Stock!A2:B5;2;FAUX)' } }, formule: '=RECHERCHEV(A2;Stock!A2:B5;2;FAUX)', actif: 'D2', refsCouleur: { A2: 'bleu' }, legende: 'Tu peux aussi remplacer FAUX par 0 : même effet, correspondance exacte.' },
+      plus: ['13. Tape « FAUX » pour une correspondance exacte. Tu peux aussi remplacer FAUX par 0 pour obtenir une correspondance exacte. 14. Ferme la parenthèse. 15. Tape sur ENTREE pour valider la formule.'],
+    },
+    {
+      humeur: 'content',
+      dit: '**Étapes 16 et 17 :** te voilà automatiquement de retour sur le tableau principal. Vérifie que la cellule affiche bien la donnée attendue : **5**, la quantité du code A1001. La clé a fait le pont !',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true } }, formule: '=RECHERCHEV(A2;Stock!A2:B5;2;FAUX)', actif: 'D2', legende: 'D2 affiche 5 : la quantité du clavier, rapatriée depuis la feuille Stock.' },
+      plus: ['16. Tu es automatiquement renvoyé vers le tableau principal. 17. Vérifie que la cellule affiche bien la donnée attendue (par ex. « 5 »).'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Étapes 18 et 19 :** avant d\'étirer, **fige la plage** du second tableau en références absolues avec des **$** (F4, ou **⌘ + T** sur Mac). Puis étire la formule vers le bas.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, D3: { t: '#N/A', rouge: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true }, D4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEV(A2;Stock!$A$2:$B$5;2;FAUX)', actif: 'D2', legende: 'Grâce aux $, la plage Stock!$A$2:$B$5 reste figée sur toutes les lignes. Mais que se passe-t-il en D3 ?' },
+      plus: ['18. Avant d\'étirer la formule, convertis la plage du second tableau en références absolues c\'est-à-dire fixe la plage du deuxième tableau en utilisant $ pour bloquer les cellules afin de préserver l\'exactitude des données. 19. Étire la formule.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**#N/A en D3 ?** Bien vu. La valeur d\'erreur **#N/A** apparaît quand une valeur n\'est **pas disponible** : le code A1002 n\'existe pas dans la feuille Stock, et en correspondance exacte, RECHERCHEV le signale. **Comment corriger ?**',
+      visuel: { type: 'parties', items: [{ label: '1. Vérifie que le code figure bien dans la colonne clé du second tableau' }, { label: '2. Ajuste ta plage pour exclure l\'en-tête si besoin (Stock!$A$2:$B$5)' }, { label: '3. Si certaines références peuvent manquer : enveloppe dans SIERREUR(… ; "Non trouvé") pour un affichage plus propre' }] },
+      plus: ['Pour la ligne 3, A3 = « A1002 ». Comme « A1002 » n\'existe pas dans la plage de recherche, RECHERCHEV, en mode correspondance exacte (0), renvoie #N/A.', 'La valeur d\'erreur #N/A apparaît lorsque une valeur n\'est pas disponible pour une fonction ou une formule.', 'Comment corriger ? 1. Vérifie que « A1002 » figure bien dans la colonne clé du second tableau. 2. Ajuste ta plage pour exclure l\'en-tête si besoin. 3. Si certaines références peuvent manquer, enveloppe dans un SIERREUR(…; "Non trouvé") pour un affichage plus propre.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La RECHERCHEV, à retenir :**',
+      visuel: { type: 'parties', items: [{ label: 'Clé en première colonne : la valeur-clé doit être la plus à gauche de ta plage' }, { label: 'Index de colonne : le numéro de la colonne (à droite de la clé) à renvoyer' }, { label: 'Références absolues : fige la plage ($A$2:$C$10) avant de recopier' }, { label: 'Correspondance exacte : FAUX ou 0 pour une égalité stricte' }, { label: 'Gestion des erreurs : SIERREUR(… ; "Texte") pour remplacer les #N/A' }] },
+      plus: ['Clé en première colonne : la colonne contenant la valeur-clé doit être la plus à gauche de ta plage (table_matrice).', 'Index de colonne : tu indiques le numéro de la colonne (à droite de la clé) à renvoyer ; si la donnée est à gauche, RECHERCHEV ne peut pas la récupérer.', 'Références absolues : fige la plage ($A$2:$C$10) avant de recopier la formule pour éviter les décalages.', 'Correspondance exacte : utilise FAUX ou 0 pour une égalité stricte (sinon Excel fait une recherche approchée sur un tableau trié).', 'Gestion des erreurs : enveloppe dans SIERREUR(...;"Texte") pour remplacer les #N/A par un message plus lisible.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Une croyance à vérifier. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'RECHERCHEV peut renvoyer une valeur située à GAUCHE de la colonne clé.', bonne: false, explication: 'RECHERCHEV cherche toujours la clé dans la PREMIÈRE colonne de la plage et ne renvoie que des colonnes situées à sa DROITE. C\'est sa grande limite.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'C\'est **la limite** de la RECHERCHEV : elle ne peut pas « regarder à gauche ». Si ta donnée se trouve à gauche de la clé, deux solutions :',
+      visuel: { type: 'parties', items: [{ label: 'Repositionner les colonnes : déplace la colonne cible à droite de la clé (simple, mais modifie la structure du tableau)' }, { label: 'Basculer vers la RECHERCHEX : elle cherche dans les deux sens, sans toucher à la structure (leçon suivante !)' }] },
+      plus: ['La RECHERCHEV ne peut pas « regarder à gauche » : elle cherche toujours la clé dans la première colonne de la table et ne renvoie qu\'une colonne à droite de cette clé.', 'Le problème : si tu cherches à extraire la Quantité alors que ta clé commune (Code article) est en colonne B et que la Quantité se trouve en colonne A, une formule du type =RECHERCHEV(B2; A2:C6; 1; FAUX) échouera ou renverra la clé elle-même, mais jamais la valeur de Quantité située à gauche.', 'Les solutions possibles : repositionner les colonnes (simple : déplace la colonne cible pour qu\'elle soit à droite de la colonne clé, puis applique RECHERCHEV normalement ; inconvénient : modifie la structure de ton tableau) ou basculer vers la RECHERCHEX.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans =RECHERCHEV(A2;Stock!$A$2:$B$5;**2**;FAUX), que désigne le **2** ?',
+      visuel: { type: 'question', options: ['Le numéro de la colonne à renvoyer dans la plage (ici, la Quantité)', 'Le nombre de résultats à afficher', 'La ligne où chercher la clé'], bonne: 0, explication: 'C\'est le no_index_colonne : colonne 1 = la clé (Code article), colonne 2 = la Quantité. Excel renvoie la valeur de la 2ᵉ colonne de la plage, sur la ligne où il a trouvé la clé.' },
+    },
+    { humeur: 'fier', dit: 'Tu sais croiser deux tableaux avec la RECHERCHEV, gérer les #N/A et verrouiller tes plages. Le détective est en piste ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : La RECHERCHEX ---
+const RECHERCHEX = {
+  id: 'fn-recherchex',
+  titre: 'La RECHERCHEX',
+  exercices: [EX11.ex80],
+  narration: [
+    { humeur: 'accueil', dit: 'La **RECHERCHEX** révolutionne la RECHERCHEV avec une approche ultra-flexible : tu peux chercher dans n\'importe quelle colonne ou ligne… **même vers la gauche** ! La correspondance **exacte** est activée d\'office. Et elle intègre directement ton message « Non trouvé », sans SIERREUR.', visuel: { type: 'formule', formule: '=RECHERCHEX(valeur_cherchée; plage_recherche; plage_retour; [si_non_trouvé]; [mode_correspondance]; [mode_recherche])' }, plus: ['La RECHERCHEX révolutionne RECHERCHEV avec une approche ultra-flexible et simple : tu peux chercher dans n\'importe quelle colonne ou ligne… même vers la gauche ! La correspondance exacte est activée d\'office, fini les faux-positifs. Intègre directement ton message « Non trouvé » si la clé manque, sans recourir à la formule SIERREUR !'] },
+    {
+      humeur: 'pensif',
+      dit: '**Ses 6 arguments** (les 3 premiers suffisent souvent) :',
+      visuel: { type: 'parties', items: [{ label: 'valeur_cherchée : la valeur ou référence à rechercher (ex. B2)' }, { label: 'plage_recherche : la colonne ou la ligne où Excel doit chercher cette valeur' }, { label: 'plage_retour : la colonne ou la ligne contenant la donnée à renvoyer' }, { label: '[si_non_trouvé] : texte ou valeur renvoyée si la clé n\'est pas trouvée (ex. "Non trouvé")' }, { label: '[mode_correspondance] : 0 pour correspondance exacte, 1 pour valeur approchée' }, { label: '[mode_recherche] : 1 pour chercher du début vers la fin, -1 de la fin vers le début' }] },
+      plus: ['Valeur_cherchée : la valeur ou référence à rechercher (ex. B2).', 'Plage_recherche : la colonne ou la ligne où Excel doit chercher cette valeur (ex. Réf!$A$2:$A$6).', 'Plage_retour : la colonne ou la ligne contenant la donnée à renvoyer (ex. Réf!$C$2:$C$6).', '[si_non_trouvé] : texte ou valeur renvoyée si la clé n\'est pas trouvée (ex. "Non trouvé").', '[mode_correspondance] : 0 pour correspondance exacte, 1 pour valeur approchée.', '[mode_recherche] : 1 pour rechercher du début vers la fin, -1 du fin vers le début.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Les conditions d\'utilisation :** la clé doit toujours être **unique et commune**. Mais contrairement à la RECHERCHEV, **aucune contrainte de position** : tu choisis chaque plage indépendamment, sans compter les colonnes, à gauche comme à droite.',
+      visuel: { type: 'deuxtableaux', t1: T11_COMMANDES, t2: T11_STOCK, legende: 'Mêmes tableaux : cette fois je sélectionne SÉPARÉMENT la colonne clé et la colonne Quantité.' },
+      plus: ['1. Clé unique et commune : comme pour RECHERCHEV, la valeur_cherchée doit être une clé unique et non dupliquée dans la plage de recherche (Ex. : un code article, un matricule ou un identifiant client).', '2. Pas de contrainte sur la position relative : contrairement à la RECHERCHEV, tu choisis chaque plage indépendamment : pas besoin de compter la position relative des colonnes. Tu peux extraire des données situées à gauche ou à droite de la clé.', 'Bien qu\'elle améliore grandement la souplesse de la RECHERCHEV, la RECHERCHEX repose toujours sur quelques règles fondamentales.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**On démarre pareil :** deux tableaux ouverts, clé repérée, colonne Quantité ajoutée, cellule D2 sélectionnée. Puis tape **=RECHERCHEX(**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '=RECHERCHEX(' } }, formule: '=RECHERCHEX(', actif: 'D2' },
+      plus: ['1. Ouvrir les deux tableaux. 2. Identifier la clé commune : repère la colonne « Code article » dans chaque tableau. Assure-toi que chaque code est unique dans le référentiel. 3. Ajoute une colonne dans ton tableau principal pour y importer les données issues du second tableau. 4. Sélectionne la cellule où le résultat doit apparaître (D2). 5. Tape =RECHERCHEX(.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La valeur cherchée :** clique sur **A2** (comme pour la RECHERCHEV, elle doit être sur la même ligne que ta formule), puis verrouille avec un **point-virgule**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001', ref: true }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '=RECHERCHEX(A2;' } }, formule: '=RECHERCHEX(A2;', actif: 'D2', refsCouleur: { A2: 'bleu' } },
+      plus: ['6. Clique sur la cellule du code article (A2). Comme pour la rechercheV, c\'est ta valeur_cherchée et elle doit se trouver sur la même ligne où tu vas entrer la formule RECHERCHEX. 7. Verrouille l\'argument avec un point-virgule.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La plage de recherche :** sur la feuille Stock, sélectionne **uniquement la colonne de la clé** (A2:A5), puis ajoute un **point-virgule**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Stock', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Quantité', entete: true }, A2: { t: 'A1001', sel: true }, B2: { t: '5', num: true }, A3: { t: 'A1003', sel: true }, B3: { t: '12', num: true }, A4: { t: 'A1004', sel: true }, B4: { t: '8', num: true }, A5: { t: 'A1005', sel: true }, B5: { t: '20', num: true } }, formule: '=RECHERCHEX(A2;Stock!A2:A5;', actif: 'D2', legende: 'Seule la colonne clé est sélectionnée : c\'est la plage_recherche.' },
+      plus: ['8. Dans le deuxième tableau, sélectionne d\'abord la colonne de la clé commune (Code article), puis séparément la colonne contenant la Quantité à rapatrier.', '9. Après avoir sélectionné la première colonne (clé commune), ajoute un point-virgule (;).'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La plage de retour :** sélectionne maintenant, **séparément**, la colonne d\'où tu veux extraire la donnée (B2:B5). Les deux plages n\'ont pas besoin d\'être côte à côte !',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Stock', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: '5', num: true, sel: true }, A3: { t: 'A1003' }, B3: { t: '12', num: true, sel: true }, A4: { t: 'A1004' }, B4: { t: '8', num: true, sel: true }, A5: { t: 'A1005' }, B5: { t: '20', num: true, sel: true } }, formule: '=RECHERCHEX(A2;Stock!A2:A5;Stock!B2:B5', actif: 'D2', legende: 'La colonne Quantité est la plage_retour : c\'est elle qu\'Excel renverra.' },
+      plus: ['10. Sélectionne ensuite la colonne d\'où tu veux extraire la donnée.', 'N\'oublie pas : commence toujours par sélectionner la colonne de la clé commune. Avec la RECHERCHEX, tu choisis chaque plage indépendamment : la colonne de recherche et la colonne de retour n\'ont pas à être côte à côte.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Le filet de sécurité :** point-virgule, puis écris directement entre guillemets le message à afficher si la clé est absente : **"Non trouvé"**. Plus besoin de FAUX ni de SIERREUR ! Ferme la parenthèse et appuie sur **Entrée**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001', ref: true }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '=RECHERCHEX(A2;Stock!A2:A5;Stock!B2:B5;"Non trouvé")' } }, formule: '=RECHERCHEX(A2;Stock!A2:A5;Stock!B2:B5;"Non trouvé")', actif: 'D2', refsCouleur: { A2: 'bleu' }, legende: 'La correspondance exacte est déjà active par défaut : pas d\'argument FAUX à ajouter.' },
+      plus: ['11. Ajoute un point-virgule pour valider la matrice. 12. Avec la RECHERCHEX, tu n\'as plus besoin de mettre 0 ou FAUX pour une correspondance exacte ; pour éviter les #N/A, écris directement entre guillemets le message à afficher (par ex. "Non trouvé") si aucune correspondance n\'est trouvée. 13. Ferme la parenthèse.'],
+    },
+    {
+      humeur: 'content',
+      dit: '**Vérifie et étire :** D2 affiche **5**. Fige les deux plages avec des **$** (F4, Mac : **⌘ + T**), puis étire. Et regarde la ligne du code manquant…',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, D3: { t: 'Non trouvé', vert: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true }, D4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEX(A2;Stock!$A$2:$A$5;Stock!$B$2:$B$5;"Non trouvé")', actif: 'D2', legende: 'APRÈS : le code A1002 absent affiche « Non trouvé » au lieu de #N/A. Propre et lisible.' },
+      plus: ['15. Tu es automatiquement renvoyé vers le tableau principal. 16. Vérifie que la cellule affiche bien la donnée attendue (par ex. « 5 »). 17. Avant d\'étirer la formule, convertis la plage du second tableau en références absolues c\'est-à-dire fixe la plage du deuxième tableau en utilisant $ pour bloquer les cellules afin de préserver l\'exactitude des données. 18. Étire la formule.', 'Sur la ligne 3, le code article A1002 n\'existe pas dans le tableau de référence ; RECHERCHEX renvoie donc la valeur que tu as précisée dans son 4ᵉ argument (ici "non trouvé") au lieu de l\'erreur #N/A. Tu peux personnaliser ce message pour qu\'il soit plus explicite (ex. "Code introuvable"), ce qui rend ton tableau plus lisible et évite les #N/A.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Une croyance à vérifier. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'RECHERCHEX peut extraire une donnée située à GAUCHE de la colonne où se trouve la clé.', bonne: true, explication: 'C\'est justement sa force : plage_recherche et plage_retour sont indépendantes. La donnée peut être à gauche, à droite, ou même sur une autre feuille.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La RECHERCHEX, à retenir :**',
+      visuel: { type: 'parties', items: [{ label: 'Deux plages indépendantes : plage de recherche (clé) et plage de retour (donnée), sans index numérique' }, { label: 'Bidirectionnelle : recherche à gauche comme à droite' }, { label: 'Correspondance exacte par défaut : [mode_correspondance] vaut 0 automatiquement' }, { label: 'Gestion native des erreurs : le 4ᵉ argument [si_non_trouvé] remplace SIERREUR' }, { label: 'Multi-critères : combine plusieurs conditions par concaténation (leçon suivante !)' }] },
+      plus: ['Deux plages indépendantes : tu sélectionnes séparément la plage de recherche (clé) et la plage de retour (donnée), sans contrainte de position ni besoin d\'index numérique.', 'Bidirectionnel : recherche à gauche, à droite, plus de limitation « clé à gauche ».', 'Correspondance exacte par défaut : l\'argument [mode_correspondance] vaut 0 automatiquement ; tu peux choisir 1 pour une recherche approchée si la plage est triée.', 'Gestion native des erreurs : le 4ᵉ argument ([si_non_trouvé]) permet de définir le message à afficher en cas d\'absence, sans recourir à SIERREUR.', 'Cas multi-critères : combine plusieurs conditions via la concaténation (Colonne1&Colonne2) pour créer un tableau et rechercher simultanément deux (ou plusieurs) critères.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Si tu omets l\'argument [mode_correspondance], quel type de correspondance utilise RECHERCHEX **par défaut** ?',
+      visuel: { type: 'question', options: ['La correspondance exacte', 'La correspondance approximative', 'La recherche inversée'], bonne: 0, explication: 'Contrairement à RECHERCHEV, la RECHERCHEX applique la correspondance EXACTE d\'office (mode 0). Fini les faux positifs par oubli du FAUX !' },
+    },
+    { humeur: 'fier', dit: 'Recherche dans les deux sens, message d\'absence intégré : la RECHERCHEX est ton nouvel outil favori. 🎉' },
+  ],
+}
+
+// --- Leçon 4 : La RECHERCHEX à 2 critères ---
+const RECHERCHEXDEUX = {
+  id: 'fn-recherchexdeux',
+  titre: 'La RECHERCHEX à 2 critères',
+  exercices: [EX11.ex81],
+  narration: [
+    { humeur: 'accueil', dit: 'La **RECHERCHEX à deux critères** croise **simultanément deux conditions** pour extraire, en une seule formule, la donnée qui correspond à leur combinaison. Imagine un catalogue où chaque article existe en plusieurs tailles : tu veux le prix du couple **Produit + Taille**, sans tableau auxiliaire.', visuel: { type: 'tableur', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4, 5, 6, 7], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Coloris', entete: true }, C1: { t: 'Taille', entete: true }, D1: { t: 'Prix', entete: true }, A2: { t: 'Tshirt' }, B2: { t: 'Blanc' }, C2: { t: 'S' }, D2: { t: '15 €', num: true }, A3: { t: 'Tshirt' }, B3: { t: 'Blanc' }, C3: { t: 'M' }, D3: { t: '17 €', num: true }, A4: { t: 'Sweat' }, B4: { t: 'Gris' }, C4: { t: 'S' }, D4: { t: '25 €', num: true }, A5: { t: 'Sweat' }, B5: { t: 'Gris' }, C5: { t: 'M' }, D5: { t: '27 €', num: true }, A6: { t: 'Hoodie' }, B6: { t: 'Noir' }, C6: { t: 'S' }, D6: { t: '29 €', num: true }, A7: { t: 'Hoodie' }, B7: { t: 'Noir' }, C7: { t: 'M' }, D7: { t: '32 €', num: true } }, legende: 'Le catalogue : « Hoodie » apparaît 2 fois. Seul le couple Produit + Taille est unique.' }, plus: ['La RECHERCHEX à deux critères permet de croiser simultanément deux conditions de recherche pour extraire en une seule formule la donnée précise qui correspond à leur combinaison.', 'Imaginons que tu gères un catalogue de produits où chaque article existe en plusieurs tailles. Tu souhaites afficher automatiquement le prix correspondant au couple Produit + Taille choisi par l\'utilisateur, sans créer de tableaux auxiliaires compliqués.'] },
+    {
+      humeur: 'pensif',
+      dit: '**Comment ça marche ?** Au lieu de chercher une seule valeur-clé, tu **combines** deux conditions en créant une **clé combinée**. Chaque ligne du tableau reçoit sa clé (ex. Produit+Taille = « HoodieS »), et la RECHERCHEX cherche la correspondance parfaite dans ce nouvel ensemble.',
+      visuel: { type: 'formule', formule: '=RECHERCHEX(clé1 & clé2 ; plage1 & plage2 ; plage_retour)' },
+      plus: ['Au lieu de rechercher une seule valeur-clé, tu combines deux (ou plusieurs) conditions en créant un critère unique, puis tu demandes à la RECHERCHEX de repérer cette combinaison.', 'Concrètement, chaque ligne de ton tableau de référence se voit attribuer une « clé combinée » (par exemple Produit+Taille), et la RECHERCHEX cherche la parfaite correspondance dans ce nouvel ensemble pour extraire la donnée souhaitée.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Le décor :** l\'utilisateur choisit son produit en G9 et sa taille en H9. Le prix doit apparaître en I9. On sélectionne la cellule de destination, puis on tape **=RECHERCHEX(**.',
+      visuel: { type: 'tableur', cols: ['G', 'H', 'I'], rows: [8, 9], cells: { G8: { t: 'Produit', entete: true }, H8: { t: 'Taille', entete: true }, I8: { t: 'Prix', entete: true }, G9: { t: 'Hoodie' }, H9: { t: 'S' }, I9: { t: '=RECHERCHEX(' } }, formule: '=RECHERCHEX(', actif: 'I9', legende: 'La zone de choix : Hoodie + S. Le prix attendu viendra en I9.' },
+      plus: ['1. Commence par sélectionner ta cellule de destination. 2. Tape =RECHERCHEX.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La clé combinée côté choix :** clique sur **G9** (le Produit), tape le signe **&**, puis clique sur **H9** (la Taille). Termine par un **point-virgule**.',
+      visuel: { type: 'tableur', cols: ['G', 'H', 'I'], rows: [8, 9], cells: { G8: { t: 'Produit', entete: true }, H8: { t: 'Taille', entete: true }, I8: { t: 'Prix', entete: true }, G9: { t: 'Hoodie', ref: true }, H9: { t: 'S', ref: true }, I9: { t: '=RECHERCHEX(G9&H9;' } }, formule: '=RECHERCHEX(G9&H9;', actif: 'I9', refsCouleur: { G9: 'bleu', H9: 'ambre' }, legende: 'G9&H9 fabrique la clé « HoodieS » : les deux critères collés l\'un à l\'autre.' },
+      plus: ['3. Clique sur G9 (Produit). 4. Tape le signe & pour ensuite sélectionner la deuxième clé. 5. Clique sur H9 (Taille). 6. Termine par un point-virgule pour passer à l\'argument suivant.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La clé combinée côté catalogue :** sélectionne la plage des produits **A2:A7**, tape **&**, puis la plage des tailles **C2:C7**. Excel fabrique la même clé combinée pour chaque ligne du catalogue. Point-virgule pour valider.',
+      visuel: { type: 'tableur', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 6, 7], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Coloris', entete: true }, C1: { t: 'Taille', entete: true }, D1: { t: 'Prix', entete: true }, A2: { t: 'Tshirt', sel: true }, B2: { t: 'Blanc' }, C2: { t: 'S', sel: true }, D2: { t: '15 €', num: true }, A3: { t: 'Tshirt', sel: true }, B3: { t: 'Blanc' }, C3: { t: 'M', sel: true }, D3: { t: '17 €', num: true }, A6: { t: 'Hoodie', sel: true }, B6: { t: 'Noir' }, C6: { t: 'S', sel: true }, D6: { t: '29 €', num: true }, A7: { t: 'Hoodie', sel: true }, B7: { t: 'Noir' }, C7: { t: 'M', sel: true }, D7: { t: '32 €', num: true } }, formule: '=RECHERCHEX(G9&H9;A2:A7&C2:C7;', actif: 'I9', legende: 'A2:A7 & C2:C7 : chaque ligne devient « TshirtS », « TshirtM », … « HoodieS », « HoodieM ».' },
+      plus: ['7. Définis la plage de recherche combinée : sélectionne la plage contenant la clé combinée, dans l\'exemple c\'est la colonne Produit. 8. Tape le signe &. 9. Définis la plage de recherche combinée : sélectionne la 2ème plage contenant la clé combinée, dans l\'exemple c\'est la colonne « Taille ». 10. Tape le signe &. 11. Termine par un point-virgule pour passer à l\'argument suivant.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La plage de retour :** sélectionne la colonne des prix, **D2:D7**, puis ferme la parenthèse et appuie sur **Entrée**.',
+      visuel: { type: 'tableur', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 6, 7], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Coloris', entete: true }, C1: { t: 'Taille', entete: true }, D1: { t: 'Prix', entete: true }, A2: { t: 'Tshirt' }, B2: { t: 'Blanc' }, C2: { t: 'S' }, D2: { t: '15 €', num: true, sel: true }, A6: { t: 'Hoodie' }, B6: { t: 'Noir' }, C6: { t: 'S' }, D6: { t: '29 €', num: true, sel: true }, A7: { t: 'Hoodie' }, B7: { t: 'Noir' }, C7: { t: 'M' }, D7: { t: '32 €', num: true, sel: true } }, formule: '=RECHERCHEX(G9&H9;A2:A7&C2:C7;D2:D7)', actif: 'I9', legende: 'D2:D7 est la plage de retour : le prix correspondant à la clé combinée trouvée.' },
+      plus: ['12. Définis la plage de retour, c\'est-à-dire la plage de cellules où la formule ira chercher la valeur à renvoyer. Ici, il s\'agit de la colonne des prix. 13. Ferme la parenthèse. 14. Tape sur ENTREE pour valider la formule.'],
+    },
+    {
+      humeur: 'content',
+      dit: '**Le résultat :** I9 affiche **29 €**, le prix du Hoodie taille S, trouvé grâce à la chaîne « HoodieS » et à la correspondance exacte. Une seule formule, deux critères croisés !',
+      visuel: { type: 'tableur', cols: ['G', 'H', 'I'], rows: [8, 9], cells: { G8: { t: 'Produit', entete: true }, H8: { t: 'Taille', entete: true }, I8: { t: 'Prix', entete: true }, G9: { t: 'Hoodie' }, H9: { t: 'S' }, I9: { t: '29 €', vert: true, num: true } }, formule: '=RECHERCHEX(G9&H9;A2:A7&C2:C7;D2:D7)', actif: 'I9', legende: 'Et voilà ! Change G9 en « Sweat » et le prix se met à jour tout seul : 25 €.' },
+      plus: ['Le 29 qui apparaît en I9 est le prix du Hoodie S, trouvé grâce à la recherche de la chaîne "HoodieS" dans ton tableau de référence et à la correspondance exacte.', 'Et voilà ! Tu sais maintenant comment faire une recherche X multi-critères sans tableaux auxiliaires : simple, clair et efficace !'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le secret de cette technique tient en un seul caractère :',
+      visuel: { type: 'encart', label: 'Le rôle du &', texte: 'Le signe **&** colle deux contenus l\'un à l\'autre (c\'est la **concaténation**). « Hoodie » & « S » = « HoodieS ». Appliqué aux plages, il fabrique une colonne virtuelle de clés combinées, sans rien ajouter dans ta feuille.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour croiser **Produit ET Taille** dans une RECHERCHEX, quelle écriture est la bonne ?',
+      visuel: { type: 'question', options: ['=RECHERCHEX(G9&H9; A2:A7&C2:C7; D2:D7)', '=RECHERCHEX(G9+H9; A2:A7+C2:C7; D2:D7)', '=RECHERCHEX(G9;H9; A2:A7;C2:C7; D2:D7)'], bonne: 0, explication: 'Le & concatène les critères (« HoodieS ») et les plages, pour comparer clé combinée à clé combinée. Le + tenterait une addition, et les points-virgules créeraient des arguments en trop.' },
+    },
+    { humeur: 'fier', dit: 'Recherche multi-critères sans colonne auxiliaire : tu utilises Excel comme un pro. 🎉' },
+  ],
+}
+
+// --- Leçon 5 : La RECHERCHEH ---
+const RECHERCHEH = {
+  id: 'fn-rechercheh',
+  titre: 'La RECHERCHEH',
+  exercices: [EX11.ex82],
+  narration: [
+    { humeur: 'accueil', dit: 'La fonction **RECHERCHEH** (Recherche **H**orizontale) agit comme RECHERCHEV, mais sur un tableau disposé **en lignes** plutôt qu\'en colonnes : elle cherche la clé sur la **première ligne** et renvoie une valeur située **dans la même colonne**. Sa syntaxe :', visuel: { type: 'formule', formule: '=RECHERCHEH(valeur_cherchée; table_matrice; no_index_ligne; [valeur_proche])' }, plus: ['La fonction RECHERCHEH (Recherche horizontale) agit comme RECHERCHEV, mais sur un tableau disposé en lignes plutôt qu\'en colonnes : RECHERCHEV cherche une clé en colonne 1 et renvoie une valeur dans la même ligne. RECHERCHEH cherche une clé en ligne 1 et renvoie une valeur dans la même colonne.'] },
+    {
+      humeur: 'pensif',
+      dit: '**Ses 4 arguments :**',
+      visuel: { type: 'parties', items: [{ label: 'valeur_cherchée : la donnée-clé à rechercher dans la PREMIÈRE LIGNE de table_matrice' }, { label: 'table_matrice : la plage contenant la ligne de la clé (ligne 1) et la ligne de données à extraire' }, { label: 'no_index_ligne : le numéro de la ligne à renvoyer (1 = ligne de la clé, 2 = 1ʳᵉ ligne de données, 3 = 2ᵉ ligne…)' }, { label: '[valeur_proche] : FAUX ou 0 pour la correspondance exacte ; VRAI ou omis pour l\'approchée (ligne 1 triée)' }] },
+      plus: ['Valeur_cherchée : la donnée-clé à rechercher dans la première ligne de table_matrice (ex. un Code article).', 'Table_matrice : la plage contenant la ligne de la clé (ligne 1) et la ligne de données à extraire.', 'No_index_ligne : le numéro de la ligne à renvoyer dans table_matrice : 1 = ligne de la clé, 2 = 1ʳᵉ ligne de données, 3 = 2ᵉ ligne de données, etc.', '[Valeur proche] : (facultatif) FAUX ou 0 pour forcer une correspondance exacte ; VRAI ou omis pour une correspondance approchée (nécessite une ligne 1 triée).'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Avant d\'aller plus loin. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour RECHERCHEH, la clé doit se trouver dans la première COLONNE de la plage.', bonne: false, explication: 'C\'est l\'inverse de RECHERCHEV : pour RECHERCHEH (Horizontale), la clé doit être sur la première LIGNE de la plage, et la donnée à extraire en dessous, dans la même colonne.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Le décor :** mon tableau principal est vertical, et mon référentiel est **horizontal** : les codes articles sur la première ligne, le prix et la quantité en dessous.',
+      visuel: { type: 'deuxtableaux', t1: { titre: 'Tableau 1 · feuille Commandes', entetes: ['Produit', 'Code article', 'Quantité'], lignes: [['Clavier sans fil', 'A1001', ''], ['Souris ergonomique', 'A1002', ''], ['Écran 24 pouces', 'A1003', '']], cle: 1 }, t2: { titre: 'Tableau 2 · feuille Réf (horizontal)', horizontal: true, entetes: ['Code article', 'A1001', 'A1002', 'A1003', 'A1004'], lignes: [['Prix', '24,90 €', '39,90 €', '149,00 €', '89,00 €'], ['Quantité', '20', '7', '12', '8']], cle: 0, valeur: 2 }, legende: 'Même logique que la RECHERCHEV, mais le référentiel est couché : clé en ligne 1, données en dessous.' },
+      plus: ['Comme pour la RECHERCHEV, j\'ai deux tableaux liés par le Code article. Avec RECHERCHEH, je sélectionne juste la ligne clé (code article) et la ligne Quantité, sans toucher à la structure.', 'Conditions d\'utilisation : 1. Clé unique en ligne 1 : la valeur recherchée doit apparaître une seule fois dans la première ligne du tableau (ex. codes produits). 2. Table_matrice horizontale : doit inclure la ligne-clé et les lignes de données à extraire (ex. ligne 1 = codes, ligne 3 = quantités). 3. Correspondance exacte : utilise FAUX ou 0 pour une recherche exacte ; sans cet argument, Excel fera une correspondance rapprochée sur un tableau trié.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**On prépare :** repère la clé dans les deux tableaux (colonne « Code article » dans le premier, **ligne** « Code article » dans le second), ajoute la colonne Quantité, et sélectionne **C2**. Puis tape **=RECHERCHEH(**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Code article', entete: true }, C1: { t: 'Quantité', entete: true }, A2: { t: 'Clavier sans fil' }, B2: { t: 'A1001' }, C2: { t: '=RECHERCHEH(' }, A3: { t: 'Souris ergonomique' }, B3: { t: 'A1002' } }, formule: '=RECHERCHEH(', actif: 'C2' },
+      plus: ['1. Ouvrir les deux tableaux. 2. Identifier la clé commune : repère la colonne « Code article » dans le 1er tableau et ligne « code article » dans le second tableau. Assure-toi que chaque code est unique dans le référentiel. 3. Si ce n\'est pas déjà fait, ajoute une colonne dans ton tableau principal pour y importer les données issues du second tableau. 4. Sélectionne la cellule où le résultat doit apparaître (C2). 5. Tape =RECHERCHEH(.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La valeur cherchée :** clique sur **B2** (le code de cette ligne), puis verrouille avec un **point-virgule**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Code article', entete: true }, C1: { t: 'Quantité', entete: true }, A2: { t: 'Clavier sans fil' }, B2: { t: 'A1001', ref: true }, C2: { t: '=RECHERCHEH(B2;' } }, formule: '=RECHERCHEH(B2;', actif: 'C2', refsCouleur: { B2: 'bleu' } },
+      plus: ['6. Clique sur la cellule du code article (B2). C\'est ta valeur_cherchée et elle doit se trouver sur la même ligne où tu vas entrer la formule RECHERCHEH. 7. Verrouille l\'argument avec un point-virgule.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La table matrice :** sur la feuille Réf, sélectionne la plage qui **commence par la ligne de la clé** et **descend jusqu\'à la ligne à rapatrier** (la Quantité) : B1:E3. La ligne de la valeur doit impérativement se trouver **en dessous** de la ligne clé.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Réf', cols: ['A', 'B', 'C', 'D', 'E'], rows: [1, 2, 3], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'A1001', sel: true }, C1: { t: 'A1002', sel: true }, D1: { t: 'A1003', sel: true }, E1: { t: 'A1004', sel: true }, A2: { t: 'Prix', entete: true }, B2: { t: '24,90 €', num: true, sel: true }, C2: { t: '39,90 €', num: true, sel: true }, D2: { t: '149,00 €', num: true, sel: true }, E2: { t: '89,00 €', num: true, sel: true }, A3: { t: 'Quantité', entete: true }, B3: { t: '20', num: true, sel: true }, C3: { t: '7', num: true, sel: true }, D3: { t: '12', num: true, sel: true }, E3: { t: '8', num: true, sel: true } }, formule: '=RECHERCHEH(B2;Réf!B1:E3', actif: 'C2', legende: 'La plage B1:E3 englobe la ligne des codes (clé) ET la ligne Quantité, en un bloc rectangulaire.' },
+      plus: ['8. Dans le tableau de référence, sélectionne la plage qui englobe la ligne de la clé commune (ligne 1, Code article) et la ligne de la donnée à rapatrier (par ex. ligne 3, Quantité).', 'N\'oublie pas : pense toujours à commencer par la ligne de la clé, puis à inclure la ligne de la valeur, qui doit impérativement se trouver en dessous de la ligne clé.', 'Lorsque ta plage de recherche (table_matrice) se trouve sur un autre onglet que le tableau principal, Excel préfixe la référence par le nom de cet onglet, suivi d\'un point d\'exclamation.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Le numéro de ligne :** point-virgule, puis **compte les lignes** entre la ligne clé et celle de la donnée : ligne 1 = codes, ligne 2 = Prix, ligne 3 = **Quantité**. Place ce **3**, puis un point-virgule.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Réf', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { A1: { t: 'Code article ①', entete: true }, B1: { t: 'A1001' }, C1: { t: 'A1002' }, A2: { t: 'Prix ②', entete: true }, B2: { t: '24,90 €', num: true }, C2: { t: '39,90 €', num: true }, A3: { t: 'Quantité ③', entete: true }, B3: { t: '20', num: true }, C3: { t: '7', num: true } }, formule: '=RECHERCHEH(B2;Réf!B1:E3;3;', actif: 'C2', legende: 'On compte : ① la clé, ② le Prix, ③ la Quantité. Le no_index_ligne est donc 3.' },
+      plus: ['9. Ajoute un point-virgule pour valider la matrice. 10. Calcule le nombre de lignes entre la ligne clé et celle de la donnée à extraire : ici, on compte 3 lignes. 11. Place le numéro de ligne correspondant dans l\'argument de ta fonction c\'est-à-dire 3. 12. Insère un point-virgule pour verrouiller l\'argument.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**On termine :** tape **FAUX** (ou 0) pour la correspondance exacte, ferme la **parenthèse**, puis **Entrée**.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Code article', entete: true }, C1: { t: 'Quantité', entete: true }, A2: { t: 'Clavier sans fil' }, B2: { t: 'A1001', ref: true }, C2: { t: '=RECHERCHEH(B2;Réf!B1:E3;3;FAUX)' } }, formule: '=RECHERCHEH(B2;Réf!B1:E3;3;FAUX)', actif: 'C2', refsCouleur: { B2: 'bleu' } },
+      plus: ['13. Tape « FAUX » ou 0 pour une correspondance exacte. 14. Ferme la parenthèse. 15. Tape sur ENTREE pour valider la formule.'],
+    },
+    {
+      humeur: 'content',
+      dit: '**Vérifie, fige, étire :** de retour sur le tableau principal, C2 affiche **20** (la quantité du code A1001). Avant d\'étirer, fige la plage avec des **$** (F4, Mac : **⌘ + T**), puis étire la formule.',
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Code article', entete: true }, C1: { t: 'Quantité', entete: true }, A2: { t: 'Clavier sans fil' }, B2: { t: 'A1001' }, C2: { t: '20', vert: true, num: true }, A3: { t: 'Souris ergonomique' }, B3: { t: 'A1002' }, C3: { t: '7', vert: true, num: true }, A4: { t: 'Écran 24 pouces' }, B4: { t: 'A1003' }, C4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEH(B2;Réf!$B$1:$E$3;3;FAUX)', actif: 'C2', legende: 'APRÈS : la plage Réf!$B$1:$E$3 figée, la formule étirée remplit toute la colonne juste.' },
+      plus: ['16. Tu es automatiquement renvoyé vers le tableau principal. 17. Vérifie que la cellule affiche bien la donnée attendue (par ex. « 20 »). 18. Avant d\'étirer la formule, convertis la plage du second tableau en références absolues c\'est-à-dire fixe la plage du deuxième tableau en utilisant $ (F4) pour bloquer les cellules afin de préserver l\'exactitude des données. 19. Étire la formule.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**La RECHERCHEH, à retenir :**',
+      visuel: { type: 'parties', items: [{ label: 'Clé en première ligne : la valeur-clé doit être sur la ligne du haut de la plage' }, { label: 'Index de ligne : la donnée recherchée doit se trouver EN DESSOUS de la clé, dans la même plage' }, { label: 'Plage 2D continue : toujours un bloc rectangulaire (ex. $A$1:$D$4), jamais deux plages séparées' }, { label: 'Correspondance exacte : comme pour RECHERCHEV, précise FAUX ou 0' }, { label: 'Évite les doublons : si la première ligne contient des clés répétées, Excel ne renvoie que la première' }] },
+      plus: ['Clé en première ligne : la valeur-clé doit être sur la ligne du haut de ta plage (table_matrice).', 'Index de ligne : indique le numéro de la ligne à renvoyer ; la donnée recherchée doit se trouver en dessous de la clé, dans la même plage rectangulaire.', 'Plage 2D continue : sélectionne toujours un bloc rectangulaire (ex. $A$1:$D$4) ; pas de sélection en deux plages séparées.', 'Correspondance exacte : comme pour RECHERCHEV, précise FAUX ou 0 pour forcer l\'égalité.', 'Évite les doublons : si ta première ligne contient des clés répétées, Excel ne renverra que la première occurrence.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dernière astuce du chapitre : avant de lancer tes recherches, fais un tour au **Gestionnaire de noms** (Formules > Gestionnaire de noms) pour vérifier tes plages nommées.',
+      visuel: { type: 'gestionnairenoms', noms: [{ nom: 'Table_Produits', ref: '=Stock!$A$2:$C$100', etendue: 'Classeur' }, { nom: 'Table_Stocks', ref: '=Réf!$B$1:$E$3', etendue: 'Classeur' }, { nom: 'Codes', ref: '=Stock!$A$2:$A$100', etendue: 'Classeur' }, { nom: 'Prix', ref: '=Stock!$C$2:$C$100', etendue: 'Classeur' }], selection: 0, note: 'Vérifie que chaque nom pointe vers la bonne plage, corrige les adresses obsolètes, et renomme clairement (Clients, Produits, Prix).' },
+      plus: ['Dans Formules > Gestionnaire de noms, parcoure la liste de tes plages nommées pour : vérifier que chaque nom pointe bien vers la bonne plage de cellules, corriger immédiatement toute adresse erronée ou obsolète, renommer clairement tes plages pour qu\'elles soient intuitives (ex. Clients, Produits, Prix).'],
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Pourquoi c\'est crucial pour tes recherches ?**',
+      visuel: { type: 'parties', items: [{ label: 'RECHERCHEV : remplace A2:C100 par un nom (Table_Produits) pour la table_matrice, fini les erreurs de plage quand tu ajoutes des lignes' }, { label: 'RECHERCHEH : un nom (Table_Stocks) simplifie la sélection des lignes horizontales' }, { label: 'RECHERCHEX : deux noms (Codes, Prix) pour la plage_recherche et la plage_retour, formule lisible et robuste' }] },
+      plus: ['RECHERCHEV : remplace A2:C100 par un nom (Table_Produits) pour la table_matrice, évitant les erreurs de plage lors d\'ajouts de lignes.', 'RECHERCHEH : utilise un nom (Table_Stocks) pour la table_matrice, simplifiant la sélection de lignes horizontales.', 'RECHERCHEX : référence directement deux noms (Codes, Prix) pour la plage_recherche et la plage_retour, rendant ta formule plus lisible et robuste.', 'Cette vérification garantit que tes recherches V, H ou X fonctionnent sans accroc, même après modification de tes tableaux !'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans =RECHERCHEH(B2;Réf!$B$1:$E$3;**3**;FAUX), que désigne le **3** ?',
+      visuel: { type: 'question', options: ['Le numéro de la LIGNE à renvoyer dans la plage (ici, la Quantité)', 'Le nombre de colonnes de la plage', 'La position de la clé sur la première ligne'], bonne: 0, explication: 'C\'est le no_index_ligne : ligne 1 = les codes (la clé), ligne 2 = le Prix, ligne 3 = la Quantité. Excel renvoie la valeur de la 3ᵉ ligne, dans la colonne où il a trouvé la clé.' },
+    },
+    { humeur: 'fier', dit: 'V, X, H : les trois recherches n\'ont plus de secret pour toi. Le détective Excel est diplômé, la ceinture marron t\'attend ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR, rappelsrecherche: RAPPELSRECHERCHE, recherchev: RECHERCHEV, recherchex: RECHERCHEX, recherchexdeux: RECHERCHEXDEUX, rechercheh: RECHERCHEH }

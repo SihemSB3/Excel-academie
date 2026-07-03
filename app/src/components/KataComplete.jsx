@@ -12,6 +12,28 @@ const FELICITATIONS = [
   'Tu avances bien. La ceinture se gagne un kata à la fois.',
 ]
 
+const SANS_FAUTE = [
+  "Sans faute ! Tu maîtrises ce geste. Si le prochain kata te semble familier, le bouton « Je connais, passer » est là pour toi.",
+  'Un sans-faute ! Ton entraînement porte ses fruits : tu peux accélérer le rythme.',
+]
+
+const PERSEVERANCE = [
+  "Kata terminé, bravo pour ta persévérance ! Les questions t'ont fait chercher : rejoue ce kata demain, et tu verras comme les réponses viennent plus vite.",
+  'Tu es allé au bout, et c\'est ça qui compte ! Chaque essai a gravé le geste un peu plus profond. Repasse par ce kata bientôt pour l\'ancrer.',
+]
+
+// Le Shifu adapte son mot de fin au passage réel : sans-faute, parcours standard,
+// ou parcours avec beaucoup d'essais (on invite à rejouer, toujours positivement).
+function messageShifu(stats) {
+  const pool =
+    stats && stats.erreurs === 0 && !stats.passe
+      ? SANS_FAUTE
+      : stats && stats.erreurs >= 3
+        ? PERSEVERANCE
+        : FELICITATIONS
+  return pool[Math.floor(Math.random() * pool.length)]
+}
+
 function Confetti() {
   const pieces = Array.from({ length: 22 }, (_, i) => ({
     left: Math.random() * 100,
@@ -45,9 +67,9 @@ function Confetti() {
 // La récompense de fin de KATA : plus petite que la cérémonie de ceinture, mais un vrai
 // moment de satisfaction — confettis, +XP, barre de progression vers la prochaine ceinture
 // et félicitations du Shifu. `dejaFait` = kata rejoué (pas de double XP, message adapté).
-export default function KataComplete({ titre, xp, dejaFait, fait, total, ceinture, onContinuer }) {
+export default function KataComplete({ titre, xp, dejaFait, stats, streak = 0, fait, total, ceinture, onContinuer }) {
   const info = ceintureInfo(ceinture)
-  const [message] = useState(() => FELICITATIONS[Math.floor(Math.random() * FELICITATIONS.length)])
+  const [message] = useState(() => messageShifu(stats))
   const pct = Math.round((fait / total) * 100)
   const pctAvant = dejaFait ? pct : Math.round(((fait - 1) / total) * 100)
   const [largeur, setLargeur] = useState(pctAvant)
@@ -80,6 +102,12 @@ export default function KataComplete({ titre, xp, dejaFait, fait, total, ceintur
       ) : (
         <div className="z-10 mt-4 animate-fade-up rounded-full bg-navy/10 px-5 py-2 text-sm font-bold text-navy/60" style={{ animationDelay: '.2s' }}>
           Kata révisé, la répétition est la voie 🥋
+        </div>
+      )}
+
+      {streak > 0 && (
+        <div className="z-10 mt-3 animate-fade-up rounded-full bg-navy px-4 py-1.5 text-xs font-bold text-cream" style={{ animationDelay: '.3s' }}>
+          {streak >= 2 ? `🔥 ${streak} jours d'entraînement d'affilée !` : '🔥 Série lancée : reviens demain pour la faire grandir !'}
         </div>
       )}
 

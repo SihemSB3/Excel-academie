@@ -1,0 +1,174 @@
+{
+  "chapitre": 11,
+  "titre": "Les fonctions de recherche",
+  "niveau": 11,
+  "ceinture": "marron",
+  "objectif": "Retrouver automatiquement la bonne information dans tes tableaux : RECHERCHEV (clé en première colonne), RECHERCHEX (bidirectionnelle, message d'absence intégré, multi-critères par concaténation) et RECHERCHEH (clé en première ligne), avec les rappels références absolues et noms de plage.",
+  "note_pedago": "Chapitre COMPLET (5 leçons) : rappelsrecherche (références relatives/absolues F4-⌘T + mode calcul manuel + 3 méthodes pour nommer + syntaxe + supprimer via Gestionnaire + naviguer/F3/premières lettres + créer depuis étiquettes), recherchev (syntaxe, 4 arguments, conditions clé unique/première colonne en choixtableau découverte, méthode 19 étapes argument par argument avec préfixe Stock!, #N/A et corrections, à retenir, limites → transition X, Ex.77-79), recherchex (pitch, 6 arguments, plages indépendantes, méthode pas à pas, si_non_trouvé, à retenir, Ex.80), recherchexdeux (clé combinée par concaténation &, méthode 14 étapes, Hoodie S → 29 €, Ex.81), rechercheh (V vs H, 4 arguments, vraifaux première ligne, méthode 19 étapes, à retenir, astuce Gestionnaire de noms pour recherches robustes, Ex.82). Source ebook pages 465-516.",
+  "xp_valeurs_note": "30 XP par leçon narrée, 40 XP quiz réussi, 10 XP checklist, 80 XP bonus ceinture.",
+  "modules": [
+    { "id": "ch11-rappelsrecherche", "type": "narration", "lecon": "rappelsrecherche", "titre": "Rappels : références & noms", "xp": 30 },
+    { "id": "ch11-recherchev", "type": "narration", "lecon": "recherchev", "titre": "La RECHERCHEV", "xp": 30 },
+    { "id": "ch11-recherchex", "type": "narration", "lecon": "recherchex", "titre": "La RECHERCHEX", "xp": 30 },
+    { "id": "ch11-recherchexdeux", "type": "narration", "lecon": "recherchexdeux", "titre": "La RECHERCHEX à 2 critères", "xp": 30 },
+    { "id": "ch11-rechercheh", "type": "narration", "lecon": "rechercheh", "titre": "La RECHERCHEH", "xp": 30 },
+    {
+      "id": "ch11-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 9,
+      "total": 12,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.11 p512-514 (12 questions), repris verbatim. Le corrigé (PARTIE 2 p682-684) a des coches graphiques non extractibles : reponses_correctes déterminées par le contenu du chapitre (confiance haute), à valider par Sihem.",
+      "questions": [
+        {
+          "id": "ch11-qcm-01",
+          "question": "Que renvoie RECHERCHEV si aucune correspondance exacte n'est trouvée ?",
+          "options": ["#N/A", "La première valeur supérieure", "La valeur inférieure la plus proche", "0"],
+          "reponses_correctes": [0],
+          "explication": "En correspondance exacte (FAUX ou 0), si la clé n'existe pas dans la première colonne de la plage, RECHERCHEV renvoie la valeur d'erreur #N/A (valeur non disponible)."
+        },
+        {
+          "id": "ch11-qcm-02",
+          "question": "À quoi sert l'argument no_index_col dans RECHERCHEV ?",
+          "options": ["Indiquer la colonne où Excel doit chercher la clé", "Spécifier le numéro de colonne à renvoyer", "Définir la plage de recherche", "Choisir le mode de correspondance"],
+          "reponses_correctes": [1],
+          "explication": "no_index_colonne désigne le numéro de la colonne (dans table_matrice) dont la valeur sera renvoyée : 1 = la clé, 2 = la 1ʳᵉ valeur associée, etc."
+        },
+        {
+          "id": "ch11-qcm-03",
+          "question": "Comment verrouiller la plage de recherche pour qu'elle ne bouge pas lors de la recopie ?",
+          "options": ["En nommant la plage dans le Gestionnaire de noms", "En convertissant la plage en tableau Excel", "En utilisant des références absolues (ex. $A$2:$C$10)", "En ajoutant un argument de tri"],
+          "reponses_correctes": [2],
+          "explication": "Les $ (F4, ou ⌘+T sur Mac) figent la plage : elle reste identique sur chaque ligne recopiée. C'est l'étape 18 de la méthode, juste avant d'étirer."
+        },
+        {
+          "id": "ch11-qcm-04",
+          "question": "Quelle condition est impérative pour éviter les erreurs avec RECHERCHEV ?",
+          "options": ["La colonne-clé doit être la première de la plage", "Le tableau doit être trié par ordre alphabétique", "Les données doivent être sur la même feuille", "Les valeurs recherchées doivent être numériques"],
+          "reponses_correctes": [0],
+          "explication": "RECHERCHEV cherche la clé uniquement dans la PREMIÈRE colonne de table_matrice, et la valeur à extraire doit se trouver à droite de cette clé."
+        },
+        {
+          "id": "ch11-qcm-05",
+          "question": "Quel argument de RECHERCHEX spécifie la plage contenant les valeurs à renvoyer ?",
+          "options": ["plage_recherche", "mode_correspondance", "valeur_cherchée", "plage_retour"],
+          "reponses_correctes": [3],
+          "explication": "plage_retour est la colonne (ou la ligne) contenant la donnée à renvoyer. plage_recherche est celle où Excel cherche la clé : les deux sont indépendantes."
+        },
+        {
+          "id": "ch11-qcm-06",
+          "question": "Par défaut, quel type de correspondance utilise RECHERCHEX si vous omettez l'argument ?",
+          "options": ["Correspondance approximative", "Correspondance exacte", "Recherche binaire", "Recherche inversée"],
+          "reponses_correctes": [1],
+          "explication": "L'argument [mode_correspondance] vaut 0 (exacte) automatiquement. C'est un grand avantage sur RECHERCHEV, où il faut penser à écrire FAUX."
+        },
+        {
+          "id": "ch11-qcm-07",
+          "question": "Quelle fonction permet de croiser plusieurs critères sans créer de colonne auxiliaire ?",
+          "options": ["RECHERCHEX", "RECHERCHEV", "RECHERCHEH", "INDEX"],
+          "reponses_correctes": [0],
+          "explication": "RECHERCHEX accepte la concaténation directement dans ses arguments : =RECHERCHEX(G9&H9; A2:A7&C2:C7; D2:D7) croise Produit + Taille en une formule."
+        },
+        {
+          "id": "ch11-qcm-08",
+          "question": "Quel argument permet de personnaliser le message retourné si la valeur n'est pas trouvée ?",
+          "options": ["mode_recherche", "si_non_trouvé", "mode_correspondance", "valeur_par_défaut"],
+          "reponses_correctes": [1],
+          "explication": "Le 4ᵉ argument de RECHERCHEX, [si_non_trouvé], affiche ton texte (ex. \"Non trouvé\") à la place de #N/A, sans avoir besoin de SIERREUR."
+        },
+        {
+          "id": "ch11-qcm-09",
+          "question": "Quel argument de RECHERCHEH détermine la ligne (numéro) à retourner dans table_matrice ?",
+          "options": ["valeur_cherchée", "valeur_proche", "no_index_ligne"],
+          "reponses_correctes": [2],
+          "explication": "no_index_ligne indique la ligne à renvoyer : 1 = la ligne de la clé, 2 = la 1ʳᵉ ligne de données, 3 = la 2ᵉ, etc."
+        },
+        {
+          "id": "ch11-qcm-10",
+          "question": "Où doit se trouver la donnée-clé pour que RECHERCHEH fonctionne sans erreur ?",
+          "options": ["Dans la première ligne de la plage", "Dans la première colonne de la plage", "Dans la dernière ligne de la plage", "Dans la dernière colonne de la plage"],
+          "reponses_correctes": [0],
+          "explication": "H comme Horizontale : la clé se cherche sur la ligne du HAUT de la plage, et la donnée à extraire doit être en dessous, dans la même colonne."
+        },
+        {
+          "id": "ch11-qcm-11",
+          "question": "Comment obliger RECHERCHEH à ne renvoyer qu'une correspondance exacte ?",
+          "options": ["En ajoutant ;VRAI à la fin de la formule", "En ajoutant ;FAUX ou ;0 comme dernier argument", "En triant la première ligne avant la recherche", "En verrouillant la plage en absolu"],
+          "reponses_correctes": [1],
+          "explication": "Comme pour RECHERCHEV : FAUX ou 0 en dernier argument force l'égalité stricte. Sans cet argument, Excel fait une correspondance approchée sur un tableau trié."
+        },
+        {
+          "id": "ch11-qcm-12",
+          "question": "Quelle est la bonne pratique pour sélectionner la plage de données (table_matrice) ?",
+          "options": ["Deux plages séparées (clé et données)", "Une plage nommée uniquement", "Deux plages nommées distinctes", "Une plage continue rectangulaire"],
+          "reponses_correctes": [3],
+          "explication": "Pour RECHERCHEV et RECHERCHEH, la table_matrice doit être un bloc rectangulaire continu (ex. $A$1:$D$4) qui englobe la clé et les données, jamais deux morceaux séparés."
+        }
+      ]
+    },
+    {
+      "id": "ch11-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist de l'ebook ch.11 p515, reprise verbatim (10 items).",
+      "a_valider": false,
+      "items": [
+        "Je sais que la colonne-clé doit être en première colonne de la plage pour RECHERCHEV.",
+        "Je sais que la ligne-clé doit être en première ligne de la plage pour RECHERCHEH.",
+        "Je sais verrouiller mes plages en absolu (ex. $A$2:$D$10) pour toutes mes recherches.",
+        "Je sais forcer la recherche exacte en utilisant FAUX ou 0 comme dernier argument.",
+        "Je sais que RECHERCHEX peut chercher à gauche ou à droite sans contrainte de position.",
+        "Je comprends que l'utilisation de noms de plage structurés rend mes formules plus claires.",
+        "Je sais utiliser l'argument si_non_trouvé de RECHERCHEX pour personnaliser les retours d'erreur.",
+        "Je sais convertir mes données en tableau structuré pour que mes plages s'ajustent automatiquement.",
+        "Je sais prévoir un retour visuel ou message personnalisé (#N/A, « Non trouvé… ») pour l'utilisateur.",
+        "Je peux combiner RECHERCHEV avec la fonction SIERREUR pour remplacer les #N/A."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["recherchev", "recherche v", "verticale", "table_matrice", "no_index"],
+      "question": "Comment fonctionne la RECHERCHEV ?",
+      "reponse": "=RECHERCHEV(valeur_cherchée; table_matrice; no_index_colonne; FAUX). Excel cherche ta clé dans la PREMIÈRE colonne de la plage et renvoie la valeur de la colonne indiquée, sur la même ligne. Pense à figer la plage avec des $ avant d'étirer, et à mettre FAUX (ou 0) pour une correspondance exacte."
+    },
+    {
+      "mots_cles": ["recherchex", "recherche x", "xlookup", "plage_retour", "si_non_trouvé"],
+      "question": "Pourquoi utiliser RECHERCHEX plutôt que RECHERCHEV ?",
+      "reponse": "RECHERCHEX sélectionne deux plages indépendantes (recherche et retour) : elle peut chercher à gauche comme à droite, la correspondance exacte est active par défaut, et son 4ᵉ argument [si_non_trouvé] affiche ton message (ex. \"Non trouvé\") à la place de #N/A, sans SIERREUR."
+    },
+    {
+      "mots_cles": ["deux critères", "2 critères", "multi-critères", "concaténation", "&"],
+      "question": "Comment faire une recherche à deux critères ?",
+      "reponse": "Avec RECHERCHEX et le signe & (concaténation) : =RECHERCHEX(G9&H9; A2:A7&C2:C7; D2:D7). Les deux critères collés forment une clé combinée (ex. « HoodieS ») comparée aux clés combinées du tableau, sans colonne auxiliaire."
+    },
+    {
+      "mots_cles": ["rechercheh", "recherche h", "horizontale", "ligne", "no_index_ligne"],
+      "question": "Quand utiliser la RECHERCHEH ?",
+      "reponse": "Quand ton tableau de référence est disposé en LIGNES : la clé sur la première ligne, les données en dessous. =RECHERCHEH(valeur_cherchée; table_matrice; no_index_ligne; FAUX) renvoie la valeur de la ligne indiquée, dans la colonne où la clé a été trouvée."
+    },
+    {
+      "mots_cles": ["#n/a", "na", "erreur", "non trouvé", "sierreur"],
+      "question": "Ma recherche renvoie #N/A, que faire ?",
+      "reponse": "#N/A signifie que la clé n'a pas été trouvée. Vérifie que la valeur existe bien dans la colonne (ou ligne) clé, ajuste ta plage si besoin, puis enveloppe ta formule dans SIERREUR(… ; \"Non trouvé\") pour un affichage propre. Avec RECHERCHEX, utilise directement le 4ᵉ argument si_non_trouvé."
+    },
+    {
+      "mots_cles": ["dollar", "figer", "absolu", "f4", "recopie", "plage qui bouge"],
+      "question": "Ma formule se décale quand je l'étire, comment l'éviter ?",
+      "reponse": "Fige la plage du tableau de référence en références absolues : sélectionne la référence dans la formule et appuie sur F4 (Mac : ⌘+T, ou Fn+F4). Stock!A2:B5 devient Stock!$A$2:$B$5 et reste identique sur toutes les lignes."
+    },
+    {
+      "mots_cles": ["nom", "nommer", "plage nommée", "gestionnaire de noms", "zone nom"],
+      "question": "Comment nommer une plage et s'en servir dans une recherche ?",
+      "reponse": "Sélectionne la plage puis tape le nom dans la zone Nom (à gauche de la barre de formule) et Entrée. Ou Formules > Définir un nom. Ensuite, utilise le nom directement : =RECHERCHEV(A2; Table_Produits; 2; FAUX). Gère tous tes noms via Formules > Gestionnaire de noms."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "marron",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture marron débloquée. Tu viens de franchir un palier avancé : combiner, croiser et automatiser tes données avec puissance et précision. RECHERCHEV, RECHERCHEX, RECHERCHEH : grâce à ta rigueur et ta persévérance, tu obtiens la ceinture de la maîtrise experte."
+  }
+}
