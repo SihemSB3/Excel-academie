@@ -682,6 +682,11 @@ const LIGNESCOLONNES = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'Repérons le bon bouton. Dans **Accueil > groupe Cellules**, **clique le bouton Insérer.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Insérer', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format' }], cible: 'Insérer', explication: 'L\'icône ⊞ Insérer : elle ajoute lignes, colonnes ou cellules. Juste à côté, ⊟ Supprimer fait l\'inverse.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Et la deuxième, souvent la plus rapide, avec le clic droit.',
       visuel: {
@@ -761,6 +766,16 @@ const MISEENFORME = {
     },
     {
       humeur: 'accueil',
+      dit: 'Repérons un outil ensemble. Dans le groupe **Police**, **clique le bouton Bordures.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Bordures', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Bordures', explication: 'C\'est l\'icône ▦ : elle ouvre les styles de bordures (toutes, contour, épaisses…).' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un réflexe bien pratique. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'En passant simplement la souris au-dessus d\'une option de mise en forme (sans cliquer), Excel montre déjà un aperçu du résultat.', bonne: true, explication: 'Vrai : c\'est l\'aperçu instantané. Tu vois l\'effet AVANT de cliquer, ce qui évite les essais-erreurs.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Ce que tu peux formater depuis le ruban :',
       visuel: { type: 'parties', items: [{ label: 'La **police** : taille, couleur, gras, italique' }, { label: 'L\'**alignement** du texte dans la cellule' }, { label: 'Les **bordures** et la **couleur de fond**' }, { label: 'Le **format des nombres** (€, %, décimales)' }] },
     },
@@ -814,6 +829,11 @@ const COULEURS = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi de trouver le bon outil. Dans le groupe **Police**, **clique le bouton des bordures.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Bordures', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Bordures', explication: 'L\'icône ▦ : un clic sur la petite flèche à côté déroule tous les styles de traits.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Pour des bordures **sur-mesure**, passe par la boîte Format de cellule.',
       visuel: {
@@ -840,6 +860,11 @@ const COULEURS = {
     },
     {
       humeur: 'accueil',
+      dit: 'Le pot de peinture, c\'est pour la couleur de fond. **Clique-le dans le ruban.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Remplissage (le pot de peinture)', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Remplissage', explication: 'Le pot 🪣 : il colore le FOND de la cellule. À ne pas confondre avec le A coloré, qui colore le texte.' },
+    },
+    {
+      humeur: 'accueil',
       dit: '**Modifier la couleur du texte** met un mot en valeur.',
       visuel: {
         type: 'methode',
@@ -850,6 +875,11 @@ const COULEURS = {
           { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'État', entete: true }, A2: { t: 'Clavier' }, B2: { t: 'Soldes' } }, refsCouleur: { B2: 'violet' }, legende: 'La couleur de police met un mot en valeur (ici « Soldes »).' } },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Ne confondons pas les deux boutons. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Le bouton « A » coloré change la couleur du FOND de la cellule.', bonne: false, explication: 'Non : le « A » coloré change la couleur du TEXTE. C\'est le pot de peinture 🪣 qui change le fond.' },
     },
     {
       humeur: 'pensif',
@@ -907,6 +937,11 @@ const NOMBRES = {
     },
     {
       humeur: 'accueil',
+      dit: 'À toi. Tu veux afficher tes valeurs en **pourcentage**. **Clique le bon bouton du ruban.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Pourcentage', actif: 'Accueil', groupeNom: 'Nombre', groupes: [{ icone: '€', label: 'Monétaire' }, { icone: '%', label: 'Pourcentage' }, { icone: '000', label: 'Séparateur' }, { icone: ',0', label: 'Décimale' }], cible: 'Pourcentage', explication: 'Le bouton % : il transforme 0,45 en 45 %. Un clic, et toute la sélection passe au format pourcentage.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'À quoi ça sert, dans la vraie vie :',
       visuel: { type: 'parties', items: [{ label: 'Afficher des prix ou des totaux proprement' }, { label: 'Exprimer une tendance ou une part en %' }, { label: 'Préparer un document pour l\'impression ou un client' }, { label: 'Comparer des valeurs alignées, avec cohérence' }] },
     },
@@ -958,9 +993,19 @@ const PINCEAUSTYLES = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'Trouve l\'outil. Dans **Accueil > groupe Presse-papiers**, **clique le pinceau.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Pinceau (Reproduire la mise en forme)', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '🖌️', label: 'Pinceau' }], cible: 'Pinceau', explication: 'Le pinceau 🖌️ : il copie le STYLE d\'une cellule (couleur, police, bordure) pour le repeindre ailleurs, sans toucher au contenu.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Un détail bien pratique avec le pinceau :',
       visuel: { type: 'encart', label: 'Bon à savoir', liste: ['Tu cliques sur le pinceau puis **fais glisser** sur plusieurs cellules → la mise en forme s\'applique à **toute la plage**.', 'Tu cliques **une seule fois** → elle s\'applique à **une seule** cellule.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions ce détail. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Le pinceau copie aussi le CONTENU (le texte, les chiffres) de la cellule modèle.', bonne: false, explication: 'Non : le pinceau ne copie que la MISE EN FORME (couleur, police, bordure). Le contenu de la cellule repeinte ne change pas.' },
     },
     {
       humeur: 'accueil',
@@ -1033,6 +1078,11 @@ const MISEENPAGE = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Un point à retenir sur les thèmes. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Un thème ne change les couleurs et polices que de la feuille active, pas du reste du classeur.', bonne: false, explication: 'Non : un thème s\'applique à TOUT le classeur d\'un coup. C\'est justement ce qui garde une cohérence entre toutes tes feuilles.' },
+    },
+    {
       humeur: 'accueil',
       dit: '**Le mode Page** te montre la feuille telle qu\'elle sera imprimée.',
       visuel: {
@@ -1055,6 +1105,11 @@ const MISEENPAGE = {
       humeur: 'accueil',
       dit: 'Les outils de mise en page disponibles :',
       visuel: { type: 'parties', items: [{ label: 'Définir les marges' }, { label: 'Choisir l\'orientation (portrait ou paysage)' }, { label: 'Définir la taille du papier' }, { label: 'Définir une zone d\'impression' }, { label: 'Insérer des sauts de page' }, { label: 'Imprimer les en-têtes de lignes/colonnes' }] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Découvrons par la logique. Ton tableau a **beaucoup de colonnes** (il est large). Quelle orientation choisir pour tout faire tenir ?',
+      visuel: { type: 'question', options: ['Paysage (horizontal)', 'Portrait (vertical)'], bonne: 0, explication: 'Paysage : la feuille est plus large que haute, parfaite pour un tableau à nombreuses colonnes. Le portrait convient mieux aux tableaux longs et étroits.' },
     },
     {
       humeur: 'accueil',
@@ -1083,6 +1138,11 @@ const MISEENPAGE = {
           { capture: { type: 'impressionapercu' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans l\'onglet **Mise en page**, **clique le bouton Zone d\'impression.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Zone d\'impression', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '🖨', label: 'Zone impression' }, { icone: '📐', label: 'Marges' }, { icone: '📄', label: 'Orientation' }], cible: 'Zone impression', explication: 'C\'est ici que tu choisis « Définir » : seules les cellules sélectionnées seront imprimées, le reste est ignoré.' },
     },
     {
       humeur: 'accueil',
@@ -1140,9 +1200,19 @@ const IMPRESSION = {
       visuel: { type: 'parties', items: [{ label: 'Donner un aspect **professionnel** et structuré au document' }, { label: 'Faciliter la lecture quand on imprime **plusieurs pages**' }, { label: 'Ajouter des **repères** utiles (numéro de page, date, nom de la feuille)' }] },
     },
     {
+      humeur: 'accueil',
+      dit: 'Réfléchissons. Ton document imprimé fait **8 pages**. Quel élément de pied de page aide le plus le lecteur à s\'y retrouver ?',
+      visuel: { type: 'question', options: ['Le numéro de page (Page 3 sur 8)', 'Une couleur de fond', 'Une bordure épaisse'], bonne: 0, explication: 'Le numéro de page permet de remettre les feuilles dans l\'ordre et de se repérer. C\'est le repère indispensable d\'un document multi-pages.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Un point à savoir sur ces zones :',
       visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Ces zones ne sont **pas visibles** à l\'écran en édition normale. Elles apparaissent en **mode Page**, dans l\'**aperçu avant impression**, et sur la **version papier**.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions ce point. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'L\'en-tête et le pied de page s\'affichent à l\'écran en mode d\'édition normal.', bonne: false, explication: 'Non : en édition normale, ils sont invisibles. Tu les vois en mode Page, dans l\'aperçu avant impression, et sur le papier.' },
     },
     {
       humeur: 'pensif',
@@ -1157,6 +1227,11 @@ const IMPRESSION = {
           { capture: { type: 'menu', items: [{ label: '(aucun)' }, { label: 'Page 1' }, { label: 'Confidentiel ; Page 1', actif: true }, { label: 'Feuil1' }, { label: 'Personnalisé…' }] } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans la liste des modèles, **clique celui qui affiche à la fois « Confidentiel » et le numéro de page.**',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique le modèle « Confidentiel ; Page 1 »', items: [{ label: '(aucun)' }, { label: 'Page 1' }, { label: 'Confidentiel ; Page 1' }, { label: 'Feuil1' }, { label: 'Personnalisé…' }], cible: 2, explication: 'Ce modèle combine la mention « Confidentiel » et le numéro de page. Et si aucun modèle ne te convient, « Personnalisé… » tout en bas te laisse tout composer.' },
     },
     {
       humeur: 'accueil',
