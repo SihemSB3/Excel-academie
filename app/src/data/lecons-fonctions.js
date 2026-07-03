@@ -4685,6 +4685,11 @@ const MFCONDITIONNELLE = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Dans **Accueil > groupe Styles**, **clique le bouton Mise en forme conditionnelle.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Mise en forme conditionnelle', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme conditionnelle' }, { icone: '▧', label: 'Mettre sous forme de tableau' }, { icone: '🎨', label: 'Styles de cellules' }], cible: 'Mise en forme conditionnelle', explication: 'Ce bouton ouvre les 7 familles de règles : surbrillance, valeurs extrêmes, nuances, barres, icônes, formule, doublons.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Deuxième famille : **mettre en avant les extrêmes** (valeurs hautes/basses).',
       visuel: {
@@ -4728,6 +4733,11 @@ const MFCONDITIONNELLE = {
           { capture: { type: 'mfctableau', style: 'barres', legende: 'APRÈS : plus la vente est grande, plus la barre est longue. Un mini-graphique directement dans le tableau !' } },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Sur les barres de données. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Les barres de données affichent, dans chaque cellule, une barre d\'autant plus longue que la valeur est grande.', bonne: true, explication: 'Vrai : c\'est un mini-graphique directement dans le tableau. Plus la valeur est haute, plus la barre remplit la cellule. Idéal pour comparer d\'un coup d\'œil.' },
     },
     {
       humeur: 'pensif',
@@ -4778,6 +4788,11 @@ const MFCONDITIONNELLE = {
     },
     {
       humeur: 'pensif',
+      dit: 'Sur la règle basée sur une formule. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Une règle « basée sur une formule » applique le format aux cellules pour lesquelles la formule renvoie VRAI.', bonne: true, explication: 'Vrai : tu écris une formule qui donne VRAI ou FAUX (ex. =B2>=12000). Là où c\'est VRAI, le format s\'applique. C\'est la règle la plus souple, pour des critères sur mesure.' },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Septième famille : la **détection des doublons**, pour repérer les valeurs en double.',
       visuel: {
         type: 'methode',
@@ -4795,6 +4810,11 @@ const MFCONDITIONNELLE = {
       humeur: 'pensif',
       dit: 'Récap : les **7 familles** de règles disponibles.',
       visuel: { type: 'encart', label: 'Les familles de règles', liste: ['**Surbrillance des cellules** : supérieur/inférieur à, entre, égal à, texte qui contient, date.', '**Valeurs haute/basse** : X plus élevées/basses, X %, au-dessus/en-dessous de la moyenne.', '**Nuances de couleurs** : dégradé bicolore ou tricolore (du min au max).', '**Barres de données** : une barre proportionnelle à la valeur, dans la cellule.', '**Jeux d\'icônes** : 3 flèches, 3 feux, 5 formes… selon des seuils.', '**Règle basée sur une formule** : mise en forme dès qu\'une formule renvoie VRAI.', '**Détection des doublons** : surligne les valeurs en double (ou uniques).'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Sur la détection des doublons. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Avec la règle « Valeurs en double », si « Marie » apparaît deux fois, TOUTES ses occurrences sont surlignées.', bonne: true, explication: 'Vrai : chaque valeur présente plus d\'une fois est surlignée, partout où elle apparaît. Parfait pour repérer (et nettoyer) les doublons d\'une liste.' },
     },
     {
       humeur: 'accueil',
@@ -4824,6 +4844,11 @@ const RAPPELREFNOMS = {
           { note: 'Vers le **bas** : la ligne change (B2→B3). Vers la **droite** : la colonne change (B2→C2).', label: 'À retenir' },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Rappel éclair sur la recopie. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Quand tu recopies =B2*C2 vers le BAS, la formule devient =B3*C3 (les lignes suivent).', bonne: true, explication: 'Vrai : une référence relative s\'adapte à la recopie. Vers le bas, les lignes changent (B2→B3) ; vers la droite, ce seraient les colonnes.' },
     },
     {
       humeur: 'pensif',
@@ -4872,14 +4897,24 @@ const FONCTIONSI = {
   narration: [
     { humeur: 'accueil', dit: 'La fonction **SI** teste une condition et renvoie une valeur si elle est **vraie**, une autre si elle est **fausse**. Sa syntaxe :', visuel: { type: 'formule', formule: '=SI(test_logique ; valeur_si_vrai ; valeur_si_faux)' } },
     {
+      humeur: 'accueil',
+      dit: 'Un exemple : =SI(A1>10;"OK";"À refaire"), avec la note **A1 = 14**. **Qu\'affiche la cellule ?**',
+      visuel: { type: 'question', options: ['OK', 'À refaire', '14'], bonne: 0, explication: '14 > 10 ? Oui : le test est vrai, Excel affiche le 2ᵉ argument, « OK ». Le texte va toujours entre guillemets.' },
+    },
+    {
       humeur: 'pensif',
-      dit: 'Un exemple concret : afficher **OK** si la note dépasse 10, sinon **À refaire**.',
+      dit: 'Voilà : A1 = 14, donc 14 > 10 est vrai, la cellule affiche « OK ».',
       visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: '14', ref: true }, B1: { t: '=SI(A1>10;"OK";"À refaire")' }, A2: { t: '' }, B2: { t: 'OK', vert: true } }, formule: '=SI(A1>10;"OK";"À refaire")', actif: 'B1', legende: 'A1 = 14, donc 14 > 10 est vrai : Excel affiche « OK ». Le texte va toujours entre guillemets.' },
     },
     {
       humeur: 'pensif',
       dit: 'La condition s\'appuie sur des **opérateurs de comparaison** :',
       visuel: { type: 'operateurs', cols: 1, items: [{ s: '=', l: 'égal à' }, { s: '<>', l: 'différent de' }, { s: '>', l: 'supérieur à' }, { s: '>=', l: 'supérieur ou égal à' }, { s: '<', l: 'inférieur à' }, { s: '<=', l: 'inférieur ou égal à' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un opérateur moins évident. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'L\'opérateur **<>** signifie « différent de ».', bonne: true, explication: 'Vrai : <> teste l\'inégalité. Ex. =SI(A1<>"";"Rempli";"Vide") affiche « Rempli » tant que A1 n\'est pas vide.' },
     },
     {
       humeur: 'pensif',
@@ -4936,6 +4971,11 @@ const SIIMBRIQUE = {
       humeur: 'pensif',
       dit: 'Voici la formule qui fait ça. Excel lit de gauche à droite : dès qu\'un test est **faux**, il passe au SI **suivant** (jusqu\'à 64 niveaux possibles).',
       visuel: { type: 'formule', formule: '=SI(B2>90;"Excellent";SI(B2>75;"Bien";SI(B2>50;"Passable";"Insuffisant")))' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Avant de la construire, teste ta lecture. Pour une note de **82** (pas > 90, mais > 75), **quel commentaire va s\'afficher ?**',
+      visuel: { type: 'question', options: ['Bien', 'Excellent', 'Passable'], bonne: 0, explication: '82 > 90 ? Non. 82 > 75 ? Oui → « Bien ». Excel s\'arrête au premier test vrai, en lisant de gauche à droite.' },
     },
     {
       humeur: 'pensif',
@@ -5004,6 +5044,11 @@ const SIIMBRIQUE = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'Zone Nord : CA = 120 000 € et satisfaction = 95 %. Avec **ET** (les deux à la fois), **quel bilan ?**',
+      visuel: { type: 'question', options: ['Validé', 'À revoir'], bonne: 0, explication: '120 000 > 100 000 ? Oui. 95 % > 90 % ? Oui. Les DEUX conditions sont vraies, donc ET renvoie VRAI → « Validé ».' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Même construction avec **OU** : cette fois, **une seule** condition vraie suffit. Regarde la zone Sud…',
       visuel: {
@@ -5065,6 +5110,11 @@ const NBSIENS = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'Dans ce fichier, **2 personnes** sont des hommes, célibataires, et gagnent plus de 50 000 € (Jean et Antoine). **Que va renvoyer NB.SI.ENS ?**',
+      visuel: { type: 'question', options: ['2', '12', '0'], bonne: 0, explication: 'NB.SI.ENS compte les lignes qui remplissent TOUS les critères à la fois : ici, 2 (Jean et Antoine).' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Vérifions ta logique. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'NB.SI.ENS compte les lignes qui remplissent AU MOINS UN des critères.', bonne: false, explication: 'NB.SI.ENS exige TOUS les critères en même temps (une logique ET). Jean compte s\'il est homme ET célibataire ET gagne plus de 50 000 €.' },
@@ -5087,6 +5137,11 @@ const SOMMESIENS = {
     { humeur: 'accueil', dit: '**SOMME.SI.ENS** fonctionne comme NB.SI.ENS, mais au lieu de compter, elle **additionne** les valeurs. Attention : ici, la **plage à totaliser vient en premier**.', visuel: { type: 'formule', formule: '=SOMME.SI.ENS(plage_somme ; plage_critères1 ; critère1 ; …)' } },
     {
       humeur: 'pensif',
+      dit: 'Le piège à connaître. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans SOMME.SI.ENS, la plage à additionner se met en PREMIER (avant les paires plage/critère).', bonne: true, explication: 'Vrai : =SOMME.SI.ENS(plage_somme ; plage_critères1 ; critère1 ; …). C\'est l\'inverse de SOMME.SI, où la plage à sommer vient en dernier. Piège classique !' },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Exemple : le CA d\'**Alice** dans la région **Est**.',
       visuel: {
         type: 'methode',
@@ -5099,6 +5154,11 @@ const SOMMESIENS = {
           { note: 'Pour **recopier** cette formule dans un tableau de synthèse, **fige les plages** avec des $ (F4 / ⌘+T) : $C$2:$C$13, $A$2:$A$13… Elles ne bougeront plus.', label: 'Recopie sans erreur' },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Une seule ligne du tableau correspond à **Alice** ET **région Est**, avec un CA de 150 000 €. **Que renvoie la formule ?**',
+      visuel: { type: 'question', options: ['150 000 €', '0 €', 'La somme de tous les CA'], bonne: 0, explication: 'SOMME.SI.ENS additionne le CA des seules lignes qui respectent TOUS les critères. Ici, une seule ligne (Alice + Est) → 150 000 €.' },
     },
     {
       humeur: 'pensif',
@@ -5163,9 +5223,19 @@ const SIERREUR = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'Ligne 3 : 30 ÷ 0, protégé par =SIERREUR(A2/B2;"-"). **Qu\'affiche la cellule ?**',
+      visuel: { type: 'question', options: ['-', '#DIV/0!', '0'], bonne: 0, explication: 'La division plante (÷ 0), donc SIERREUR affiche la valeur de remplacement : « - ». Sans SIERREUR, on verrait le vilain #DIV/0!.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Pour t\'aider à diagnostiquer, voici les **erreurs Excel** les plus courantes :',
       visuel: { type: 'erreursexcel' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Reconnaître une erreur. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'L\'erreur #DIV/0! apparaît quand une formule divise par zéro (ou par une cellule vide).', bonne: true, explication: 'Vrai : diviser par 0 est impossible, d\'où #DIV/0!. La parade : envelopper la division dans SIERREUR(… ; "-") ou vérifier le diviseur avec un SI.' },
     },
     {
       humeur: 'accueil',
