@@ -1945,9 +1945,19 @@ const RECHERCHERREMPLACER = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi de trouver l\'outil. Dans l\'onglet **Accueil > groupe Édition**, **clique la loupe** (Rechercher & sélectionner).',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Rechercher & sélectionner', actif: 'Accueil', groupeNom: 'Édition', groupes: [{ icone: '∑', label: 'Somme' }, { icone: '⇅', label: 'Trier & filtrer' }, { icone: '🔍', label: 'Rechercher & sélectionner' }], cible: 'Rechercher & sélectionner', explication: 'La loupe 🔍 : elle ouvre le menu Rechercher / Remplacer. Choisis « Remplacer… » pour changer des valeurs en masse.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Les deux raccourcis à retenir :',
       visuel: { type: 'encart', label: 'Astuce clavier', liste: ['**Ctrl + H** ouvre « Rechercher et remplacer » (Mac : **⌘ + Maj + H**).', '**Ctrl + F** ouvre juste « Rechercher » : pour **trouver** une valeur, sans la remplacer (Mac : **⌘ + F**).'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Ne confondons pas les deux raccourcis. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Ctrl + F sert à remplacer une valeur par une autre.', bonne: false, explication: 'Non : Ctrl + F sert seulement à TROUVER une valeur. Pour la remplacer, c\'est Ctrl + H (Rechercher ET remplacer).' },
     },
     {
       humeur: 'accueil',
@@ -1986,9 +1996,19 @@ const CONVERTIR = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Dans l\'onglet **Données**, **clique le bouton Convertir.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Convertir', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🔀', label: 'Convertir' }, { icone: '🧹', label: 'Supprimer doublons' }, { icone: '✓', label: 'Validation' }], cible: 'Convertir', explication: 'Convertir 🔀 lance l\'assistant qui découpe une colonne en plusieurs, selon un séparateur (espace, virgule…).' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Les pièges à éviter :',
       visuel: { type: 'encart', label: 'Erreurs fréquentes', liste: ['Oublier de **prévoir des colonnes vides à droite** : tu risques d\'écraser des données existantes.', 'Cliquer sur **Suivant** trop vite, sans vérifier l\'aperçu du découpage.', 'Croire que Convertir **modifie** le texte : en réalité, il le **copie** dans d\'autres cellules.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un point important à comprendre. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Il faut prévoir des colonnes vides à droite avant de convertir, sinon tu écrases des données existantes.', bonne: true, explication: 'Vrai : Convertir place les morceaux dans les colonnes voisines. S\'il y a déjà des données à droite, elles seront écrasées. Prévois de l\'espace (ou choisis une destination).' },
     },
     {
       humeur: 'accueil',
@@ -2019,6 +2039,11 @@ const FONCTIONSPARTICULIERES = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Tu cherches une fonction pour calculer une durée entre deux dates. Dans l\'onglet **Formules**, **clique la famille où chercher.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique la catégorie Date & heure', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer fonction' }, { icone: '💰', label: 'Financières' }, { icone: '📅', label: 'Date & heure' }, { icone: '🔤', label: 'Texte' }], cible: 'Date & heure', explication: 'Chaque famille regroupe des fonctions par thème. Les durées, jours ouvrés, mois… sont dans « Date & heure ».' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Les grandes familles de fonctions :',
       visuel: { type: 'parties', items: [{ label: '**Math & trigo** : arrondis, sommes conditionnelles…' }, { label: '**Texte** : extraire un mot, reformater du texte' }, { label: '**Date & heure** : plannings, durées, jours ouvrés' }, { label: '**Logique** : SI, ET, OU…' }, { label: '**Financières** : simuler un prêt, une mensualité' }, { label: '**Statistiques** : comptages, moyennes, médianes' }, { label: '**Recherche & référence** : RECHERCHEV, RECHERCHEX…' }] },
@@ -2027,6 +2052,11 @@ const FONCTIONSPARTICULIERES = {
       humeur: 'accueil',
       dit: 'Le plus rassurant :',
       visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Tu **n\'as pas besoin de retenir toutes les fonctions** ! Clique sur **fx** (Insérer une fonction), tape ce que tu veux faire (« moyenne », « arrondir »…), et Excel te propose la bonne fonction et t\'accompagne pas à pas.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'De quoi te rassurer. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour bien utiliser Excel, il faut connaître par cœur le nom de toutes les fonctions.', bonne: false, explication: 'Faux, et heureusement ! Le bouton fx te laisse décrire ton besoin en mots (« arrondir », « compter »…) et Excel propose la fonction. Tu apprends les plus utiles avec la pratique.' },
     },
     {
       humeur: 'pensif',
@@ -2066,7 +2096,16 @@ const ARRONDIS = {
       dit: 'Le 2e argument, **no_chiffres**, décide où on arrondit :',
       visuel: { type: 'encart', label: 'Le rôle de no_chiffres', liste: ['**no_chiffres > 0** : arrondi aux décimales (ex : 2 = deux chiffres après la virgule).', '**no_chiffres = 0** : arrondi à l\'entier le plus proche.', '**no_chiffres < 0** : arrondi à gauche de la virgule (ex : -2 = à la centaine).'] },
     },
-    { humeur: 'fier', dit: 'Exemple : =ARRONDI(12,8 ; 0) donne 13 (12,8 est plus proche de 13 que de 12).', visuel: tabArr5('12,8', '=ARRONDI(A2;0)', { t: '13', num: true, vert: true }) },
+    {
+      humeur: 'pensif',
+      dit: 'Un cas surprenant. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '=ARRONDI(31415 ; -2) arrondit à la centaine la plus proche et donne 31400.', bonne: true, explication: 'Vrai : un no_chiffres négatif arrondit à GAUCHE de la virgule. -2 = à la centaine. 31415 devient 31400 (la centaine la plus proche).' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi de deviner. **=ARRONDI(12,8 ; 0), combien ça donne ?**',
+      visuel: { type: 'question', options: ['13', '12', '12,8'], bonne: 0, explication: '12,8 est plus proche de 13 que de 12, donc ARRONDI le monte à 13. Le 0 signifie « zéro décimale ».' },
+    },
     { humeur: 'accueil', dit: '**ARRONDI.INF** arrondit **toujours vers le bas** (vers zéro). Pratique pour ne pas surestimer un résultat (budgets, prévisions prudentes).', visuel: { type: 'formule', formule: '=ARRONDI.INF(nombre ; no_chiffres)' } },
     {
       humeur: 'pensif',
@@ -2089,6 +2128,11 @@ const ARRONDIS = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. **=ARRONDI.INF(76,3 ; 0), ça donne quoi ?**',
+      visuel: { type: 'question', options: ['76', '77', '76,3'], bonne: 0, explication: 'ARRONDI.INF va toujours vers le BAS : 76,3 devient 76, même si 76,3 est plus proche de 76 (ici ça tombe pareil qu\'ARRONDI, mais ARRONDI.INF descendrait aussi 76,9 à 76).' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Trois exemples pour bien voir :',
       visuel: { type: 'encart', label: 'ARRONDI.INF en exemples', liste: ['=ARRONDI.INF(76,3 ; 0) → **76** (entier juste en dessous).', '=ARRONDI.INF(3,14159 ; 3) → **3,141** (coupe après 3 décimales).', '=ARRONDI.INF(31415 ; -2) → **31400** (centaine inférieure).'] },
@@ -2109,6 +2153,11 @@ const ARRONDIS = {
           { capture: tabArr5('76,3', '=ARRONDI.SUP(A2;0)', { t: '77', num: true, vert: true }) },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. **=ARRONDI.SUP(76,3 ; 0), ça donne quoi ?**',
+      visuel: { type: 'question', options: ['77', '76', '80'], bonne: 0, explication: 'ARRONDI.SUP va toujours vers le HAUT : même 76,1 monterait à 77. C\'est parfait pour prévoir une marge (arrondir un temps, un stock, un prix au-dessus).' },
     },
     {
       humeur: 'pensif',
@@ -2141,6 +2190,11 @@ const ARRONDIS = {
       humeur: 'pensif',
       dit: 'La différence clé entre ARRONDI et TRONQUE :',
       visuel: { type: 'encart', label: 'ARRONDI vs TRONQUE', liste: ['**ARRONDI** regarde la valeur et arrondit au plus proche : 12,8 → **13**.', '**TRONQUE** ne regarde rien, il coupe : 12,8 → **12**.', 'Pour un nombre positif, TRONQUE donne le même résultat qu\'ARRONDI.INF, mais c\'est une simple coupe, pas un arrondi.'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'La question qui fait la différence. La valeur est 12,8. **=TRONQUE(12,8 ; 0), combien ça donne ?**',
+      visuel: { type: 'question', options: ['12', '13', '12,8'], bonne: 0, explication: 'TRONQUE COUPE, il n\'arrondit pas : il jette la partie décimale. 12,8 devient 12 (alors qu\'ARRONDI donnerait 13).' },
     },
     { humeur: 'accueil', dit: 'Côte à côte : la même valeur 12,8, traitée par les deux.', visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Valeur', entete: true }, B1: { t: 'ARRONDI', entete: true }, C1: { t: 'TRONQUE', entete: true }, A2: { t: '12,8', num: true }, B2: { t: '13', num: true, vert: true }, C2: { t: '12', num: true, vert: true } }, legende: 'ARRONDI(12,8;0) = 13, mais TRONQUE(12,8;0) = 12.' } },
     {
@@ -2212,6 +2266,11 @@ const FONCTIONSDATE = {
         ],
       },
     },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. La date en A2 est le 11/05/2025. **=ANNEE(A2), ça donne quoi ?**',
+      visuel: { type: 'question', options: ['2025', '5', '11'], bonne: 0, explication: 'ANNEE extrait l\'année : 2025. (MOIS donnerait 5, JOUR donnerait 11.)' },
+    },
     { humeur: 'accueil', dit: '**JOURSEM** renvoie le jour de la semaine sous forme de chiffre. Le 2e argument, **type_retour**, choisit par quel jour commence la semaine.', visuel: { type: 'formule', formule: '=JOURSEM(date ; type_retour)' } },
     {
       humeur: 'pensif',
@@ -2250,6 +2309,11 @@ const FONCTIONSDATE = {
       dit: 'Un détail à connaître sur DATEDIF :',
       visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Quand tu tapes =DATEDIF, **aucune suggestion ne s\'affiche**, c\'est normal : écris-la en entier. Combine-la avec **AUJOURDHUI()** pour une durée qui se met à jour toute seule.' },
     },
+    {
+      humeur: 'pensif',
+      dit: 'L\'astuce qui rend ça vivant. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si la date de fin est =AUJOURDHUI(), l\'ancienneté calculée par DATEDIF se met à jour toute seule chaque jour.', bonne: true, explication: 'Vrai : AUJOURDHUI() renvoie la date du jour, recalculée à chaque ouverture. L\'ancienneté (ou le délai) reste donc toujours exacte, sans rien retoucher.' },
+    },
     { humeur: 'accueil', dit: '**NB.JOURS.OUVRES.INTL** compte les jours travaillés entre deux dates (hors week-ends et jours fériés).', visuel: { type: 'formule', formule: '=NB.JOURS.OUVRES.INTL(début ; fin ; [weekend] ; [fériés])' } },
     {
       humeur: 'pensif',
@@ -2272,6 +2336,11 @@ const FONCTIONSDATE = {
         ],
       },
     },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Du **1er au 30 avril 2025**, en comptant seulement les jours travaillés (les week-ends exclus), combien de jours ouvrés à peu près ?',
+      visuel: { type: 'question', options: ['22', '30', '8'], bonne: 0, explication: 'Avril 2025 compte 30 jours, dont 8 de week-end : il reste 22 jours ouvrés. C\'est exactement ce que renvoie NB.JOURS.OUVRES.INTL.' },
+    },
     { humeur: 'accueil', dit: '**SERIE.JOURS.OUVRES** fait l\'inverse : à partir d\'une date, elle ajoute (ou retire) un nombre de jours ouvrés pour trouver une date d\'échéance ou de livraison.', visuel: { type: 'formule', formule: '=SERIE.JOURS.OUVRES(début ; nb_jours ; [fériés])' } },
     {
       humeur: 'pensif',
@@ -2288,6 +2357,11 @@ const FONCTIONSDATE = {
           { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Début', entete: true }, B1: { t: 'Jours ouvrés', entete: true }, C1: { t: 'Échéance', entete: true }, A2: { t: '01/04/2025' }, B2: { t: '10', num: true }, C2: { t: '15/04/2025', vert: true } }, formule: '=SERIE.JOURS.OUVRES(A2;B2)', actif: 'C2', refsCouleur: { A2: 'bleu', B2: 'ambre' }, legende: '10 jours ouvrés après le 01/04/2025 → échéance le 15/04/2025.' } },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un réflexe puissant. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Avec SERIE.JOURS.OUVRES, un nombre de jours négatif (ex : -10) permet de REMONTER dans le temps.', bonne: true, explication: 'Vrai : -10 recule de 10 jours ouvrés. Pratique pour retrouver « quand dois-je commencer pour livrer à telle date ? ».' },
     },
     {
       humeur: 'pensif',
@@ -2343,6 +2417,11 @@ const FONCTIONSTEXTE = {
       dit: 'TEXTE ne sert pas qu\'aux dates :',
       visuel: { type: 'encart', label: 'Autres usages', liste: ['=TEXTE(123 ; "00000") → « 00123 » (codes clients à longueur fixe).', '=TEXTE(2,5 ; "0,000 kg") → « 2,500 kg » (ajoute automatiquement l\'unité).'] },
     },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions le rôle de TEXTE. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '=TEXTE(15/04/2025 ; "jj mmmm aaaa") affiche « 15 avril 2025 ».', bonne: true, explication: 'Vrai : « jj » = jour sur 2 chiffres, « mmmm » = mois en toutes lettres, « aaaa » = année sur 4 chiffres. TEXTE habille la valeur exactement comme tu l\'écris entre guillemets.' },
+    },
     { humeur: 'accueil', dit: '**GAUCHE** extrait les premiers caractères (par la gauche), **DROITE** les derniers (par la droite).', visuel: { type: 'formule', formule: '=GAUCHE(texte ; no_car)   =DROITE(texte ; no_car)' } },
     {
       humeur: 'pensif',
@@ -2358,7 +2437,12 @@ const FONCTIONSTEXTE = {
         ],
       },
     },
-    { humeur: 'accueil', dit: '**DROITE** marche exactement comme **GAUCHE**, sauf qu\'elle compte **à partir de la droite** : elle prend la **fin** du texte. Exemple : on récupère les 3 derniers caractères du code (le numéro de série).', visuel: tabTxt('FR-2025-001', '=DROITE(A2;3)', { t: '001', vert: true }, 'Code') },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Le code en A2 est **« FR-2025-001 »**. **=DROITE(A2 ; 3), ça donne quoi ?**',
+      visuel: { type: 'question', options: ['001', 'FR-', '025'], bonne: 0, explication: 'DROITE prend les caractères par la fin : les 3 derniers de « FR-2025-001 », c\'est « 001 » (le numéro de série).' },
+    },
+    { humeur: 'accueil', dit: '**DROITE** marche exactement comme **GAUCHE**, sauf qu\'elle compte **à partir de la droite** : elle prend la **fin** du texte. Ici, les 3 derniers caractères du code donnent bien « 001 ».', visuel: tabTxt('FR-2025-001', '=DROITE(A2;3)', { t: '001', vert: true }, 'Code') },
     { humeur: 'accueil', dit: '**STXT** extrait un morceau **au milieu** : tu indiques à quelle position commencer et combien de caractères prendre.', visuel: { type: 'formule', formule: '=STXT(texte ; position_départ ; nb_caractères)' } },
     { humeur: 'accueil', dit: 'Notre but ici : dans le code **« FR-2025-001 »**, isoler **l\'année 2025**. Elle commence au **4e caractère** et fait **4 caractères** : c\'est exactement ce qu\'on va dire à STXT.', visuel: { type: 'tableur', cols: ['A'], rows: [1, 2], cells: { A1: { t: 'Code', entete: true }, A2: { t: 'FR-2025-001' } }, legende: 'F(1) R(2) -(3) 2(4) 0(5) 2(6) 5(7) : « 2025 » commence en position 4, sur 4 caractères.' } },
     {
@@ -2380,6 +2464,11 @@ const FONCTIONSTEXTE = {
           { capture: tabTxt('FR-2025-001', '=STXT(A2;4;4)', { t: '2025', vert: true }, 'Code') },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'On a dit à STXT de partir du 4e caractère et d\'en prendre 4, sur « FR-2025-001 ». **Qu\'est-ce qui s\'affiche ?**',
+      visuel: { type: 'question', options: ['2025', '-202', 'R-20'], bonne: 0, explication: 'On commence en position 4 (le « 2 » de 2025) et on prend 4 caractères : « 2025 ». STXT extrait pile au milieu.' },
     },
     {
       humeur: 'accueil',
@@ -2417,6 +2506,11 @@ const FONCTIONSFINANCIERES = {
     { humeur: 'pensif', dit: 'Tu connais déjà **VPM** (ceinture verte) : elle calcule la **mensualité** d\'un prêt. Petit rappel, et si tu maîtrises, utilise « Je connais, passer » en haut.', visuel: { type: 'formule', formule: '=VPM(taux ; nb_périodes ; valeur_actuelle)' } },
     { humeur: 'pensif', dit: 'Exemple : 15 000 € à 5 % par an sur 120 mois → =VPM(5%/12 ; 120 ; -15000) ≈ -159,10 €/mois.', visuel: tabVPM(true) },
     { humeur: 'accueil', dit: '**VA (Valeur Actuelle)** répond à une question simple : « combien vaut **aujourd\'hui** de l\'argent que je vais recevoir (ou verser) plus tard ? » Car 100 € dans 5 ans valent moins que 100 € aujourd\'hui : avec les intérêts, l\'argent « perd de la valeur » avec le temps.' },
+    {
+      humeur: 'pensif',
+      dit: 'Une idée clé à valider. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Recevoir 100 € dans 5 ans, ça vaut aujourd\'hui un peu MOINS que 100 €.', bonne: true, explication: 'Vrai : c\'est le principe de la valeur actuelle. 100 € placés aujourd\'hui rapporteraient des intérêts, donc 100 € plus tard valent moins qu\'aujourd\'hui. C\'est ce que calcule VA.' },
+    },
     { humeur: 'pensif', dit: 'Exemple concret : on te promet **200 € par mois pendant 3 ans** (36 mois), avec un taux de 4 % par an. Combien vaut cette promesse aujourd\'hui ? Réponse de VA : environ **6 769 €**.', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Versement /mois', entete: true }, B1: { t: '200 €' }, A2: { t: 'Durée (mois)', entete: true }, B2: { t: '36' }, A3: { t: 'Taux annuel', entete: true }, B3: { t: '4 %' }, A4: { t: 'Valeur aujourd\'hui', entete: true }, B4: { t: '6 769 €', vert: true } }, formule: '=VA(B3/12;B2;-B1)', actif: 'B4', refsCouleur: { B3: 'bleu', B2: 'ambre', B1: 'violet' }, legende: 'Recevoir 200 €/mois pendant 3 ans, ça vaut ≈ 6 769 € aujourd\'hui.' } },
     { humeur: 'pensif', dit: 'Sa structure :', visuel: { type: 'formule', formule: '=VA(taux ; n_périodes ; vpm ; [vc] ; [type])' } },
     {
@@ -2428,6 +2522,11 @@ const FONCTIONSFINANCIERES = {
       humeur: 'pensif',
       dit: 'L\'erreur n°1 sur VA (et VPM, NPM) :',
       visuel: { type: 'encart', label: 'Toujours diviser le taux par 12 !', texte: 'Le taux est donné **par an**, mais les paiements sont **par mois**. Il faut donc le taux **par mois** : on divise le taux annuel par 12 (ex : 4 % par an → **4%/12**). Si tu oublies, Excel calcule comme si tu payais 4 % **chaque mois** (soit 48 % par an !), et le résultat n\'a plus aucun sens.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'L\'erreur à ne jamais faire. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour des paiements mensuels avec un taux annuel de 4 %, on met directement 4 % comme argument Taux.', bonne: false, explication: 'Non : il faut le taux PAR MOIS, donc 4%/12. Mettre 4 % reviendrait à 4 % chaque mois (≈ 48 %/an), et le résultat serait absurde.' },
     },
     {
       humeur: 'accueil',
@@ -2445,6 +2544,7 @@ const FONCTIONSFINANCIERES = {
     },
     { humeur: 'accueil', dit: '**NPM** calcule le **nombre de paiements** nécessaires pour rembourser un emprunt, quand tu connais la mensualité et le capital.', visuel: { type: 'formule', formule: '=NPM(taux ; vpm ; va ; [vc] ; [type])' } },
     { humeur: 'pensif', dit: 'Exemple : un prêt de 10 000 € à 2 %/an, remboursé 102,45 €/mois. On cherche la durée, en construisant NPM pas à pas.', visuel: tabNpm('') },
+    { humeur: 'accueil', dit: 'Le résultat (la durée) ira sur la ligne « Durée (mois) ». **Clique la cellule qui va le recevoir.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la Durée', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Capital', entete: true }, B1: { t: '10 000 €' }, A2: { t: 'Taux annuel', entete: true }, B2: { t: '2 %' }, A3: { t: 'Mensualité', entete: true }, B3: { t: '-102,45 €' }, A4: { t: 'Durée (mois)', entete: true } }, cible: 'B4', explication: 'Oui, B4 : à droite de « Durée (mois) ». C\'est là qu\'on écrit =NPM(…).' } },
     {
       humeur: 'pensif',
       dit: 'Étape par étape, dans la cellule B4 :',
@@ -2464,6 +2564,11 @@ const FONCTIONSFINANCIERES = {
           { capture: tabNpm('=NPM(B2/12;B3;B1)', { t: '107', num: true, vert: true }) },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un dernier réflexe. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans NPM (comme dans VPM), la mensualité doit être saisie en NÉGATIF.', bonne: true, explication: 'Vrai : la mensualité est une sortie d\'argent, donc négative (-102,45). Sans le signe moins, le calcul est faussé.' },
     },
     {
       humeur: 'pensif',
