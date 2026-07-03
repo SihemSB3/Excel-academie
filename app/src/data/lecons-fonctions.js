@@ -3191,6 +3191,11 @@ const REGLESLISTE = {
       visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Une ligne ou une colonne vide **coupe** ta liste en deux : tris et filtres ne s\'appliqueront qu\'à la partie au-dessus. Une seule cellule vide par ligne est tolérée, mais jamais une ligne ou colonne entière.' },
     },
     {
+      humeur: 'pensif',
+      dit: 'Vérifions la règle la plus piégeuse. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Une ligne entièrement vide au milieu de ta liste n\'a aucune conséquence sur les tris et filtres.', bonne: false, explication: 'Faux : une ligne (ou colonne) entièrement vide COUPE la liste en deux. Excel croit qu\'elle s\'arrête là, et tes tris/filtres ne prennent que la partie au-dessus.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'Sur une longue liste, les titres disparaissent quand tu fais défiler. La solution : **figer les volets** pour garder les en-têtes à l\'écran.',
       visuel: {
@@ -3252,6 +3257,11 @@ const IMPRIMERLISTE = {
     },
     {
       humeur: 'accueil',
+      dit: 'À toi. Dans l\'onglet **Mise en page**, **clique le bouton Imprimer les titres.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Imprimer les titres', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '🔲', label: 'Zone impression' }, { icone: '📄', label: 'Imprimer les titres' }, { icone: '✂', label: 'Sauts de page' }], cible: 'Imprimer les titres', explication: 'De là, tu indiques « Lignes à répéter en haut » ($1:$1) : la ligne d\'en-tête réapparaîtra en haut de CHAQUE page imprimée.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Pour voir et régler les coupures : le **mode Aperçu des sauts de page**.',
       visuel: {
         type: 'methode',
@@ -3280,6 +3290,11 @@ const IMPRIMERLISTE = {
           { capture: { type: 'impressionapercu' } },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Ne confondons pas écran et papier. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '« Figer les volets » garde aussi les titres visibles sur les pages IMPRIMÉES.', bonne: false, explication: 'Non : figer les volets, c\'est pour l\'ÉCRAN quand tu fais défiler. Pour le papier, c\'est Mise en page > Imprimer les titres.' },
     },
     {
       humeur: 'accueil',
@@ -3315,6 +3330,11 @@ const CREERTABLEAU = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Dans **Accueil > groupe Styles**, **clique le bouton qui transforme ta liste en tableau.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique « Mettre sous forme de tableau »', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme cond.' }, { icone: '▧', label: 'Mettre sous forme de tableau' }, { icone: '🎨', label: 'Styles de cellules' }], cible: 'Mettre sous forme de tableau', explication: 'Tu choisis un style, tu confirmes « Mon tableau comporte des en-têtes », et ta liste devient un vrai tableau avec filtres et couleurs alternées.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Dès que tu cliques dans le tableau, un **onglet contextuel** apparaît à droite du ruban.',
       visuel: {
@@ -3331,6 +3351,11 @@ const CREERTABLEAU = {
       humeur: 'accueil',
       dit: 'Le gros avantage : l\'**extension automatique**. Une nouvelle ligne saisie juste en dessous s\'intègre toute seule au tableau, avec la même mise en forme.',
       visuel: { type: 'extensiontableau' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le super-pouvoir du tableau. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si tu saisis une nouvelle ligne juste en dessous d\'un tableau, elle s\'y intègre automatiquement (mise en forme et filtres compris).', bonne: true, explication: 'Vrai : c\'est l\'extension automatique. Le tableau s\'agrandit tout seul pour englober la nouvelle ligne, avec le même style et les mêmes filtres.' },
     },
     {
       humeur: 'accueil',
@@ -3362,6 +3387,11 @@ const SAISIRLISTE = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Une limite à connaître. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'La saisie semi-automatique propose des mots présents dans n\'importe quelle colonne de la feuille.', bonne: false, explication: 'Non : elle ne propose que des mots déjà tapés plus haut dans la MÊME colonne. C\'est ce qui la rend fiable pour des listes cohérentes (villes, vendeurs…).' },
+    },
+    {
       humeur: 'accueil',
       dit: 'Ou la **liste déroulante** des valeurs déjà saisies, pour choisir au lieu de taper.',
       visuel: {
@@ -3376,6 +3406,11 @@ const SAISIRLISTE = {
           { capture: { type: 'menu', items: [{ label: 'Marie' }, { label: 'Karim' }, { label: 'Léa', actif: true }, { label: 'Tom' }] } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Tu fais clic droit dans une cellule pour choisir une valeur déjà saisie. **Clique la bonne entrée du menu.**',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Liste déroulante de choix »', items: [{ icone: '✂️', label: 'Couper' }, { icone: '📋', label: 'Copier' }, '-', { label: 'Liste déroulante de choix' }], cible: 3, explication: 'Une liste des valeurs déjà présentes dans la colonne s\'ouvre : tu choisis au lieu de retaper. Au clavier, c\'est Alt + ↓ (⌥ + ↓ sur Mac).' },
     },
     {
       humeur: 'pensif',
@@ -3444,6 +3479,11 @@ const TRIERLISTE = {
     },
     {
       humeur: 'accueil',
+      dit: 'À toi. Tu veux voir les plus gros CA en premier. Dans **Données > Trier et filtrer**, **clique le bouton qui trie du plus grand au plus petit.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique « Trier de Z à A » (décroissant)', actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: 'A↓', label: 'Trier de A à Z' }, { icone: 'Z↓', label: 'Trier de Z à A' }, { icone: '▽', label: 'Filtrer' }], cible: 'Trier de Z à A', explication: 'Z→A trie en DÉCROISSANT : sur des nombres, du plus grand au plus petit (les gros CA en tête). A→Z ferait l\'inverse.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Le **tri personnalisé** combine plusieurs colonnes, avec un ordre de priorité.',
       visuel: {
         type: 'methode',
@@ -3461,6 +3501,11 @@ const TRIERLISTE = {
       humeur: 'pensif',
       dit: 'Pour revenir en arrière :',
       visuel: { type: 'encart', label: 'Astuce', liste: ['**Ctrl + Z** (⌘ + Z) juste après le tri annule immédiatement.', 'Données > Trier et filtrer > **Effacer** (l\'entonnoir barré) retire tris et filtres d\'un coup.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Comprendre la hiérarchie des niveaux. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans un tri à deux niveaux (Ville, puis CA), le 2ᵉ critère (CA) ne départage que les lignes qui ont la MÊME ville.', bonne: true, explication: 'Vrai : le niveau 1 (Ville) trie d\'abord ; le niveau 2 (CA) n\'intervient qu\'à l\'intérieur de chaque ville, pour départager les lignes égales sur le 1ᵉ critère.' },
     },
     {
       humeur: 'accueil',
@@ -3490,6 +3535,11 @@ const FILTRERLISTE = {
           { capture: { type: 'tableaudonnees', entetes: LISTE_ENTETES, lignes: LISTE_LIGNES, filtres: true, legende: 'Une flèche de filtre apparaît dans chaque en-tête.' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Sur une liste classique, dans **Données > Trier et filtrer**, **clique le bouton qui active les filtres.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Filtrer', actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: 'A↓', label: 'Trier de A à Z' }, { icone: 'Z↓', label: 'Trier de Z à A' }, { icone: '▽', label: 'Filtrer' }], cible: 'Filtrer', explication: 'Une petite flèche ▾ apparaît alors dans chaque en-tête : c\'est par elle qu\'on ouvre le menu de filtre de chaque colonne.' },
     },
     {
       humeur: 'accueil',
@@ -3576,6 +3626,16 @@ const SOUSTOTAUX = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Dans **Données > groupe Plan**, **clique le bouton Sous-total.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Sous-total', actif: 'Données', groupeNom: 'Plan', groupes: [{ icone: '⊞', label: 'Grouper' }, { icone: '⊟', label: 'Dissocier' }, { icone: 'Σ', label: 'Sous-total' }], cible: 'Sous-total', explication: 'Tu choisis alors la colonne de regroupement (Ville), la fonction (Somme) et la colonne à totaliser (CA). Excel insère un total à chaque changement de ville.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Deux ventes à Lyon : 6 400 € (Léa) et 8 200 € (Marie). **Quel sous-total « Total Lyon » va afficher Excel ?**',
+      visuel: { type: 'question', options: ['14 600 €', '8 200 €', '6 400 €'], bonne: 0, explication: '6 400 + 8 200 = 14 600 €. Le sous-total additionne toutes les lignes d\'un même groupe (ici, toutes les ventes de Lyon).' },
+    },
+    {
       humeur: 'pensif',
       dit: 'À gauche apparaissent les **boutons de plan** (1, 2, 3) pour changer de niveau de détail. Regarde :',
       visuel: { type: 'plan' },
@@ -3599,6 +3659,11 @@ const SOUSTOTAUX = {
       humeur: 'pensif',
       dit: 'Le 1er argument (**no_fonction**) choisit le calcul ET s\'il inclut ou non les lignes masquées :',
       visuel: { type: 'parties', items: [{ label: '**1 à 11** : inclut les lignes masquées (ex : SOMME = **9**, MOYENNE = 1, NB = 2, MAX = 4).' }, { label: '**101 à 111** : ignore les lignes masquées (ex : SOMME = **109**, MOYENNE = 101, MAX = 104).' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La grande différence avec SOMME. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Après avoir filtré une liste, =SOMME additionne seulement les lignes visibles à l\'écran.', bonne: false, explication: 'Non : SOMME additionne TOUT, même les lignes masquées par le filtre. Pour ne compter que les lignes visibles, il faut SOUS.TOTAL avec un code 101 à 111 (ex : 109 pour la somme).' },
     },
     {
       humeur: 'accueil',
