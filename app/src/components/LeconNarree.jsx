@@ -4449,6 +4449,146 @@ function TrouveErreur({ v, onResolu, onErreur }) {
   )
 }
 
+// « Clique sur… » : l'élève DÉSIGNE le bon élément directement sur une vraie capture
+// Excel (cellule d'un tableur, bouton d'un ruban, ou entrée de menu). Le geste actif
+// qui remplace « regarde cette capture » par « fais-le ». Cycle réessai + comptage.
+function CliqueCible({ v, onResolu, onErreur }) {
+  const { consigne, support = 'tableur', cible, explication } = v
+  const [rates, setRates] = useState([])
+  const [trouve, setTrouve] = useState(false)
+  const choisir = (val) => {
+    if (trouve) return
+    if (val === cible) {
+      setTrouve(true)
+      onResolu && onResolu()
+    } else if (!rates.includes(val)) {
+      setRates((r) => [...r, val])
+      onErreur && onErreur()
+    }
+  }
+
+  let support_ui = null
+  if (support === 'tableur') {
+    const { cols = [], rows = [], cells = {}, formule, feuilles, feuilleActive } = v
+    support_ui = (
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+        <div className="flex items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1.5 text-xs">
+          <span className="font-bold text-navy/50">fx</span>
+          <span className="font-mono text-navy/90">{formule ? coloreFormule(formule) : <span className="text-navy/30">|</span>}</span>
+        </div>
+        <div className="grid text-xs" style={{ gridTemplateColumns: `28px repeat(${cols.length}, 1fr)` }}>
+          <div className="bg-navy/5" />
+          {cols.map((c) => (
+            <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
+          ))}
+          {rows.map((r) => (
+            <div key={r} className="contents">
+              <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{r}</div>
+              {cols.map((c) => {
+                const id = c + r
+                const cell = cells[id] || {}
+                const estFormule = typeof cell.t === 'string' && cell.t.startsWith('=')
+                const bon = trouve && id === cible
+                const rate = rates.includes(id)
+                const cliquable = !cell.entete && !trouve && !rate
+                let cls = 'text-navy/90'
+                if (cell.entete) cls = 'bg-navy/10 font-bold text-navy/70'
+                else if (bon) cls = 'bg-mint/40 font-bold text-navy ring-2 ring-inset ring-mint'
+                else if (rate) cls = 'bg-red-500/10 text-navy/35'
+                else cls = 'text-navy/90 hover:bg-mint/10'
+                return (
+                  <div
+                    key={id}
+                    onClick={cliquable ? () => choisir(id) : undefined}
+                    className={`min-h-[30px] border-b border-l border-navy/10 px-2 py-1 ${cell.num ? 'text-right' : ''} ${cliquable ? 'cursor-pointer' : ''} ${cls}`}
+                  >
+                    {estFormule ? <span className="font-mono text-[10px] leading-tight">{coloreFormule(cell.t)}</span> : cell.t || ''}
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+        {feuilles && (
+          <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+            {feuilles.map((f) => (
+              <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  } else if (support === 'ruban') {
+    const { onglets = ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données', 'Révision', 'Affichage'], actif = 'Accueil', groupes = [], groupeNom } = v
+    support_ui = (
+      <div className="mx-auto max-w-md animate-fade-up overflow-hidden rounded-md border border-navy/15 text-[10px] shadow-lg">
+        <div className="flex gap-0.5 bg-[#f3f3f3] px-2 pt-1">
+          {onglets.map((o) => (<span key={o} className={`rounded-t px-2 py-1 ${o === actif ? 'bg-white font-bold text-[#0a7a3d]' : 'text-navy/55'}`}>{o}</span>))}
+        </div>
+        <div className="flex items-start gap-2 bg-white px-2 py-2">
+          <div className="rounded-md border border-navy/15 bg-navy/[0.02] px-1.5 pb-1 pt-1.5">
+            <div className="flex items-end gap-1">
+              {groupes.map((g, i) => {
+                const bon = trouve && g.label === cible
+                const rate = rates.includes(g.label)
+                const cliquable = !trouve && !rate
+                return (
+                  <div
+                    key={i}
+                    onClick={cliquable ? () => choisir(g.label) : undefined}
+                    className={`flex w-16 flex-col items-center gap-1 rounded px-1 py-1 text-center transition ${cliquable ? 'cursor-pointer hover:bg-mint/10' : ''} ${bon ? 'bg-mint/20 ring-2 ring-mint' : rate ? 'opacity-30' : ''}`}
+                  >
+                    <span className={`grid h-7 w-7 place-items-center rounded text-sm ${g.icone === 'fx' ? 'bg-[#107c41] font-bold italic text-white' : 'text-navy/70'}`}>{g.icone}</span>
+                    <span className="leading-tight text-navy/75">{g.label.split('\n').map((l, j) => (<span key={j} className="block">{l}</span>))}</span>
+                  </div>
+                )
+              })}
+            </div>
+            {groupeNom && <div className="mt-1 border-t border-navy/10 pt-0.5 text-center text-[9px] font-semibold text-navy/60">{groupeNom}</div>}
+          </div>
+        </div>
+      </div>
+    )
+  } else if (support === 'menu') {
+    const { items = [] } = v
+    support_ui = (
+      <div className="mx-auto max-w-xs animate-fade-up overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+        {items.map((it, i) => {
+          const label = typeof it === 'string' ? it : it.label
+          if (label === '-') return <div key={i} className="my-0.5 border-t border-navy/10" />
+          const bon = trouve && i === cible
+          const rate = rates.includes(i)
+          const cliquable = !trouve && !rate
+          return (
+            <div
+              key={i}
+              onClick={cliquable ? () => choisir(i) : undefined}
+              className={`flex items-center gap-2 px-3 py-1.5 transition ${cliquable ? 'cursor-pointer hover:bg-mint/10' : ''} ${bon ? 'bg-mint/20 font-bold text-navy' : rate ? 'text-navy/30' : 'text-navy/80'}`}
+            >
+              {typeof it === 'object' && it.icone && <span className="w-4 text-center">{it.icone}</span>}
+              <span>{label}</span>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-3">
+      {consigne && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {consigne}</p>}
+      {support_ui}
+      {trouve ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ {rates.length === 0 ? 'Pile dessus, du premier coup ! 🥋' : 'Voilà ! 🥋'}</span> {explication}
+        </p>
+      ) : rates.length > 0 ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">{ENCOURAGEMENTS_Q[(rates.length - 1) % ENCOURAGEMENTS_Q.length]}</p>
+      ) : null}
+    </div>
+  )
+}
+
 // « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
 // (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
 function ChoixTableau({ v, onResolu, onErreur }) {
@@ -4664,7 +4804,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -4716,6 +4856,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ChoixTableau v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'vraifaux' ? (
             <VraiFaux v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'cliquecible' ? (
+            <CliqueCible v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -4735,7 +4877,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                       ? 'Choisis une proposition'
                       : s.visuel?.type === 'vraifaux'
                         ? 'Vrai ou faux ?'
-                        : 'Réponds pour continuer'
+                        : s.visuel?.type === 'cliquecible'
+                          ? 'Clique le bon élément'
+                          : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

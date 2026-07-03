@@ -33,16 +33,26 @@ const SOMME = {
   ],
   narration: [
     { humeur: 'accueil', dit: 'SOMME additionne plusieurs cellules d\'un seul coup. On va la construire ensemble.' },
-    { humeur: 'accueil', dit: 'Voici trois prix. On veut leur total dans la case B5.', visuel: tabS() },
+    { humeur: 'accueil', dit: 'Voici trois prix. On veut leur total sur la ligne « Total ». **Clique la cellule qui va recevoir le total.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du total (à droite de « Total »)', cols: colsS, rows: rowsS, cells: { ...S }, cible: 'B5', explication: 'Oui : B5, à droite de « Total ». C\'est là qu\'on écrit la somme.' } },
     { humeur: 'pensif', dit: '**Étape 1 :** dans B5, toute formule commence par le signe =.', visuel: tabS('=') },
     { humeur: 'pensif', dit: '**Étape 2 :** on écrit SOMME et on ouvre une parenthèse.', visuel: tabS('=SOMME(') },
     { humeur: 'accueil', dit: '**Étape 3 :** on sélectionne la plage à additionner, de B2 à B4 (en bleu).', visuel: tabS('=SOMME(B2:B4', null, ['B2', 'B3', 'B4']) },
     { humeur: 'pensif', dit: '**Étape 4 :** on ferme la parenthèse. La formule complète est dans la case.', visuel: tabS('=SOMME(B2:B4)') },
-    { humeur: 'fier', dit: 'On appuie sur Entrée : la case affiche 30 + 20 + 150 = 200.', visuel: tabS('=SOMME(B2:B4)', { t: '200', vert: true }) },
+    {
+      humeur: 'accueil',
+      dit: 'On appuie sur Entrée. Les trois prix sont 30, 20 et 150. **Que va afficher B5 ?**',
+      visuel: { type: 'question', options: ['200', '150', '20030'], bonne: 0, explication: '30 + 20 + 150 = 200. SOMME additionne toute la plage B2:B4 d\'un coup.' },
+    },
+    { humeur: 'fier', dit: 'Et voilà, la case affiche 200.', visuel: tabS('=SOMME(B2:B4)', { t: '200', vert: true }) },
     {
       humeur: 'pensif',
       dit: 'Une astuce à retenir.',
       visuel: { type: 'encart', label: 'Astuce', texte: 'Encore plus rapide : sélectionne la colonne et clique sur le bouton **∑ Somme automatique**. Excel écrit la formule pour toi.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Essaie : dans l\'onglet **Accueil**, **clique le bouton Somme automatique.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Somme automatique', actif: 'Accueil', groupeNom: 'Édition', groupes: [{ icone: '∑', label: 'Somme auto' }, { icone: '↓', label: 'Remplissage' }, { icone: '🧹', label: 'Effacer' }], cible: 'Somme auto', explication: 'Le bouton ∑ : Excel devine la plage à additionner et écrit le SOMME tout seul. Un vrai gain de temps.' },
     },
     { humeur: 'accueil', dit: 'Et pour des cellules qui ne se suivent pas, sépare-les par un point-virgule : =SOMME(B2;B4).' },
     {
@@ -72,18 +82,30 @@ const SI = {
   narration: [
     { humeur: 'accueil', dit: 'La fonction SI pose une question à Excel : selon la réponse, elle affiche une chose ou une autre.' },
     { humeur: 'accueil', dit: 'Notre but : afficher « OK » si la note (en A2) dépasse 10, sinon « À refaire ». On construit la formule pas à pas.', visuel: tabSI({ t: '12' }) },
+    { humeur: 'accueil', dit: 'Le résultat doit apparaître à droite de la note. **Clique la cellule du résultat.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule Résultat de la note', cols: colsSI, rows: rowsSI, cells: { ...baseSI, A2: { t: '12' } }, cible: 'B2', explication: 'Oui, B2 : colonne « Résultat », en face de la note. C\'est là qu\'on écrit le SI.' } },
     { humeur: 'pensif', dit: '**Étape 1 :** on clique dans B2 et on tape =. Il s\'écrit dans la case et dans la barre de formule.', visuel: tabSI({ t: '12' }, '=') },
     { humeur: 'pensif', dit: '**Étape 2 :** on écrit SI et on ouvre une parenthèse.', visuel: tabSI({ t: '12' }, '=SI(') },
-    { humeur: 'accueil', dit: '**Argument 1, la condition :** on teste si A2 (la case bleue) est supérieur à 10.', visuel: tabSI({ t: '12', ref: true }, '=SI(A2>10') },
+    { humeur: 'accueil', dit: '**Argument 1, la condition :** on veut tester la note. **Clique la cellule de la note**, celle qu\'on va comparer à 10.', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la note (celle qu\'on teste)', cols: colsSI, rows: rowsSI, cells: { ...baseSI, A2: { t: '12' }, B2: { t: '=SI(' } }, formule: '=SI(', cible: 'A2', explication: 'Exact : A2, la note. On écrit donc =SI(A2>10 : « si A2 dépasse 10… ».' } },
+    { humeur: 'accueil', dit: 'La condition s\'écrit donc **A2>10** : « si la note est supérieure à 10 ».', visuel: tabSI({ t: '12', ref: true }, '=SI(A2>10') },
     { humeur: 'pensif', dit: 'Point-virgule ; puis **argument 2, le résultat si c\'est VRAI**, entre guillemets.', visuel: tabSI({ t: '12' }, '=SI(A2>10;"OK"') },
     { humeur: 'pensif', dit: 'Encore un point-virgule ; puis **argument 3, le résultat si c\'est FAUX**.', visuel: tabSI({ t: '12' }, '=SI(A2>10;"OK";"À refaire"') },
     { humeur: 'accueil', dit: 'On ferme la parenthèse. La formule complète est dans la case et dans la barre.', visuel: tabSI({ t: '12' }, fSI) },
-    { humeur: 'fier', dit: 'On appuie sur Entrée : 12 > 10 ? Oui → la case affiche OK.', visuel: tabSI({ t: '12' }, fSI, { t: 'OK', vert: true }) },
+    {
+      humeur: 'accueil',
+      dit: 'On appuie sur Entrée. La note est 12. **Que va afficher B2 ?**',
+      visuel: { type: 'question', options: ['OK', 'À refaire'], bonne: 0, explication: '12 > 10 ? Oui, la condition est vraie : Excel affiche le 2ᵉ argument, « OK ».' },
+    },
+    { humeur: 'fier', dit: 'Exact : 12 > 10, donc la case affiche OK.', visuel: tabSI({ t: '12' }, fSI, { t: 'OK', vert: true }) },
     { humeur: 'pensif', dit: 'Et si la note avait été 7 ? 7 > 10 ? Non → la case affiche À refaire.', visuel: tabSI({ t: '7' }, fSI, { t: 'À refaire', rouge: true }) },
     {
       humeur: 'pensif',
       dit: 'Une astuce à garder en tête.',
       visuel: { type: 'encart', label: 'Astuce', texte: 'Le texte (comme **OK** ou **À refaire**) va toujours **entre guillemets**. C\'est comme ça qu\'Excel le reconnaît comme du texte.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions cette règle. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans un SI, le texte à afficher (OK, À refaire…) doit être entouré de guillemets.', bonne: true, explication: 'Vrai : sans les guillemets, Excel croit que « OK » est un nom de cellule ou de formule, et renvoie une erreur. Les guillemets disent « c\'est du texte ».' },
     },
     {
       humeur: 'accueil',
@@ -112,6 +134,12 @@ const tabC = (opts, formule, resultat) => {
   else if (formule) cells.C2 = { t: formule }
   return { type: 'tableur', cols: colsC, rows: rowsC, cells, actif: 'C2', formule }
 }
+// Version cliquable de la table des calculs : l'élève désigne lui-même la bonne cellule.
+const clicC = (consigne, cible, formule, explication) => ({
+  type: 'cliquecible', support: 'tableur', consigne, cible, explication,
+  cols: colsC, rows: rowsC, formule: formule || undefined,
+  cells: { ...baseC, C2: { t: formule || '' } },
+})
 
 const CALCULS = {
   id: 'fn-calculs',
@@ -120,7 +148,7 @@ const CALCULS = {
     { titre: 'Exercice 5 · Les calculs avec les opérateurs', url: 'https://drive.google.com/file/d/1OI37AtYGKyXyn8yLMxrtGoqx3qRh32ic/view?usp=drivesdk' },
   ],
   narration: [
-    { humeur: 'accueil', dit: 'Excel, c\'est une super calculatrice : tu fais tes calculs directement dans les cellules.' },
+    { humeur: 'accueil', dit: 'Excel, c\'est une super calculatrice : tu fais tes calculs directement dans les cellules. Regarde ce petit tableau, c\'est lui qu\'on va faire parler.', visuel: tabC({}) },
     { humeur: 'pensif', dit: 'Comme toute formule, un calcul commence toujours par le signe =.' },
     {
       humeur: 'accueil',
@@ -137,12 +165,22 @@ const CALCULS = {
       dit: 'Un point à garder en tête.',
       visuel: { type: 'encart', label: 'Astuce', texte: 'Pas d\'**espaces** dans une formule : Excel a besoin que tout soit collé pour la lire correctement.' },
     },
-    { humeur: 'accueil', dit: 'Un exemple : un prix (A2) multiplié par une quantité (B2). On veut le total dans C2.', visuel: tabC({}) },
-    { humeur: 'pensif', dit: '**Étape 1 :** dans C2, on commence par =.', visuel: tabC({}, '=') },
-    { humeur: 'accueil', dit: '**Étape 2 :** on clique sur le prix, la cellule A2 (en bleu).', visuel: tabC({ A2ref: true }, '=A2') },
+    {
+      humeur: 'accueil',
+      dit: 'Une croyance à vérifier tout de suite. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'On peut mettre des espaces autour des signes dans une formule, ex. = A2 * B2.', bonne: false, explication: 'Non : tout doit être collé, =A2*B2. Un espace au mauvais endroit et Excel ne sait plus lire la formule.' },
+    },
+    { humeur: 'accueil', dit: 'Passons à la pratique : un prix (A2) multiplié par une quantité (B2). On veut le total dans C2. Où va-t-on écrire la formule ? **Clique la cellule du total.**', visuel: clicC('Clique la cellule où doit apparaître le total', 'C2', '', 'Exactement, C2 : c\'est là qu\'on écrit la formule, à l\'intersection du produit et de la colonne Total.') },
+    { humeur: 'pensif', dit: '**Étape 1 :** dans C2, on commence toujours par le signe =.', visuel: tabC({}, '=') },
+    { humeur: 'accueil', dit: '**Étape 2 :** au lieu de retaper « 10 », on **clique la cellule du prix**. À toi : clique le prix.', visuel: clicC('Clique la cellule qui contient le prix', 'A2', '=', 'Bravo. En cliquant A2, Excel utilise son contenu : si le prix change plus tard, le total se recalcule tout seul.') },
     { humeur: 'accueil', dit: '**Étape 3 :** on tape l\'opérateur de multiplication, la touche *.', visuel: tabC({ A2ref: true }, '=A2*') },
-    { humeur: 'accueil', dit: '**Étape 4 :** on clique sur la quantité, la cellule B2.', visuel: tabC({ B2ref: true }, '=A2*B2') },
-    { humeur: 'fier', dit: 'On appuie sur Entrée : Excel calcule 10 × 3 = 30.', visuel: tabC({}, '=A2*B2', { t: '30', vert: true }) },
+    { humeur: 'accueil', dit: '**Étape 4 :** il manque la quantité. **Clique la bonne cellule.**', visuel: clicC('Clique la cellule qui contient la quantité', 'B2', '=A2*', 'Parfait : =A2*B2. La formule est complète, il ne reste qu\'à valider.') },
+    {
+      humeur: 'pensif',
+      dit: 'On appuie sur **Entrée**. Avant de regarder : le prix est 10, la quantité 3. **Que va afficher C2 ?**',
+      visuel: { type: 'question', options: ['30', '13', '103'], bonne: 0, explication: 'Excel calcule 10 × 3 = 30. (13 serait une addition, 103 une simple juxtaposition.)' },
+    },
+    { humeur: 'fier', dit: 'Et voilà : Excel affiche 30. Ta première formule tourne !', visuel: tabC({}, '=A2*B2', { t: '30', vert: true, num: true }) },
     {
       humeur: 'pensif',
       dit: 'Retiens bien cette règle.',
@@ -151,14 +189,9 @@ const CALCULS = {
     },
     { humeur: 'accueil', dit: 'Exemple : dans =5+2*3, on calcule d\'abord 2×3 = 6, puis on ajoute 5 → 11. Avec des parenthèses, =(5+2)*3 fait d\'abord 5+2 = 7, puis ×3 → 21.', visuel: { type: 'formule', formule: '=5+2*3' } },
     {
-      humeur: 'pensif',
-      dit: 'Petit réflexe à vérifier. **Vrai ou faux ?**',
-      visuel: { type: 'vraifaux', affirmation: 'Une formule commence toujours par le signe =.', bonne: true, explication: 'Sans le =, Excel range ce que tu tapes comme du simple texte. Avec lui, il comprend « calcule-moi ça ».' },
-    },
-    {
       humeur: 'accueil',
-      dit: 'À toi. Combien fait =2+3*4 ?',
-      visuel: { type: 'question', options: ['14', '20'], bonne: 0, explication: '× passe avant + : on fait d\'abord 3×4 = 12, puis on ajoute 2 = 14.' },
+      dit: 'À toi de trancher, en appliquant la règle. Combien fait =2+3*4 ?',
+      visuel: { type: 'question', options: ['14', '20'], bonne: 0, explication: '× passe avant + : on fait d\'abord 3×4 = 12, puis on ajoute 2 = 14. (20 serait faux : ce serait (2+3)×4.)' },
     },
     { humeur: 'fier', dit: 'Tu sais faire tes calculs dans Excel ! Bravo ! 🎉' },
   ],
@@ -180,12 +213,22 @@ const SAISIE = {
     { humeur: 'pensif', dit: '**Le geste :** clique sur une cellule, tape ton texte ou ton nombre, puis valide avec **Entrée**.', visuel: { type: 'saisiecell' } },
     { humeur: 'accueil', dit: 'Le texte se cale à gauche, les nombres à droite, automatiquement. Pas besoin d\'y penser.', visuel: tabSai({ A2: { t: 'Pomme' }, B2: { t: '120', num: true }, A3: { t: 'Poire' }, B3: { t: '85', num: true } }) },
     {
+      humeur: 'accueil',
+      dit: 'Vérifions que tu lis bien la grille. **Clique le stock des pommes.**',
+      visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du stock des pommes', cols: ['A', 'B'], rows: [1, 2, 3], cells: { A1: { t: 'Fruit', entete: true }, B1: { t: 'Stock', entete: true }, A2: { t: 'Pomme' }, B2: { t: '120', num: true }, A3: { t: 'Poire' }, B3: { t: '85', num: true } }, cible: 'B2', explication: 'Oui : ligne « Pomme », colonne « Stock » = B2. Et remarque, c\'est un nombre, donc calé à droite.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Si une colonne est trop étroite, Excel affiche #####. À toi de l\'élargir !',
       visuel: { type: 'elargir' },
     },
     { humeur: 'accueil', dit: 'Et voilà, le nombre réapparaît. Aucune inquiétude, donc : ##### veut juste dire « élargis-moi ».' },
     { humeur: 'pensif', dit: 'Pour une date, écris-la avec des / ou des - (ex : 11/05/2025). Excel la reconnaît comme une vraie date.', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Tâche', entete: true }, B1: { t: 'Date', entete: true }, A2: { t: 'Réunion' }, B2: { t: '11/05/2025', num: true } } } },
+    {
+      humeur: 'pensif',
+      dit: 'Un piège classique. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si tu écris « 11 mai 2025 » en toutes lettres, Excel le comprend comme une vraie date calculable.', bonne: false, explication: 'Non : écrit en toutes lettres, c\'est du texte. Pour une vraie date, utilise les / ou les - : 11/05/2025 ou 11-05-2025.' },
+    },
     { humeur: 'accueil', dit: 'Tu peux changer son **affichage** (court, long, personnalisé) : clic droit sur la cellule > **Format de cellule** > Date.', visuel: { type: 'formatcellule', etapes: ['Clic droit sur la cellule', 'Format de cellule', 'Onglet Nombre > Date', 'Choisis le format qui te plaît'] }, plus: ['Tu peux toujours modifier le format d\'affichage (court, long, personnalisé) en faisant clic droit > Format de cellule > Date.', 'Pour qu\'Excel reconnaisse une date, il faut utiliser un format qu\'il comprend. Tu peux écrire ta date de plusieurs façons : avec des slashs (11/05/2025 ou 11/05) ou avec des tirets (11-05-2025 ou 11-05).'] },
     {
       humeur: 'pensif',
@@ -230,8 +273,14 @@ const RECOPIE = {
   narration: [
     { humeur: 'accueil', dit: 'Excel peut recopier une donnée ou une formule tout seul, pour t\'éviter de tout retaper à la main.' },
     { humeur: 'pensif', dit: 'En bas à droite d\'une cellule, il y a une petite croix : la poignée de recopie. Tu cliques dessus et tu tires.', visuel: tabRec({}, null, 'A2', 'La petite croix (+) en bas à droite de la cellule sélectionnée, c\'est la poignée de recopie.'), plus: ['Place ta souris sur le petit carré en bas à droite de la cellule (la poignée de recopie). Clique, maintiens et tire la poignée vers les cellules où tu veux dupliquer le contenu.', 'Tu peux tirer vers le haut, le bas, la gauche ou la droite.'] },
-    { humeur: 'accueil', dit: 'Exemple : en D2, tu écris =B2*C2 pour le total de la première ligne.', visuel: tabRec({ D2: { t: '=B2*C2' } }, '=B2*C2', 'D2', 'Chaque cellule de la formule prend une couleur, comme dans Excel : B2 en bleu, C2 en orange.', { refsCouleur: { B2: 'bleu', C2: 'ambre' } }) },
+    { humeur: 'accueil', dit: 'On va calculer le total de la ligne « Clavier » (prix × quantité). Dans quelle cellule écrire la formule ? **Clique-la.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du total de la ligne Clavier', cols: ['A', 'B', 'C', 'D', 'E'], rows: [1, 2, 3, 4], cells: { ...REC }, cible: 'D2', explication: 'Oui : ligne « Clavier », colonne « Total » = D2. C\'est là qu\'on écrit =B2*C2.' } },
+    { humeur: 'accueil', dit: 'Donc en D2, tu écris =B2*C2 pour le total de la première ligne.', visuel: tabRec({ D2: { t: '=B2*C2' } }, '=B2*C2', 'D2', 'Chaque cellule de la formule prend une couleur, comme dans Excel : B2 en bleu, C2 en orange.', { refsCouleur: { B2: 'bleu', C2: 'ambre' } }) },
     { humeur: 'pensif', dit: 'Tu tires la poignée vers le bas : Excel adapte la formule à chaque ligne. Regarde le détail : =B2*C2 devient =B3*C3, puis =B4*C4.', visuel: { type: 'recopieanim' } },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions que le principe est clair. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Il faut réécrire la formule à la main dans chaque ligne du tableau.', bonne: false, explication: 'Non ! Tu l\'écris UNE seule fois, puis tu tires la poignée : Excel l\'adapte tout seul à chaque ligne. C\'est tout l\'intérêt de la recopie.' },
+    },
     { humeur: 'fier', dit: 'Et voilà, chaque ligne se calcule. Tu n\'as écrit la formule qu\'une seule fois.', visuel: tabRec({ D2: { t: '60', vert: true }, D3: { t: '60', vert: true }, D4: { t: '150', vert: true } }), plus: ['Quand tu copies une cellule, Excel adapte automatiquement les références : si tu copies vers le bas, les lignes changent mais la colonne reste la même (=B2 devient =B3, puis =B4). Si tu copies vers la droite, les colonnes changent mais la ligne reste la même (=B2 devient =C2, puis =D2). C\'est ce qu\'on appelle une référence relative.', 'Astuce : si le mode de calcul d\'Excel est défini sur « manuel », les formules ne se recalculent pas automatiquement. Solution : Formules > Options de calcul > Automatique.'] },
     {
       humeur: 'accueil',
@@ -254,7 +303,13 @@ const REFERENCES = {
   ],
   narration: [
     { humeur: 'accueil', dit: 'Quand tu recopies une formule, Excel adapte tout seul les cellules. Très pratique ! Et parfois, tu veux qu\'une cellule reste fixe. Voyons les deux cas.', plus: ['Par défaut, Excel utilise des références dites « relatives » : quand tu copies une formule vers une autre cellule, les coordonnées de cellule s\'adaptent en fonction de la nouvelle position.', 'Une référence absolue, elle, reste fixe même si tu copies la formule ailleurs. C\'est utile quand tu veux toujours faire référence à la même cellule, comme un taux de TVA, un seuil, ou une valeur constante.'] },
-    { humeur: 'pensif', dit: 'Ici, on veut le Prix TTC = Prix HT × le taux (en C2). En B2, on écrit =A2*C2.', visuel: tabRef({ B2: { t: '=A2*C2' }, A2: { t: '30' }, C2: { t: '1,2' } }, '=A2*C2', 'B2', 'Prix HT (A2) en bleu, Taux (C2) en orange, comme dans Excel.', { refsCouleur: { A2: 'bleu', C2: 'ambre' } }) },
+    { humeur: 'accueil', dit: 'On veut le Prix TTC = Prix HT × le taux. Pour la première ligne, **clique la cellule du Prix TTC.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du Prix TTC de la première ligne', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { ...REFb }, cible: 'B2', explication: 'Oui, B2 : colonne « Prix TTC », première ligne. C\'est là qu\'on écrit la formule.' } },
+    { humeur: 'pensif', dit: 'Dans B2, on écrit =A2*C2 : le Prix HT (A2) multiplié par le taux (C2).', visuel: tabRef({ B2: { t: '=A2*C2' }, A2: { t: '30' }, C2: { t: '1,2' } }, '=A2*C2', 'B2', 'Prix HT (A2) en bleu, Taux (C2) en orange, comme dans Excel.', { refsCouleur: { A2: 'bleu', C2: 'ambre' } }) },
+    {
+      humeur: 'accueil',
+      dit: 'Le Prix HT est 30, le taux 1,2. **Que va afficher B2 ?**',
+      visuel: { type: 'question', options: ['36', '31,2', '3,6'], bonne: 0, explication: '30 × 1,2 = 36. (31,2 serait une addition, 3,6 une virgule mal placée.)' },
+    },
     { humeur: 'fier', dit: 'En B2, ça marche : 30 × 1,2 = 36.', visuel: tabRef({ B2: { t: '36', vert: true } }, '=A2*C2', 'B2') },
     { humeur: 'pensif', dit: 'En recopiant vers le bas, Excel décale tout : B3 devient =A3*C3. Sauf que le taux, lui, est en C2 : celui-là, on veut le garder en place.', visuel: tabRef({ B2: { t: '36', vert: true }, B3: { t: '=A3*C3' }, C3: { t: '', ref: true } }, '=A3*C3', 'B3') },
     { humeur: 'accueil', dit: '**La solution :** figer le taux avec des $. On écrit =A2*$C$2. Les $ verrouillent la cellule C2.', visuel: tabRef({ B2: { t: '=A2*$C$2' }, A2: { t: '30' }, C2: { t: '1,2' } }, '=A2*$C$2', 'B2', 'Le taux $C$2 garde sa couleur : il restera figé en recopiant.', { refsCouleur: { A2: 'bleu', C2: 'ambre' } }) },
@@ -265,6 +320,11 @@ const REFERENCES = {
       plus: ['Tu peux activer une référence absolue en appuyant sur F4 juste après avoir cliqué sur une cellule dans la formule. Si F4 ne fonctionne pas tout seul, essaie FN + F4.'],
     },
     { humeur: 'fier', dit: 'Maintenant, en recopiant, A2 s\'adapte (A3, A4...) mais $C$2 reste fixe. Tous les calculs tombent juste : 36, 24...', visuel: tabRef({ B2: { t: '36', vert: true }, B3: { t: '24', vert: true }, A3: { t: '20' } }, '=A3*$C$2', 'B3', 'A3 a changé de cellule (bleu), mais $C$2 (orange) est resté le même.', { refsCouleur: { A3: 'bleu', C2: 'ambre' } }) },
+    {
+      humeur: 'pensif',
+      dit: 'Le point clé du chapitre. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Une référence figée avec des $ (comme $C$2) se décale quand on recopie la formule vers le bas.', bonne: false, explication: 'Non, justement : les $ l\'empêchent de bouger. $C$2 reste $C$2 partout. C\'est une référence relative (sans $) qui se décale.' },
+    },
     {
       humeur: 'accueil',
       dit: 'Le $ peut figer la colonne, la ligne, ou les deux. Regarde ce que chacun garde fixe (en vert) :',
@@ -314,13 +374,28 @@ const DEPLACER = {
     },
     {
       humeur: 'accueil',
+      dit: 'Essayons la méthode 1. Dans le ruban **Accueil**, **clique le bouton pour copier.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Copier', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }], cible: 'Copier', explication: 'Voilà, le bouton Copier (📄). Ensuite tu cliques la destination et tu fais Coller.' },
+    },
+    {
+      humeur: 'accueil',
       dit: '**Méthode 2, le clic droit :** clic droit sur la cellule > **Copier**, puis clic droit sur la destination > **Coller**.',
       visuel: { type: 'menu', items: [{ icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier', actif: true }, { icone: '📋', label: 'Coller', actif: true }, { label: 'Collage spécial…' }, '-', { label: 'Insérer…' }, { label: 'Supprimer…' }] },
     },
     {
       humeur: 'accueil',
+      dit: 'Tu as copié, tu es sur la cellule de destination et tu fais clic droit. **Clique l\'entrée pour coller.**',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Coller » dans le menu', items: [{ icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }, { icone: '📋', label: 'Coller' }, { label: 'Collage spécial…' }, '-', { label: 'Insérer…' }, { label: 'Supprimer…' }], cible: 2, explication: 'Coller (📋) dépose ce que tu as copié. Le « Collage spécial » juste en dessous, on le verra bientôt : il colle au choix les valeurs, la mise en forme…' },
+    },
+    {
+      humeur: 'accueil',
       dit: '**Méthode 3, les raccourcis clavier** (les plus rapides). Sur Mac, utilise ⌘ à la place de Ctrl.',
       visuel: { type: 'operateurs', items: [{ s: 'Ctrl + C', l: 'copier' }, { s: 'Ctrl + X', l: 'couper (pour déplacer)' }, { s: 'Ctrl + V', l: 'coller' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Attention à ne pas confondre. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour DÉPLACER une cellule (la retirer d\'un endroit pour la mettre ailleurs), on utilise Ctrl + C.', bonne: false, explication: 'Non : Ctrl + C copie (l\'original reste). Pour déplacer, c\'est Ctrl + X (couper), qui retire l\'original. Puis Ctrl + V pour coller.' },
     },
     { humeur: 'accueil', dit: 'Exemple : tu copies la ligne « Clavier » et tu la colles plus bas. La copie apparaît, l\'original reste en place.', visuel: tabDep({ A2: { t: 'Clavier', ref: true }, B2: { t: '30', num: true, ref: true }, A4: { t: 'Clavier', vert: true }, B4: { t: '30', num: true, vert: true } }, 'A4') },
     { humeur: 'pensif', dit: 'Encore plus direct : le **glisser-déposer**. Sélectionne tes cellules, attrape le **bord** de la sélection (le curseur devient une flèche), et fais-les glisser où tu veux.', visuel: { type: 'glisser' }, plus: ['Glisser-déposer : 1. Clique sur le bord de la sélection (ta souris devient une flèche blanche). 2. Maintiens le clic, glisse la cellule où tu veux. 3. Relâche : Excel déplace les données.'] },
@@ -371,8 +446,18 @@ const COLLAGE = {
       visuel: { type: 'collagespecial', etapes: ['Copie ta cellule (Ctrl + C ou clic droit > Copier)', 'Clic droit sur la cellule de destination', 'Clique sur Collage spécial…', 'Choisis ce que tu veux coller (valeurs, format, formules…)'] },
       plus: ['Méthode clic droit : 1. Clic droit sur la cellule que tu veux copier > Copier. 2. Clic droit sur la cellule de destination. 3. Clique sur Collage spécial… 4. Choisis ce que tu veux coller (valeurs, formats, formules…).', 'Méthode ruban : onglet Accueil > Coller > Collage spécial. Tu y trouveras plusieurs icônes (Formule, Mise en forme, 123 Valeurs…). Passe ta souris dessus pour voir un aperçu avant de cliquer.'],
     },
+    {
+      humeur: 'accueil',
+      dit: 'Tu as copié, tu fais clic droit sur la destination. **Clique l\'entrée qui ouvre le choix de collage.**',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Collage spécial… »', items: [{ icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }, { icone: '📋', label: 'Coller' }, { label: 'Collage spécial…' }, '-', { label: 'Insérer…' }], cible: 3, explication: 'C\'est là que tu choisis : valeurs seules, mise en forme seule, transposer… au lieu de tout coller d\'un bloc.' },
+    },
     { humeur: 'accueil', dit: 'Cas très utile : en D2 tu as un total calculé par une formule, =B2*C2, qui affiche 10.', visuel: tabCol({ D2: { t: '=B2*C2' }, B2: { t: '2', num: true, ref: true }, C2: { t: '5', num: true, ref: true } }, '=B2*C2', 'D2') },
     { humeur: 'pensif', dit: 'Avec **Collage spécial > Valeurs**, tu colles le résultat **10** tout seul, sans la formule. Pratique pour figer un résultat.', visuel: tabCol({ D2: { t: '10', num: true, vert: true } }, null, 'D2') },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions que la nuance est claire. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Après un Collage spécial > Valeurs, la cellule contient encore la formule =B2*C2.', bonne: false, explication: 'Non : « Valeurs » colle seulement le résultat affiché (10). La formule disparaît. C\'est justement ce qu\'on veut pour figer un chiffre.' },
+    },
     {
       humeur: 'accueil',
       dit: 'Autre option : **Transposer**. Une ligne se colle en colonne : les lignes et les colonnes s\'échangent.',
@@ -384,6 +469,11 @@ const COLLAGE = {
       dit: 'Une précision utile.',
       visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Certaines options du collage spécial ne marchent **pas** après un Couper (Ctrl + X). Pour le collage spécial, fais plutôt **Copier (Ctrl + C)**.' },
       plus: ['Certaines options de collage spécial ne fonctionnent pas lorsque tu coupes un élément (Ctrl + X). Pour en profiter pleinement, copie (Ctrl + C) plutôt que couper.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un dernier réflexe. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Le collage spécial fonctionne aussi bien après un Couper (Ctrl + X) qu\'après un Copier (Ctrl + C).', bonne: false, explication: 'Non : certaines options du collage spécial sont désactivées après un Couper. Pour en profiter, copie (Ctrl + C) plutôt que couper.' },
     },
     {
       humeur: 'accueil',
@@ -429,6 +519,7 @@ const ASSISTANT = {
       visuel: { type: 'parties', items: [{ label: 'Choisir la bonne fonction' }, { label: 'Comprendre ses arguments' }, { label: 'Sélectionner facilement les bonnes cellules' }] },
       plus: ['Utiliser l\'assistant pas à pas : 1. Sélectionne la fonction souhaitée (Excel t\'explique à quoi elle sert en bas). 2. Clique sur OK. 3. Remplis les arguments en cliquant sur les cellules concernées. 4. Clique sur OK → Excel place la bonne formule dans la cellule.'],
     },
+    { humeur: 'accueil', dit: 'On veut la **moyenne** des notes, sur la ligne « Moyenne ». Première chose : **clique la cellule qui recevra le résultat.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la Moyenne', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { ...baseAss }, cible: 'B5', explication: 'Oui, B5 : à droite de « Moyenne ». C\'est de cette cellule qu\'on ouvre l\'assistant.' } },
     {
       humeur: 'accueil',
       dit: '**Pour l\'ouvrir :** clique sur la cellule du résultat, puis va dans l\'onglet **Formules** (ou Accueil).',
@@ -441,6 +532,11 @@ const ASSISTANT = {
     },
     {
       humeur: 'accueil',
+      dit: 'À toi : dans l\'onglet **Formules**, **clique le bouton qui ouvre l\'assistant** (fx).',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique « Insérer une fonction » (fx)', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer une fonction' }, { icone: 'Σ', label: 'Somme auto' }, { icone: '?', label: 'Logique' }], cible: 'Insérer une fonction', explication: 'Le fx vert : il ouvre la boîte « Insérer une fonction », où Excel te guide pas à pas.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Voici la boîte « Insérer une fonction ». Tu sélectionnes la fonction, ici **MOYENNE**. En bas, Excel explique à quoi elle sert.',
       visuel: { type: 'assistant', categorie: 'Les dernières utilisées', fonctions: ['SI', 'RECHERCHEX', 'RECHERCHEV', 'SOMME.SI.ENS', 'MOYENNE', 'SOMME', 'LIEN_HYPERTEXTE'], selection: 4, signature: 'MOYENNE(nombre1;nombre2;...)', description: 'Renvoie la moyenne (arithmétique) des arguments, qui peuvent être des nombres, des noms ou des plages.', focus: 'liste' },
     },
@@ -449,7 +545,17 @@ const ASSISTANT = {
       dit: 'Tu cliques sur **OK** : Excel ouvre les arguments. Tu cliques les cellules une par une (B2, B3, B4), et **Nombre4 reste vide** (tous les arguments ne sont pas obligatoires). En bas, l\'aperçu du résultat et la définition s\'affichent.',
       visuel: { type: 'arguments', fonction: 'MOYENNE', args: [{ label: 'Nombre1', ref: 'B2', valeur: '14' }, { label: 'Nombre2', ref: 'B3', valeur: '16' }, { label: 'Nombre3', ref: 'B4', valeur: '12' }, { label: 'Nombre4', ref: '', valeur: 'nombre' }], apercu: '14', description: 'Renvoie la moyenne (arithmétique) des arguments.', resultat: '14', encadre: true },
     },
+    {
+      humeur: 'accueil',
+      dit: 'Les trois notes sont 14, 16 et 12. **Quelle moyenne va afficher Excel ?**',
+      visuel: { type: 'question', options: ['14', '42', '16'], bonne: 0, explication: '(14 + 16 + 12) ÷ 3 = 42 ÷ 3 = 14. MOYENNE additionne puis divise par le nombre de valeurs.' },
+    },
     { humeur: 'fier', dit: 'Un dernier OK, et Excel place =MOYENNE(B2;B3;B4) dans la cellule. Résultat : 14. 🎉', visuel: tabAss('=MOYENNE(B2;B3;B4)', { t: '14', num: true, vert: true }) },
+    {
+      humeur: 'pensif',
+      dit: 'Tu te souviens du Nombre4 resté vide ? **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans une fonction, il faut obligatoirement remplir TOUS les champs d\'arguments proposés.', bonne: false, explication: 'Non : beaucoup d\'arguments sont facultatifs. Pour MOYENNE, tu remplis autant de nombres que tu veux et tu laisses le reste vide.' },
+    },
     {
       humeur: 'pensif',
       dit: 'Et si tu ne sais pas quelle fonction choisir ? Tape ta demande en **langage simple** dans la recherche : « compter les cellules non vides ». Excel te propose **NBVAL**.',
@@ -495,7 +601,12 @@ const SERIES = {
     { humeur: 'accueil', dit: 'La poignée de recopie ne sert pas qu\'à copier : elle crée aussi des **suites automatiques**, les séries. Un vrai gain de temps.' },
     { humeur: 'accueil', dit: 'Écris « janvier » (ou « janv »), tire la poignée, et Excel complète tout seul.', visuel: tabSerie({ A1: { t: 'janvier' }, B1: { t: 'février', vert: true }, C1: { t: 'mars', vert: true }, D1: { t: 'avril', vert: true } }, 'A1', 'La poignée de recopie : la petite croix (+) en bas à droite de la cellule. Clique dessus et tire pour recopier.'), plus: ['Écris un mois dans une cellule (septembre ou sept). Tire la poignée de recopie vers la droite ou vers le bas. Excel complètera automatiquement avec octobre, nov, déc, etc.', 'Tu peux aussi écrire les mois en version abrégée (3 ou 4 lettres) : sept, nov...'] },
     { humeur: 'accueil', dit: 'Pareil pour les **jours** (lundi, mardi...) et les **trimestres**. Peu importe la version, entière ou abrégée (mer, sept).', visuel: tabSerie({ A1: { t: 'lundi' }, B1: { t: 'mardi', vert: true }, C1: { t: 'mercredi', vert: true }, D1: { t: 'jeudi', vert: true } }, 'A1'), plus: ['Écris un jour de la semaine dans une cellule (mercredi, mer). Tire la poignée de recopie. Excel continuera avec jeudi, vendredi, samedi, etc.', 'Peu importe si tu tapes le jour en entier ou en version courte, Excel reconnaît la suite.'] },
-    { humeur: 'pensif', dit: 'Pour une **date** : tape 01/05/2025, tire, et Excel ajoute un jour à chaque cellule. (La cellule doit être au format date.)', visuel: tabSerie({ A1: { t: '01/05/2025' }, B1: { t: '02/05/2025', vert: true }, C1: { t: '03/05/2025', vert: true } }, 'A1') },
+    {
+      humeur: 'accueil',
+      dit: 'Et pour une **date** ? Tu tapes 01/05/2025 et tu tires la poignée. **Que met Excel dans la case suivante ?**',
+      visuel: { type: 'question', options: ['02/05/2025', '01/05/2025', '01/06/2025'], bonne: 0, explication: 'Par défaut, Excel ajoute un jour à chaque case : 02/05, 03/05… (On verra juste après comment changer ce pas.)' },
+    },
+    { humeur: 'pensif', dit: 'Voilà : tape 01/05/2025, tire, et Excel ajoute un jour à chaque cellule. (La cellule doit être au format date.)', visuel: tabSerie({ A1: { t: '01/05/2025' }, B1: { t: '02/05/2025', vert: true }, C1: { t: '03/05/2025', vert: true } }, 'A1') },
     {
       humeur: 'accueil',
       dit: 'Tu peux même choisir le pas des dates : par **jours ouvrés** (sans week-ends), par **mois** ou par **année**.',
@@ -512,7 +623,17 @@ const SERIES = {
       visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Maintiens **Ctrl** (sur **Mac** : **⌘**) en tirant la poignée : Excel répète la valeur au lieu de créer une série. À l\'inverse, sur un seul chiffre, Ctrl crée la suite 1, 2, 3...' },
       plus: ['Par défaut, Excel crée une suite logique. Mais si tu veux recopier exactement la même date ou le même jour, sans l\'incrémenter : maintiens la touche CTRL enfoncée pendant que tu tires la poignée. Excel répétera la valeur au lieu de créer une série.'],
     },
-    { humeur: 'accueil', dit: 'Pour une suite de **nombres** avec un écart : tape les deux premiers (1 puis 3), sélectionne-les, et tire. Excel comprend « +2 ».', visuel: tabSerie({ A1: { t: '1', num: true }, B1: { t: '3', num: true }, C1: { t: '5', num: true, vert: true }, D1: { t: '7', num: true, vert: true }, E1: { t: '9', num: true, vert: true } }, 'B1'), plus: ['Tu veux 1, 2, 3, 4, 5… ? ou une série avec un écart (par exemple +2) ? Tape les deux premiers chiffres de ta suite dans deux cellules consécutives (ex : 1 puis 3), sélectionne les deux cellules, puis tire la poignée de recopie. Excel détecte la logique (ici, +2) et continue automatiquement : 5, 7, 9…', 'Pour une suite simple 1, 2, 3 : tape 1 dans une cellule, puis tire la poignée en maintenant la touche CTRL.'] },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions cette astuce. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'En maintenant Ctrl (⌘ sur Mac) pendant que tu tires « lundi », Excel répète « lundi » partout au lieu de continuer la série.', bonne: true, explication: 'Vrai : Ctrl inverse le comportement. Sur un jour ou une date, il répète la valeur. (Sur un simple chiffre, c\'est l\'inverse : Ctrl crée la suite 1, 2, 3.)' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour une suite de nombres avec un écart : tape 1 puis 3, sélectionne les deux, et tire. **Que va mettre Excel dans la case suivante ?**',
+      visuel: { type: 'question', options: ['5', '4', '33'], bonne: 0, explication: 'Excel repère l\'écart entre 1 et 3 (c\'est +2) et continue : 5, 7, 9…' },
+    },
+    { humeur: 'accueil', dit: 'Voilà : tu tapes 1 puis 3, tu sélectionnes les deux, tu tires, et Excel comprend « +2 ».', visuel: tabSerie({ A1: { t: '1', num: true }, B1: { t: '3', num: true }, C1: { t: '5', num: true, vert: true }, D1: { t: '7', num: true, vert: true }, E1: { t: '9', num: true, vert: true } }, 'B1'), plus: ['Tu veux 1, 2, 3, 4, 5… ? ou une série avec un écart (par exemple +2) ? Tape les deux premiers chiffres de ta suite dans deux cellules consécutives (ex : 1 puis 3), sélectionne les deux cellules, puis tire la poignée de recopie. Excel détecte la logique (ici, +2) et continue automatiquement : 5, 7, 9…', 'Pour une suite simple 1, 2, 3 : tape 1 dans une cellule, puis tire la poignée en maintenant la touche CTRL.'] },
     { humeur: 'accueil', dit: 'Encore plus fort : du **texte + un nombre**. Tape « Client 1 », tire, et Excel continue : Client 2, Client 3...', visuel: tabSerie({ A1: { t: 'Client 1' }, B1: { t: 'Client 2', vert: true }, C1: { t: 'Client 3', vert: true } }, 'A1'), plus: ['Tu peux créer tes propres listes automatiques (ex : Client 1, Client 2, Client 3…) en combinant texte + nombre dans une cellule. Tape « Client 1 », puis tire la poignée : Excel créera la suite tout seul !'] },
     {
       humeur: 'accueil',
