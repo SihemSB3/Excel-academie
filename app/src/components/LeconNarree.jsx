@@ -4324,6 +4324,162 @@ function Visuel({ v }) {
 const REUSSITES_Q = ['Excellent, du premier coup ! 🥋', 'Et voilà, bien vu ! 🎯', 'Exactement ! 💪', 'Précis comme un coup de Wing Chun ! 🥋']
 const ENCOURAGEMENTS_Q = ['Pas celle-là… observe bien et retente ! 🧘', 'Presque ! Relis la question, tu l\'as.', 'Non, mais tu chauffes. Essaie encore !']
 
+// ---------- Interactions actives (palier 1) : l'élève AGIT, il ne lit pas ----------
+
+// « Trouve l'erreur » : l'élève doit CLIQUER la cellule fautive dans le tableau.
+// Après 2 essais ratés, l'indice s'affiche. Bloque le bouton Continuer jusqu'à trouver.
+function TrouveErreur({ v, onResolu }) {
+  const { entetes = [], lignes = [], erreur, indice, explication, consigne } = v
+  const [essais, setEssais] = useState([])
+  const [trouve, setTrouve] = useState(false)
+  const cle = (r, c) => `${r}-${c}`
+  const clic = (r, c) => {
+    if (trouve) return
+    if (r === erreur.ligne && c === erreur.col) {
+      setTrouve(true)
+      onResolu && onResolu()
+    } else if (!essais.includes(cle(r, c))) {
+      setEssais((e) => [...e, cle(r, c)])
+    }
+  }
+  return (
+    <div className="mt-3">
+      {consigne && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">🔍 {consigne}</p>}
+      <div className="mx-auto w-fit overflow-hidden rounded-md border border-navy/15 shadow">
+        <table className="border-collapse text-[12px]">
+          <thead>
+            <tr>{entetes.map((h, i) => (<th key={i} className="border-b-2 border-mint bg-mint/25 px-4 py-1.5 text-left font-bold text-navy">{h}</th>))}</tr>
+          </thead>
+          <tbody>
+            {lignes.map((row, r) => (
+              <tr key={r} className={r % 2 ? 'bg-navy/[0.03]' : 'bg-white'}>
+                {row.map((cell, c) => {
+                  const estBonne = trouve && r === erreur.ligne && c === erreur.col
+                  const rate = essais.includes(cle(r, c))
+                  return (
+                    <td key={c} onClick={() => clic(r, c)} className={`cursor-pointer border-b border-navy/10 px-4 py-1.5 transition ${estBonne ? 'bg-mint/30 font-bold text-navy ring-2 ring-inset ring-mint' : rate ? 'bg-red-500/10 text-navy/40' : 'text-navy/85 hover:bg-mint/10'}`}>{cell || ' '}</td>
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {trouve ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ {essais.length === 0 ? 'Œil de lynx, du premier coup ! 🥋' : 'Trouvé ! 🥋'}</span> {explication}
+        </p>
+      ) : essais.length > 0 ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">
+          {essais.length >= 2 && indice ? <><span className="font-bold">Indice :</span> {indice}</> : ENCOURAGEMENTS_Q[(essais.length - 1) % ENCOURAGEMENTS_Q.length]}
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
+// « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
+// (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
+function ChoixTableau({ v, onResolu }) {
+  const { options = [], bonne = 0, explication } = v
+  const [essais, setEssais] = useState([])
+  const [trouve, setTrouve] = useState(false)
+  const clic = (i) => {
+    if (trouve) return
+    if (i === bonne) {
+      setTrouve(true)
+      onResolu && onResolu()
+    } else if (!essais.includes(i)) {
+      setEssais((e) => [...e, i])
+    }
+  }
+  return (
+    <div className="mt-3">
+      <div className={`grid gap-3 ${options.length >= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
+        {options.map((opt, i) => {
+          const etat = trouve && i === bonne ? 'bonne' : essais.includes(i) ? 'rate' : 'neutre'
+          return (
+            <button
+              key={i}
+              disabled={trouve || essais.includes(i)}
+              onClick={() => clic(i)}
+              className={`rounded-xl border-2 p-2 text-left transition ${etat === 'bonne' ? 'border-mint bg-mint/10' : etat === 'rate' ? 'border-red-400/40 bg-red-500/5 opacity-50' : 'border-navy/15 bg-white hover:border-mint/60'}`}
+            >
+              {opt.titre && <p className="mb-1 text-center text-[11px] font-bold text-navy/60">{opt.titre}</p>}
+              <div className="overflow-hidden rounded-md border border-navy/10">
+                <table className="w-full border-collapse text-[10px]">
+                  <thead>
+                    <tr>{opt.tableau.entetes.map((h, j) => (<th key={j} className={`border-b px-2 py-1 text-left font-bold ${h ? 'border-mint/60 bg-mint/20 text-navy' : 'border-navy/10 bg-navy/5'}`}>{h || ' '}</th>))}</tr>
+                  </thead>
+                  <tbody>
+                    {opt.tableau.lignes.map((row, r) => (
+                      <tr key={r}>{row.map((cell, c) => (<td key={c} className="border-b border-navy/5 px-2 py-0.5 text-navy/80">{cell || ' '}</td>))}</tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {etat === 'bonne' && <p className="mt-1 text-center text-[11px] font-bold text-mint">✓ Celui-ci !</p>}
+            </button>
+          )
+        })}
+      </div>
+      {trouve ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ {essais.length === 0 ? 'Excellent instinct, du premier coup ! 🥋' : 'Trouvé ! 🥋'}</span> {explication}
+        </p>
+      ) : essais.length > 0 ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">{ENCOURAGEMENTS_Q[(essais.length - 1) % ENCOURAGEMENTS_Q.length]}</p>
+      ) : null}
+    </div>
+  )
+}
+
+// « Vrai ou faux ? » : une affirmation, deux gros boutons. Se trompe ? Il retente.
+function VraiFaux({ v, onResolu }) {
+  const { affirmation, bonne, explication } = v
+  const [choix, setChoix] = useState(null)
+  const [trouve, setTrouve] = useState(false)
+  const [rate, setRate] = useState(false)
+  const clic = (val) => {
+    if (trouve) return
+    setChoix(val)
+    if (val === bonne) {
+      setTrouve(true)
+      onResolu && onResolu()
+    } else {
+      setRate(true)
+    }
+  }
+  return (
+    <div className="mt-3">
+      <p className="rounded-xl border border-navy/10 bg-white px-4 py-3 text-center font-mono text-sm leading-relaxed text-navy shadow-sm">{affirmation}</p>
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        {[{ label: 'VRAI', val: true }, { label: 'FAUX', val: false }].map((o) => {
+          const estBon = trouve && o.val === bonne
+          const estRate = rate && choix === o.val && o.val !== bonne
+          return (
+            <button
+              key={o.label}
+              disabled={trouve || estRate}
+              onClick={() => clic(o.val)}
+              className={`rounded-xl border-2 py-3 font-display text-xl transition ${estBon ? 'border-mint bg-mint/15 text-mint' : estRate ? 'border-red-400/50 bg-red-500/10 text-red-400 opacity-60' : 'border-navy/15 bg-white text-navy hover:border-mint/60'}`}
+            >
+              {o.label}
+            </button>
+          )
+        })}
+      </div>
+      {trouve ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ {!rate ? 'Excellent, du premier coup ! 🥋' : 'Voilà ! 🥋'}</span> {explication}
+        </p>
+      ) : rate ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">Hmm… relis bien l'affirmation et retente ! 🧘</p>
+      ) : null}
+    </div>
+  )
+}
+
 function Question({ q, onResolu }) {
   const [essais, setEssais] = useState([])
   const [trouve, setTrouve] = useState(false)
@@ -4431,7 +4587,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const [resolu, setResolu] = useState(false)
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -4468,6 +4624,12 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <Elargir v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'doubleclic' ? (
             <DoubleClic onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'trouvererreur' ? (
+            <TrouveErreur v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'choixtableau' ? (
+            <ChoixTableau v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'vraifaux' ? (
+            <VraiFaux v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -4481,7 +4643,13 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                 ? 'Élargis la colonne'
                 : s.visuel?.type === 'doubleclic'
                   ? 'Double-clique sur le bord'
-                  : 'Réponds pour continuer'
+                  : s.visuel?.type === 'trouvererreur'
+                    ? 'Clique la cellule fautive'
+                    : s.visuel?.type === 'choixtableau'
+                      ? 'Choisis une proposition'
+                      : s.visuel?.type === 'vraifaux'
+                        ? 'Vrai ou faux ?'
+                        : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

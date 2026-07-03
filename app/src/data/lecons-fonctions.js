@@ -2690,6 +2690,20 @@ const REGLESLISTE = {
     { humeur: 'accueil', dit: 'Une **liste**, c\'est une suite d\'informations rangée en colonnes, avec une ligne d\'en-tête en haut. Avant de la trier, la filtrer ou la totaliser, elle doit être « propre ». Voici un exemple :', visuel: { type: 'tableaudonnees', brut: true, entetes: ['Date', 'Vendeur', 'Ville', 'CA'], lignes: [['05/03', 'Marie', 'Lyon', '8 200 €'], ['06/03', 'Karim', 'Paris', '12 500 €'], ['07/03', 'Léa', 'Lyon', '6 400 €'], ['08/03', 'Tom', 'Marseille', '9 100 €']], legende: 'Une ligne d\'en-tête (Date, Vendeur, Ville, CA), puis une ligne par enregistrement.' } },
     {
       humeur: 'pensif',
+      dit: 'Avant toute explication, à ton avis : **lequel de ces trois tableaux** Excel reconnaîtra-t-il parfaitement comme une liste ? **Clique-le !**',
+      visuel: {
+        type: 'choixtableau',
+        bonne: 2,
+        explication: 'Le tableau C : des en-têtes complets et aucune ligne vide. Le A a une ligne entièrement vide au milieu (Excel croit que la liste s\'arrête là), le B a un en-tête manquant. Voyons les règles qui se cachent derrière !',
+        options: [
+          { titre: 'Tableau A', tableau: { entetes: ['Vendeur', 'Ville', 'CA'], lignes: [['Marie', 'Lyon', '8 200 €'], ['', '', ''], ['Karim', 'Paris', '12 500 €']] } },
+          { titre: 'Tableau B', tableau: { entetes: ['Vendeur', '', 'CA'], lignes: [['Marie', 'Lyon', '8 200 €'], ['Karim', 'Paris', '12 500 €']] } },
+          { titre: 'Tableau C', tableau: { entetes: ['Vendeur', 'Ville', 'CA'], lignes: [['Marie', 'Lyon', '8 200 €'], ['Karim', 'Paris', '12 500 €']] } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Les 3 règles d\'une liste exploitable :',
       visuel: { type: 'parties', items: [{ label: '**Aucune ligne ni colonne entièrement vide** : Excel prend une ligne/colonne vide pour la fin du tableau.' }, { label: '**Les en-têtes sur une seule ligne** (ex : A1:C1), sans rien au-dessus : Excel repère la 1re ligne comme titres.' }, { label: '**Jamais de cellules fusionnées** dans le tableau : ça casse les tris automatiques.' }] },
     },
@@ -3222,7 +3236,7 @@ const DEPLACERGRAPHIQUE = {
   titre: 'Déplacer & redimensionner',
   exercices: [EX8.ex60],
   narration: [
-    { humeur: 'accueil', dit: 'Un graphique est un **objet flottant** posé sur ta feuille : tu peux le déplacer et l\'agrandir librement, sans toucher aux données.' },
+    { humeur: 'accueil', dit: 'Un graphique est un **objet flottant** posé sur ta feuille : tu peux le déplacer et l\'agrandir librement, sans toucher aux données.', visuel: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', poignees: true, legende: 'Le voilà, notre objet : sélectionné, avec son cadre et ses 8 poignées. On va apprendre à le manier.' } },
     {
       humeur: 'pensif',
       dit: 'Pour le **déplacer** : attrape-le par son bord.',
@@ -3742,6 +3756,19 @@ const CONSOPOSITION = {
     },
     {
       humeur: 'pensif',
+      dit: 'Petit défi avant la méthode : cette version de « Février » a un **problème** qui fausserait la consolidation par position. **Clique la cellule fautive !**',
+      visuel: {
+        type: 'trouvererreur',
+        consigne: 'Compare avec la feuille Janvier : Ebook Excel, Ebook Shaolin, Formations',
+        entetes: ['Produit', 'CA'],
+        lignes: [['Ebook Excel', '13 800 €'], ['Ebook Shaolin', '9 700 €'], ['Formation', '6 900 €']],
+        erreur: { ligne: 2, col: 0 },
+        indice: 'Regarde bien la 1re colonne : une étiquette a perdu une lettre…',
+        explication: 'Il est écrit « Formation » au lieu de « Formations ». Par position, Excel additionne case par case SANS vérifier les étiquettes : la synthèse serait fausse en silence. D\'où la règle d\'or : mêmes étiquettes, mêmes positions, partout.',
+      },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Bon à savoir avant de commencer :',
       visuel: { type: 'encart', label: 'Contexte', liste: ['Les en-têtes de **lignes et colonnes** doivent être **identiques** et **aux mêmes emplacements** sur chaque feuille.', 'Les sources peuvent être sur des **feuilles** différentes, plusieurs **classeurs** ouverts, ou une même feuille.', '**Sans liaison** : résultat figé. **Avec liaison** : mise à jour auto quand les sources changent.'] },
     },
@@ -4136,7 +4163,7 @@ const RAPPELREFNOMS = {
   titre: 'Rappels express : références & noms',
   exercices: [],
   narration: [
-    { humeur: 'accueil', dit: 'Avant les fonctions conditionnelles, deux **rappels** essentiels : les **références** (relatives/absolues) et les **noms**. Ils reviennent tout au long du chapitre.' },
+    { humeur: 'accueil', dit: 'Avant les fonctions conditionnelles, deux **rappels** essentiels : les **références** (relatives/absolues) et les **noms**. Ils reviennent tout au long du chapitre.', visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Prix', entete: true }, B1: { t: 'Qté', entete: true }, C1: { t: 'Total', entete: true }, A2: { t: '25', ref: true }, B2: { t: '4', ref: true }, C2: { t: '=A2*B2' } }, refsCouleur: { A2: 'bleu', B2: 'ambre' }, formule: '=A2*B2', actif: 'C2', legende: 'Tout ce chapitre joue avec des formules comme celle-ci. Petit échauffement !' } },
     {
       humeur: 'pensif',
       dit: 'Une **référence relative** s\'adapte quand tu recopies la formule.',
@@ -4286,6 +4313,16 @@ const SIIMBRIQUE = {
           { etapes: ['Appuie sur **Entrée**, puis **étire** la formule pour les autres élèves.'], depart: 8 },
           { capture: { type: 'tableur', cols: ['B', 'C'], rows: [1, 2, 3], cells: { B1: { t: 'Note', entete: true }, C1: { t: 'Commentaire', entete: true }, B2: { t: '82', ref: true }, C2: { t: 'Bien', vert: true }, B3: { t: '45' }, C3: { t: 'Insuffisant', vert: true } }, formule: '=SI(B2>90;"Excellent";SI(B2>75;"Bien";SI(B2>50;"Passable";"Insuffisant")))', actif: 'C2', legende: '82 : pas > 90, mais > 75 → « Bien ». 45 : aucun test vrai → « Insuffisant ».' } },
         ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions ton œil de logicienne. **Vrai ou faux ?**',
+      visuel: {
+        type: 'vraifaux',
+        affirmation: '=SI(B2>90;"Excellent";…) affiche « Excellent » quand B2 vaut exactement 90.',
+        bonne: false,
+        explication: '90 n\'est pas STRICTEMENT supérieur à 90 : le test B2>90 est FAUX, Excel passe au palier suivant. Pour inclure 90, écris B2>=90. Ce détail piège tout le monde, retiens-le bien !',
       },
     },
     {
