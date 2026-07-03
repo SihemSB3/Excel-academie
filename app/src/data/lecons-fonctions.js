@@ -5309,6 +5309,11 @@ const RAPPELSRECHERCHE = {
     },
     {
       humeur: 'pensif',
+      dit: 'Un rappel qui sert tout le chapitre. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Une référence figée avec des $ (comme $G$10) reste identique quand tu recopies la formule.', bonne: true, explication: 'Vrai : les $ verrouillent la cellule. Sans eux, une référence relative se décale à chaque recopie. Tu figeras toujours la plage du tableau de référence dans tes RECHERCHE.' },
+    },
+    {
+      humeur: 'pensif',
       dit: '**Les références absolues :** parfois, une cellule doit rester **figée**. Exemple : tu veux calculer un pourcentage basé sur la cellule G10. En H2, tu écris =G2/G10… et en recopiant vers le bas, tu obtiens =G4/G11. Excel a tout décalé !',
       visuel: { type: 'tableur', cols: ['G', 'H'], rows: [2, 3, 4], cells: { G2: { t: '12 500', num: true }, H2: { t: '=G2/G10' }, G3: { t: '9 800', num: true }, H3: { t: '=G3/G11' }, G4: { t: '7 200', num: true }, H4: { t: '=G4/G12' } }, formule: '=G4/G12', actif: 'H4', legende: 'AVANT : G10 est devenu G11 puis G12, le diviseur a glissé à chaque ligne. Ce n\'est pas ce qu\'on veut !' },
       plus: ['Une référence absolue reste fixe, même si tu copies la formule ailleurs. C\'est utile quand tu veux toujours faire référence à la même cellule, comme un taux de TVA, un seuil, ou une valeur constante.', 'Tu veux calculer un pourcentage basé sur la cellule G10. En H2 : =G2/G10. Si tu recopies vers H4, tu obtiens =G4/G11. Ce n\'est pas ce qu\'on veut ! Solution : figer G10 → =G2/$G$10.'],
@@ -5341,6 +5346,11 @@ const RAPPELSRECHERCHE = {
         ],
       },
       plus: ['Utiliser un nom dans une formule rend le fichier plus lisible. Plutôt que d\'écrire =A1+B1, tu peux écrire =Prix+Quantité. Cela facilite la compréhension, surtout si d\'autres personnes utilisent ton fichier.', '1. Sélectionne la cellule ou la plage à nommer. 2. Clique dans la zone Nom (à gauche de la barre de formule). 3. Tape le nom (respecte la syntaxe). 4. Appuie sur Entrée.', 'Erreurs à éviter : oublier d\'appuyer sur [Entrée] après avoir tapé un nom. Utiliser un espace dans le nom (Prix unitaire → erreur). Nommer une cellule avec un mot déjà utilisé dans Excel (comme SOMME).'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Deuxième méthode : dans l\'onglet **Formules**, **clique le bouton Définir un nom.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Définir un nom', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection' }], cible: 'Définir un nom', explication: 'Le bouton 🔖 ouvre la fenêtre « Nouveau nom » : tu choisis le nom, sa portée (classeur ou feuille) et sa plage. Pratique pour des noms clairs dans tes RECHERCHE.' },
     },
     {
       humeur: 'pensif',
@@ -5483,6 +5493,11 @@ const RECHERCHEV = {
       plus: ['1. Ouvrir les deux tableaux. 2. Identifier la clé commune : repère la colonne « Code article » dans chaque tableau. Assure-toi que chaque code est unique dans le référentiel. 3. Ajoute une colonne dans ton tableau principal pour y importer les données issues du second tableau. 4. Sélectionne la cellule où le résultat doit apparaître (D2).'],
     },
     {
+      humeur: 'accueil',
+      dit: 'On a ajouté la colonne Quantité au tableau Commandes. **Clique la cellule où écrire la formule** (la Quantité du 1er article).',
+      visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule Quantité de la 1re ligne', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true } }, cible: 'D2', explication: 'Oui, D2 : sur la même ligne que le code A1001. C\'est là qu\'on écrit =RECHERCHEV(…).' },
+    },
+    {
       humeur: 'pensif',
       dit: '**Étape 5 :** tape **=RECHERCHEV(** pour ouvrir la fonction.',
       visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '=RECHERCHEV(' } }, formule: '=RECHERCHEV(', actif: 'D2' },
@@ -5519,6 +5534,11 @@ const RECHERCHEV = {
       plus: ['13. Tape « FAUX » pour une correspondance exacte. Tu peux aussi remplacer FAUX par 0 pour obtenir une correspondance exacte. 14. Ferme la parenthèse. 15. Tape sur ENTREE pour valider la formule.'],
     },
     {
+      humeur: 'accueil',
+      dit: 'Formule validée : =RECHERCHEV(A2;Stock!A2:B5;2;FAUX). Le code A1001 a **5** en quantité dans Stock. **Que va afficher D2 ?**',
+      visuel: { type: 'question', options: ['5', 'A1001', '24,90 €'], bonne: 0, explication: 'Excel retrouve A1001 dans la 1re colonne de Stock, puis renvoie la valeur de la 2ᵉ colonne (Quantité) : 5.' },
+    },
+    {
       humeur: 'content',
       dit: '**Étapes 16 et 17 :** te voilà automatiquement de retour sur le tableau principal. Vérifie que la cellule affiche bien la donnée attendue : **5**, la quantité du code A1001. La clé a fait le pont !',
       visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true } }, formule: '=RECHERCHEV(A2;Stock!A2:B5;2;FAUX)', actif: 'D2', legende: 'D2 affiche 5 : la quantité du clavier, rapatriée depuis la feuille Stock.' },
@@ -5529,6 +5549,11 @@ const RECHERCHEV = {
       dit: '**Étapes 18 et 19 :** avant d\'étirer, **fige la plage** du second tableau en références absolues avec des **$** (F4, ou **⌘ + T** sur Mac). Puis étire la formule vers le bas.',
       visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, D3: { t: '#N/A', rouge: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true }, D4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEV(A2;Stock!$A$2:$B$5;2;FAUX)', actif: 'D2', legende: 'Grâce aux $, la plage Stock!$A$2:$B$5 reste figée sur toutes les lignes. Mais que se passe-t-il en D3 ?' },
       plus: ['18. Avant d\'étirer la formule, convertis la plage du second tableau en références absolues c\'est-à-dire fixe la plage du deuxième tableau en utilisant $ pour bloquer les cellules afin de préserver l\'exactitude des données. 19. Étire la formule.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Regarde la ligne 3 : le code **A1002** n\'existe PAS dans la feuille Stock. En correspondance exacte, **que va afficher D3 ?**',
+      visuel: { type: 'question', options: ['#N/A', '0', 'A1002'], bonne: 0, explication: '#N/A = « valeur non disponible ». Le code A1002 est introuvable dans Stock, donc RECHERCHEV le signale. On va voir comment rendre ça plus propre.' },
     },
     {
       humeur: 'pensif',
@@ -5624,6 +5649,11 @@ const RECHERCHEX = {
     },
     {
       humeur: 'pensif',
+      dit: 'Le gros avantage sur RECHERCHEV. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Avec RECHERCHEX, la donnée à renvoyer peut se trouver à GAUCHE de la colonne clé.', bonne: true, explication: 'Vrai : plage_recherche et plage_retour sont indépendantes. RECHERCHEX cherche dans les deux sens, contrairement à RECHERCHEV qui ne regarde qu\'à droite.' },
+    },
+    {
+      humeur: 'pensif',
       dit: '**La RECHERCHEX, à retenir :**',
       visuel: { type: 'parties', items: [{ label: 'Deux plages indépendantes : plage de recherche (clé) et plage de retour (donnée), sans index numérique' }, { label: 'Bidirectionnelle : recherche à gauche comme à droite' }, { label: 'Correspondance exacte par défaut : [mode_correspondance] vaut 0 automatiquement' }, { label: 'Gestion native des erreurs : le 4ᵉ argument [si_non_trouvé] remplace SIERREUR' }, { label: 'Multi-critères : combine plusieurs conditions par concaténation (leçon suivante !)' }] },
       plus: ['Deux plages indépendantes : tu sélectionnes séparément la plage de recherche (clé) et la plage de retour (donnée), sans contrainte de position ni besoin d\'index numérique.', 'Bidirectionnel : recherche à gauche, à droite, plus de limitation « clé à gauche ».', 'Correspondance exacte par défaut : l\'argument [mode_correspondance] vaut 0 automatiquement ; tu peux choisir 1 pour une recherche approchée si la plage est triée.', 'Gestion native des erreurs : le 4ᵉ argument ([si_non_trouvé]) permet de définir le message à afficher en cas d\'absence, sans recourir à SIERREUR.', 'Cas multi-critères : combine plusieurs conditions via la concaténation (Colonne1&Colonne2) pour créer un tableau et rechercher simultanément deux (ou plusieurs) critères.'],
@@ -5675,6 +5705,11 @@ const RECHERCHEXDEUX = {
       plus: ['12. Définis la plage de retour, c\'est-à-dire la plage de cellules où la formule ira chercher la valeur à renvoyer. Ici, il s\'agit de la colonne des prix. 13. Ferme la parenthèse. 14. Tape sur ENTREE pour valider la formule.'],
     },
     {
+      humeur: 'accueil',
+      dit: 'L\'utilisateur a choisi **Hoodie** + **S**. Dans le catalogue, le Hoodie S coûte 29 €. **Que va afficher I9 ?**',
+      visuel: { type: 'question', options: ['29 €', '32 €', '25 €'], bonne: 0, explication: 'La clé combinée « HoodieS » correspond à la ligne du Hoodie taille S : 29 €. (32 € serait le M, 25 € le Sweat S.)' },
+    },
+    {
       humeur: 'content',
       dit: '**Le résultat :** I9 affiche **29 €**, le prix du Hoodie taille S, trouvé grâce à la chaîne « HoodieS » et à la correspondance exacte. Une seule formule, deux critères croisés !',
       visuel: { type: 'tableur', cols: ['G', 'H', 'I'], rows: [8, 9], cells: { G8: { t: 'Produit', entete: true }, H8: { t: 'Taille', entete: true }, I8: { t: 'Prix', entete: true }, G9: { t: 'Hoodie' }, H9: { t: 'S' }, I9: { t: '29 €', vert: true, num: true } }, formule: '=RECHERCHEX(G9&H9;A2:A7&C2:C7;D2:D7)', actif: 'I9', legende: 'Et voilà ! Change G9 en « Sweat » et le prix se met à jour tout seul : 25 €.' },
@@ -5684,6 +5719,11 @@ const RECHERCHEXDEUX = {
       humeur: 'pensif',
       dit: 'Le secret de cette technique tient en un seul caractère :',
       visuel: { type: 'encart', label: 'Le rôle du &', texte: 'Le signe **&** colle deux contenus l\'un à l\'autre (c\'est la **concaténation**). « Hoodie » & « S » = « HoodieS ». Appliqué aux plages, il fabrique une colonne virtuelle de clés combinées, sans rien ajouter dans ta feuille.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Sur le rôle du &. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Le signe & colle deux valeurs bout à bout : "Hoodie" & "S" donne "HoodieS".', bonne: true, explication: 'Vrai : c\'est la concaténation. Elle fabrique une clé combinée pour croiser deux critères, sans créer de colonne auxiliaire dans ta feuille.' },
     },
     {
       humeur: 'accueil',
@@ -5749,6 +5789,11 @@ const RECHERCHEH = {
       plus: ['13. Tape « FAUX » ou 0 pour une correspondance exacte. 14. Ferme la parenthèse. 15. Tape sur ENTREE pour valider la formule.'],
     },
     {
+      humeur: 'accueil',
+      dit: 'Formule prête : =RECHERCHEH(B2;Réf!B1:E3;3;FAUX), pour le code A1001. Dans le référentiel horizontal, la quantité d\'A1001 est **20**. **Que va afficher C2 ?**',
+      visuel: { type: 'question', options: ['20', '24,90 €', 'A1001'], bonne: 0, explication: 'RECHERCHEH trouve A1001 sur la 1re ligne, puis descend à la 3ᵉ ligne (Quantité) : 20. La ligne 2 (Prix) donnerait 24,90 €.' },
+    },
+    {
       humeur: 'content',
       dit: '**Vérifie, fige, étire :** de retour sur le tableau principal, C2 affiche **20** (la quantité du code A1001). Avant d\'étirer, fige la plage avec des **$** (F4, Mac : **⌘ + T**), puis étire la formule.',
       visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Code article', entete: true }, C1: { t: 'Quantité', entete: true }, A2: { t: 'Clavier sans fil' }, B2: { t: 'A1001' }, C2: { t: '20', vert: true, num: true }, A3: { t: 'Souris ergonomique' }, B3: { t: 'A1002' }, C3: { t: '7', vert: true, num: true }, A4: { t: 'Écran 24 pouces' }, B4: { t: 'A1003' }, C4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEH(B2;Réf!$B$1:$E$3;3;FAUX)', actif: 'C2', legende: 'APRÈS : la plage Réf!$B$1:$E$3 figée, la formule étirée remplit toute la colonne juste.' },
@@ -5759,6 +5804,11 @@ const RECHERCHEH = {
       dit: '**La RECHERCHEH, à retenir :**',
       visuel: { type: 'parties', items: [{ label: 'Clé en première ligne : la valeur-clé doit être sur la ligne du haut de la plage' }, { label: 'Index de ligne : la donnée recherchée doit se trouver EN DESSOUS de la clé, dans la même plage' }, { label: 'Plage 2D continue : toujours un bloc rectangulaire (ex. $A$1:$D$4), jamais deux plages séparées' }, { label: 'Correspondance exacte : comme pour RECHERCHEV, précise FAUX ou 0' }, { label: 'Évite les doublons : si la première ligne contient des clés répétées, Excel ne renvoie que la première' }] },
       plus: ['Clé en première ligne : la valeur-clé doit être sur la ligne du haut de ta plage (table_matrice).', 'Index de ligne : indique le numéro de la ligne à renvoyer ; la donnée recherchée doit se trouver en dessous de la clé, dans la même plage rectangulaire.', 'Plage 2D continue : sélectionne toujours un bloc rectangulaire (ex. $A$1:$D$4) ; pas de sélection en deux plages séparées.', 'Correspondance exacte : comme pour RECHERCHEV, précise FAUX ou 0 pour forcer l\'égalité.', 'Évite les doublons : si ta première ligne contient des clés répétées, Excel ne renverra que la première occurrence.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Sur la sélection de la plage. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour RECHERCHEH, la table_matrice doit être un bloc rectangulaire continu (la ligne clé ET la ligne des données ensemble).', bonne: true, explication: 'Vrai : sélectionne toujours un rectangle continu (ex. B1:E3) englobant la ligne des codes et celle des données. Jamais deux plages séparées.' },
     },
     {
       humeur: 'pensif',
