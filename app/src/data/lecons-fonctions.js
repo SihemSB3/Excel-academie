@@ -1340,6 +1340,7 @@ const FONCTIONSSIMPLES = {
       visuel: { type: 'operateurs', cols: 1, items: [{ s: ':', l: 'Les deux points veulent dire « jusqu\'à ». Exemple : A1:A5 = de A1 à A5' }, { s: ';', l: 'Le point-virgule veut dire « et ». Exemple : A1;C1;E1 = A1 et C1 et E1' }] },
     },
     { humeur: 'accueil', dit: 'Un exemple concret : on cherche le produit qui a le **moins** vendu. La fonction MIN trouve la plus petite valeur de la plage. On la construit en la tapant.', visuel: tabMIN() },
+    { humeur: 'accueil', dit: 'Le résultat ira sur la ligne « Le + petit ». **Clique la cellule qui va le recevoir.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du résultat (à droite de « Le + petit »)', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5, 6, 7], cells: { ...VENTES }, cible: 'B7', explication: 'Oui, B7 : c\'est là qu\'on écrit =MIN(…) pour afficher la plus petite valeur.' } },
     {
       humeur: 'pensif',
       dit: 'On la saisit directement dans la cellule, pas à pas.',
@@ -1358,6 +1359,11 @@ const FONCTIONSSIMPLES = {
           { note: 'Dans cette plage (B2 à B6), la valeur 8800 correspond aux ventes du Tablier, le produit qui a eu le moins de ventes.' },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Tu as trouvé le produit qui a le moins vendu avec MIN. Et pour trouver celui qui a le **plus** vendu, quelle fonction utilises-tu ?',
+      visuel: { type: 'question', options: ['MAX', 'MIN', 'SOMME'], bonne: 0, explication: 'MAX renvoie la plus GRANDE valeur, MIN la plus petite. Elles s\'écrivent pareil : =MAX(B2:B6). SOMME, elle, additionnerait tout.' },
     },
     {
       humeur: 'accueil',
@@ -1445,15 +1451,26 @@ const FONCTIONSCOMPLEXES = {
       dit: 'Tu l\'as déjà croisée en ceinture jaune : la fonction **SI**. Elle demande **trois** arguments.',
       visuel: { type: 'parties', items: [{ label: 'Une **condition** (la question posée à Excel)' }, { label: 'Un **résultat si c\'est vrai**' }, { label: 'Un **résultat si c\'est faux**' }] },
     },
-    { humeur: 'accueil', dit: 'On va la construire pas à pas dans la cellule B2. Le but : afficher « OK » si la note en A2 dépasse 10, sinon « À refaire ».', visuel: tabSI4({ t: '12' }) },
+    { humeur: 'accueil', dit: 'On va la construire pas à pas. Le résultat doit s\'afficher en face de la note. **Clique la cellule du résultat.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule Résultat', cols: ['A', 'B'], rows: [1, 2], cells: { ...baseSI4, A2: { t: '12' } }, cible: 'B2', explication: 'Oui, B2 : colonne « Résultat ». C\'est là qu\'on construit le SI.' } },
     { humeur: 'pensif', dit: '**Étape 1 :** clique dans B2 et tape **=**. Il s\'écrit dans la cellule et dans la barre de formule.', visuel: tabSI4({ t: '12' }, '=') },
     { humeur: 'pensif', dit: '**Étape 2 :** écris **SI** et ouvre une parenthèse.', visuel: tabSI4({ t: '12' }, '=SI(') },
-    { humeur: 'accueil', dit: '**Argument 1, la condition :** on teste si A2 (la case bleue) est supérieur à 10.', visuel: tabSI4({ t: '12', ref: true }, '=SI(A2>10') },
+    { humeur: 'accueil', dit: '**Argument 1, la condition :** on veut comparer la note à 10. **Clique la cellule de la note.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la note à tester', cols: ['A', 'B'], rows: [1, 2], cells: { ...baseSI4, A2: { t: '12' }, B2: { t: '=SI(' } }, formule: '=SI(', cible: 'A2', explication: 'Exact : A2. On écrit =SI(A2>10 : « si la note dépasse 10… ».' } },
+    { humeur: 'accueil', dit: 'La condition s\'écrit donc **A2>10** : on teste si A2 est supérieur à 10.', visuel: tabSI4({ t: '12', ref: true }, '=SI(A2>10') },
     { humeur: 'pensif', dit: 'Un point-virgule **;** puis **argument 2, le résultat si VRAI**, entre guillemets.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK"') },
     { humeur: 'pensif', dit: 'Encore un **;** puis **argument 3, le résultat si FAUX**.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK";"À refaire"') },
     { humeur: 'pensif', dit: 'On ferme la parenthèse **)**. La formule complète est dans B2 et dans la barre de formule.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK";"À refaire")') },
-    { humeur: 'fier', dit: 'On appuie sur **Entrée** : 12 > 10 ? Oui → B2 affiche **OK**.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK";"À refaire")', { t: 'OK', vert: true }) },
-    { humeur: 'pensif', dit: 'Et si la note avait été 7 ? 7 > 10 ? Non → B2 affiche **À refaire**.', visuel: tabSI4({ t: '7' }, '=SI(A2>10;"OK";"À refaire")', { t: 'À refaire', rouge: true }) },
+    {
+      humeur: 'accueil',
+      dit: 'On appuie sur Entrée. La note est 12. **Que va afficher B2 ?**',
+      visuel: { type: 'question', options: ['OK', 'À refaire'], bonne: 0, explication: '12 > 10 ? Oui : la condition est vraie, Excel affiche le 2ᵉ argument, « OK ».' },
+    },
+    { humeur: 'fier', dit: 'Exact : 12 > 10, donc B2 affiche **OK**.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK";"À refaire")', { t: 'OK', vert: true }) },
+    {
+      humeur: 'accueil',
+      dit: 'Et si la note avait été **7** ? **Que va afficher B2 ?**',
+      visuel: { type: 'question', options: ['À refaire', 'OK'], bonne: 0, explication: '7 > 10 ? Non : la condition est fausse, Excel affiche le 3ᵉ argument, « À refaire ».' },
+    },
+    { humeur: 'pensif', dit: 'Voilà : 7 > 10 ? Non → B2 affiche **À refaire**.', visuel: tabSI4({ t: '7' }, '=SI(A2>10;"OK";"À refaire")', { t: 'À refaire', rouge: true }) },
     {
       humeur: 'pensif',
       dit: 'Un détail à ne pas oublier dans SI :',
@@ -1479,7 +1496,8 @@ const FONCTIONSCOMPLEXES = {
     { humeur: 'accueil', dit: 'Une autre fonction complexe bien pratique : **ARRONDI**. Elle réduit le nombre de décimales d\'un chiffre. Tu choisis combien de chiffres après la virgule, et Excel arrondit pour toi.', visuel: { type: 'formule', formule: '=ARRONDI(nombre ; nombre_de_chiffres)' } },
     { humeur: 'accueil', dit: 'On l\'écrit pas à pas dans B2, pour arrondir le montant 12,8 placé en A2.', visuel: tabARR() },
     { humeur: 'pensif', dit: '**Étape 1 :** dans B2, tape **=ARRONDI(**.', visuel: tabARR('=ARRONDI(') },
-    { humeur: 'accueil', dit: '**Argument 1, le nombre :** clique sur A2 (la case bleue), la valeur à arrondir.', visuel: tabARR('=ARRONDI(A2') },
+    { humeur: 'accueil', dit: '**Argument 1, le nombre :** on veut arrondir le montant. **Clique la cellule à arrondir.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du montant à arrondir', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Montant', entete: true }, B1: { t: 'Arrondi', entete: true }, A2: { t: '12,8', num: true }, B2: { t: '=ARRONDI(' } }, formule: '=ARRONDI(', cible: 'A2', explication: 'Oui, A2 : le montant 12,8. On écrit donc =ARRONDI(A2 : « arrondis A2… ».' } },
+    { humeur: 'accueil', dit: 'On a donc **=ARRONDI(A2** : A2 est la valeur à arrondir.', visuel: tabARR('=ARRONDI(A2') },
     { humeur: 'pensif', dit: 'Un **;** puis **argument 2, le nombre de décimales** : 0 pour un entier.', visuel: tabARR('=ARRONDI(A2;0') },
     { humeur: 'pensif', dit: 'On ferme la parenthèse **)**.', visuel: tabARR('=ARRONDI(A2;0)') },
     { humeur: 'fier', dit: 'On appuie sur **Entrée** : 12,8 arrondi à l\'entier donne **13**.', visuel: tabARR('=ARRONDI(A2;0)', { t: '13', num: true, vert: true }) },
@@ -1508,6 +1526,11 @@ const FONCTIONSCOMPLEXES = {
       humeur: 'accueil',
       dit: 'Tu te demandais s\'il y avait d\'autres ARRONDI : oui, deux petites sœurs, au cas où tu veux forcer le sens.',
       visuel: { type: 'encart', label: 'Les variantes d\'ARRONDI', liste: ['**ARRONDI** : arrondit normalement (au plus proche).', '**ARRONDI.INF** : arrondit toujours vers le **bas**.', '**ARRONDI.SUP** : arrondit toujours vers le **haut**.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions ces variantes. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '=ARRONDI.SUP(12,1 ; 0) donne 12.', bonne: false, explication: 'Non : ARRONDI.SUP arrondit toujours vers le HAUT, donc 12,1 devient 13. C\'est ARRONDI.INF qui donnerait 12.' },
     },
     {
       humeur: 'accueil',
@@ -1541,15 +1564,30 @@ const RECOPIERFORMULES = {
     },
     {
       humeur: 'pensif',
+      dit: 'Vérifions ce sens. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Quand tu recopies =B2 vers la DROITE, c\'est le numéro de ligne qui change (B2 → B3).', bonne: false, explication: 'Non : vers la droite, c\'est la COLONNE qui change (B2 → C2 → D2). Vers le bas, ce serait la ligne (B2 → B3).' },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Un piège classique avec les relatives :',
       visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Si tes formules ne se recalculent pas toutes seules, le mode de calcul est sûrement réglé sur « manuel ». Solution : **Formules > Options de calcul > Automatique**.' },
     },
     { humeur: 'accueil', dit: '**Les références absolues.** Parfois, une cellule doit rester fixe, même en recopiant : un taux de TVA, un seuil, une constante. Ici, le taux est en E2 et on veut le garder. On écrit =B2*$E$2.', visuel: tabREF4({ C2: { t: '=B2*$E$2' } }, '=B2*$E$2', 'C2', 'Les $ verrouillent E2 : le taux restera figé en recopiant.', { refsCouleur: { B2: 'bleu', E2: 'ambre' } }) },
+    {
+      humeur: 'accueil',
+      dit: 'Tu recopies =B2*$E$2 une ligne plus bas, en C3. **Qu\'obtiens-tu ?**',
+      visuel: { type: 'question', options: ['=B3*$E$2', '=B3*$E$3', '=B2*$E$2'], bonne: 0, explication: 'B2 est relatif : il devient B3. Mais $E$2 est figé par les $ : il reste $E$2. Le taux ne bouge pas.' },
+    },
     { humeur: 'fier', dit: 'En recopiant vers le bas, B2 s\'adapte (B3…) mais $E$2 reste figé. Tous les calculs tombent juste.', visuel: tabREF4({ C2: { t: '36', vert: true }, C3: { t: '24', vert: true } }, '=B3*$E$2', 'C3', 'B3 a changé (bleu), mais $E$2 (orange) est resté le même.', { refsCouleur: { B3: 'bleu', E2: 'ambre' } }) },
     {
       humeur: 'pensif',
       dit: 'Le raccourci pour mettre les $ sans les taper :',
       visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Clique sur la cellule dans ta formule, puis appuie sur **F4** : Excel transforme B1 en $B$1. Si F4 ne marche pas tout seul, essaie **Fn + F4** (claviers portables). Sur **Mac**, utilise **⌘ + T**.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions ce raccourci. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Sélectionner une référence dans la formule et appuyer sur F4 (⌘ + T sur Mac) ajoute les $ automatiquement.', bonne: true, explication: 'Vrai : F4 (ou ⌘ + T) transforme B1 en $B$1 sans taper les $ à la main. Un appui de plus fige seulement la ligne, puis la colonne.' },
     },
     {
       humeur: 'accueil',
@@ -1577,6 +1615,11 @@ const NOMSFORMULES = {
       humeur: 'pensif',
       dit: 'Utiliser un nom rend le fichier plus **lisible**. Plutôt que =A1*B1, tu écris =Prix*Quantité. La formule se comprend d\'un coup d\'œil, surtout si d\'autres personnes utilisent ton fichier.',
       visuel: { type: 'formule', formule: '=Prix * Quantité' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions l\'intérêt. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '=Prix*Quantité et =A1*B1 donnent le même résultat, mais la première se relit plus facilement.', bonne: true, explication: 'Vrai : le nom rend la formule parlante. Six mois plus tard (ou pour un collègue), =Prix*Quantité se comprend d\'un coup, pas =A1*B1.' },
     },
     {
       humeur: 'pensif',
@@ -1618,6 +1661,11 @@ const NOMSFORMULES = {
     },
     {
       humeur: 'accueil',
+      dit: 'À toi. Dans l\'onglet **Formules**, **clique le bouton qui définit un nom.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Définir un nom', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection' }], cible: 'Définir un nom', explication: 'Le bouton 🔖 Définir un nom ouvre la fenêtre où tu choisis le nom, sa portée (classeur ou feuille) et sa plage.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Troisième méthode, avec la souris : le clic droit.',
       visuel: {
         type: 'methode',
@@ -1634,6 +1682,11 @@ const NOMSFORMULES = {
       humeur: 'pensif',
       dit: 'Quel que soit le moyen, le nom doit respecter quelques règles :',
       visuel: { type: 'encart', label: 'Les règles à suivre pour un nom', liste: ['Il doit **commencer par une lettre**.', '**Pas d\'espace** (utilise _ ou colle les mots : Prix_Unitaire, PrixUnitaire).', 'Pas de **référence** (n\'utilise pas l\'adresse d\'une cellule, comme A1).', 'Longueur **max : 255 caractères** (largement suffisant !).', 'Pas de **doublon** dans un même classeur.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions ces règles. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: '« Prix unitaire » (avec un espace) est un nom de plage valide.', bonne: false, explication: 'Non : les espaces sont interdits. Écris « Prix_unitaire » ou « PrixUnitaire ». Le nom doit aussi commencer par une lettre, pas un chiffre.' },
     },
     {
       humeur: 'accueil',
@@ -1660,6 +1713,11 @@ const NOMSFORMULES = {
       visuel: { type: 'encart', label: 'Attention', texte: 'Si une formule utilise encore ce nom, elle renverra une erreur **#NOM ?** après suppression. Vérifie que le nom n\'est plus utilisé avant de le supprimer.' },
     },
     {
+      humeur: 'pensif',
+      dit: 'Anticipons un problème. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si tu supprimes un nom encore utilisé dans une formule, cette formule affichera #NOM ?.', bonne: true, explication: 'Vrai : la formule ne retrouve plus le nom et renvoie #NOM ?. D\'où le réflexe : vérifie qu\'aucune formule ne l\'utilise avant de supprimer.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'Maintenant, **utiliser** tes noms. D\'abord pour **naviguer** : la Zone Nom t\'emmène directement à la cellule.',
       visuel: {
@@ -1684,6 +1742,11 @@ const NOMSFORMULES = {
           { capture: { type: 'listedialog', titre: 'Coller un nom', intro: 'Nom collé :', items: ['Prix_Unitaire', 'Quantite', 'TVA'], selection: 0 } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Tu es en train d\'écrire une formule et tu veux insérer un nom déjà créé. Quelle touche ouvre la liste de tes noms ?',
+      visuel: { type: 'question', options: ['F3', 'F1', 'Entrée'], bonne: 0, explication: 'F3 ouvre la boîte « Coller un nom » : tu choisis, Excel l\'insère. (Pendant la saisie d\'une formule, tu ne peux pas cliquer dans la Zone Nom.)' },
     },
     {
       humeur: 'accueil',
@@ -1775,7 +1838,22 @@ const ARGUMENTSVPM = {
     },
     {
       humeur: 'accueil',
-      dit: 'Maintenant qu\'on sait ce que fait VPM, on la construit avec l\'**assistant fonction**.',
+      dit: 'Réfléchis. Ton prêt est à **5 % par an**, mais tu paies **chaque mois**. Quel taux mettre dans l\'argument Taux ?',
+      visuel: { type: 'question', options: ['5%/12', '5%', '5%*12'], bonne: 0, explication: 'Le taux doit être PAR PÉRIODE. Comme tu paies mensuellement, on divise le taux annuel par 12 : 5%/12. C\'est le piège classique de VPM.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un réflexe de lecture de l\'assistant. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans la fenêtre de l\'assistant, un argument affiché en gras est facultatif.', bonne: false, explication: 'Non : le gras signale un argument OBLIGATOIRE. Les facultatifs sont en écriture normale (et souvent entre crochets dans la syntaxe).' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Maintenant qu\'on sait ce que fait VPM, on la construit avec l\'**assistant fonction**. Le résultat ira sur la ligne « Mensualité ». **Clique la cellule du résultat.**',
+      visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la Mensualité', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Montant emprunté', entete: true }, B1: { t: '15 000 €' }, A2: { t: 'Taux annuel', entete: true }, B2: { t: '5 %' }, A3: { t: 'Durée (mois)', entete: true }, B3: { t: '120' }, A4: { t: 'Mensualité', entete: true } }, cible: 'B4', explication: 'Oui, B4 : à droite de « Mensualité ». C\'est de là qu\'on ouvre l\'assistant pour écrire le VPM.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'On la construit avec l\'**assistant fonction**.',
       visuel: {
         type: 'methode',
         titre: 'Construire VPM avec l\'assistant',
@@ -1794,6 +1872,11 @@ const ARGUMENTSVPM = {
       humeur: 'pensif',
       dit: 'Pourquoi le résultat est-il négatif :',
       visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Le résultat est **négatif** car c\'est une sortie d\'argent (tu paies). Pour l\'afficher en positif, ajoute un signe moins devant : =-VPM(...).' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Vérifions ce point. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'VPM renvoie un montant négatif, et c\'est normal : c\'est de l\'argent qui sort de ta poche.', bonne: true, explication: 'Vrai : par convention, une sortie d\'argent est négative. Pour l\'afficher en positif, mets un signe moins devant la fonction : =-VPM(…).' },
     },
     {
       humeur: 'pensif',
