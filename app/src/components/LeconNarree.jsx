@@ -877,7 +877,7 @@ function ProtegerFeuilleDialog() {
 // Un tableau de données Excel « mis sous forme de tableau » : en-têtes colorés,
 // flèches de filtre, lignes en couleurs alternées (zébrées).
 function TableauDonnees({ v }) {
-  const { entetes = [], lignes = [], filtres = false, filtreCol = -1, legende, total, brut = false, selection = false, colSel = -1, ligneSel = -1, ligneSelDepuis = 1 } = v
+  const { entetes = [], lignes = [], filtres = false, filtreCol = -1, legende, total, brut = false, selection = false, colSel = -1, ligneSel = -1, ligneSelDepuis = 1, feuilles, feuilleActive } = v
   return (
     <div className="mt-3">
       <div className={`animate-fade-up overflow-hidden rounded-lg border border-navy/15 shadow-lg ${selection ? 'ring-2 ring-[#1a73e8] ring-offset-1' : ''}`}>
@@ -914,6 +914,14 @@ function TableauDonnees({ v }) {
             )}
           </tbody>
         </table>
+        {feuilles && (
+          <div className="flex items-end gap-1 border-t border-navy/15 bg-navy/5 px-2 pb-0.5 pt-1 text-[10px]">
+            {feuilles.map((f) => (
+              <span key={f} className={`rounded-t px-2 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy shadow ring-1 ring-navy/20' : 'text-navy/55'}`}>{f}</span>
+            ))}
+            <span className="px-1 text-navy/40">＋</span>
+          </div>
+        )}
       </div>
       {legende && (
         <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
@@ -2417,7 +2425,12 @@ function Graphique({ v }) {
     anime = false,
     surbrillance,
     axeY,
+    theme,
   } = v
+  // theme: 'sombre' = un vrai changement de style (fond navy, texte blanc), pour montrer
+  // qu'appliquer un style transforme l'habillage complet du graphique.
+  const sombre = theme === 'sombre'
+  const encre = sombre ? '#ffffff' : '#0a335d'
 
   const [grandi, setGrandi] = useState(!anime)
   useEffect(() => {
@@ -2448,7 +2461,7 @@ function Graphique({ v }) {
 
   return (
     <div className="mt-3 flex flex-col items-center gap-2">
-      <div className="w-full max-w-sm animate-fade-up rounded-lg border border-navy/15 bg-white p-2 shadow-lg">
+      <div className={`w-full max-w-sm animate-fade-up rounded-lg border p-2 shadow-lg ${sombre ? 'border-navy-deep bg-navy' : 'border-navy/15 bg-white'}`}>
         <svg viewBox="0 0 300 210" className="w-full">
           {poignees && (
             <g>
@@ -2458,7 +2471,7 @@ function Graphique({ v }) {
               ))}
             </g>
           )}
-          {titre && <text x="150" y="18" textAnchor="middle" fontSize="12" fontWeight="700" fill="#0a335d">{titre}</text>}
+          {titre && <text x="150" y="18" textAnchor="middle" fontSize="12" fontWeight="700" fill={encre}>{titre}</text>}
           {surbrillance === 'titre' && titre && <rect x="70" y="5" width="160" height="17" rx="3" fill="none" stroke="#41c1ba" strokeWidth="1.5" strokeDasharray="3 2" />}
 
           {forme !== 'secteurs' && (
@@ -2468,15 +2481,15 @@ function Graphique({ v }) {
                 const gy = baseY - (i / paliers) * plot.h
                 return (
                   <g key={i}>
-                    {quadrillage && <line x1={plot.x} y1={gy} x2={plot.x + plot.w} y2={gy} stroke="#0a335d" strokeOpacity="0.1" strokeWidth="1" />}
-                    <text x={plot.x - 5} y={gy + 3} textAnchor="end" fontSize="8" fill="#0a335d" fillOpacity="0.6">{Math.round(val)}</text>
+                    {quadrillage && <line x1={plot.x} y1={gy} x2={plot.x + plot.w} y2={gy} stroke={encre} strokeOpacity={sombre ? 0.18 : 0.1} strokeWidth="1" />}
+                    <text x={plot.x - 5} y={gy + 3} textAnchor="end" fontSize="8" fill={encre} fillOpacity={sombre ? 0.75 : 0.6}>{Math.round(val)}</text>
                   </g>
                 )
               })}
-              <line x1={plot.x} y1={plot.y} x2={plot.x} y2={baseY} stroke={surbrillance === 'axeY' ? '#41c1ba' : '#0a335d'} strokeWidth={surbrillance === 'axeY' ? 2 : 1} strokeOpacity={surbrillance === 'axeY' ? 1 : 0.35} />
-              <line x1={plot.x} y1={baseY} x2={plot.x + plot.w} y2={baseY} stroke="#0a335d" strokeWidth="1" strokeOpacity="0.35" />
+              <line x1={plot.x} y1={plot.y} x2={plot.x} y2={baseY} stroke={surbrillance === 'axeY' ? '#41c1ba' : encre} strokeWidth={surbrillance === 'axeY' ? 2 : 1} strokeOpacity={surbrillance === 'axeY' ? 1 : 0.35} />
+              <line x1={plot.x} y1={baseY} x2={plot.x + plot.w} y2={baseY} stroke={encre} strokeWidth="1" strokeOpacity="0.35" />
               {cats.map((c, ci) => (
-                <text key={ci} x={plot.x + groupW * (ci + 0.5)} y={baseY + 13} textAnchor="middle" fontSize="9" fill="#0a335d" fillOpacity="0.75">{c}</text>
+                <text key={ci} x={plot.x + groupW * (ci + 0.5)} y={baseY + 13} textAnchor="middle" fontSize="9" fill={encre} fillOpacity={sombre ? 0.85 : 0.75}>{c}</text>
               ))}
             </g>
           )}
@@ -2595,12 +2608,13 @@ function Graphique({ v }) {
 // La grille « quel graphique pour quoi » (Insertion > Graphiques).
 function TypesGraphiques() {
   const items = [
-    { nom: 'Histogramme', use: 'Comparer des valeurs', ic: 'histo' },
-    { nom: 'Courbe', use: 'Suivre une évolution', ic: 'ligne' },
-    { nom: 'Secteurs', use: 'Voir une répartition (%)', ic: 'pie' },
-    { nom: 'Barres', use: 'Classer (libellés longs)', ic: 'barres' },
-    { nom: 'Aires', use: 'Montrer un cumul', ic: 'aire' },
-    { nom: 'Nuage', use: 'Corréler deux mesures', ic: 'nuage' },
+    { nom: 'Histogramme', use: 'Comparer des valeurs entre séries', ic: 'histo' },
+    { nom: 'Courbe', use: 'Montrer une évolution dans le temps', ic: 'ligne' },
+    { nom: 'Secteurs', use: 'Une part relative d\'un total', ic: 'pie' },
+    { nom: 'Barres', use: 'Quand les étiquettes sont longues', ic: 'barres' },
+    { nom: 'Aires', use: 'Mettre en avant le volume cumulé', ic: 'aire' },
+    { nom: 'Nuage de points', use: 'La relation entre deux variables', ic: 'nuage' },
+    { nom: 'Autres', use: 'Graphiques spéciaux (cascade, radar…)', ic: 'autres' },
   ]
   const Icone = ({ t }) => {
     if (t === 'histo') return <g><rect x="2" y="9" width="4" height="9" fill="#41c1ba" /><rect x="8" y="5" width="4" height="13" fill="#0a335d" /><rect x="14" y="11" width="4" height="7" fill="#e8853a" /></g>
@@ -2608,7 +2622,8 @@ function TypesGraphiques() {
     if (t === 'pie') return <g><circle cx="10" cy="10" r="8" fill="#0a335d" /><path d="M10,10 L10,2 A8,8 0 0,1 17,13 Z" fill="#41c1ba" /></g>
     if (t === 'barres') return <g><rect x="2" y="3" width="12" height="3" fill="#41c1ba" /><rect x="2" y="8" width="8" height="3" fill="#0a335d" /><rect x="2" y="13" width="15" height="3" fill="#e8853a" /></g>
     if (t === 'aire') return <polygon points="2,18 2,12 8,7 13,10 18,4 18,18" fill="#41c1ba" fillOpacity="0.6" stroke="#41c1ba" />
-    return <g><circle cx="5" cy="13" r="1.6" fill="#0a335d" /><circle cx="9" cy="9" r="1.6" fill="#0a335d" /><circle cx="13" cy="11" r="1.6" fill="#0a335d" /><circle cx="16" cy="5" r="1.6" fill="#41c1ba" /></g>
+    if (t === 'nuage') return <g><circle cx="5" cy="13" r="1.6" fill="#0a335d" /><circle cx="9" cy="9" r="1.6" fill="#0a335d" /><circle cx="13" cy="11" r="1.6" fill="#0a335d" /><circle cx="16" cy="5" r="1.6" fill="#41c1ba" /></g>
+    return <g><polygon points="10,2 17,7.5 14.5,17 5.5,17 3,7.5" fill="none" stroke="#0a335d" strokeWidth="1.2" /><polygon points="10,6 13.5,8.5 12,13.5 8,13.5 6.5,8.5" fill="#41c1ba" fillOpacity="0.55" stroke="#41c1ba" strokeWidth="0.7" /></g>
   }
   return (
     <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -2623,21 +2638,511 @@ function TypesGraphiques() {
   )
 }
 
-// La galerie des sous-types (dropdown Insertion > Histogramme), un sous-type surligné.
-function GalerieGraphiques() {
-  const sous = ['Groupé', 'Empilé', 'Empilé 100%', '3D groupé']
+// Le focus « sous-types » d'une catégorie (ex. l'histogramme) : 2D, 3D, cylindre, conique, pyramidal.
+function SousTypesGraphiques() {
+  const items = [
+    { nom: 'Histogramme 2D', use: 'Barres verticales simples pour comparer des valeurs.', ic: '2d' },
+    { nom: 'Histogramme 3D', use: 'Même représentation avec un effet tridimensionnel.', ic: '3d' },
+    { nom: 'Cylindre', use: 'Barres en forme de cylindres, rendu plus esthétique.', ic: 'cyl' },
+    { nom: 'Conique', use: 'Barres coniques pointant vers le haut.', ic: 'cone' },
+    { nom: 'Pyramidal', use: 'Barres en pyramides, pour un visuel original.', ic: 'pyr' },
+  ]
+  const BARRES = [[3, 10, 10], [10, 6, 14], [17, 12, 8]]
+  const cols = ['#41c1ba', '#0a335d', '#e8853a']
+  const Ic = ({ t }) => {
+    if (t === '2d') return <g>{BARRES.map(([x, y, h], i) => (<rect key={i} x={x} y={y} width="4" height={h} fill={cols[i]} />))}</g>
+    if (t === '3d') return <g>{BARRES.map(([x, y, h], i) => (<g key={i}><rect x={x} y={y} width="4" height={h} fill={cols[i]} /><polygon points={`${x},${y} ${x + 1.5},${y - 1.6} ${x + 5.5},${y - 1.6} ${x + 4},${y}`} fill={cols[i]} fillOpacity="0.65" /></g>))}</g>
+    if (t === 'cyl') return <g>{BARRES.map(([x, y, h], i) => (<g key={i}><rect x={x} y={y} width="4" height={h} fill={cols[i]} /><ellipse cx={x + 2} cy={y + h} rx="2" ry="0.9" fill={cols[i]} /><ellipse cx={x + 2} cy={y} rx="2" ry="0.9" fill={cols[i]} fillOpacity="0.65" /></g>))}</g>
+    if (t === 'cone') return <g>{BARRES.map(([x, y, h], i) => (<g key={i}><polygon points={`${x + 2},${y} ${x + 4},${y + h} ${x},${y + h}`} fill={cols[i]} /><ellipse cx={x + 2} cy={y + h} rx="2" ry="0.8" fill={cols[i]} fillOpacity="0.65" /></g>))}</g>
+    return <g>{BARRES.map(([x, y, h], i) => (<g key={i}><polygon points={`${x + 2},${y} ${x + 4},${y + h} ${x},${y + h}`} fill={cols[i]} /><line x1={x + 2} y1={y} x2={x + 2} y2={y + h} stroke="white" strokeWidth="0.5" /></g>))}</g>
+  }
   return (
-    <div className="mx-auto mt-3 w-60 overflow-hidden rounded-md border border-navy/20 bg-white p-2 text-[10px] shadow-xl">
-      <p className="mb-1.5 font-semibold text-navy/75">Histogramme</p>
-      <div className="grid grid-cols-4 gap-1.5">
-        {sous.map((s, i) => (
-          <div key={i} className={`flex flex-col items-center gap-0.5 rounded p-1 ${i === 0 ? 'bg-mint/15 ring-2 ring-mint' : 'ring-1 ring-navy/10'}`}>
-            <svg viewBox="0 0 24 18" className="h-5 w-6"><rect x="3" y="8" width="4" height="8" fill="#41c1ba" /><rect x="9" y="4" width="4" height="12" fill="#0a335d" /><rect x="15" y="10" width="4" height="6" fill="#e8853a" /></svg>
-            <span className="text-navy/60">{s}</span>
+    <div className="mt-3">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        {items.map((it, i) => (
+          <div key={i} className="flex animate-fade-up flex-col items-center gap-1 rounded-xl border border-navy/10 bg-navy/5 p-2 text-center" style={{ animationDelay: `${i * 70}ms` }}>
+            <svg viewBox="0 0 24 22" className="h-9 w-10"><Ic t={it.ic} /></svg>
+            <span className="text-[11px] font-bold text-navy">{it.nom}</span>
+            <span className="text-[10px] leading-tight text-navy/60">{it.use}</span>
           </div>
         ))}
       </div>
-      <p className="mt-2 flex items-start gap-1 text-[9px] text-navy/50"><span>↳</span><span>Survole un sous-type pour l'aperçu, clique pour l'insérer.</span></p>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>Ces sous-types apparaissent en miniatures dès que tu ouvres une catégorie, ou via <strong className="font-bold text-navy">Tous types de graphiques</strong>. Chaque famille a aussi ses variantes <strong className="font-bold text-navy">Groupé / Empilé / Empilé 100 %</strong> (visibles dans la galerie). Survole pour l'aperçu, clique pour insérer.</span>
+      </p>
+    </div>
+  )
+}
+
+// La galerie « Styles du graphique » : chaque vignette est un habillage complet différent
+// (fond, quadrillage, effets, couleurs). Le Style 3 (fond sombre) est celui qu'on applique.
+function StylesGraphiqueGalerie() {
+  const barres = [[8, 10], [17, 15], [26, 8]]
+  const Vignette = ({ n }) => {
+    const fondSombre = n === 3
+    const gris = n === 2
+    const contour = n === 4
+    const bande = n === 5
+    const mono = n === 6
+    const cols = mono ? ['#41c1ba', '#7fd6d1', '#b9e9e6'] : ['#41c1ba', '#0a335d', '#e8853a']
+    return (
+      <div className={`flex flex-col items-center gap-1 rounded-lg p-1.5 ${fondSombre ? 'bg-mint/10 ring-2 ring-mint' : 'ring-1 ring-navy/15'}`}>
+        <svg viewBox="0 0 40 28" className="h-10 w-14">
+          <rect x="0.5" y="0.5" width="39" height="27" rx="1.5" fill={fondSombre ? '#0a335d' : gris ? '#eef1f4' : '#ffffff'} stroke="#0a335d" strokeOpacity="0.15" />
+          {bande && <rect x="2" y="12" width="36" height="12" fill="#0a335d" fillOpacity="0.07" />}
+          <rect x="11" y="4" width="18" height="1.8" rx="0.9" fill={fondSombre ? '#ffffff' : '#0a335d'} fillOpacity="0.55" />
+          {(gris || fondSombre) && [12, 16, 20].map((gy) => (
+            <line key={gy} x1="4" y1={gy} x2="36" y2={gy} stroke={fondSombre ? '#ffffff' : '#0a335d'} strokeOpacity="0.15" strokeWidth="0.5" />
+          ))}
+          {barres.map(([x, h], i) =>
+            contour ? (
+              <rect key={i} x={x} y={24 - h} width="6" height={h} fill="none" stroke={cols[i]} strokeWidth="1.2" />
+            ) : (
+              <rect key={i} x={x} y={24 - h} width="6" height={h} fill={fondSombre ? '#41c1ba' : cols[i]} />
+            ),
+          )}
+          <line x1="4" y1="24" x2="36" y2="24" stroke={fondSombre ? '#ffffff' : '#0a335d'} strokeOpacity="0.4" strokeWidth="0.6" />
+        </svg>
+        <span className={`text-[9px] ${fondSombre ? 'font-bold text-mint' : 'text-navy/60'}`}>Style {n}</span>
+      </div>
+    )
+  }
+  return (
+    <div className="mt-3">
+      <div className="grid grid-cols-3 gap-2">
+        {[1, 2, 3, 4, 5, 6].map((n) => (
+          <Vignette key={n} n={n} />
+        ))}
+      </div>
+      <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>La galerie <strong className="font-bold text-navy">Styles du graphique</strong> : chaque vignette est un habillage complet (fond, quadrillage, effets, couleurs). Ici on va choisir le <strong className="font-bold text-navy">Style 3</strong> (fond sombre).</span>
+      </p>
+    </div>
+  )
+}
+
+// Une mini-courbe (pendant de MiniBarres) pour les aperçus.
+function MiniCourbe({ w = 150, h = 72, titre = 'Ventes' }) {
+  const vals = [12, 19, 15, 24]
+  const max = 25
+  const px = 10
+  const pw = w - 20
+  const base = h - 12
+  const ph = base - 16
+  const pts = vals.map((val, i) => [px + (i / (vals.length - 1)) * pw, base - (val / max) * ph])
+  const d = 'M' + pts.map((p) => p.map((x) => x.toFixed(1)).join(',')).join(' L')
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="h-full w-full">
+      <text x={w / 2} y="10" textAnchor="middle" fontSize="8" fontWeight="700" fill="#0a335d">{titre}</text>
+      <line x1={px} y1={base} x2={px + pw} y2={base} stroke="#0a335d" strokeOpacity="0.3" />
+      <path d={d} fill="none" stroke="#41c1ba" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      {pts.map((p, i) => (
+        <circle key={i} cx={p[0]} cy={p[1]} r="2" fill="white" stroke="#41c1ba" strokeWidth="1.4" />
+      ))}
+    </svg>
+  )
+}
+
+// La fenêtre « Insérer un graphique » (Graphiques recommandés), ANIMÉE : Excel propose
+// d'abord l'histogramme, puis on voit quelqu'un cliquer la miniature « Courbe » et
+// l'aperçu changer en direct. Rejouable.
+function RecommandeDialog() {
+  const [sel, setSel] = useState(0)
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setSel(0)
+    const id = setTimeout(() => setSel(1), 1600)
+    return () => clearTimeout(id)
+  }, [cle])
+  const Mini = ({ t }) => (
+    <svg viewBox="0 0 24 16" className="h-4 w-7">
+      {t === 'histo' && <g><rect x="3" y="7" width="4" height="7" fill="#41c1ba" /><rect x="9" y="3" width="4" height="11" fill="#0a335d" /><rect x="15" y="9" width="4" height="5" fill="#e8853a" /></g>}
+      {t === 'ligne' && <polyline points="3,13 8,6 13,9 20,3" fill="none" stroke="#41c1ba" strokeWidth="1.8" />}
+      {t === 'barres' && <g><rect x="3" y="3" width="12" height="2.6" fill="#41c1ba" /><rect x="3" y="7" width="8" height="2.6" fill="#0a335d" /><rect x="3" y="11" width="15" height="2.6" fill="#e8853a" /></g>}
+      {t === 'aire' && <polygon points="3,14 3,9 9,5 14,8 20,3 20,14" fill="#41c1ba" fillOpacity="0.6" stroke="#41c1ba" />}
+    </svg>
+  )
+  const minis = ['histo', 'ligne', 'barres', 'aire']
+  const actif = sel === 0 ? 0 : 1
+  return (
+    <div className="mt-3">
+      <div className="mx-auto max-w-md overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+        <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Insérer un graphique</span><span className="text-navy/40">✕</span></div>
+        <div className="bg-white p-3">
+          <div className="mb-2 flex gap-4 border-b border-navy/10 pb-1 text-[10px]"><span className="font-bold text-[#0a7a3d]">Graphiques recommandés</span><span className="text-navy/45">Tous les graphiques</span></div>
+          <div className="flex gap-2">
+            <div className="flex w-16 shrink-0 flex-col gap-1.5">
+              {minis.map((t, i) => (
+                <div key={i} className={`relative grid place-items-center rounded p-1 transition ${i === actif ? 'ring-2 ring-mint' : 'ring-1 ring-navy/15'}`}>
+                  <Mini t={t} />
+                  {i === 1 && sel === 1 && <span className="pointer-events-none absolute -bottom-2 -right-1"><Pointeur /></span>}
+                </div>
+              ))}
+            </div>
+            <div className="flex-1">
+              <div className="rounded border border-navy/15 bg-[#fafafa] p-1" style={{ height: 80 }}>
+                {sel === 0 ? <MiniBarres w={150} h={72} titre="Ventes par mois" /> : <MiniCourbe w={150} h={72} titre="Ventes par mois" />}
+              </div>
+              <p className="mt-1.5 text-[10px] leading-snug text-navy/60">
+                {sel === 0 ? (
+                  <>Un <strong className="text-navy">histogramme groupé</strong> permet de comparer des valeurs entre quelques catégories.</>
+                ) : (
+                  <>Une <strong className="text-navy">courbe</strong> montre l'évolution des valeurs dans le temps.</>
+                )}
+              </p>
+            </div>
+          </div>
+          <div className="mt-2 flex justify-end gap-2"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+        </div>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{sel === 0 ? 'Excel propose d\'abord l\'histogramme (1re miniature sélectionnée)…' : '…on clique la miniature « Courbe » : l\'aperçu et la description changent en direct.'}</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
+      </div>
+    </div>
+  )
+}
+
+// Animation : modifier le titre du graphique — on double-clique le titre, on tape le
+// nouveau texte, puis clic en dehors pour valider. Rejouable.
+function TitreGraphique() {
+  const [p, setP] = useState(0) // 0 on approche · 1 double-clic (édition) · 2 on tape · 3 validé
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setP(0)
+    const t1 = setTimeout(() => setP(1), 900)
+    const t2 = setTimeout(() => setP(2), 2000)
+    const t3 = setTimeout(() => setP(3), 3500)
+    return () => {
+      clearTimeout(t1)
+      clearTimeout(t2)
+      clearTimeout(t3)
+    }
+  }, [cle])
+  const messages = [
+    'On approche le curseur du titre…',
+    'Double-clic : le titre passe en édition (encadré, texte sélectionné).',
+    'On tape le nouveau titre : « Ventes 2025 »…',
+    '…clic en dehors : le nouveau titre est validé. ✓',
+  ]
+  return (
+    <div className="mt-3">
+      <div className="mx-auto w-full max-w-sm rounded-lg border border-navy/15 bg-white p-2 shadow-lg">
+        <div className="relative flex h-8 items-center justify-center">
+          {p === 0 && (
+            <span className="relative text-sm font-bold text-navy">
+              Ventes par mois
+              <span className="pointer-events-none absolute -bottom-3 -right-4"><Pointeur /></span>
+            </span>
+          )}
+          {p === 1 && (
+            <span className="relative rounded-sm border border-[#1a73e8] px-2 text-sm font-bold text-navy">
+              <span className="bg-sky-200/70">Ventes par mois</span>
+              <span className="pointer-events-none absolute -bottom-3 -right-4"><Pointeur /></span>
+              <span className="absolute -right-1.5 -top-1.5 h-4 w-4 animate-ping rounded-full bg-mint/60" />
+            </span>
+          )}
+          {p === 2 && (
+            <span className="rounded-sm border border-[#1a73e8] px-2 text-sm font-bold text-navy">
+              Ventes 2025<span className="animate-pulse">|</span>
+            </span>
+          )}
+          {p === 3 && <span className="animate-fade-up text-sm font-bold text-navy">Ventes 2025</span>}
+        </div>
+        <div style={{ height: 104 }}><MiniBarres w={280} h={100} titre="" /></div>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{messages[p]}</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
+      </div>
+    </div>
+  )
+}
+
+// Le groupe « Sélection active » (tout à gauche de l'onglet Format), rendu comme dans le
+// VRAI Excel : une grande LISTE DÉROULANTE qui affiche l'élément sélectionné du graphique,
+// + les boutons « Mise en forme de la sélection » et « Rétablir le style d'origine »,
+// avec une annotation qui explique ce que c'est. (Identique sur Mac et Windows.)
+function SelectionActive({ v }) {
+  const element = v?.element || 'Série « Ventes »'
+  const onglets = ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format']
+  return (
+    <div className="mx-auto mt-3 max-w-md animate-fade-up overflow-hidden rounded-md border border-navy/15 text-[10px] shadow-lg">
+      <div className="flex gap-0.5 bg-[#f3f3f3] px-2 pt-1">
+        {onglets.map((o) => (
+          <span key={o} className={`rounded-t px-2 py-1 ${o === 'Format' ? 'bg-white font-bold text-[#0a7a3d]' : 'text-navy/55'}`}>{o}</span>
+        ))}
+      </div>
+      <div className="flex items-start bg-white px-2 py-2">
+        <div className="shrink-0 rounded-md border border-navy/15 bg-navy/[0.02] px-2 pb-1 pt-1.5">
+          <div className="space-y-1">
+            <div className="flex w-44 items-center justify-between rounded-sm border-2 border-mint bg-white px-2 py-1 text-navy">
+              <span className="truncate font-semibold">{element}</span>
+              <span className="ml-1 grid h-3.5 w-4 shrink-0 place-items-center rounded-sm bg-navy/10 text-navy/70">▾</span>
+            </div>
+            <div className="w-44 rounded-sm border border-navy/20 bg-[#f7f7f7] px-2 py-1 text-navy/80">🎨 Mise en forme de la sélection</div>
+            <div className="w-44 rounded-sm border border-navy/20 bg-[#f7f7f7] px-2 py-1 text-navy/60">↺ Rétablir le style d'origine</div>
+          </div>
+          <div className="mt-1 border-t border-navy/10 pt-0.5 text-center text-[9px] font-semibold text-navy/60">Sélection active</div>
+        </div>
+        <div className="ml-3 mt-1 min-w-0 text-[9px] leading-snug">
+          <p className="font-bold text-mint">↖ La liste déroulante</p>
+          <p className="mt-0.5 text-navy/65">Elle affiche <strong className="font-bold text-navy">l'élément du graphique actuellement sélectionné</strong> (ici « {element} »). La flèche <strong className="font-bold text-navy">▾</strong> ouvre la liste de tous les éléments.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Le CLIC DROIT montré dans son CONTEXTE : le graphique sélectionné, le pointeur sur une
+// barre, et le menu contextuel qui s'ouvre juste à côté (pas un menu flottant sorti de nulle part).
+function ClicDroitGraphique({ v }) {
+  const items = v?.items || [
+    { label: 'Supprimer' },
+    { label: 'Modifier le type de graphique de série…', actif: true },
+    { label: 'Sélectionner des données…' },
+    { label: 'Ajouter des étiquettes de données' },
+    { label: 'Ajouter une courbe de tendance…' },
+    { label: 'Mettre en forme une série de données…' },
+  ]
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="relative" style={{ width: 330, height: 218 }}>
+        <div className="absolute left-0 top-0 rounded border border-navy/20 bg-white p-1 shadow ring-1 ring-[#1a73e8]" style={{ width: 190, height: 120 }}>
+          <MiniBarres w={180} h={110} titre="Ventes" />
+        </div>
+        <span className="pointer-events-none absolute z-20" style={{ left: 92, top: 62 }}><Pointeur /></span>
+        <div className="absolute z-10 w-56 overflow-hidden rounded-md border border-navy/20 bg-white py-0.5 text-[10px] shadow-xl" style={{ left: 102, top: 76 }}>
+          {items.map((it, i) => (
+            <div key={i} className={`px-2 py-1 ${it.actif ? 'bg-mint/15 font-semibold text-navy' : 'text-navy/75'}`}>{it.label}</div>
+          ))}
+        </div>
+      </div>
+      <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>Clic <strong className="font-bold text-navy">droit</strong> sur la série (une barre) : le menu s'ouvre <strong className="font-bold text-navy">juste à côté</strong>, avec les commandes de CET élément.
+      </p>
+    </div>
+  )
+}
+
+// Le clic droit sur un ONGLET de feuille : la barre d'onglets en bas + le menu qui s'ouvre
+// au-dessus de l'onglet visé.
+function ClicDroitOnglet({ v }) {
+  const onglet = v?.onglet || 'Graph1'
+  const feuilles = v?.feuilles || ['Feuil1', 'Graph1']
+  const items = v?.items || [{ label: 'Insérer…' }, { label: 'Supprimer', actif: true }, { label: 'Renommer' }, { label: 'Déplacer ou copier…' }]
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="relative w-64" style={{ height: 160 }}>
+        <div className="absolute bottom-8 left-14 z-10 w-44 overflow-hidden rounded-md border border-navy/20 bg-white py-0.5 text-[10px] shadow-xl">
+          {items.map((it, i) => (
+            <div key={i} className={`px-2 py-1 ${it.actif ? 'bg-mint/15 font-semibold text-navy' : 'text-navy/75'}`}>{it.label}</div>
+          ))}
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 overflow-hidden rounded-md border border-navy/15 bg-white">
+          <div className="h-6 bg-white" />
+          <div className="flex items-end gap-1 border-t border-navy/15 bg-navy/5 px-2 pb-0.5 pt-1 text-[10px]">
+            {feuilles.map((f) => (
+              <span key={f} className={`relative rounded-t px-2 py-0.5 ${f === onglet ? 'bg-white font-bold text-navy shadow ring-1 ring-mint' : 'text-navy/55'}`}>
+                {f}
+                {f === onglet && <span className="pointer-events-none absolute -right-2 -top-2 z-20"><Pointeur /></span>}
+              </span>
+            ))}
+            <span className="px-1 text-navy/40">＋</span>
+          </div>
+        </div>
+      </div>
+      <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>Clic <strong className="font-bold text-navy">droit</strong> sur l'onglet « {onglet} » (en bas) : le menu s'ouvre juste au-dessus, avec <strong className="font-bold text-navy">Supprimer</strong>.
+      </p>
+    </div>
+  )
+}
+
+// Le volet « Mettre en forme… » (task pane à droite) : remplissage, bordure, effets d'un élément.
+function VoletFormat({ v }) {
+  const titre = v?.titre || 'Mettre en forme la sélection'
+  const radios = (opts) => opts.map(([l, on], i) => (
+    <div key={i} className="flex items-center gap-2">
+      <span className={`grid h-3 w-3 place-items-center rounded-full border ${on ? 'border-mint' : 'border-navy/40'}`}>{on && <span className="h-1.5 w-1.5 rounded-full bg-mint" />}</span>
+      <span className={on ? 'font-semibold text-navy' : 'text-navy/70'}>{l}</span>
+    </div>
+  ))
+  return (
+    <div className="mx-auto mt-3 w-56 overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>{titre}</span><span className="text-navy/40">✕</span></div>
+      <div className="bg-white p-2">
+        <div className="mb-2 flex gap-4 border-b border-navy/10 pb-1 text-navy/55"><span className="text-mint">🪣 Remplissage</span><span>⬠ Effets</span></div>
+        <p className="font-bold text-navy/75">▾ Remplissage</p>
+        <div className="mb-2 ml-1 space-y-1">
+          {radios([['Aucun', false], ['Uni', true], ['Dégradé', false]])}
+          <div className="flex items-center gap-2 pl-5"><span className="text-navy/55">Couleur</span><span className="h-4 w-6 rounded-sm border border-navy/25" style={{ background: v?.couleur || '#41c1ba' }} /><span className="text-navy/40">▾</span></div>
+        </div>
+        <p className="font-bold text-navy/75">▾ Bordure</p>
+        <div className="ml-1 space-y-1">{radios([['Aucune', false], ['Trait plein', true]])}</div>
+        <p className="mt-2 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Ajuste le <strong className="text-navy">remplissage</strong>, la <strong className="text-navy">bordure</strong> et les <strong className="text-navy">effets</strong> de l'élément choisi.</span></p>
+      </div>
+    </div>
+  )
+}
+
+// Le raccourci « pinceau » à côté du graphique : onglets Style et Couleur.
+function PinceauGraphique() {
+  return (
+    <div className="mx-auto mt-3 w-60 overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex gap-4 border-b border-navy/15 bg-[#f3f3f3] px-3 py-1.5 font-semibold"><span className="text-[#0a7a3d]">Style</span><span className="text-navy/45">Couleur</span></div>
+      <div className="bg-white p-2">
+        <p className="mb-1 text-[10px] text-navy/55">Applique une mise en forme globale (effets, bordures, transparence).</p>
+        <div className="grid grid-cols-3 gap-1.5">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className={`rounded p-1 ${i === 1 ? 'ring-2 ring-mint' : 'ring-1 ring-navy/15'}`}>
+              <svg viewBox="0 0 24 16" className="h-4 w-full"><rect x="3" y="7" width="4" height="7" fill="#41c1ba" /><rect x="9" y="4" width="4" height="10" fill="#0a335d" /><rect x="15" y="9" width="4" height="5" fill="#e8853a" /></svg>
+            </div>
+          ))}
+        </div>
+        <p className="mt-2 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Onglet <strong className="text-navy">Couleur</strong> : palette <strong className="text-navy">Colorée</strong> (multicolore) ou <strong className="text-navy">Monochrome</strong> (une seule teinte).</span></p>
+      </div>
+    </div>
+  )
+}
+
+// Le raccourci « filtre » à côté du graphique : onglets Valeurs / Noms + Appliquer.
+function FiltreGraphique() {
+  const cases = (opts) => opts.map(([l, on], i) => (
+    <div key={i} className="flex items-center gap-2 text-navy/80">
+      <span className={`grid h-3 w-3 place-items-center rounded-sm border text-[8px] ${on ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{on ? '✓' : ''}</span>{l}
+    </div>
+  ))
+  return (
+    <div className="mx-auto mt-3 w-56 overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex gap-4 border-b border-navy/15 bg-[#f3f3f3] px-3 py-1.5 font-semibold"><span className="text-[#0a7a3d]">Valeurs</span><span className="text-navy/45">Noms</span></div>
+      <div className="bg-white p-2">
+        <p className="mb-1 font-semibold text-navy/70">Séries</p>
+        <div className="mb-2 ml-1 space-y-1">{cases([['Ventes', true]])}</div>
+        <p className="mb-1 font-semibold text-navy/70">Catégories</p>
+        <div className="ml-1 space-y-1">{cases([['Jan', true], ['Fév', true], ['Mar', true], ['Avr', false]])}</div>
+        <div className="mt-2 flex justify-end"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-3 py-0.5 font-semibold">Appliquer</span></div>
+        <p className="mt-1.5 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Coche/décoche (ici <strong className="text-navy">Avr</strong> est décoché), puis <strong className="text-navy">Appliquer</strong> — sans toucher aux données sources.</span></p>
+      </div>
+    </div>
+  )
+}
+
+// La fenêtre « Modifier le type de graphique », ANIMÉE : catégories à gauche, sous-types +
+// aperçu à droite. On voit quelqu'un cliquer « Courbes » : l'aperçu change en direct. Rejouable.
+function TypeGraphiqueDialog() {
+  const [sel, setSel] = useState(0)
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setSel(0)
+    const id = setTimeout(() => setSel(1), 1600)
+    return () => clearTimeout(id)
+  }, [cle])
+  const cats = ['Histogramme', 'Courbes', 'Secteurs', 'Barres', 'Aires', 'Nuage de points', 'Autres']
+  const actif = sel === 0 ? 0 : 1
+  return (
+    <div className="mt-3">
+      <div className="mx-auto max-w-md overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+        <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Modifier le type de graphique</span><span className="text-navy/40">✕</span></div>
+        <div className="bg-white p-3">
+          <div className="flex gap-2">
+            <div className="w-28 shrink-0 overflow-hidden rounded-sm border border-navy/20 text-[10px]">
+              {cats.map((c, i) => (
+                <div key={i} className={`relative px-2 py-1 transition ${i === actif ? 'bg-[#cfe2ff] font-semibold text-navy' : 'text-navy/70'}`}>
+                  {c}
+                  {i === 1 && sel === 1 && <span className="pointer-events-none absolute -bottom-1.5 right-1 z-10"><Pointeur /></span>}
+                </div>
+              ))}
+            </div>
+            <div className="flex-1">
+              <div className="mb-2 flex gap-1.5">
+                {[0, 1, 2].map((i) => (
+                  <div key={i} className={`rounded p-1 ${i === 0 ? 'ring-2 ring-mint' : 'ring-1 ring-navy/15'}`}>
+                    <svg viewBox="0 0 24 18" className="h-5 w-7">
+                      {actif === 0 ? (
+                        <g><rect x="3" y="8" width="4" height="8" fill="#41c1ba" /><rect x="9" y="4" width="4" height="12" fill="#0a335d" /><rect x="15" y="10" width="4" height="6" fill="#e8853a" /></g>
+                      ) : (
+                        <polyline points="3,14 8,7 13,10 20,4" fill="none" stroke="#41c1ba" strokeWidth="1.8" />
+                      )}
+                    </svg>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded border border-navy/15 bg-[#fafafa] p-1" style={{ height: 86 }}>
+                {actif === 0 ? <MiniBarres w={150} h={78} titre="Aperçu" /> : <MiniCourbe w={150} h={78} titre="Aperçu" />}
+              </div>
+            </div>
+          </div>
+          <div className="mt-2 flex justify-end gap-2"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+        </div>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{sel === 0 ? 'La catégorie « Histogramme » est sélectionnée, avec son aperçu…' : '…on clique « Courbes » : les sous-types et l\'aperçu changent en direct. OK pour valider.'}</span>
+        </p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
+      </div>
+    </div>
+  )
+}
+
+// La galerie des sous-types (dropdown Insertion > Histogramme), un sous-type surligné.
+// Chaque vignette dessine son vrai rendu : groupé, EMPILÉ (segments superposés),
+// empilé 100 % (barres pleines découpées), 3D.
+function GalerieGraphiques() {
+  const Vig = ({ t }) => (
+    <svg viewBox="0 0 24 18" className="h-5 w-6">
+      {t === 'groupe' && <g><rect x="3" y="8" width="4" height="8" fill="#41c1ba" /><rect x="9" y="4" width="4" height="12" fill="#0a335d" /><rect x="15" y="10" width="4" height="6" fill="#e8853a" /></g>}
+      {t === 'empile' && (
+        <g>
+          <rect x="4" y="9" width="5" height="4" fill="#41c1ba" /><rect x="4" y="13" width="5" height="3" fill="#0a335d" />
+          <rect x="11" y="5" width="5" height="6" fill="#41c1ba" /><rect x="11" y="11" width="5" height="5" fill="#0a335d" />
+          <rect x="18" y="8" width="5" height="4" fill="#41c1ba" /><rect x="18" y="12" width="5" height="4" fill="#0a335d" />
+        </g>
+      )}
+      {t === 'cent' && (
+        <g>
+          <rect x="4" y="3" width="5" height="7" fill="#41c1ba" /><rect x="4" y="10" width="5" height="6" fill="#0a335d" />
+          <rect x="11" y="3" width="5" height="4" fill="#41c1ba" /><rect x="11" y="7" width="5" height="9" fill="#0a335d" />
+          <rect x="18" y="3" width="5" height="9" fill="#41c1ba" /><rect x="18" y="12" width="5" height="4" fill="#0a335d" />
+        </g>
+      )}
+      {t === 'trois' && (
+        <g>
+          <rect x="3" y="8" width="4" height="8" fill="#41c1ba" /><polygon points="3,8 4.5,6.5 8.5,6.5 7,8" fill="#41c1ba" fillOpacity="0.6" />
+          <rect x="10" y="4" width="4" height="12" fill="#0a335d" /><polygon points="10,4 11.5,2.5 15.5,2.5 14,4" fill="#0a335d" fillOpacity="0.6" />
+          <rect x="17" y="10" width="4" height="6" fill="#e8853a" /><polygon points="17,10 18.5,8.5 22.5,8.5 21,10" fill="#e8853a" fillOpacity="0.6" />
+        </g>
+      )}
+    </svg>
+  )
+  const sous = [
+    { n: 'Groupé', t: 'groupe' },
+    { n: 'Empilé', t: 'empile' },
+    { n: 'Empilé 100%', t: 'cent' },
+    { n: '3D groupé', t: 'trois' },
+  ]
+  return (
+    <div className="mx-auto mt-3 w-64 overflow-hidden rounded-md border border-navy/20 bg-white p-2 text-[10px] shadow-xl">
+      <p className="mb-1.5 font-semibold text-navy/75">Histogramme</p>
+      <div className="grid grid-cols-4 gap-1.5">
+        {sous.map((s, i) => (
+          <div key={i} className={`flex flex-col items-center gap-0.5 rounded p-1 text-center ${i === 0 ? 'bg-mint/15 ring-2 ring-mint' : 'ring-1 ring-navy/10'}`}>
+            <Vig t={s.t} />
+            <span className="leading-tight text-navy/60">{s.n}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 flex items-start gap-1 text-[9px] text-navy/50"><span>↳</span><span>Survole un sous-type pour l'aperçu, clique pour l'insérer. L'<strong className="text-navy">Empilé</strong> superpose les séries dans une même barre ; l'<strong className="text-navy">Empilé 100 %</strong> montre leur part en pourcentage.</span></p>
     </div>
   )
 }
@@ -2745,8 +3250,12 @@ function OngletsContextuels() {
   )
 }
 
-// Les trois boutons flottants à côté du graphique (＋ / pinceau / filtre) + le menu du « ＋ ».
+// Les trois boutons flottants à côté du graphique sélectionné (＋ / pinceau / filtre).
+// `bouton` ('plus' | 'pinceau' | 'filtre') surligne l'icône concernée pour montrer OÙ elle
+// se trouve ; le menu des éléments n'est affiché que pour le ＋.
 function BoutonsGraphique({ v }) {
+  const bouton = v?.bouton || 'plus'
+  const actifIdx = bouton === 'plus' ? 0 : bouton === 'pinceau' ? 1 : 2
   const elements = v?.elements || [
     { l: 'Titre du graphique', c: true },
     { l: 'Étiquettes de données', c: false },
@@ -2755,27 +3264,40 @@ function BoutonsGraphique({ v }) {
     { l: 'Légende', c: true },
     { l: 'Courbe de tendance', c: false },
   ]
+  const legendes = {
+    plus: (
+      <>Les trois icônes flottantes : <strong className="font-bold text-navy">＋</strong> (éléments, surligné), <strong className="font-bold text-navy">🖌</strong> (style/couleur), <strong className="font-bold text-navy">▽</strong> (filtre). Coche ou décoche un élément pour l'ajouter ou le retirer.</>
+    ),
+    pinceau: (
+      <>Le <strong className="font-bold text-navy">🖌 pinceau</strong> est la <strong className="font-bold text-navy">2e icône flottante</strong>, juste à droite du graphique sélectionné (surlignée ici).</>
+    ),
+    filtre: (
+      <>Le <strong className="font-bold text-navy">▽ filtre</strong> est la <strong className="font-bold text-navy">3e icône flottante</strong>, juste à droite du graphique sélectionné (surlignée ici).</>
+    ),
+  }
   return (
     <div className="mt-3 flex flex-col items-center gap-2">
       <div className="flex items-start gap-2">
-        <div className="rounded border border-navy/20 bg-white p-1 shadow" style={{ width: 140, height: 92 }}><MiniBarres /></div>
+        <div className="rounded border border-navy/20 bg-white p-1 shadow ring-1 ring-[#1a73e8]" style={{ width: 140, height: 92 }}><MiniBarres /></div>
         <div className="flex flex-col gap-1">
-          {[['＋', true], ['🖌', false], ['▽', false]].map(([ic, on], i) => (
-            <span key={i} className={`grid h-6 w-6 place-items-center rounded-full border bg-white text-[11px] shadow ${on ? 'border-mint text-navy ring-2 ring-mint' : 'border-navy/20 text-navy/60'}`}>{ic}</span>
+          {['＋', '🖌', '▽'].map((ic, i) => (
+            <span key={i} className={`grid h-6 w-6 place-items-center rounded-full border bg-white text-[11px] shadow ${i === actifIdx ? 'border-mint text-navy ring-2 ring-mint' : 'border-navy/20 text-navy/60'}`}>{ic}</span>
           ))}
         </div>
-        <div className="w-44 overflow-hidden rounded-md border border-navy/20 bg-white text-[10px] shadow-xl">
-          <div className="border-b border-navy/10 bg-navy/5 px-2 py-1 font-semibold text-navy/75">Éléments de graphique</div>
-          {elements.map((e, i) => (
-            <div key={i} className="flex items-center gap-2 px-2 py-1">
-              <span className={`grid h-3 w-3 place-items-center rounded-sm border text-[8px] ${e.c ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{e.c ? '✓' : ''}</span>
-              <span className="text-navy/80">{e.l}</span>
-            </div>
-          ))}
-        </div>
+        {bouton === 'plus' && (
+          <div className="w-44 overflow-hidden rounded-md border border-navy/20 bg-white text-[10px] shadow-xl">
+            <div className="border-b border-navy/10 bg-navy/5 px-2 py-1 font-semibold text-navy/75">Éléments de graphique</div>
+            {elements.map((e, i) => (
+              <div key={i} className="flex items-center gap-2 px-2 py-1">
+                <span className={`grid h-3 w-3 place-items-center rounded-sm border text-[8px] ${e.c ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{e.c ? '✓' : ''}</span>
+                <span className="text-navy/80">{e.l}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
-        <span className="text-navy/40">↳ </span>Les trois icônes flottantes : <strong className="font-bold text-navy">＋</strong> (éléments, surligné), <strong className="font-bold text-navy">🖌</strong> (style/couleur), <strong className="font-bold text-navy">▽</strong> (filtre). Coche ou décoche un élément pour l'ajouter ou le retirer.
+        <span className="text-navy/40">↳ </span>{legendes[bouton]}
       </p>
     </div>
   )
@@ -2813,6 +3335,11 @@ function SelectionnerDonnees({ v }) {
       <div className="bg-white p-3">
         <div className="mb-2 flex justify-center"><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/80">⇄ Intervertir les lignes/colonnes</span></div>
         <p className="mb-1 text-navy/55">Entrées de légende (Séries)</p>
+        <div className="mb-1 flex gap-1">
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5 text-navy/80">＋ Ajouter</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5 text-navy/80">✎ Modifier</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5 text-navy/80">✕ Supprimer</span>
+        </div>
         <div className="flex gap-2">
           <div className="flex-1 overflow-hidden rounded-sm border border-navy/25">
             {series.map((s, i) => (
@@ -2827,7 +3354,7 @@ function SelectionnerDonnees({ v }) {
             <span className="grid h-5 w-5 place-items-center rounded-sm border-2 border-mint bg-white font-bold text-navy">↓</span>
           </div>
         </div>
-        <p className="mt-2 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Les flèches <strong className="text-navy">↑ ↓</strong> changent l'ordre des séries.</span></p>
+        <p className="mt-2 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Les boutons <strong className="text-navy">Ajouter / Modifier / Supprimer</strong> gèrent les séries ; les flèches <strong className="text-navy">↑ ↓</strong> changent leur ordre.</span></p>
       </div>
     </div>
   )
@@ -2891,6 +3418,53 @@ function DeplacerGraphiqueDialog({ v }) {
   )
 }
 
+// La vue « Fichier > Imprimer » ENTIÈRE (l'écran backstage d'Excel) : le menu Fichier à
+// gauche (Imprimer surligné), les paramètres au centre (Imprimante, Paramètres avec
+// « Imprimer la sélection »), et le VRAI aperçu à droite (page + « 1 sur 1 »).
+function BackstageImprimer({ v }) {
+  const parametre = v?.parametre || 'Imprimer la sélection'
+  const legende = v?.legende
+  return (
+    <div className="mt-3">
+      <div className="mx-auto w-full max-w-md overflow-hidden rounded-md border border-navy/25 shadow-xl">
+        <div className="flex" style={{ minHeight: 235 }}>
+          <div className="w-24 shrink-0 bg-[#1f7a4d] px-2 py-2 text-[9px] text-white">
+            <p className="mb-2 pl-1 text-sm leading-none">←</p>
+            {['Accueil', 'Nouveau', 'Ouvrir', 'Enregistrer', 'Imprimer', 'Partager', 'Fermer'].map((m) => (
+              <p key={m} className={`rounded px-1.5 py-1 ${m === 'Imprimer' ? 'bg-white/25 font-bold' : 'opacity-85'}`}>{m}</p>
+            ))}
+          </div>
+          <div className="w-40 shrink-0 border-r border-navy/10 bg-[#f7f7f7] p-2 text-[9px] text-navy">
+            <p className="mb-1.5 text-[13px] font-bold">Imprimer</p>
+            <div className="mb-2 flex items-center gap-2">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#1f7a4d] text-sm text-white">🖨</span>
+              <span className="text-navy/70">Copies : 1</span>
+            </div>
+            <p className="mt-1 font-semibold text-navy/55">Imprimante</p>
+            <div className="mb-1 flex items-center justify-between rounded-sm border border-navy/20 bg-white px-1.5 py-1"><span>Mon imprimante</span><span className="text-navy/40">▾</span></div>
+            <p className="mt-1 font-semibold text-navy/55">Paramètres</p>
+            <div className="flex items-center justify-between rounded-sm border-2 border-mint bg-white px-1.5 py-1 font-semibold"><span>{parametre}</span><span className="text-navy/40">▾</span></div>
+            <div className="mt-1 flex items-center justify-between rounded-sm border border-navy/20 bg-white px-1.5 py-1"><span>Orientation Paysage</span><span className="text-navy/40">▾</span></div>
+            <div className="mt-1 flex items-center justify-between rounded-sm border border-navy/20 bg-white px-1.5 py-1"><span>A4</span><span className="text-navy/40">▾</span></div>
+          </div>
+          <div className="flex flex-1 flex-col items-center justify-center bg-[#e8e6e1] p-2">
+            <div className="rounded-sm bg-white p-2 shadow-md ring-1 ring-navy/15" style={{ width: 148 }}>
+              <div style={{ height: 94 }}><MiniBarres w={132} h={90} titre="Ventes par mois" /></div>
+            </div>
+            <p className="mt-1.5 text-[9px] text-navy/50">◂ &nbsp;1 sur 1&nbsp; ▸</p>
+          </div>
+        </div>
+      </div>
+      {legende && (
+        <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{legende}</span>
+        </p>
+      )}
+    </div>
+  )
+}
+
 // Aperçu d'impression d'un graphique seul (page A4 portrait).
 function ImprimerGraphique() {
   return (
@@ -2906,7 +3480,9 @@ function ImprimerGraphique() {
 }
 
 // Un tableau avec une colonne « Tendance » de sparklines (mini-graphiques dans une cellule).
-function Sparklines() {
+// `marqueurs: true` = version personnalisée (couleur orange + un marqueur sur chaque point).
+function Sparklines({ v }) {
+  const marqueurs = v?.marqueurs
   const rows = [
     { nom: 'Ebook Excel', vals: [8, 12, 10, 16, 22] },
     { nom: 'Ebook Shaolin', vals: [20, 16, 17, 12, 9] },
@@ -2922,8 +3498,12 @@ function Sparklines() {
     const last = pts[pts.length - 1]
     return (
       <svg viewBox={`0 0 ${w} ${h}`} className="h-4 w-16">
-        <path d={d} fill="none" stroke="#41c1ba" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx={last[0]} cy={last[1]} r="1.6" fill="#0a335d" />
+        <path d={d} fill="none" stroke={marqueurs ? '#e8853a' : '#41c1ba'} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        {marqueurs ? (
+          pts.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r="1.5" fill="#0a335d" />)
+        ) : (
+          <circle cx={last[0]} cy={last[1]} r="1.6" fill="#0a335d" />
+        )}
       </svg>
     )
   }
@@ -2946,7 +3526,12 @@ function Sparklines() {
         </table>
       </div>
       <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
-        <span className="text-navy/40">↳ </span>Un <strong className="font-bold text-navy">sparkline</strong> est un mini-graphique logé dans une seule cellule (colonne « Tendance ») : parfait pour un tableau de bord.
+        <span className="text-navy/40">↳ </span>
+        {marqueurs ? (
+          <>Après personnalisation : <strong className="font-bold text-navy">couleur orange</strong> + un <strong className="font-bold text-navy">marqueur</strong> sur chaque point (avant, les courbes étaient turquoise, sans marqueurs).</>
+        ) : (
+          <>Un <strong className="font-bold text-navy">sparkline</strong> est un mini-graphique logé dans une seule cellule (colonne « Tendance ») : parfait pour un tableau de bord.</>
+        )}
       </p>
     </div>
   )
@@ -3100,7 +3685,7 @@ function ChampsTCD({ v }) {
     <div className="mx-auto mt-3 w-60 overflow-hidden rounded-lg border border-navy/25 text-[10px] shadow-xl">
       <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Champs de tableau croisé dynamique</span><span className="text-navy/40">✕</span></div>
       <div className="bg-white p-2">
-        <div className="mb-1 flex gap-3 border-b border-navy/10 pb-1 text-[9px]"><span className="font-bold text-[#0a7a3d]">Tous</span><span className="text-navy/45">Actifs</span></div>
+        <div className="mb-1 flex gap-3 border-b border-navy/10 pb-1 text-[9px]"><span className="text-navy/45">Actifs</span><span className="font-bold text-[#0a7a3d]">Tous</span></div>
         <div className="mb-2 space-y-1">
           {tables.map((t, i) => (
             <div key={i}>
@@ -3145,7 +3730,7 @@ function RelationDialog({ v }) {
 
 // La fenêtre « Gérer les relations » (liste des liaisons + boutons).
 function GererRelations({ v }) {
-  const { relations = [] } = v
+  const { relations = [], focusDetection = false } = v
   return (
     <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
       <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Gérer les relations</span><span className="text-navy/40">✕</span></div>
@@ -3155,17 +3740,19 @@ function GererRelations({ v }) {
           {relations.length === 0 ? <div className="px-2 py-2 italic text-navy/30">(aucune relation pour l'instant)</div> : relations.map((r, i) => (<div key={i} className="border-t border-navy/10 px-2 py-1 font-mono text-[10px] text-navy/80">{r}</div>))}
         </div>
         <div className="mt-2 flex flex-wrap gap-1">
-          <span className="rounded-sm border-2 border-mint bg-mint/15 px-3 py-0.5 font-bold">Nouveau…</span>
+          <span className={focusDetection ? 'rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5' : 'rounded-sm border-2 border-mint bg-mint/15 px-3 py-0.5 font-bold'}>Nouveau…</span>
           <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Modifier…</span>
           <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Supprimer</span>
-          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Détection automatique…</span>
+          <span className={focusDetection ? 'rounded-sm border-2 border-mint bg-mint/15 px-3 py-0.5 font-bold' : 'rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5'}>Détection automatique…</span>
         </div>
       </div>
     </div>
   )
 }
 
-// Animation : on glisse un champ (Vendeurs) de la liste vers la zone Lignes du TCD.
+// Animation : comme dans le vrai volet, la LISTE DES CHAMPS est EN HAUT et les QUATRE
+// zones (Filtres, Colonnes, Lignes, Valeurs) EN BAS. Le champ « Vendeurs » est glissé de
+// la liste vers la zone Lignes. Rejouable.
 function GlisserChampTCD() {
   const [pose, setPose] = useState(false)
   const [cle, setCle] = useState(0)
@@ -3174,29 +3761,37 @@ function GlisserChampTCD() {
     const id = setTimeout(() => setPose(true), 900)
     return () => clearTimeout(id)
   }, [cle])
+  const Zone = ({ nom, actif }) => (
+    <div className={`rounded-sm border-2 border-dashed p-1 transition-colors ${actif ? 'border-mint bg-mint/5' : 'border-navy/25 bg-[#fafafa]'}`}>
+      <p className="text-[9px] font-semibold text-navy/50">{nom}</p>
+      <div className="min-h-[24px]" />
+    </div>
+  )
   return (
     <div className="mt-3">
-      <div className="relative mx-auto flex h-36 w-full max-w-xs gap-2 rounded-md border border-navy/15 bg-white p-2">
-        <div className="w-1/2">
-          <p className="text-[9px] font-semibold text-navy/50">Champs</p>
-          <div className="mt-1"><span className="block w-24 rounded-sm border border-navy/20 bg-[#f0f0f0] px-1.5 py-0.5 text-[10px] text-navy/70">Montant</span></div>
-        </div>
-        <div className="w-1/2 space-y-1">
-          <div className={`rounded-sm border-2 border-dashed p-1 transition-colors ${pose ? 'border-mint bg-mint/5' : 'border-navy/25 bg-[#fafafa]'}`}>
-            <p className="text-[9px] font-semibold text-navy/50">☰ Lignes</p>
-            <div className="min-h-[18px]" />
+      <div className="relative mx-auto w-full max-w-sm rounded-md border border-navy/15 bg-white p-2">
+        <p className="text-[9px] font-semibold leading-tight text-navy/60">Champs de tableau croisé dynamique</p>
+        <div className="mt-1 space-y-0.5 rounded-sm border border-navy/15 bg-[#fafafa] px-1.5 py-1 text-[10px] text-navy/75">
+          <p className="font-semibold text-navy/55">▾ T_vendeurs</p>
+          <div className="ml-2 flex items-center gap-1.5">
+            <span className={`grid h-3 w-3 place-items-center rounded-sm border text-[8px] ${pose ? 'border-mint bg-mint text-white' : 'border-navy/40 bg-white'}`}>{pose ? '✓' : ''}</span>
+            <span className={pose ? 'text-navy/35' : ''}>Vendeurs</span>
           </div>
-          <div className="rounded-sm border-2 border-dashed border-navy/25 bg-[#fafafa] p-1">
-            <p className="text-[9px] font-semibold text-navy/50">Σ Valeurs</p>
-            <div className="min-h-[18px]" />
-          </div>
+          <p className="font-semibold text-navy/55">▾ T_ventes</p>
+          <div className="ml-2 flex items-center gap-1.5"><span className="grid h-3 w-3 rounded-sm border border-navy/40 bg-white" /> Montant</div>
         </div>
-        <span className="absolute z-10 rounded-sm bg-mint/30 px-1.5 py-0.5 text-[10px] font-medium text-navy shadow ring-1 ring-mint" style={{ left: pose ? '56%' : 12, top: pose ? 38 : 28, transition: 'left .9s cubic-bezier(.4,0,.2,1), top .9s cubic-bezier(.4,0,.2,1)' }}>Vendeurs</span>
+        <div className="mt-2 grid grid-cols-2 gap-1.5">
+          <Zone nom="▽ Filtres" />
+          <Zone nom="▥ Colonnes" />
+          <Zone nom="☰ Lignes" actif={pose} />
+          <Zone nom="Σ Valeurs" />
+        </div>
+        <span className="absolute z-10 rounded-sm bg-mint/30 px-1.5 py-0.5 text-[10px] font-medium text-navy shadow ring-1 ring-mint" style={{ left: pose ? 26 : 38, top: pose ? 184 : 34, transition: 'left .9s cubic-bezier(.4,0,.2,1), top .9s cubic-bezier(.4,0,.2,1)' }}>Vendeurs</span>
       </div>
       <div className="mt-2 flex items-start justify-between gap-3">
         <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
           <span className="text-navy/40">↳</span>
-          <span>{pose ? '« Vendeurs » est déposé dans la zone Lignes : chaque vendeur devient une ligne du rapport.' : 'Glisse un champ (ex. Vendeurs) depuis la liste vers une zone (Lignes).'}</span>
+          <span>{pose ? '« Vendeurs » est déposé dans la zone Lignes (en bas) : chaque vendeur devient une ligne du rapport.' : 'La liste des champs est EN HAUT, les 4 zones EN BAS. On attrape « Vendeurs » et on le glisse vers Lignes…'}</span>
         </p>
         <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
       </div>
@@ -3204,16 +3799,366 @@ function GlisserChampTCD() {
   )
 }
 
+// Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
+// boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
+function PlanConso() {
+  const rows = [
+    { g: '', txt: 'Janvier', val: '12 400 €', detail: true },
+    { g: '', txt: 'Février', val: '13 800 €', detail: true },
+    { g: '', txt: 'Mars', val: '12 000 €', detail: true },
+    { g: '−', txt: 'Ebook Excel', val: '38 200 €', bold: true },
+    { g: '+', txt: 'Ebook Shaolin', val: '28 500 €', bold: true },
+    { g: '+', txt: 'Formations', val: '21 900 €', bold: true },
+  ]
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="w-72 overflow-hidden rounded-md border border-navy/15 shadow">
+        <div className="flex items-center gap-1 border-b border-navy/15 bg-navy/5 px-2 py-1">
+          {[1, 2].map((n) => (
+            <span key={n} className="grid h-4 w-4 place-items-center rounded-sm border border-navy/35 bg-white text-[9px] font-bold text-navy/70">{n}</span>
+          ))}
+          <span className="ml-1 text-[9px] text-navy/40">← niveaux de plan</span>
+        </div>
+        <div className="text-[11px]">
+          {rows.map((r, i) => (
+            <div key={i} className={`flex items-stretch border-b border-navy/10 ${r.bold ? 'bg-mint/10 font-bold text-navy' : 'text-navy/70'}`}>
+              <span className="grid w-6 shrink-0 place-items-center border-r border-navy/10">
+                {r.g && <span className="grid h-3.5 w-3.5 place-items-center rounded-sm border border-navy/40 bg-white text-[10px] font-bold text-navy">{r.g}</span>}
+              </span>
+              <span className={`flex-1 px-2 py-1 ${r.detail ? 'pl-5 italic' : ''}`}>{r.txt}</span>
+              <span className="px-3 py-1 text-right">{r.val}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳ </span>« <strong className="font-bold text-navy">−</strong> » = groupe développé (le détail des 3 mois d'Ebook Excel est visible) ; « <strong className="font-bold text-navy">+</strong> » = groupe fermé (seul le total s'affiche). Les boutons <strong className="font-bold text-navy">1 / 2</strong> (en haut à gauche) changent le niveau pour tout le tableau.
+      </p>
+    </div>
+  )
+}
+
+// La feuille TCD ENTIÈRE : à gauche la zone du rapport (vide « prêt à configurer », ou le
+// vrai rapport croisé avec Étiquettes de lignes ▾ / Somme de Montant / Total général) et à
+// droite la fenêtre « Champs de tableau croisé dynamique » dockée, + les onglets en bas.
+function VueTCD({ v }) {
+  const { rapport = false, legende } = v || {}
+  const Zone = ({ nom, items }) => (
+    <div className="rounded-sm border border-navy/20 bg-white p-0.5">
+      <p className="text-[8px] font-semibold text-navy/50">{nom}</p>
+      <div className="min-h-[14px] space-y-0.5">
+        {items.map((it, i) => (
+          <span key={i} className="block truncate rounded-sm bg-mint/20 px-1 py-0.5 text-[8px] text-navy ring-1 ring-mint/40">{it}</span>
+        ))}
+      </div>
+    </div>
+  )
+  const tables = [
+    { nom: 'T_ventes', champs: [{ n: 'Zones Vente' }, { n: 'Montant', c: rapport }] },
+    { nom: 'T_zones', champs: [{ n: 'Zones Vente' }, { n: 'Bureau' }] },
+    { nom: 'T_vendeurs', champs: [{ n: 'Vendeurs', c: rapport }, { n: 'Grade' }] },
+  ]
+  return (
+    <div className="mt-3">
+      <div className="mx-auto w-full max-w-md overflow-hidden rounded-md border border-navy/25 shadow-xl">
+        <div className="flex items-center bg-[#1f7a4d] px-2 py-1 text-[10px] text-white">
+          <span className="font-semibold">📗 Consolidation.xlsx — Excel</span>
+          <span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span>
+        </div>
+        <div className="flex bg-white">
+          <div className="flex-1 p-2">
+            {rapport ? (
+              <div className="overflow-hidden rounded-sm border border-navy/20 text-[10px]">
+                <div className="grid border-b border-navy/15 bg-[#dbeafe] font-semibold text-navy" style={{ gridTemplateColumns: '1.3fr 1fr' }}>
+                  <span className="flex items-center justify-between px-2 py-1">Étiquettes de lignes <span className="text-navy/50">▾</span></span>
+                  <span className="border-l border-navy/15 px-2 py-1">Somme de Montant</span>
+                </div>
+                {[['Karim', '18 700 €'], ['Léa', '14 600 €'], ['Marie', '8 200 €']].map(([n, m], i) => (
+                  <div key={i} className={`grid ${i % 2 ? 'bg-navy/[0.03]' : 'bg-white'}`} style={{ gridTemplateColumns: '1.3fr 1fr' }}>
+                    <span className="px-2 py-0.5 text-navy/85">{n}</span>
+                    <span className="border-l border-navy/10 px-2 py-0.5 text-right text-navy/85">{m}</span>
+                  </div>
+                ))}
+                <div className="grid border-t-2 border-navy/30 bg-[#dbeafe]/60 font-bold text-navy" style={{ gridTemplateColumns: '1.3fr 1fr' }}>
+                  <span className="px-2 py-0.5">Total général</span>
+                  <span className="border-l border-navy/15 px-2 py-0.5 text-right">41 500 €</span>
+                </div>
+              </div>
+            ) : (
+              <div className="grid h-40 place-items-center rounded-sm border-2 border-navy/30 p-2 text-center">
+                <div>
+                  <p className="text-[10px] font-semibold text-navy/70">TableauCroisédynamique1</p>
+                  <p className="mx-auto mt-1 max-w-[150px] text-[9px] leading-snug text-navy/45">Pour générer un rapport, choisissez des champs dans la liste des champs de tableau croisé dynamique</p>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="w-40 shrink-0 border-l border-navy/15 bg-[#fafafa] p-1.5 text-[9px]">
+            <p className="font-semibold leading-tight text-navy/80">Champs de tableau croisé dynamique</p>
+            <div className="mb-1 mt-1 flex gap-2 border-b border-navy/10 pb-0.5 text-[8px]"><span className="text-navy/45">Actifs</span><span className="font-bold text-[#0a7a3d]">Tous</span></div>
+            <div className="mb-1.5 space-y-0.5">
+              {tables.map((t, i) => (
+                <div key={i}>
+                  <p className="font-semibold text-navy/70">▾ {t.nom}</p>
+                  {t.champs.map((c2, j) => (
+                    <div key={j} className="ml-1.5 flex items-center gap-1 text-[8px] text-navy/75">
+                      <span className={`grid h-2.5 w-2.5 place-items-center rounded-sm border text-[7px] ${c2.c ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{c2.c ? '✓' : ''}</span>
+                      {c2.n}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-1">
+              <Zone nom="▽ Filtres" items={[]} />
+              <Zone nom="▥ Colonnes" items={[]} />
+              <Zone nom="☰ Lignes" items={rapport ? ['Vendeurs'] : []} />
+              <Zone nom="Σ Valeurs" items={rapport ? ['Somme de Montant'] : []} />
+            </div>
+          </div>
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/15 bg-navy/5 px-2 pb-0.5 pt-1 text-[9px]">
+          {['Ventes', 'Zones Vente', 'Vendeurs', 'TCD'].map((f) => (
+            <span key={f} className={`rounded-t px-2 py-0.5 ${f === 'TCD' ? 'bg-white font-bold text-navy shadow ring-1 ring-navy/20' : 'text-navy/55'}`}>{f}</span>
+          ))}
+          <span className="px-1 text-navy/40">＋</span>
+        </div>
+      </div>
+      {legende && (
+        <p className="mt-2 flex items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+          <span className="text-navy/40">↳</span>
+          <span>{legende}</span>
+        </p>
+      )}
+    </div>
+  )
+}
+
+// ---------- Chapitre 10 : mise en forme conditionnelle & fonctions conditionnelles ----------
+const MFC_DATA = [
+  ['Marie', '8 200 €', 8200],
+  ['Karim', '12 500 €', 12500],
+  ['Léa', '4 300 €', 4300],
+  ['Tom', '15 800 €', 15800],
+  ['Nina', '6 100 €', 6100],
+]
+
+// Un tableau de ventes AVEC ou SANS mise en forme conditionnelle : surbrillance rouge sous
+// un seuil, barres de données, jeu d'icônes, NUANCES de couleurs (dégradé), règle par
+// FORMULE (vert au-dessus d'un seuil) ou DOUBLONS (noms en double surlignés).
+// `avant` = version brute (pour l'avant/après) ; `data` = autres lignes que MFC_DATA.
+function MFCTableau({ v }) {
+  const { style, avant = false, seuil = 7000, legende, data } = v
+  const rows = data || MFC_DATA
+  const max = Math.max(...rows.map((r) => r[2]))
+  const counts = {}
+  rows.forEach(([nom]) => {
+    counts[nom] = (counts[nom] || 0) + 1
+  })
+  const icone = (n) => (n >= 12000 ? { s: '▲', c: '#1f9d57' } : n >= 7000 ? { s: '▬', c: '#d9a406' } : { s: '▼', c: '#d33' })
+  const nuance = (n) => (n >= 12000 ? '#c6efce' : n >= 7000 ? '#ffeb9c' : '#ffc7ce')
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="overflow-hidden rounded-md border border-navy/15 shadow">
+        <table className="border-collapse text-[11px]">
+          <thead><tr>{['Vendeur', 'Ventes'].map((h) => (<th key={h} className="border-b-2 border-mint bg-mint/25 px-4 py-1 font-bold text-navy">{h}</th>))}</tr></thead>
+          <tbody>
+            {rows.map(([nom, aff, n], i) => {
+              const rouge = !avant && style === 'surbrillance' && n < seuil
+              const vert = !avant && style === 'formule' && n >= 12000
+              const doublon = !avant && style === 'doublons' && counts[nom] > 1
+              const fondNuance = !avant && style === 'nuances' ? { background: nuance(n) } : vert ? { background: '#c6efce' } : undefined
+              return (
+                <tr key={i} className={i % 2 ? 'bg-navy/[0.03]' : 'bg-white'}>
+                  <td className={`border-b border-navy/10 px-4 py-1 ${doublon ? 'bg-red-500/25 font-semibold text-red-700' : 'text-navy/85'}`}>{nom}</td>
+                  <td className={`relative border-b border-navy/10 px-4 py-1 ${rouge ? 'bg-red-500/25 font-semibold text-red-700' : vert ? 'font-semibold text-[#1f7a4d]' : 'text-navy/85'}`} style={fondNuance}>
+                    {!avant && style === 'barres' && <span className="absolute inset-y-1 left-1 rounded-sm bg-mint/40" style={{ width: `${(n / max) * 72}%` }} />}
+                    <span className="relative flex items-center gap-1.5">
+                      {!avant && style === 'icones' && <span style={{ color: icone(n).c }}>{icone(n).s}</span>}
+                      {aff}
+                    </span>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+      {legende && <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60"><span className="text-navy/40">↳ </span>{legende}</p>}
+    </div>
+  )
+}
+
+// Le menu déroulant « Mise en forme conditionnelle » (Accueil > Styles), une entrée surlignée.
+function MFCMenu({ v }) {
+  const actif = v?.actif ?? 0
+  const items = ['Règles de mise en surbrillance des cellules', 'Règles des valeurs de plage haute/basse', 'Barres de données', 'Nuances de couleurs', 'Jeux d\'icônes', 'Nouvelle règle…', 'Effacer les règles', 'Gérer les règles…']
+  const icons = ['▦', '📊', '▬', '🎨', '🚦', '＋', '⌫', '⚙']
+  return (
+    <div className="mx-auto mt-3 w-72 overflow-hidden rounded-md border border-navy/20 bg-white py-0.5 text-[10px] shadow-xl">
+      {items.map((it, i) => (
+        <div key={i} className={`flex items-center justify-between px-2 py-1 ${i === actif ? 'bg-mint/15 font-semibold text-navy' : 'text-navy/75'}`}>
+          <span className="flex items-center gap-1.5"><span className="w-3 text-center">{icons[i]}</span>{it}</span>
+          {i < 5 && <span className="text-navy/40">▸</span>}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// Une petite fenêtre de règle (ex. « Inférieur à ») : le seuil + le style de mise en forme.
+function MFCDialog({ v }) {
+  const { titre = 'Inférieur à', valeur = '7000', style = 'Remplissage rouge clair, texte rouge foncé', phrase } = v
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>{titre}</span><span className="text-navy/40">✕</span></div>
+      <div className="space-y-2 bg-white p-3 text-navy">
+        <p className="text-navy/70">Mettre en forme les cellules {phrase || (<>qui sont <strong>{titre.toUpperCase()}</strong></>)} :</p>
+        <div className="flex items-center gap-2">
+          <span className="min-w-[70px] rounded-sm border-2 border-mint bg-white px-2 py-1 text-center font-mono">{valeur}</span>
+          <span className="text-navy/55">avec</span>
+          <span className="flex items-center gap-1 rounded-sm border border-navy/25 bg-[#fde8e8] px-2 py-1 text-red-700">{style}<span className="text-navy/40">▾</span></span>
+        </div>
+        <div className="flex justify-end gap-2 pt-0.5"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+      </div>
+    </div>
+  )
+}
+
+// La fenêtre « Nouvelle règle de mise en forme » : les types de règles (le dernier,
+// « Utiliser une formule… », sélectionné), la zone de formule et l'aperçu du format.
+function NouvelleRegle({ v }) {
+  const formule = v?.formule || '=B2>=12000'
+  const types = [
+    "Mettre en forme toutes les cellules d'après leur valeur",
+    'Appliquer une mise en forme uniquement aux cellules qui contiennent',
+    'Appliquer une mise en forme aux valeurs de début ou de fin de plage',
+    'Utiliser une formule pour déterminer pour quelles cellules le format sera appliqué',
+  ]
+  return (
+    <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Nouvelle règle de mise en forme</span><span className="text-navy/40">✕</span></div>
+      <div className="bg-white p-3">
+        <p className="mb-1 text-navy/55">Sélectionnez un type de règle :</p>
+        <div className="mb-2 overflow-hidden rounded-sm border border-navy/25 text-[10px]">
+          {types.map((t, i) => (
+            <div key={i} className={`px-2 py-1 ${i === types.length - 1 ? 'bg-[#cfe2ff] font-semibold text-navy' : 'text-navy/70'}`}>▸ {t}</div>
+          ))}
+        </div>
+        <p className="mb-1 text-navy/55">Appliquer une mise en forme aux valeurs pour lesquelles cette formule est vraie :</p>
+        <div className="mb-2 rounded-sm border-2 border-mint bg-white px-2 py-1 font-mono text-navy">{formule}</div>
+        <div className="flex items-center gap-2">
+          <span className="text-navy/55">Aperçu :</span>
+          <span className="rounded-sm border border-navy/20 bg-[#c6efce] px-3 py-0.5 text-[#1f7a4d]">AaBbCc</span>
+          <span className="ml-auto rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Format…</span>
+        </div>
+        <div className="mt-2 flex justify-end gap-2"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+      </div>
+    </div>
+  )
+}
+
+// Le « Gestionnaire des règles de mise en forme conditionnelle » (liste + boutons).
+function GestionRegles({ v }) {
+  const regles = v?.regles || [{ desc: 'Jeu d\'icônes (3 flèches)', plage: '=$B$2:$B$6' }]
+  const sel = v?.selection ?? 0
+  return (
+    <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Gestionnaire des règles de mise en forme conditionnelle</span><span className="text-navy/40">✕</span></div>
+      <div className="bg-white p-3">
+        <div className="mb-2 flex gap-1">
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5">＋ Nouvelle règle</span>
+          <span className="rounded-sm border-2 border-mint bg-mint/15 px-2 py-0.5 font-bold">✎ Modifier la règle…</span>
+          <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5">✕ Supprimer</span>
+        </div>
+        <div className="overflow-hidden rounded-sm border border-navy/25">
+          <div className="grid bg-navy/10 text-navy/55" style={{ gridTemplateColumns: '2fr 1.2fr' }}><span className="px-2 py-1">Règle (dans l'ordre)</span><span className="border-l border-navy/10 px-2 py-1">S'applique à</span></div>
+          {regles.map((r, i) => (<div key={i} className={`grid ${i === sel ? 'bg-[#cfe2ff]' : 'bg-white'}`} style={{ gridTemplateColumns: '2fr 1.2fr' }}><span className="border-t border-navy/10 px-2 py-1 text-navy">{r.desc}</span><span className="border-l border-t border-navy/10 px-2 py-1 font-mono text-navy/70">{r.plage}</span></div>))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// La fenêtre « Modifier la règle » d'un jeu d'icônes : chaque icône + son seuil (Valeur/Type).
+function RegleIcones({ v }) {
+  const lignes = v?.lignes || [{ icone: '▲', c: '#1f9d57', op: '>=', val: '67' }, { icone: '▬', c: '#d9a406', op: '>=', val: '33' }, { icone: '▼', c: '#d33', op: '<', val: '33' }]
+  return (
+    <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Modifier la règle de mise en forme</span><span className="text-navy/40">✕</span></div>
+      <div className="bg-white p-3">
+        <p className="mb-1.5 font-semibold text-navy/75">Afficher chaque icône selon ces règles :</p>
+        <div className="grid text-[9px] text-navy/50" style={{ gridTemplateColumns: '1.3fr 0.8fr 1.3fr' }}><span>Icône</span><span>quand</span><span>Valeur · Type</span></div>
+        <div className="space-y-1">
+          {lignes.map((l, i) => (
+            <div key={i} className="grid items-center gap-1" style={{ gridTemplateColumns: '1.3fr 0.8fr 1.3fr' }}>
+              <span className="flex items-center gap-1"><span className="text-base" style={{ color: l.c }}>{l.icone}</span><span className="text-navy/55">{i === 0 ? 'quand ≥' : i === lignes.length - 1 ? 'sinon <' : 'sinon ≥'}</span></span>
+              <span className="rounded-sm border border-navy/25 px-1 py-0.5 text-center font-mono">{l.op}</span>
+              <span className="flex items-center gap-1 rounded-sm border-2 border-mint px-1 py-0.5 ring-1 ring-mint"><span className="flex-1 text-center font-mono">{l.val}</span><span className="text-navy/40">Nombre ▾</span></span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-2 flex justify-end gap-2"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-4 py-0.5">OK</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5">Annuler</span></div>
+      </div>
+    </div>
+  )
+}
+
+// Le lexique des erreurs Excel : Erreur / Quand ? / Comment corriger.
+function ErreursExcel({ v }) {
+  const erreurs = v?.erreurs || [
+    { e: '#DIV/0!', q: 'Division par zéro ou dénominateur vide', c: 'Entoure la division de SIERREUR(… ; "")' },
+    { e: '#VALEUR!', q: 'Format incompatible (ex. texte + nombre)', c: 'Corrige le format de la cellule' },
+    { e: '#NOM ?', q: 'Nom ou référence non valide (faute de frappe)', c: 'Corrige l\'orthographe / le nom de plage' },
+    { e: '#N/A', q: 'Une recherche ne trouve pas la valeur', c: 'SI.NON.DISPO(… ; 0) pour remplacer' },
+    { e: '#NUL!', q: 'Un deux-points manque dans la plage (A1B1)', c: 'Ajoute le : → A1:B1' },
+    { e: '#NOMBRE!', q: 'Nombre trop grand ou calcul impossible', c: 'Vérifie tes calculs intermédiaires' },
+    { e: '#####', q: 'La colonne est trop étroite pour le contenu', c: 'Élargis la colonne' },
+  ]
+  return (
+    <div className="mt-3 overflow-hidden rounded-md border border-navy/15 text-[11px] shadow">
+      <div className="grid bg-mint/25 font-bold text-navy" style={{ gridTemplateColumns: '0.9fr 1.7fr 1.6fr' }}><span className="px-2 py-1">Erreur</span><span className="px-2 py-1">Quand ?</span><span className="px-2 py-1">Comment corriger</span></div>
+      {erreurs.map((x, i) => (
+        <div key={i} className={`grid ${i % 2 ? 'bg-navy/[0.03]' : 'bg-white'}`} style={{ gridTemplateColumns: '0.9fr 1.7fr 1.6fr' }}>
+          <span className="border-t border-navy/10 px-2 py-1 font-mono font-bold text-red-600">{x.e}</span>
+          <span className="border-t border-navy/10 px-2 py-1 text-navy/80">{x.q}</span>
+          <span className="border-t border-navy/10 px-2 py-1 text-navy/70">{x.c}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
+  if (v.type === 'mfctableau') return <MFCTableau v={v} />
+  if (v.type === 'mfcmenu') return <MFCMenu v={v} />
+  if (v.type === 'mfcdialog') return <MFCDialog v={v} />
+  if (v.type === 'nouvelleregle') return <NouvelleRegle v={v} />
+  if (v.type === 'gestionregles') return <GestionRegles v={v} />
+  if (v.type === 'regleicones') return <RegleIcones v={v} />
+  if (v.type === 'erreursexcel') return <ErreursExcel v={v} />
+  if (v.type === 'vuetcd') return <VueTCD v={v} />
   if (v.type === 'consoliderdialog') return <ConsoliderDialog v={v} />
   if (v.type === 'champstcd') return <ChampsTCD v={v} />
   if (v.type === 'relationdialog') return <RelationDialog v={v} />
   if (v.type === 'gererrelations') return <GererRelations v={v} />
   if (v.type === 'glisserchamptcd') return <GlisserChampTCD />
+  if (v.type === 'planconso') return <PlanConso />
   if (v.type === 'classeuraxe') return <ClasseurAxe v={v} />
   if (v.type === 'graphique') return <Graphique v={v} />
   if (v.type === 'typesgraphiques') return <TypesGraphiques />
+  if (v.type === 'soustypesgraphiques') return <SousTypesGraphiques />
+  if (v.type === 'typegraphiquedialog') return <TypeGraphiqueDialog v={v} />
+  if (v.type === 'recommandedialog') return <RecommandeDialog />
+  if (v.type === 'titregraphique') return <TitreGraphique />
+  if (v.type === 'stylesgraphique') return <StylesGraphiqueGalerie />
+  if (v.type === 'selectionactive') return <SelectionActive v={v} />
+  if (v.type === 'clicdroitgraphique') return <ClicDroitGraphique v={v} />
+  if (v.type === 'clicdroitonglet') return <ClicDroitOnglet v={v} />
+  if (v.type === 'voletformat') return <VoletFormat v={v} />
+  if (v.type === 'pinceaugraphique') return <PinceauGraphique />
+  if (v.type === 'filtregraphique') return <FiltreGraphique />
   if (v.type === 'galeriegraphiques') return <GalerieGraphiques />
   if (v.type === 'deplacergraphique') return <DeplacerGraphique />
   if (v.type === 'redimensionnergraphique') return <RedimensionnerGraphique />
@@ -3223,8 +4168,9 @@ function Visuel({ v }) {
   if (v.type === 'selectionnerdonnees') return <SelectionnerDonnees v={v} />
   if (v.type === 'intervertirgraphique') return <IntervertirGraphique />
   if (v.type === 'deplacergraphiquedialog') return <DeplacerGraphiqueDialog v={v} />
+  if (v.type === 'backstageimprimer') return <BackstageImprimer v={v} />
   if (v.type === 'imprimergraphique') return <ImprimerGraphique />
-  if (v.type === 'sparklines') return <Sparklines />
+  if (v.type === 'sparklines') return <Sparklines v={v} />
   if (v.type === 'methode') return <Methode v={v} />
   if (v.type === 'recopieanim') return <RecopieAnim />
   if (v.type === 'reffiger') return <RefFiger />
@@ -3282,9 +4228,9 @@ function Visuel({ v }) {
   if (v.type === 'zonenom') return <ZoneNom v={v} />
   if (v.type === 'formule') {
     return (
-      <div className="mt-3 flex animate-fade-up items-center gap-2 rounded-xl border-2 border-mint/45 bg-mint/15 px-4 py-3 shadow-sm">
+      <div className="mt-3 flex animate-fade-up items-start gap-2 rounded-xl border-2 border-mint/45 bg-mint/15 px-4 py-3 shadow-sm">
         <span className="shrink-0 font-mono text-sm italic text-mint/70">fx</span>
-        <span className="font-mono text-lg text-navy">{coloreFormule(v.formule)}</span>
+        <span className={`min-w-0 break-all font-mono leading-snug text-navy ${v.formule.length > 42 ? 'text-sm' : 'text-lg'}`}>{coloreFormule(v.formule)}</span>
       </div>
     )
   }
@@ -3373,26 +4319,35 @@ function Visuel({ v }) {
   return null
 }
 
+// Mini-question à RÉESSAI : une mauvaise réponse ne révèle pas la bonne, le Shifu
+// encourage et l'élève retente jusqu'à trouver (cycle : se tromper → corriger → réussir).
+const REUSSITES_Q = ['Excellent, du premier coup ! 🥋', 'Et voilà, bien vu ! 🎯', 'Exactement ! 💪', 'Précis comme un coup de Wing Chun ! 🥋']
+const ENCOURAGEMENTS_Q = ['Pas celle-là… observe bien et retente ! 🧘', 'Presque ! Relis la question, tu l\'as.', 'Non, mais tu chauffes. Essaie encore !']
+
 function Question({ q, onResolu }) {
-  const [choix, setChoix] = useState(null)
-  const repondu = choix !== null
+  const [essais, setEssais] = useState([])
+  const [trouve, setTrouve] = useState(false)
+  const clic = (i) => {
+    if (trouve) return
+    if (i === q.bonne) {
+      setTrouve(true)
+      onResolu && onResolu()
+    } else if (!essais.includes(i)) {
+      setEssais((e) => [...e, i])
+    }
+  }
   return (
     <div className="mt-3">
       <div className="space-y-2">
         {q.options.map((opt, i) => {
           let cls = 'border-navy/10 bg-navy/5'
-          if (repondu) {
-            if (i === q.bonne) cls = 'border-mint/60 bg-mint/15'
-            else if (i === choix) cls = 'border-red-400/50 bg-red-500/10'
-          }
+          if (trouve && i === q.bonne) cls = 'border-mint/60 bg-mint/15'
+          else if (essais.includes(i)) cls = 'border-red-400/50 bg-red-500/10 opacity-55'
           return (
             <button
               key={i}
-              disabled={repondu}
-              onClick={() => {
-                setChoix(i)
-                onResolu && onResolu()
-              }}
+              disabled={trouve || essais.includes(i)}
+              onClick={() => clic(i)}
               className={`flex w-full items-center gap-2 rounded-xl border px-4 py-3 text-left font-mono text-sm transition ${cls}`}
             >
               {coloreFormule(opt)}
@@ -3400,12 +4355,16 @@ function Question({ q, onResolu }) {
           )
         })}
       </div>
-      {repondu && (
-        <p className={`mt-2 rounded-xl px-3 py-2 text-sm ${choix === q.bonne ? 'bg-mint/15 text-mint' : 'bg-navy/10 text-navy/90'}`}>
-          {choix === q.bonne ? '✓ Bravo ! ' : 'Presque ! '}
+      {trouve ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ {essais.length === 0 ? REUSSITES_Q[q.bonne % REUSSITES_Q.length] : 'Trouvé ! La persévérance paie. 🥋'}</span>{' '}
           {q.explication}
         </p>
-      )}
+      ) : essais.length > 0 ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">
+          {ENCOURAGEMENTS_Q[(essais.length - 1) % ENCOURAGEMENTS_Q.length]}
+        </p>
+      ) : null}
     </div>
   )
 }

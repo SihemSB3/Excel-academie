@@ -3185,13 +3185,28 @@ const CREERGRAPHIQUE = {
     },
     {
       humeur: 'accueil',
-      dit: 'Comment choisir le **bon type** ? Chaque graphique raconte une histoire différente.',
+      dit: 'Excel propose plusieurs **catégories** de graphiques. Chacune raconte une histoire différente :',
       visuel: { type: 'typesgraphiques' },
     },
     {
       humeur: 'pensif',
-      dit: 'Pas sûre du type ? Excel propose **Insertion > Graphique recommandé** : il analyse tes données et suggère les plus adaptés.',
-      visuel: { type: 'encart', label: 'Astuce', texte: 'Le bouton **Graphique recommandé** (groupe Graphiques) est parfait quand tu débutes : tu choisis parmi des propositions déjà pertinentes.' },
+      dit: 'Une fois la catégorie choisie, Excel propose des **sous-types** (en miniatures). Exemple pour l\'histogramme :',
+      visuel: { type: 'soustypesgraphiques' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pas sûre du type ? Laisse Excel te guider avec **Graphique recommandé**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Le graphique recommandé',
+        blocs: [
+          { etapes: ['Sélectionne ton tableau, puis onglet **Insertion** > groupe **Graphiques** > **Graphique recommandé**.'] },
+          { capture: { type: 'ruban', actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Histogramme' }, { icone: '📈', label: 'Courbe' }, { icone: '⭐', label: 'Graphique\nrecommandé', actif: true }] } },
+          { etapes: ['La fenêtre **Insérer un graphique** s\'ouvre : Excel analyse tes données et propose les **3 à 5 types les plus pertinents**. Clique une miniature pour l\'aperçu, puis **OK**.'], depart: 2 },
+          { capture: { type: 'recommandedialog' } },
+          { note: 'Parfait quand tu débutes : tu choisis parmi des propositions déjà adaptées à tes données.', label: 'Bon à savoir' },
+        ],
+      },
     },
     {
       humeur: 'accueil',
@@ -3231,6 +3246,7 @@ const DEPLACERGRAPHIQUE = {
           { etapes: ['Clique le graphique : **8 poignées** apparaissent sur son cadre.'] },
           { etapes: ['Attrape une **poignée d\'angle** et fais-la glisser pour agrandir ou réduire.'], depart: 2 },
           { capture: { type: 'redimensionnergraphique' } },
+          { note: '**Poignées d\'angle** : redimensionnent largeur ET hauteur ensemble (proportions). **Poignées latérales** (au milieu des côtés) : modifient une **seule** dimension.', label: 'Bon à savoir' },
           { etapes: ['Maintiens **Shift** pendant le glissement pour garder les **proportions**.'], depart: 3 },
           { capture: { type: 'touche', touches: ['Shift'], note: 'Maintenue pendant le glissement d\'une poignée d\'angle, la touche Shift garde le graphique bien proportionné (pas déformé).' } },
           { note: 'Pour une **taille précise** : onglet **Format** > groupe **Taille**, saisis la **Hauteur** et la **Largeur**.', label: 'Astuce' },
@@ -3261,6 +3277,31 @@ const MODIFIERGRAPHIQUE = {
     },
     {
       humeur: 'pensif',
+      dit: 'Que fait chacun de ces deux onglets ?',
+      visuel: { type: 'encart', label: 'Les deux onglets contextuels', liste: ['**Création de graphique** : choix du type de graphique, sélection ou modification de la source de données, déplacement et disposition générale.', '**Mise en forme (Format)** : application de styles et de thèmes, personnalisation des couleurs, des bordures et des effets, ajout ou retrait des éléments (titre, légende, axes, étiquettes…) et réglages précis de leur position et de leur format.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour modifier **un élément précis** (une série, un axe, le titre…), voici le chemin complet.',
+      visuel: {
+        type: 'methode',
+        titre: 'Mise en forme de la sélection',
+        blocs: [
+          { etapes: ['Voici le graphique de **départ** : la série est turquoise. On va la passer en orange.'] },
+          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', legende: 'AVANT : la série « Ventes » est turquoise.' } },
+          { etapes: ['**Sélectionne ton graphique** (clique-le), puis ouvre l\'onglet **Format** (Mise en forme). **Tout à gauche** du ruban : le groupe **Sélection active**, avec sa grande **liste déroulante**.'], depart: 2 },
+          { capture: { type: 'selectionactive', element: 'Série « Ventes »' } },
+          { note: 'La liste déroulante affiche **toujours l\'élément en cours de sélection** : clique une barre du graphique, elle indiquera « Série « Ventes » ». **Sur Mac comme sur Windows**, ce groupe est tout à gauche de l\'onglet Format, dès que le graphique est sélectionné.', label: 'Où ça se trouve ?' },
+          { etapes: ['Clique la **flèche ▾** de la liste : **tous les éléments** du graphique s\'affichent. Choisis **Série « Ventes »**.'], depart: 3 },
+          { capture: { type: 'menu', items: [{ label: 'Zone de graphique' }, { label: 'Zone de traçage' }, { label: 'Série « Ventes »', actif: true }, { label: 'Axe vertical (Valeurs)' }, { label: 'Titre du graphique' }, { label: 'Légende' }] } },
+          { etapes: ['Clique **Mise en forme de la sélection** : la fenêtre **Mettre en forme…** s\'ouvre à droite. Ajuste le **remplissage** (ici orange), la **bordure** ou les **effets 3D**.'], depart: 4 },
+          { capture: { type: 'voletformat', titre: 'Mettre en forme la série', couleur: '#e8853a' } },
+          { capture: { type: 'graphique', cats: ['Jan', 'Fév', 'Mar', 'Avr'], series: [{ nom: 'Ventes', couleur: '#e8853a', vals: [12, 19, 15, 24] }], titre: 'Ventes par mois', legende: 'APRÈS : la série a pris le remplissage orange choisi dans le volet. Compare avec le départ !' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Change l\'allure d\'un clic avec un **style prédéfini**.',
       visuel: {
         type: 'methode',
@@ -3268,8 +3309,38 @@ const MODIFIERGRAPHIQUE = {
         blocs: [
           { etapes: ['Sélectionne le graphique, onglet **Création de graphique** > groupe **Styles du graphique**.'] },
           { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'], actif: 'Création de graphique', groupeNom: 'Styles du graphique', groupes: [{ icone: '▤', label: 'Style 1' }, { icone: '▥', label: 'Style 2', actif: true }, { icone: '▦', label: 'Style 3' }, { icone: '🎨', label: 'Modifier les\ncouleurs' }] } },
-          { etapes: ['Survole les vignettes pour l\'aperçu, clique pour appliquer.'], depart: 2 },
-          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', legende: 'Le style change couleurs, bordures et effets d\'un coup.' } },
+          { capture: { type: 'stylesgraphique' } },
+          { etapes: ['**Survole** les vignettes pour un aperçu en direct, puis **clique** pour appliquer.'], depart: 2 },
+          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', legende: 'AVANT : le style par défaut (fond blanc).' } },
+          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', theme: 'sombre', legende: 'APRÈS : Style 3 appliqué, le même graphique change complètement d\'habillage (fond sombre, texte blanc).' } },
+          { note: 'Pour changer seulement les **couleurs** : Création > **Modifier les couleurs** (palette Colorée ou Monochrome). Pour un réglage fin d\'un élément (remplissage, bordure, effets), utilise le volet **Mettre en forme…** (voir la leçon « Les axes »).', label: 'Astuce' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La **disposition** agence d\'un coup tous les éléments (titre, légende, étiquettes, axes) proprement.',
+      visuel: {
+        type: 'methode',
+        titre: 'Modifier la disposition',
+        blocs: [
+          { etapes: ['Sélectionne le graphique, onglet **Création de graphique** > groupe **Dispositions du graphique** > **Disposition rapide**.'] },
+          { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'], actif: 'Création de graphique', groupeNom: 'Dispositions du graphique', groupes: [{ icone: '▚', label: 'Disposition\nrapide', actif: true }, { icone: '＋', label: 'Ajouter un\nélément' }] } },
+          { note: 'Survole chaque miniature pour l\'aperçu, puis clique celle qui te plaît : tous les éléments se placent tout seuls.', label: 'Astuce' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Tu peux aussi **mettre en forme le texte** (titre, étiquettes) comme dans une cellule.',
+      visuel: {
+        type: 'methode',
+        titre: 'Mettre en forme le texte',
+        blocs: [
+          { etapes: ['Clique le texte à modifier (titre, étiquette), puis onglet **Accueil** > groupe **Police** : police, taille, gras.'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'A', label: 'Police' }, { icone: '↕', label: 'Taille' }, { icone: 'G', label: 'Gras', actif: true }] } },
+          { etapes: ['Groupe **Alignement** : place le texte (gauche/centré/droite, haut/milieu/bas).'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Alignement', groupes: [{ icone: '↥', label: 'Haut' }, { icone: '≡', label: 'Centré', actif: true }, { icone: '↧', label: 'Bas' }] } },
         ],
       },
     },
@@ -3280,6 +3351,41 @@ const MODIFIERGRAPHIQUE = {
     },
     {
       humeur: 'pensif',
+      dit: 'Le **＋** te donne accès à tous les éléments du graphique. Voici à quoi ils servent :',
+      visuel: { type: 'encart', label: 'Éléments de graphique', liste: ['**Titre** : le nom affiché au-dessus du graphique.', '**Étiquettes de données** : la valeur exacte posée sur chaque barre ou point.', '**Table de données** : un mini-tableau des valeurs sous le graphique.', '**Quadrillage** : les lignes de fond alignées sur les graduations.', '**Légende** : la zone qui associe chaque couleur à sa série.', '**Courbe de tendance** : une ligne qui montre la tendance d\'une série.'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La 2e icône flottante, le **🖌 pinceau**, change le look en un clin d\'œil, sans quitter le graphique.',
+      visuel: {
+        type: 'methode',
+        titre: 'Le raccourci pinceau',
+        blocs: [
+          { etapes: ['Sélectionne le graphique, puis clique le **🖌 pinceau** (2e icône flottante, juste à droite).'] },
+          { capture: { type: 'boutonsgraphique', bouton: 'pinceau' } },
+          { etapes: ['Deux onglets s\'ouvrent : **Style** (mise en forme globale) et **Couleur** (palette Colorée ou Monochrome). Survole pour tester, clique pour appliquer.'], depart: 2 },
+          { capture: { type: 'pinceaugraphique' } },
+          { capture: { type: 'graphique', cats: ['Jan', 'Fév', 'Mar', 'Avr'], series: [{ nom: 'Ventes', couleur: '#e8853a', vals: [12, 19, 15, 24] }], titre: 'Ventes par mois', legende: 'APRÈS : palette Monochrome orange appliquée via l\'onglet Couleur (avant, les barres étaient turquoise).' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La 3e icône flottante, le **▽ filtre**, choisit ce qui s\'affiche, sans toucher aux données.',
+      visuel: {
+        type: 'methode',
+        titre: 'Le raccourci filtre',
+        blocs: [
+          { etapes: ['Sélectionne le graphique, puis clique le **▽ filtre** (3e icône flottante, juste à droite).'] },
+          { capture: { type: 'boutonsgraphique', bouton: 'filtre' } },
+          { etapes: ['Onglet **Valeurs** : coche/décoche les **séries** et les **catégories** (ici on décoche Avr), puis **Appliquer**.'], depart: 2 },
+          { capture: { type: 'filtregraphique' } },
+          { capture: { type: 'graphique', cats: ['Jan', 'Fév', 'Mar'], series: [{ nom: 'Ventes', vals: [12, 19, 15] }], titre: 'Ventes par mois', legende: 'APRÈS : « Avr » est masqué du graphique (avant, il y avait 4 barres ; les données sources n\'ont pas bougé).' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
       dit: 'Le **titre** se modifie directement.',
       visuel: {
         type: 'methode',
@@ -3287,7 +3393,7 @@ const MODIFIERGRAPHIQUE = {
         blocs: [
           { etapes: ['**Double-clique** le titre du graphique.'] },
           { etapes: ['Tape ton nouveau texte, puis clique ailleurs pour valider.'], depart: 2 },
-          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', surbrillance: 'titre', legende: 'Le titre (encadré) devient modifiable au double-clic.' } },
+          { capture: { type: 'titregraphique' } },
         ],
       },
     },
@@ -3323,6 +3429,26 @@ const AXESGRAPHIQUE = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Astuce de pro : pour sélectionner **précisément** un élément (surtout s\'il est petit), passe par la **Sélection active**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Choisir un élément avec la Sélection active',
+        blocs: [
+          { etapes: ['Voici le graphique de **départ** : on veut modifier l\'**axe vertical** (l\'échelle des valeurs), un élément fin, facile à rater à la souris.'] },
+          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', legende: 'AVANT : l\'axe vertical est fin et discret.' } },
+          { etapes: ['Sélectionne le graphique, puis onglet **Format** (Mise en forme) : **tout à gauche** du ruban, le groupe **Sélection active** et sa grande **liste déroulante**.'], depart: 2 },
+          { capture: { type: 'selectionactive', element: 'Axe vertical (Valeurs)' } },
+          { etapes: ['Clique la **flèche ▾**, choisis **Axe vertical (Valeurs)** dans la liste, puis clique **Mise en forme de la sélection**.'], depart: 3 },
+          { capture: { type: 'menu', items: [{ label: 'Zone de graphique' }, { label: 'Zone de traçage' }, { label: 'Axe horizontal (Catégories)' }, { label: 'Axe vertical (Valeurs)', actif: true }, { label: 'Titre du graphique' }, { label: 'Légende' }] } },
+          { capture: { type: 'voletformat', titre: 'Mettre en forme la sélection' } },
+          { etapes: ['Ajuste le remplissage ou la bordure : le changement s\'applique **en direct** sur l\'axe.'], depart: 4 },
+          { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', surbrillance: 'axeY', legende: 'APRÈS : l\'axe vertical a pris la couleur turquoise et un trait plus épais, choisis dans le volet.' } },
+          { note: 'Ce volet **Mettre en forme…** marche pour **n\'importe quel élément** (série, axe, titre, légende) : remplissage, bordure, effets. C\'est aussi comme ça qu\'on personnalise le **style** en profondeur.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Dans la boîte « Format de l\'axe », que peux-tu régler ?',
       visuel: { type: 'question', options: ['La couleur des barres uniquement', 'Le style de police uniquement', 'Les limites (min/max) et les unités'], bonne: 2, explication: 'Les Options d\'axe règlent surtout les limites (minimum, maximum) et les unités (principale, secondaire), c\'est-à-dire l\'échelle.' },
@@ -3351,7 +3477,7 @@ const SERIESGRAPHIQUE = {
           { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'], actif: 'Création de graphique', groupeNom: 'Données', groupes: [{ icone: '🔁', label: 'Intervertir les\nlignes/colonnes' }, { icone: '⊞', label: 'Sélectionner\ndes données', actif: true }] } },
           { capture: { type: 'selectionnerdonnees', series: ['Ebook Excel', 'Ebook Shaolin'], selection: 0 } },
           { etapes: ['Dans la fenêtre, utilise les flèches **↑ ↓** pour changer l\'ordre des séries.'], depart: 3 },
-          { note: 'Les boutons **Ajouter** / **Modifier** / **Supprimer** gèrent les séries une à une.', label: 'Astuce' },
+          { note: 'Les boutons **Ajouter / Modifier / Supprimer** (juste au-dessus de la liste des séries) gèrent les séries une à une : en ajouter une nouvelle, corriger une existante, en retirer une.', label: 'Astuce' },
         ],
       },
     },
@@ -3369,9 +3495,32 @@ const SERIESGRAPHIQUE = {
       },
     },
     {
-      humeur: 'accueil',
-      dit: 'Tu peux aussi changer le **type d\'une série** : clic droit dessus > **Modifier le type de graphique de série**.',
-      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Changer le type d\'une seule série (ex. la passer en courbe) est le premier pas vers un **graphique mixte**, qu\'on verra au dernier module.' },
+      humeur: 'pensif',
+      dit: 'Gagne du temps : au lieu de chercher dans le ruban, **clique droit** directement sur un élément (barre, courbe, axe, titre).',
+      visuel: {
+        type: 'methode',
+        titre: 'Le clic droit, ton raccourci',
+        blocs: [
+          { etapes: ['**Clique droit** sur une série (ou un axe, un titre…) : un menu avec ses commandes s\'ouvre juste à côté.'] },
+          { capture: { type: 'clicdroitgraphique' } },
+          { note: '**Sélection rapide** : cliquer un élément le sélectionne seul (ex. la série « Ebook Excel »), et le clic droit donne accès à SES commandes : modifier le type, sélectionner des données, étiquettes, courbe de tendance, mise en forme, supprimer.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Tu peux **changer le type** de tout le graphique (ou d\'une seule série) à tout moment.',
+      visuel: {
+        type: 'methode',
+        titre: 'Modifier le type de graphique',
+        blocs: [
+          { etapes: ['Onglet **Création de graphique** > groupe **Type** > **Modifier le type de graphique**.'] },
+          { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'], actif: 'Création de graphique', groupeNom: 'Type', groupes: [{ icone: '🔄', label: 'Modifier le type\nde graphique', actif: true }] } },
+          { etapes: ['À gauche, choisis la **catégorie** ; au centre, le **type/sous-type** ; puis **OK**.'], depart: 2 },
+          { capture: { type: 'typegraphiquedialog', categorie: 0 } },
+          { note: 'Passe la souris sur chaque vignette pour un **aperçu en direct** sur ton graphique avant de valider.', label: 'Astuce' },
+        ],
+      },
     },
     {
       humeur: 'accueil',
@@ -3397,8 +3546,10 @@ const DEPLACERIMPRIMER = {
         blocs: [
           { etapes: ['Sélectionne le graphique, onglet **Création de graphique** > **Déplacer le graphique**.'] },
           { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'], actif: 'Création de graphique', groupeNom: 'Emplacement', groupes: [{ icone: '↗', label: 'Déplacer le\ngraphique', actif: true }] } },
-          { etapes: ['Choisis **Nouvelle feuille** (une page dédiée) ou **Objet dans** (une autre feuille existante), puis **OK**.'], depart: 2 },
+          { etapes: ['**Nouvelle feuille** : le graphique devient un **onglet à part entière**, sans cellules autour. Saisis son nom, puis **OK**.'], depart: 2 },
           { capture: { type: 'deplacergraphiquedialog', selection: 0 } },
+          { etapes: ['**Objet dans** : le graphique reste **intégré** dans une feuille existante. Choisis la feuille dans la **liste déroulante**, puis **OK**.'], depart: 3 },
+          { capture: { type: 'deplacergraphiquedialog', selection: 1 } },
         ],
       },
     },
@@ -3411,9 +3562,11 @@ const DEPLACERIMPRIMER = {
         blocs: [
           { etapes: ['**Sélectionne** le graphique : clique son **bord** (les poignées apparaissent).'] },
           { capture: { type: 'graphique', ...GRAPH_MOIS, titre: 'Ventes par mois', poignees: true, legende: 'Graphique sélectionné : son cadre et ses 8 poignées sont visibles.' } },
-          { etapes: ['**Fichier > Imprimer** : l\'aperçu ne montre que le graphique.'], depart: 2 },
-          { capture: { type: 'imprimergraphique' } },
-          { note: 'Si **aucun** graphique n\'est sélectionné, Excel imprime **toute la feuille active** (données + graphique).', label: 'Bon à savoir' },
+          { etapes: ['Clique l\'onglet **Fichier** (tout à gauche du ruban), puis **Imprimer** (raccourci **Ctrl + P**, Mac **⌘ + P**).'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Fichier', groupeNom: 'Dans le menu Fichier', groupes: [{ icone: '🖨', label: 'Imprimer', actif: true }] } },
+          { etapes: ['L\'écran **Imprimer** s\'ouvre en entier : le menu Fichier à gauche, les **Paramètres** au centre (vérifie **Imprimer la sélection**), et l\'**aperçu** à droite : on ne voit QUE ton graphique.'], depart: 3 },
+          { capture: { type: 'backstageimprimer', parametre: 'Imprimer la sélection', legende: 'La vraie vue Fichier > Imprimer : le menu à gauche (Imprimer surligné), les paramètres au centre avec « Imprimer la sélection » (encadré), et l\'aperçu du graphique seul à droite (1 sur 1).' } },
+          { note: 'Si **aucun** graphique n\'est sélectionné, le paramètre affiche « Imprimer les feuilles actives » : Excel imprime alors **toute la feuille** (données + graphique).', label: 'Bon à savoir' },
         ],
       },
     },
@@ -3427,6 +3580,8 @@ const DEPLACERIMPRIMER = {
           { etapes: ['Clique le **bord** du graphique pour le sélectionner en entier.'] },
           { etapes: ['Appuie sur **Suppr**.'], depart: 2 },
           { capture: { type: 'touche', touches: ['Suppr'], note: 'Clique d\'abord le bord (tout le graphique). Si tu cliques un élément interne, Suppr n\'enlève que cet élément (ex. la légende).' } },
+          { etapes: ['Si le graphique est sur sa **propre feuille** : clic droit sur l\'onglet de cette feuille (en bas) > **Supprimer**.'], depart: 3 },
+          { capture: { type: 'clicdroitonglet' } },
         ],
       },
     },
@@ -3482,7 +3637,23 @@ const MIXTESPARKLINE = {
           { capture: { type: 'ruban', actif: 'Insertion', groupeNom: 'Sparklines', groupes: [{ icone: '〰', label: 'Courbe', actif: true }, { icone: '▁▃▅', label: 'Histogramme' }, { icone: '±', label: 'Conclusion' }] } },
           { etapes: ['Indique la **plage de données** et la **cellule de destination**, puis **OK**.'], depart: 3 },
           { capture: { type: 'champs', titre: 'Créer des Sparklines', champs: [{ l: 'Plage de données', v: 'B2:F2', actif: true }, { l: 'Emplacement', v: '$G$2', actif: true }] } },
-          { note: 'Étire la **poignée de recopie** vers le bas pour l\'appliquer aux autres lignes, puis personnalise via l\'onglet **Sparkline**.', label: 'Astuce' },
+          { etapes: ['Le sparkline apparaît dans la cellule ; étire la **poignée de recopie** vers le bas pour l\'appliquer aux autres lignes. Voici le **rendu** :'], depart: 4 },
+          { capture: { type: 'sparklines' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un sparkline se **modifie** et se **supprime** facilement.',
+      visuel: {
+        type: 'methode',
+        titre: 'Modifier ou supprimer un sparkline',
+        blocs: [
+          { etapes: ['Sélectionne la cellule du sparkline : l\'onglet **Sparkline** apparaît. Tu peux **Modifier les données** (la plage source), choisir un **style**, une **couleur**, ou ajouter des **marqueurs**.'] },
+          { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Sparkline'], actif: 'Sparkline', groupeNom: 'Sparkline', groupes: [{ icone: '✎', label: 'Modifier les\ndonnées' }, { icone: '〰', label: 'Style' }, { icone: '🎨', label: 'Couleur' }, { icone: '●', label: 'Marqueurs', actif: true }] } },
+          { capture: { type: 'sparklines', marqueurs: true } },
+          { etapes: ['Pour **supprimer** : sélectionne la cellule puis **Suppr**, ou onglet Sparkline > **Supprimer** > **Supprimer les Sparklines**.'], depart: 2 },
+          { capture: { type: 'menu', items: [{ label: 'Supprimer les Sparklines', actif: true }, { label: 'Supprimer les groupes de Sparklines' }] } },
         ],
       },
     },
@@ -3505,9 +3676,13 @@ const EX9 = {
   ex70c: { titre: 'Exercice 70 · TCD multi-tables — Correction', url: U9('1lQ8RwFBBSNEm--jGjSpWuEhLEWgwrCYQ') },
 }
 const CONSO_ENTETES = ['Produit', 'CA']
-const CONSO_JAN = [['Ebook Excel', '12'], ['Ebook Shaolin', '9'], ['Formations', '7']]
+const CONSO_FEUILLES = ['Janvier', 'Février', 'Mars', 'Synthèse']
+const CONSO_JAN = [['Ebook Excel', '12 400 €'], ['Ebook Shaolin', '9 100 €'], ['Formations', '7 300 €']]
+const CONSO_FEV = [['Ebook Excel', '13 800 €'], ['Ebook Shaolin', '9 700 €'], ['Formations', '6 900 €']]
+const CONSO_MARS = [['Ebook Excel', '12 000 €'], ['Ebook Shaolin', '9 700 €'], ['Formations', '7 700 €']]
 const CONSO_VIDE = [['Ebook Excel', ''], ['Ebook Shaolin', ''], ['Formations', '']]
-const CONSO_TOTAL = [['Ebook Excel', '45'], ['Ebook Shaolin', '33'], ['Formations', '25']]
+const CONSO_TOTAL = [['Ebook Excel', '38 200 €'], ['Ebook Shaolin', '28 500 €'], ['Formations', '21 900 €']]
+const TCD_FEUILLES = ['Ventes', 'Zones Vente', 'Vendeurs']
 
 // --- Leçon 1 : Rappel, la référence 3D ---
 const RAPPEL3D = {
@@ -3552,7 +3727,19 @@ const CONSOPOSITION = {
   titre: 'La consolidation par position',
   exercices: [EX9.ex67, EX9.ex68],
   narration: [
-    { humeur: 'accueil', dit: 'La **consolidation** fusionne plusieurs tableaux en une vue d\'ensemble. La version **par position** marche quand tes tableaux ont la **même structure** et la **même disposition** : seules les **valeurs** changent.', visuel: { type: 'tableaudonnees', brut: true, entetes: CONSO_ENTETES, lignes: CONSO_JAN, legende: 'Feuille « Janvier ». Février et Mars ont exactement la même forme, avec d\'autres chiffres.' } },
+    {
+      humeur: 'accueil',
+      dit: 'La **consolidation** fusionne plusieurs tableaux en une vue d\'ensemble. La version **par position** marche quand tes tableaux ont la **même structure** et la **même disposition** : seules les **valeurs** changent.',
+      visuel: {
+        type: 'methode',
+        blocs: [
+          { etapes: ['Voici le classeur : **3 feuilles sources** (Janvier, Février, Mars, regarde les onglets en bas) + une feuille **Synthèse**. Même structure partout, seules les valeurs changent.'] },
+          { capture: { type: 'tableaudonnees', brut: true, entetes: CONSO_ENTETES, lignes: CONSO_JAN, feuilles: CONSO_FEUILLES, feuilleActive: 'Janvier', legende: 'La feuille « Janvier » (onglet actif en bas).' } },
+          { capture: { type: 'tableaudonnees', brut: true, entetes: CONSO_ENTETES, lignes: CONSO_FEV, feuilles: CONSO_FEUILLES, feuilleActive: 'Février', legende: 'La feuille « Février » : même forme, d\'autres chiffres.' } },
+          { capture: { type: 'tableaudonnees', brut: true, entetes: CONSO_ENTETES, lignes: CONSO_MARS, feuilles: CONSO_FEUILLES, feuilleActive: 'Mars', legende: 'La feuille « Mars » : même forme, d\'autres chiffres.' } },
+        ],
+      },
+    },
     {
       humeur: 'pensif',
       dit: 'Bon à savoir avant de commencer :',
@@ -3566,23 +3753,50 @@ const CONSOPOSITION = {
         titre: 'Consolider par position',
         blocs: [
           { etapes: ['Sur la feuille **Synthèse**, prépare un tableau **vide** aux mêmes étiquettes et au même endroit, et clique la 1re cellule de résultat.'] },
-          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: CONSO_ENTETES, lignes: CONSO_VIDE, legende: 'Feuille « Synthèse » : mêmes produits, colonne CA vide, prête à recevoir le total.' } },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: CONSO_ENTETES, lignes: CONSO_VIDE, feuilles: CONSO_FEUILLES, feuilleActive: 'Synthèse', legende: 'Feuille « Synthèse » (onglet actif) : mêmes produits, colonne CA vide, prête à recevoir le total.' } },
           { etapes: ['Onglet **Données** > groupe **Outils de données** > **Consolider**.'], depart: 2 },
           { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir' }, { icone: '⧉', label: 'Consolider', actif: true }, { icone: '🔗', label: 'Liaisons' }] } },
-          { etapes: ['Dans la fenêtre, choisis la **Fonction** (Somme).'], depart: 3 },
+          { etapes: ['Dans la fenêtre, choisis la **Fonction** : **Somme** (champ encadré ci-dessous).'], depart: 3 },
           { capture: { type: 'consoliderdialog', fonction: 'Somme', focus: 'fonction' } },
-          { etapes: ['Clique dans **Référence**, sélectionne le 1er tableau source, puis **Ajouter**. Répète pour chaque feuille.'], depart: 4 },
+          { etapes: ['Clique dans **Référence**, puis va sur la feuille **Janvier** et sélectionne la plage : Excel l\'encadre et écrit la référence tout seul.'], depart: 4 },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: CONSO_ENTETES, lignes: CONSO_JAN, feuilles: CONSO_FEUILLES, feuilleActive: 'Janvier', legende: 'Sur « Janvier » : la plage sélectionnée (contour bleu) devient la référence Janvier!$B$2:$B$4.' } },
+          { note: 'Le bouton **Parcourir…** de la fenêtre sert à aller chercher une source dans un **autre classeur** (un autre fichier Excel) : il ouvre l\'explorateur de fichiers pour le sélectionner.', label: 'À quoi sert « Parcourir… » ?' },
+          { etapes: ['Clique **Ajouter**, puis répète pour **Février** et **Mars**.'], depart: 5 },
           { capture: { type: 'consoliderdialog', fonction: 'Somme', reference: 'Mars!$B$2:$B$4', refs: ['Janvier!$B$2:$B$4', 'Février!$B$2:$B$4', 'Mars!$B$2:$B$4'], focus: 'ajouter' } },
-          { etapes: ['Coche **Lier aux données source** (recommandé), puis **OK**.'], depart: 5 },
+          { etapes: ['Coche **Lier aux données source** (recommandé), puis **OK**.'], depart: 6 },
           { capture: { type: 'consoliderdialog', fonction: 'Somme', refs: ['Janvier!$B$2:$B$4', 'Février!$B$2:$B$4', 'Mars!$B$2:$B$4'], lier: true } },
-          { capture: { type: 'tableaudonnees', entetes: CONSO_ENTETES, lignes: CONSO_TOTAL, legende: 'Ton tableau consolidé apparaît sur « Synthèse » : la somme des 3 mois, produit par produit.' } },
+          { capture: { type: 'tableaudonnees', entetes: CONSO_ENTETES, lignes: CONSO_TOTAL, feuilles: CONSO_FEUILLES, feuilleActive: 'Synthèse', legende: 'APRÈS : le tableau consolidé sur « Synthèse » = la somme des 3 mois (ex. Ebook Excel : 12 400 + 13 800 + 12 000 = 38 200 €).' } },
         ],
       },
     },
     {
       humeur: 'pensif',
-      dit: 'Deux détails pratiques :',
-      visuel: { type: 'encart', label: 'Bon à savoir', liste: ['Pas besoin de préparer le tableau vide : sur une feuille vierge, coche **Ligne du haut** et **Colonne de gauche** pour que les titres apparaissent tout seuls.', 'Les petits boutons **+ / –** à gauche du résultat sont le **plan** : ils développent (+) ou masquent (–) le détail. Niveau **1** = total global, niveau **2** = totaux intermédiaires + global.'] },
+      dit: 'Bonne nouvelle : tu peux aussi consolider **sans préparer de tableau vide** à l\'avance.',
+      visuel: {
+        type: 'methode',
+        titre: 'Variante rapide : sans tableau préparé',
+        blocs: [
+          { etapes: ['Sur une feuille **vierge**, ouvre **Données > Consolider** et choisis la **fonction** (Somme).'] },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', focus: 'fonction' } },
+          { etapes: ['Sélectionne ta 1re plage source **avec les titres** (ex. Janvier A1:B4), clique **Ajouter**, et répète pour toutes les plages.'], depart: 2 },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: CONSO_ENTETES, lignes: CONSO_JAN, feuilles: CONSO_FEUILLES, feuilleActive: 'Janvier', legende: 'Cette fois on sélectionne AUSSI les titres (Produit, CA) : la plage devient A1:B4.' } },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', reference: 'Mars!$A$1:$B$4', refs: ['Janvier!$A$1:$B$4', 'Février!$A$1:$B$4', 'Mars!$A$1:$B$4'], focus: 'ajouter' } },
+          { etapes: ['Coche **Ligne du haut** et **Colonne de gauche** (section Étiquettes), puis **OK**.'], depart: 3 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', refs: ['Janvier!$A$1:$B$4', 'Février!$A$1:$B$4', 'Mars!$A$1:$B$4'], ligneHaut: true, colGauche: true } },
+          { capture: { type: 'tableaudonnees', entetes: CONSO_ENTETES, lignes: CONSO_TOTAL, feuilles: CONSO_FEUILLES, feuilleActive: 'Synthèse', legende: 'Excel crée le tableau consolidé à l\'emplacement actif, titres compris, sans préparation.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un dernier détail pratique : avec la liaison, des petits boutons **+ / –** apparaissent à gauche du résultat. C\'est le **plan**.',
+      visuel: {
+        type: 'methode',
+        blocs: [
+          { etapes: ['Clique **–** pour masquer le détail d\'un groupe, **+** pour le développer, ou les boutons **1 / 2** (en haut à gauche) pour changer le niveau de tout le tableau : niveau **1** = totaux seuls, niveau **2** = tout le détail.'] },
+          { capture: { type: 'planconso' } },
+        ],
+      },
     },
     {
       humeur: 'accueil',
@@ -3606,13 +3820,20 @@ const CONSOCATEGORIE = {
         type: 'methode',
         titre: 'Consolider par catégorie',
         blocs: [
-          { etapes: ['Clique une cellule vide (feuille **Synthèse**), puis **Données** > **Consolider**.'] },
+          { etapes: ['Regarde d\'abord les **feuilles sources** : les dispositions **diffèrent** d\'une feuille à l\'autre.'] },
+          { capture: { type: 'tableaudonnees', brut: true, entetes: CONSO_ENTETES, lignes: CONSO_JAN, feuilles: CONSO_FEUILLES, feuilleActive: 'Janvier', legende: 'Feuille « Janvier » : 3 produits.' } },
+          { capture: { type: 'tableaudonnees', brut: true, entetes: CONSO_ENTETES, lignes: [['Coaching', '2 900 €'], ['Ebook Shaolin', '9 700 €'], ['Ebook Excel', '12 000 €']], feuilles: CONSO_FEUILLES, feuilleActive: 'Mars', legende: 'Feuille « Mars » : autre ordre, « Coaching » en plus, « Formations » absent. Par position, impossible ; par catégorie, aucun souci !' } },
+          { etapes: ['Clique une cellule vide (feuille **Synthèse**), puis **Données** > **Consolider**.'], depart: 2 },
           { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir' }, { icone: '⧉', label: 'Consolider', actif: true }, { icone: '🔗', label: 'Liaisons' }] } },
-          { etapes: ['Choisis la **Fonction**, puis ajoute chaque tableau **avec ses titres** (ex. Janvier A1:B5), via **Référence** puis **Ajouter**.'], depart: 2 },
-          { capture: { type: 'consoliderdialog', fonction: 'Somme', reference: 'Mars!$A$1:$B$5', refs: ['Janvier!$A$1:$B$5', 'Février!$A$1:$B$5', 'Mars!$A$1:$B$5'], focus: 'ajouter' } },
-          { etapes: ['Coche **Ligne du haut** et **Colonne de gauche** (ce sont les catégories), puis **Lier aux données source** et **OK**.'], depart: 3 },
-          { capture: { type: 'consoliderdialog', fonction: 'Somme', refs: ['Janvier!$A$1:$B$5', 'Février!$A$1:$B$5', 'Mars!$A$1:$B$5'], ligneHaut: true, colGauche: true, lier: true } },
-          { capture: { type: 'tableaudonnees', entetes: CONSO_ENTETES, lignes: [['Ebook Excel', '45'], ['Ebook Shaolin', '33'], ['Formations', '25'], ['Coaching', '']], legende: 'Résultat : toutes les catégories des 3 feuilles. « Coaching », présent dans une seule feuille, apparaît quand même ; les cases sans donnée restent vides.' } },
+          { etapes: ['Choisis la **Fonction** : **Somme** (champ encadré).'], depart: 3 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', focus: 'fonction' } },
+          { etapes: ['Clique dans **Référence** et sélectionne le 1er tableau **avec ses titres** (ex. Janvier A1:B4).'], depart: 4 },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: CONSO_ENTETES, lignes: CONSO_JAN, feuilles: CONSO_FEUILLES, feuilleActive: 'Janvier', legende: 'Titres compris (Produit, CA) : c\'est grâce à eux qu\'Excel reconnaît les catégories.' } },
+          { etapes: ['Clique **Ajouter**, répète pour chaque feuille.'], depart: 5 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', reference: 'Mars!$A$1:$B$4', refs: ['Janvier!$A$1:$B$4', 'Février!$A$1:$B$4', 'Mars!$A$1:$B$4'], focus: 'ajouter' } },
+          { etapes: ['Coche **Ligne du haut** et **Colonne de gauche** (ce sont les catégories), puis **Lier aux données source** et **OK**.'], depart: 6 },
+          { capture: { type: 'consoliderdialog', fonction: 'Somme', refs: ['Janvier!$A$1:$B$4', 'Février!$A$1:$B$4', 'Mars!$A$1:$B$4'], ligneHaut: true, colGauche: true, lier: true } },
+          { capture: { type: 'tableaudonnees', entetes: CONSO_ENTETES, lignes: [['Ebook Excel', '38 200 €'], ['Ebook Shaolin', '28 500 €'], ['Formations', '14 200 €'], ['Coaching', '2 900 €']], feuilles: CONSO_FEUILLES, feuilleActive: 'Synthèse', legende: 'APRÈS : toutes les catégories regroupées par libellé. « Coaching » (présent seulement en Mars) apparaît quand même ; « Formations » (absent de Mars) est totalisé sur ses 2 mois.' } },
         ],
       },
     },
@@ -3630,7 +3851,24 @@ const TCDTABLES = {
   titre: 'TCD multi-tables : préparer les tables',
   exercices: [],
   narration: [
-    { humeur: 'accueil', dit: 'Troisième méthode de consolidation : le **tableau croisé dynamique (TCD) multi-tables**. Il relie plusieurs tables grâce à une **colonne commune** (une « clé »), puis résume tout dans un rapport interactif.', visuel: { type: 'parties', items: [{ label: 'Table **Ventes** : Zones Vente + Montant.' }, { label: 'Table **Zones Vente** : chaque zone (Ohio, Texas…) et son bureau.' }, { label: 'Table **Vendeurs** : chaque vendeur, sa date d\'entrée, son grade.' }, { label: 'La **clé partagée** (Zones Vente, Vendeurs) relie ces tables entre elles.' }] } },
+    {
+      humeur: 'accueil',
+      dit: 'Troisième méthode de consolidation : le **tableau croisé dynamique (TCD) multi-tables**. Il relie plusieurs tables grâce à une **colonne commune** (une « clé »), puis résume tout dans un rapport interactif.',
+      visuel: {
+        type: 'methode',
+        blocs: [
+          { etapes: ['Voici le classeur de travail : **3 feuilles** (regarde les onglets en bas) = **3 tables** à relier.'] },
+          { capture: { type: 'tableaudonnees', brut: true, entetes: ['Zones Vente', 'Montant'], lignes: [['Ohio', '8 200 €'], ['Texas', '12 500 €'], ['Ohio', '6 400 €']], feuilles: TCD_FEUILLES, feuilleActive: 'Ventes', legende: 'Feuille « Ventes » : chaque vente, avec sa zone et son montant.' } },
+          { capture: { type: 'tableaudonnees', brut: true, entetes: ['Zones Vente', 'Bureau'], lignes: [['Ohio', 'Cleveland'], ['Texas', 'Dallas']], feuilles: TCD_FEUILLES, feuilleActive: 'Zones Vente', legende: 'Feuille « Zones Vente » : chaque zone et son bureau.' } },
+          { capture: { type: 'tableaudonnees', brut: true, entetes: ['Vendeurs', 'Zones Vente', 'Grade'], lignes: [['Marie', 'Ohio', 'Senior'], ['Karim', 'Texas', 'Junior'], ['Léa', 'Ohio', 'Senior']], feuilles: TCD_FEUILLES, feuilleActive: 'Vendeurs', legende: 'Feuille « Vendeurs » : chaque vendeur, sa zone et son grade.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour que le TCD combine ces trois tables, il faut au minimum une **clé partagée** :',
+      visuel: { type: 'parties', items: [{ label: 'La colonne **Zones Vente** relie la feuille Ventes à la feuille Zones Vente.' }, { label: 'La colonne **Zones Vente** des Vendeurs les relie aussi aux ventes de leur zone.' }, { label: 'Une clé partagée = une colonne qui porte le **même nom** et les **mêmes valeurs** (Ohio, Texas…) dans les deux tables.' }] },
+    },
     {
       humeur: 'pensif',
       dit: 'Étape indispensable : transformer chaque plage en **vrai Tableau** nommé.',
@@ -3638,15 +3876,16 @@ const TCDTABLES = {
         type: 'methode',
         titre: 'Transforme chaque plage en Table',
         blocs: [
-          { etapes: ['Sélectionne le tableau (feuille **Ventes**).'] },
-          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: ['Zones Vente', 'Montant'], lignes: [['Ohio', '8 200 €'], ['Texas', '12 500 €'], ['Ohio', '6 400 €']], legende: 'On sélectionne la plage entière, titres compris.' } },
+          { etapes: ['Sélectionne le tableau de la feuille **Ventes** (regarde l\'onglet actif en bas).'] },
+          { capture: { type: 'tableaudonnees', brut: true, selection: true, entetes: ['Zones Vente', 'Montant'], lignes: [['Ohio', '8 200 €'], ['Texas', '12 500 €'], ['Ohio', '6 400 €']], feuilles: TCD_FEUILLES, feuilleActive: 'Ventes', legende: 'Sur la feuille « Ventes » : on sélectionne la plage entière, titres compris.' } },
           { etapes: ['Onglet **Accueil** > **Mettre sous forme de tableau** (ou **Ctrl + L**, Mac **⌘ + L**), coche **« Ma table comporte des en-têtes »**.'], depart: 2 },
           { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme\nconditionnelle' }, { icone: '▧', label: 'Mettre sous\nforme de tableau', actif: true }, { icone: '🎨', label: 'Styles de\ncellules' }] } },
           { capture: { type: 'champs', titre: 'Créer un tableau', champs: [{ l: 'Où sont les données de votre tableau ?', v: '=$A$1:$B$4', actif: true }, { l: 'Ma table comporte des en-têtes', check: true }] } },
+          { capture: { type: 'tableaudonnees', filtres: true, entetes: ['Zones Vente', 'Montant'], lignes: [['Ohio', '8 200 €'], ['Texas', '12 500 €'], ['Ohio', '6 400 €']], feuilles: TCD_FEUILLES, feuilleActive: 'Ventes', legende: 'APRÈS : la plage est devenue un vrai tableau Excel (lignes en couleurs alternées + flèches de filtre).' } },
           { etapes: ['Renomme la table via l\'onglet **Création de tableau** > **Nom du tableau** (ex. **T_ventes**).'], depart: 3 },
           { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de tableau'], actif: 'Création de tableau', groupeNom: 'Propriétés', groupes: [{ icone: '🏷', label: 'Nom du\ntableau', actif: true }] } },
           { capture: { type: 'champs', titre: 'Propriétés', champs: [{ l: 'Nom du tableau', v: 'T_ventes', actif: true }] } },
-          { note: 'Répète pour les deux autres feuilles : **T_zones** et **T_vendeurs**. Des noms clairs rendent les relations bien plus faciles à créer ensuite.', label: 'Bon à savoir' },
+          { note: 'Fais pareil pour **chaque feuille** du classeur : la feuille Zones Vente devient **T_zones**, la feuille Vendeurs devient **T_vendeurs**. À la fin, tes **3 tables nommées** sont prêtes à être reliées.', label: 'Important' },
         ],
       },
     },
@@ -3671,10 +3910,17 @@ const TCDRELATIONS = {
         type: 'methode',
         titre: 'Créer le TCD à partir du modèle de données',
         blocs: [
-          { etapes: ['Place-toi dans la cellule cible, puis **Insertion** > **Tableau croisé dynamique** > **À partir d\'un tableau/plage**.'] },
+          { etapes: ['Ajoute une **nouvelle feuille** (ex. « TCD ») et clique la **cellule** où poser le rapport.'] },
+          { capture: { type: 'tableur', feuilles: ['Ventes', 'Zones Vente', 'Vendeurs', 'TCD'], feuilleActive: 'TCD', cols: ['A', 'B'], rows: [1, 2, 3], cells: {}, actif: 'A3', legende: 'Une feuille « TCD » toute neuve (onglet actif en bas) ; on clique la cellule A3.' } },
+          { etapes: ['**Insertion** > **Tableau croisé dynamique** > **À partir d\'un tableau/plage**.'], depart: 2 },
           { capture: { type: 'ruban', actif: 'Insertion', groupeNom: 'Tableaux', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique', actif: true }, { icone: '📋', label: 'Tableau' }] } },
-          { etapes: ['Sélectionne une table (T_ventes), coche **« Ajouter ces données au modèle de données »**, puis **OK**.'], depart: 2 },
-          { capture: { type: 'champs', titre: 'Tableau croisé dynamique', champs: [{ l: 'Table/plage', v: 'T_ventes', actif: true }, { l: 'Feuille de calcul existante', check: true }, { l: 'Ajouter ces données au modèle de données', check: true }] } },
+          { etapes: ['Dans la fenêtre, choisis la **table** (T_ventes), puis coche **« Feuille de calcul existante »** pour placer le TCD dans la feuille que tu viens de créer (l\'emplacement indique la cellule cliquée).'], depart: 3 },
+          { capture: { type: 'champs', titre: 'Tableau croisé dynamique', champs: [{ l: 'Table/plage', v: 'T_ventes', actif: true }, { l: 'Nouvelle feuille de calcul', check: false }, { l: 'Feuille de calcul existante', check: true }, { l: 'Emplacement', v: 'TCD!$A$3', actif: true }] } },
+          { etapes: ['Coche **« Ajouter ces données au modèle de données »**, puis **OK**.'], depart: 4 },
+          { capture: { type: 'champs', titre: 'Tableau croisé dynamique', champs: [{ l: 'Table/plage', v: 'T_ventes' }, { l: 'Feuille de calcul existante', check: true }, { l: 'Ajouter ces données au modèle de données', check: true }] } },
+          { note: 'Cette case est **indispensable** pour un TCD **multi-tables** : c\'est le **modèle de données** qui permet de relier tes tables entre elles. Sans elle, pas de relations possibles.', label: 'Hyper important' },
+          { etapes: ['Après **OK**, ton TCD est **prêt à être configuré** : la zone du rapport à gauche, et la fenêtre **Champs de tableau croisé dynamique** dockée à droite de la feuille.'], depart: 5 },
+          { capture: { type: 'vuetcd', legende: 'La feuille entière : la zone du rapport (à gauche, encore vide) + la fenêtre des champs, à droite. C\'est là que tout va se jouer.' } },
         ],
       },
     },
@@ -3691,9 +3937,14 @@ const TCDRELATIONS = {
           { capture: { type: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], actif: 'Analyse du TCD', groupeNom: 'Calculs', groupes: [{ icone: '🔗', label: 'Relations', actif: true }, { icone: 'ƒ', label: 'Champs,\néléments' }] } },
           { etapes: ['Dans **Gérer les relations**, clique **Nouveau**.'], depart: 3 },
           { capture: { type: 'gererrelations', relations: [] } },
-          { etapes: ['Définis la relation : **Table** (T_ventes) → **Colonne (externe)** (Zones Vente) → **Table associée** (T_zones) → **Colonne associée** (Zones Vente), puis **OK**.'], depart: 4 },
+          { etapes: ['Définis la relation : **Table** (T_ventes) → **Colonne (externe)** (Zones Vente) → **Table associée** (T_zones) → **Colonne associée** (Zones Vente).'], depart: 4 },
           { capture: { type: 'relationdialog', table: 'T_ventes', colonne: 'Zones Vente', tableAssociee: 'T_zones', colonneAssociee: 'Zones Vente' } },
-          { note: 'La clé partagée doit contenir les **mêmes valeurs** des deux côtés (ex. « Ohio », « Texas »). Astuce : **Détection automatique** laisse Excel proposer les liens à partir des noms de colonnes identiques.', label: 'Bon à savoir' },
+          { note: 'Une relation, c\'est un **pont** entre deux tables. **Table** = d\'où part le pont (T_ventes). **Colonne (externe)** = la colonne de départ qui contient le mot commun (Zones Vente). **Table associée** = où arrive le pont (T_zones). **Colonne associée** = la colonne d\'arrivée qui contient les **mêmes mots** (Ohio, Texas…). Ce mot commun, c\'est la **clé partagée** : grâce à lui, Excel sait que la vente « Ohio » et la zone « Ohio » parlent de la même chose.', label: 'Comprendre la relation' },
+          { etapes: ['Valide par **OK**, puis **répète** (Nouveau) pour relier **T_vendeurs** à **T_zones** de la même façon. La fenêtre liste maintenant **tous les liens** entre tes tables.'], depart: 5 },
+          { capture: { type: 'gererrelations', relations: ['T_ventes (Zones Vente)  →  T_zones (Zones Vente)', 'T_vendeurs (Zones Vente)  →  T_zones (Zones Vente)'] } },
+          { etapes: ['Pressée ? **Détection automatique** demande à Excel de créer les liens tout seul, à partir des colonnes qui portent le **même nom**.'], depart: 6 },
+          { capture: { type: 'gererrelations', relations: [], focusDetection: true } },
+          { capture: { type: 'champs', titre: 'Détection automatique des relations', champs: [{ l: 'Détection terminée : 2 relations ont été créées', check: true }] } },
         ],
       },
     },
@@ -3708,7 +3959,9 @@ const TCDRELATIONS = {
           { capture: { type: 'glisserchamptcd' } },
           { etapes: ['Glisse le champ **Montant** (de T_ventes) dans la zone **Valeurs** (Excel calcule la **Somme de Montant**).'], depart: 2 },
           { capture: { type: 'champstcd', tables: [{ nom: 'T_ventes', champs: [{ nom: 'Zones Vente' }, { nom: 'Montant', coche: true }] }, { nom: 'T_vendeurs', champs: [{ nom: 'Vendeurs', coche: true }, { nom: 'Grade' }] }], lignes: ['Vendeurs'], valeurs: ['Somme de Montant'] } },
-          { capture: { type: 'tableaudonnees', entetes: ['Étiquettes de lignes', 'Somme de Montant'], lignes: [['Karim', '18 700 €'], ['Léa', '14 600 €'], ['Marie', '8 200 €']], total: ['Total général', '41 500 €'], legende: 'Le rapport relie chaque vendeur à ses ventes via la relation : Excel va chercher les montants tout seul.' } },
+          { etapes: ['Admire le résultat : un **vrai tableau croisé dynamique**, avec son volet de champs.'], depart: 3 },
+          { capture: { type: 'vuetcd', rapport: true, legende: 'La vue complète : à gauche le rapport TCD (Étiquettes de lignes ▾, Somme de Montant, Total général 41 500 €) ; à droite la fenêtre des champs (Vendeurs coché en Lignes, Somme de Montant en Valeurs).' } },
+          { note: 'Regarde bien ce qui vient de se passer : **Vendeurs** vient de la table T_vendeurs, **Montant** vient de la table T_ventes. Ce rapport croise donc **deux tableaux différents**, et c\'est **grâce aux relations** (la clé partagée Zones Vente) qu\'Excel a pu les combiner. **Sans ces relations**, impossible de calculer les ventes **par vendeur** : on n\'aurait pu totaliser les montants que **par zone de vente** (la seule info présente dans la table Ventes).', label: 'La magie des relations' },
         ],
       },
     },
@@ -3720,4 +3973,517 @@ const TCDRELATIONS = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS }
+// ===================== CHAPITRE 10 : FONCTIONS CONDITIONNELLES (ceinture bleue-marron) =====================
+const U10 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX10 = {
+  ex71: { titre: 'Exercice 71 · La mise en forme conditionnelle', url: U10('1pxcb_TevJZSOLe2CzDjbun4sGE-y43rW') },
+  ex72: { titre: 'Exercice 72 · La fonction SI simple', url: U10('1xX0Nik_L4NRNArhkQpRWeYKCNikEAYcO') },
+  ex73: { titre: 'Exercice 73 · La fonction SI imbriquée, ET, OU', url: U10('18Q9o1iM-L5onhnyPNiugW82GjbOiSCqp') },
+  ex74: { titre: 'Exercice 74 · Les fonctions SI.ENS', url: U10('1eMcGOXxo2JQlkJU--0X_YGtAg0l_fiQq') },
+  ex75: { titre: 'Exercice 75 · Les références semi-relatives', url: U10('1aNsWTtgeRmcWDvvCSTVFgQMbWTL0JLoC') },
+  ex76: { titre: 'Exercice 76 · La gestion des erreurs', url: U10('1Rc6M4Bi4-jCR6d6fH_yLerRKD8VJe09q') },
+}
+
+// --- Leçon 1 : La mise en forme conditionnelle ---
+const MFCONDITIONNELLE = {
+  id: 'fn-mfconditionnelle',
+  titre: 'La mise en forme conditionnelle',
+  exercices: [EX10.ex71],
+  narration: [
+    { humeur: 'accueil', dit: 'La **mise en forme conditionnelle** applique automatiquement un style (couleur, icône, barre) à une cellule **selon son contenu**. En un coup d\'œil, tu repères les valeurs clés. Voici un tableau brut :', visuel: { type: 'mfctableau', avant: true, legende: 'AVANT : rien ne ressort. Difficile de repérer les faibles ou les fortes ventes.' } },
+    {
+      humeur: 'pensif',
+      dit: 'Première famille : **colorer les cellules selon un seuil** (Règles de mise en surbrillance).',
+      visuel: {
+        type: 'methode',
+        titre: 'Règles de mise en surbrillance',
+        blocs: [
+          { etapes: ['Sélectionne ta plage, puis onglet **Accueil** > groupe **Styles** > **Mise en forme conditionnelle**.'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme\nconditionnelle', actif: true }, { icone: '▧', label: 'Mettre sous\nforme de tableau' }, { icone: '🎨', label: 'Styles de\ncellules' }] } },
+          { etapes: ['Choisis **Règles de mise en surbrillance des cellules**, puis le type (ici **Inférieur à**).'], depart: 2 },
+          { capture: { type: 'mfcmenu', actif: 0 } },
+          { capture: { type: 'menu', items: [{ label: 'Supérieur à…' }, { label: 'Inférieur à…', actif: true }, { label: 'Entre…' }, { label: 'Égal à…' }, { label: 'Texte qui contient…' }, { label: 'Une date se situant…' }] } },
+          { etapes: ['Saisis le **seuil** (7000), choisis un **style**, puis **OK**.'], depart: 3 },
+          { capture: { type: 'mfcdialog', titre: 'Inférieur à', valeur: '7000' } },
+          { capture: { type: 'mfctableau', style: 'surbrillance', seuil: 7000, legende: 'APRÈS : les ventes sous 7 000 € (Léa, Nina) ressortent en rouge. On voit tout de suite les plus basses.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Deuxième famille : **mettre en avant les extrêmes** (valeurs hautes/basses).',
+      visuel: {
+        type: 'methode',
+        titre: 'Valeurs de plage haute/basse',
+        blocs: [
+          { etapes: ['Mise en forme conditionnelle > **Règles des valeurs de plage haute/basse**.'] },
+          { capture: { type: 'mfcmenu', actif: 1 } },
+          { capture: { type: 'menu', items: [{ label: '10 valeurs les plus élevées…', actif: true }, { label: '10 valeurs les moins élevées…' }, { label: '10 % les plus élevés…' }, { label: 'Valeurs supérieures à la moyenne' }, { label: 'Valeurs inférieures à la moyenne' }] } },
+          { note: 'Ajuste le nombre ou le pourcentage (ex. les **10 % les plus élevés**), choisis un format, puis **OK**. Parfait pour les meilleures ou pires performances.', label: 'Astuce' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Troisième famille : les **nuances de couleurs**, un dégradé du plus bas au plus haut.',
+      visuel: {
+        type: 'methode',
+        titre: 'Les nuances de couleurs (dégradés)',
+        blocs: [
+          { etapes: ['Sélectionne ta plage, puis Mise en forme conditionnelle > **Nuances de couleurs**.'] },
+          { capture: { type: 'mfcmenu', actif: 3 } },
+          { etapes: ['**Survole** les modèles pour voir l\'effet en direct sur ton tableau, puis **clique** celui qui te convient.'], depart: 2 },
+          { capture: { type: 'menu', items: [{ label: 'Dégradé vert - jaune - rouge', actif: true }, { label: 'Dégradé rouge - jaune - vert' }, { label: 'Dégradé bicolore vert - blanc' }, { label: 'Dégradé bicolore blanc - rouge' }] } },
+          { capture: { type: 'mfctableau', style: 'nuances', legende: 'APRÈS : chaque cellule prend sa teinte selon sa valeur, du vert (élevé) au rouge (bas), en passant par le jaune.' } },
+          { note: 'Pour des comparaisons claires, privilégie un dégradé à **deux couleurs** (vert/rouge) : le vert pour les valeurs élevées, le rouge pour les basses.', label: 'Astuce' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Quatrième famille : les **barres de données**, une barre proportionnelle à la valeur, directement dans la cellule.',
+      visuel: {
+        type: 'methode',
+        titre: 'Les barres de données',
+        blocs: [
+          { etapes: ['Sélectionne ta plage, puis Mise en forme conditionnelle > **Barres de données**.'] },
+          { capture: { type: 'mfcmenu', actif: 2 } },
+          { etapes: ['Choisis un remplissage **dégradé** (fondu subtil) ou **uni** (bande pleine).'], depart: 2 },
+          { capture: { type: 'menu', items: [{ label: 'Remplissage dégradé', actif: true }, { label: 'Remplissage uni' }] } },
+          { capture: { type: 'mfctableau', style: 'barres', legende: 'APRÈS : plus la vente est grande, plus la barre est longue. Un mini-graphique directement dans le tableau !' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Cinquième famille : **classer visuellement avec des icônes** (flèches, feux…).',
+      visuel: {
+        type: 'methode',
+        titre: 'Les jeux d\'icônes',
+        blocs: [
+          { etapes: ['Mise en forme conditionnelle > **Jeux d\'icônes**, puis choisis un style (ex. **3 flèches**).'] },
+          { capture: { type: 'mfcmenu', actif: 4 } },
+          { capture: { type: 'menu', items: [{ label: '3 flèches (colorées)', actif: true }, { label: '3 feux tricolores' }, { label: '5 formes géométriques' }] } },
+          { capture: { type: 'mfctableau', style: 'icones', legende: 'Résultat : flèche verte ▲ pour les fortes ventes, jaune ▬ pour les moyennes, rouge ▼ pour les faibles.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Tu peux **régler toi-même les seuils** d\'un jeu d\'icônes, pour coller à TES paliers.',
+      visuel: {
+        type: 'methode',
+        titre: 'Modifier les plages d\'un jeu d\'icônes',
+        blocs: [
+          { etapes: ['Mise en forme conditionnelle > **Gérer les règles**.'] },
+          { capture: { type: 'mfcmenu', actif: 7 } },
+          { etapes: ['Sélectionne la règle, clique **Modifier la règle…**'], depart: 2 },
+          { capture: { type: 'gestionregles', regles: [{ desc: 'Jeu d\'icônes (3 flèches)', plage: '=$B$2:$B$6' }], selection: 0 } },
+          { etapes: ['Change les **valeurs** de chaque icône (ex. ▲ si ≥ 67, ▬ si ≥ 33, ▼ sinon), puis **OK** (2 fois).'], depart: 3 },
+          { capture: { type: 'regleicones', lignes: [{ icone: '▲', c: '#1f9d57', op: '≥', val: '67' }, { icone: '▬', c: '#d9a406', op: '≥', val: '33' }, { icone: '▼', c: '#d33', op: '<', val: '33' }] } },
+          { note: 'Adapter les seuils évite les interprétations trompeuses des bornes par défaut, et rend ta lecture instantanée.', label: 'Pourquoi c\'est utile' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Sixième famille : la **règle basée sur une formule**, pour des critères sur mesure.',
+      visuel: {
+        type: 'methode',
+        titre: 'Règle basée sur une formule',
+        blocs: [
+          { etapes: ['Sélectionne ta plage, puis Mise en forme conditionnelle > **Nouvelle règle…**'] },
+          { capture: { type: 'mfcmenu', actif: 5 } },
+          { etapes: ['Choisis **« Utiliser une formule pour déterminer pour quelles cellules le format sera appliqué »**.'], depart: 2 },
+          { etapes: ['Écris une formule qui renvoie **VRAI ou FAUX** (ex. **=B2>=12000**), choisis le **Format…** (ici fond vert), puis **OK**.'], depart: 3 },
+          { capture: { type: 'nouvelleregle', formule: '=B2>=12000' } },
+          { capture: { type: 'mfctableau', style: 'formule', legende: 'APRÈS : la formule renvoie VRAI pour Karim (12 500 €) et Tom (15 800 €) : leurs cellules passent en vert.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Septième famille : la **détection des doublons**, pour repérer les valeurs en double.',
+      visuel: {
+        type: 'methode',
+        titre: 'Détecter les doublons',
+        blocs: [
+          { etapes: ['Sélectionne la colonne à vérifier, puis Mise en forme conditionnelle > Règles de mise en surbrillance > **Valeurs en double…**'] },
+          { capture: { type: 'menu', items: [{ label: 'Supérieur à…' }, { label: 'Inférieur à…' }, { label: 'Texte qui contient…' }, { label: 'Valeurs en double…', actif: true }] } },
+          { etapes: ['Choisis **en double** (ou **uniques** pour l\'inverse) et un style, puis **OK**.'], depart: 2 },
+          { capture: { type: 'mfcdialog', titre: 'Valeurs en double', phrase: 'contenant des valeurs', valeur: 'en double' } },
+          { capture: { type: 'mfctableau', style: 'doublons', data: [['Marie', '8 200 €', 8200], ['Karim', '12 500 €', 12500], ['Marie', '4 300 €', 4300], ['Tom', '15 800 €', 15800], ['Karim', '6 100 €', 6100]], legende: 'APRÈS : « Marie » et « Karim » apparaissent deux fois : toutes leurs occurrences ressortent en rouge. Pratique pour nettoyer une liste !' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Récap : les **7 familles** de règles disponibles.',
+      visuel: { type: 'encart', label: 'Les familles de règles', liste: ['**Surbrillance des cellules** : supérieur/inférieur à, entre, égal à, texte qui contient, date.', '**Valeurs haute/basse** : X plus élevées/basses, X %, au-dessus/en-dessous de la moyenne.', '**Nuances de couleurs** : dégradé bicolore ou tricolore (du min au max).', '**Barres de données** : une barre proportionnelle à la valeur, dans la cellule.', '**Jeux d\'icônes** : 3 flèches, 3 feux, 5 formes… selon des seuils.', '**Règle basée sur une formule** : mise en forme dès qu\'une formule renvoie VRAI.', '**Détection des doublons** : surligne les valeurs en double (ou uniques).'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle mise en forme conditionnelle met en évidence les **valeurs extrêmes** (top/flop) ?',
+      visuel: { type: 'question', options: ['Nuances de couleurs tricolores', 'Règles des valeurs de plage haute/basse', 'Barres de données'], bonne: 1, explication: 'Les « valeurs de plage haute/basse » ciblent précisément les extrêmes : X plus élevées/basses, X %, au-dessus/en-dessous de la moyenne.' },
+    },
+    { humeur: 'fier', dit: 'Tes tableaux parlent d\'eux-mêmes : d\'un regard, tu vois le bon, le moyen, le faible. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : Rappels express, références & noms ---
+const RAPPELREFNOMS = {
+  id: 'fn-rappelrefnoms',
+  titre: 'Rappels express : références & noms',
+  exercices: [],
+  narration: [
+    { humeur: 'accueil', dit: 'Avant les fonctions conditionnelles, deux **rappels** essentiels : les **références** (relatives/absolues) et les **noms**. Ils reviennent tout au long du chapitre.' },
+    {
+      humeur: 'pensif',
+      dit: 'Une **référence relative** s\'adapte quand tu recopies la formule.',
+      visuel: {
+        type: 'methode',
+        titre: 'Références relatives',
+        blocs: [
+          { etapes: ['En **D2**, tape **=B2*C2**. Tire la poignée vers le bas : Excel adapte tout seul.'] },
+          { capture: { type: 'tableur', cols: ['B', 'C', 'D'], rows: [2, 3, 4], cells: { B2: { t: '10' }, C2: { t: '5' }, D2: { t: '=B2*C2', ref: true }, B3: { t: '8' }, C3: { t: '4' }, D3: { t: '=B3*C3', vert: true }, B4: { t: '6' }, C4: { t: '3' }, D4: { t: '=B4*C4', vert: true } }, legende: 'D3 devient =B3*C3, D4 devient =B4*C4 : les lignes suivent la recopie.' } },
+          { note: 'Vers le **bas** : la ligne change (B2→B3). Vers la **droite** : la colonne change (B2→C2).', label: 'À retenir' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Une **référence absolue** fige une cellule avec des **$**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Références absolues (F4)',
+        blocs: [
+          { etapes: ['Pour figer G10 : écris **$G$10**. Astuce : sélectionne la référence et appuie sur **F4** (Mac : **⌘ + T**, ou **Fn + F4**).'] },
+          { capture: { type: 'touche', touches: ['F4'], note: 'Sur Mac : ⌘ + T (ou Fn + F4). Excel transforme G10 en $G$10 : la cellule ne bougera plus, où que tu copies la formule.' } },
+          { capture: { type: 'reffiger' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Les **noms** rendent tes formules lisibles : **=Prix*Quantité** au lieu de =A1*B1.',
+      visuel: {
+        type: 'methode',
+        titre: 'Utiliser les noms',
+        blocs: [
+          { etapes: ['**Nommer** : sélectionne la plage, clique la **zone Nom** (à gauche de la barre de formule), tape le nom (sans espace), **Entrée**.'] },
+          { capture: { type: 'zonenom', nom: 'Prix', ref: 'B2' } },
+          { etapes: ['**Créer d\'un coup** depuis les titres : Formules > Noms définis > **Créer à partir de la sélection** (coche Ligne du haut / Colonne de gauche).'], depart: 2 },
+          { capture: { type: 'listedialog', titre: 'Créer des noms à partir de la sélection', cases: [{ label: 'Ligne du haut', coche: true }, { label: 'Colonne de gauche', coche: false }, { label: 'Ligne du bas', coche: false }, { label: 'Colonne de droite', coche: false }] } },
+          { etapes: ['**Réutiliser** dans une formule : tape **=**, appuie sur **F3** > choisis le nom (ou tape ses premières lettres, il apparaît en haut de la liste).'], depart: 3 },
+          { capture: { type: 'listedialog', titre: 'Coller un nom', items: ['Prix', 'Quantite', 'TVA'], selection: 0 } },
+          { note: 'Règles du nom : commence par une lettre, **pas d\'espace**, pas de doublon, pas une adresse (B2), 255 caractères max. Gère tout via Formules > **Gestionnaire de noms**.', label: 'Syntaxe' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Laquelle de ces notations **verrouille entièrement** la cellule B1 ?',
+      visuel: { type: 'question', options: ['B$1', '$B1', '$B$1', 'B1'], bonne: 2, explication: '$B$1 fige la colonne B ET la ligne 1. B$1 ne fige que la ligne, $B1 que la colonne, B1 rien du tout.' },
+    },
+    { humeur: 'fier', dit: 'Références et noms bien en tête. Place aux fonctions conditionnelles. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : La fonction SI ---
+const FONCTIONSI = {
+  id: 'fn-fonctionsi',
+  titre: 'La fonction SI',
+  exercices: [EX10.ex72],
+  narration: [
+    { humeur: 'accueil', dit: 'La fonction **SI** teste une condition et renvoie une valeur si elle est **vraie**, une autre si elle est **fausse**. Sa syntaxe :', visuel: { type: 'formule', formule: '=SI(test_logique ; valeur_si_vrai ; valeur_si_faux)' } },
+    {
+      humeur: 'pensif',
+      dit: 'Un exemple concret : afficher **OK** si la note dépasse 10, sinon **À refaire**.',
+      visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: '14', ref: true }, B1: { t: '=SI(A1>10;"OK";"À refaire")' }, A2: { t: '' }, B2: { t: 'OK', vert: true } }, formule: '=SI(A1>10;"OK";"À refaire")', actif: 'B1', legende: 'A1 = 14, donc 14 > 10 est vrai : Excel affiche « OK ». Le texte va toujours entre guillemets.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La condition s\'appuie sur des **opérateurs de comparaison** :',
+      visuel: { type: 'operateurs', cols: 1, items: [{ s: '=', l: 'égal à' }, { s: '<>', l: 'différent de' }, { s: '>', l: 'supérieur à' }, { s: '>=', l: 'supérieur ou égal à' }, { s: '<', l: 'inférieur à' }, { s: '<=', l: 'inférieur ou égal à' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Méthode 1 : avec l\'**assistant fonction** (fx), guidé.',
+      visuel: {
+        type: 'methode',
+        titre: 'SI avec l\'assistant (fx)',
+        blocs: [
+          { etapes: ['Clique la cellule, tape **=**, puis le bouton **fx** de la barre de formule. Choisis la catégorie **Logique** > **SI** > OK.'] },
+          { capture: { type: 'assistant', categorie: 'Logique', fonctions: ['NB.SI.ENS', 'OU', 'SI', 'SI.CONDITIONS', 'ET'], selection: 2, signature: 'SI(test_logique; valeur_si_vrai; valeur_si_faux)', description: 'Vérifie si une condition est respectée et renvoie une valeur si VRAI, une autre si FAUX.', focus: 'liste' } },
+          { etapes: ['Remplis chaque **argument**, puis OK : Excel écrit la formule pour toi.'], depart: 2 },
+          { capture: { type: 'arguments', fonction: 'SI', args: [{ label: 'test_logique', ref: 'A1>10', valeur: 'VRAI', obligatoire: true }, { label: 'valeur_si_vrai', ref: '"OK"', valeur: '"OK"', obligatoire: true }, { label: 'valeur_si_faux', ref: '"À refaire"', valeur: '"À refaire"', obligatoire: false }], apercu: 'OK', resultat: 'OK' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Méthode 2 : la **saisie directe**, pas à pas.',
+      visuel: {
+        type: 'methode',
+        titre: 'SI en saisie directe',
+        blocs: [
+          { etapes: ['Dans la cellule, tape **=SI(**'] },
+          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1], cells: { A1: { t: '14', ref: true }, B1: { t: '=SI(' } }, formule: '=SI(', actif: 'B1' } },
+          { etapes: ['Écris le **test**, puis un point-virgule : **A1>10;**'], depart: 2 },
+          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1], cells: { A1: { t: '14', ref: true }, B1: { t: '=SI(A1>10;' } }, formule: '=SI(A1>10;', actif: 'B1' } },
+          { etapes: ['Le **résultat si vrai** entre guillemets, puis **;** : **"OK";**'], depart: 3 },
+          { etapes: ['Le **résultat si faux**, ferme la parenthèse, **Entrée** : **"À refaire")**'], depart: 4 },
+          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1], cells: { A1: { t: '14', ref: true }, B1: { t: 'OK', vert: true } }, formule: '=SI(A1>10;"OK";"À refaire")', actif: 'B1', legende: 'Formule complète, résultat « OK ».' } },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. La fonction **SI** simple renvoie...',
+      visuel: { type: 'question', options: ['le compte des lignes qui remplissent un critère', 'une valeur_si_vrai ou valeur_si_faux selon le test logique', 'la somme des valeurs supérieures à un seuil'], bonne: 1, explication: 'SI teste UNE condition et renvoie une valeur si elle est vraie, une autre si elle est fausse. Compter, c\'est NB.SI ; sommer, c\'est SOMME.SI.' },
+    },
+    { humeur: 'fier', dit: 'Tu sais automatiser une décision avec SI. La brique de base de toute logique Excel. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 4 : SI imbriquée & ET/OU/NON ---
+const SIIMBRIQUE = {
+  id: 'fn-siimbrique',
+  titre: 'SI imbriquée, ET, OU',
+  exercices: [EX10.ex73],
+  narration: [
+    {
+      humeur: 'accueil',
+      dit: 'La **SI imbriquée** teste **plusieurs paliers** dans une seule formule. Concrètement : tu veux commenter la **note** d\'un élève (en B2) selon 4 paliers :',
+      visuel: { type: 'parties', items: [{ label: 'Note **supérieure à 90** : afficher « Excellent »' }, { label: 'Note **supérieure à 75** : afficher « Bien »' }, { label: 'Note **supérieure à 50** : afficher « Passable »' }, { label: '**Sinon** : afficher « Insuffisant »' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Voici la formule qui fait ça. Excel lit de gauche à droite : dès qu\'un test est **faux**, il passe au SI **suivant** (jusqu\'à 64 niveaux possibles).',
+      visuel: { type: 'formule', formule: '=SI(B2>90;"Excellent";SI(B2>75;"Bien";SI(B2>50;"Passable";"Insuffisant")))' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Elle a l\'air longue ? On la construit **argument par argument**, calmement.',
+      visuel: {
+        type: 'methode',
+        titre: 'La SI imbriquée, argument par argument',
+        blocs: [
+          { etapes: ['Place ton curseur dans la cellule de destination (C2) et tape **=SI(**'] },
+          { capture: { type: 'tableur', cols: ['B', 'C'], rows: [1, 2], cells: { B1: { t: 'Note', entete: true }, C1: { t: 'Commentaire', entete: true }, B2: { t: '82', ref: true }, C2: { t: '=SI(' } }, formule: '=SI(', actif: 'C2' } },
+          { etapes: ['Entre le **1er critère** suivi d\'un point-virgule : **B2>90;**'], depart: 2 },
+          { capture: { type: 'formule', formule: '=SI(B2>90;' } },
+          { etapes: ['Le texte à afficher **si c\'est vrai**, entre guillemets, puis **;** : **"Excellent";**'], depart: 3 },
+          { capture: { type: 'formule', formule: '=SI(B2>90;"Excellent";' } },
+          { etapes: ['À la place du « sinon », **relance un SI(** : c\'est ça, l\'imbrication.'], depart: 4 },
+          { capture: { type: 'formule', formule: '=SI(B2>90;"Excellent";SI(' } },
+          { etapes: ['2e palier, même séquence condition ; résultat : **B2>75;"Bien";**'], depart: 5 },
+          { capture: { type: 'formule', formule: '=SI(B2>90;"Excellent";SI(B2>75;"Bien";' } },
+          { etapes: ['3e palier : **SI(B2>50;"Passable";**'], depart: 6 },
+          { capture: { type: 'formule', formule: '=SI(B2>90;"Excellent";SI(B2>75;"Bien";SI(B2>50;"Passable";' } },
+          { etapes: ['Après le dernier SI, la **valeur si tout est faux** : **"Insuffisant"**, puis ferme **autant de parenthèses que de SI** : **)))**'], depart: 7 },
+          { capture: { type: 'formule', formule: '=SI(B2>90;"Excellent";SI(B2>75;"Bien";SI(B2>50;"Passable";"Insuffisant")))' } },
+          { etapes: ['Appuie sur **Entrée**, puis **étire** la formule pour les autres élèves.'], depart: 8 },
+          { capture: { type: 'tableur', cols: ['B', 'C'], rows: [1, 2, 3], cells: { B1: { t: 'Note', entete: true }, C1: { t: 'Commentaire', entete: true }, B2: { t: '82', ref: true }, C2: { t: 'Bien', vert: true }, B3: { t: '45' }, C3: { t: 'Insuffisant', vert: true } }, formule: '=SI(B2>90;"Excellent";SI(B2>75;"Bien";SI(B2>50;"Passable";"Insuffisant")))', actif: 'C2', legende: '82 : pas > 90, mais > 75 → « Bien ». 45 : aucun test vrai → « Insuffisant ».' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour tester **plusieurs conditions ensemble**, glisse **ET**, **OU** ou **NON** dans le SI.',
+      visuel: { type: 'encart', label: 'ET / OU / NON', liste: ['**ET** : VRAI seulement si **toutes** les conditions sont vraies. =SI(ET(c1;c2);vrai;faux)', '**OU** : VRAI si **au moins une** condition est vraie. =SI(OU(c1;c2);vrai;faux)', '**NON** : **inverse** le résultat logique. =SI(NON(condition);vrai;faux)'] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Exemple avec **ET** : « Validé » si le CA dépasse 100 000 € **ET** la satisfaction dépasse 90 %. Les deux à la fois !',
+      visuel: {
+        type: 'methode',
+        titre: 'SI + ET, argument par argument',
+        blocs: [
+          { etapes: ['Voici les données : le CA en B2 (bleu), la satisfaction en C2 (orange). En D2, tape **=SI(**'] },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Zone', entete: true }, B1: { t: 'CA', entete: true }, C1: { t: 'Satisf.', entete: true }, D1: { t: 'Bilan', entete: true }, A2: { t: 'Nord' }, B2: { t: '120 000', ref: true }, C2: { t: '95 %', ref: true }, D2: { t: '=SI(' } }, refsCouleur: { B2: 'bleu', C2: 'ambre' }, formule: '=SI(', actif: 'D2' } },
+          { etapes: ['Insère la fonction **ET** et ouvre sa parenthèse : **ET(**'], depart: 2 },
+          { capture: { type: 'formule', formule: '=SI(ET(' } },
+          { etapes: ['Saisis ta **1re condition**, puis un point-virgule : **B2>100000;**'], depart: 3 },
+          { capture: { type: 'formule', formule: '=SI(ET(B2>100000;' } },
+          { etapes: ['Saisis ta **2e condition** : **C2>90%**'], depart: 4 },
+          { capture: { type: 'formule', formule: '=SI(ET(B2>100000;C2>90%' } },
+          { etapes: ['Ferme la parenthèse **du ET** : **)**'], depart: 5 },
+          { capture: { type: 'formule', formule: '=SI(ET(B2>100000;C2>90%)' } },
+          { etapes: ['La valeur **si VRAI** : **;"Validé"**'], depart: 6 },
+          { capture: { type: 'formule', formule: '=SI(ET(B2>100000;C2>90%);"Validé"' } },
+          { etapes: ['La valeur **si FAUX**, ferme la parenthèse du SI, **Entrée** : **;"À revoir")**'], depart: 7 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Zone', entete: true }, B1: { t: 'CA', entete: true }, C1: { t: 'Satisf.', entete: true }, D1: { t: 'Bilan', entete: true }, A2: { t: 'Nord' }, B2: { t: '120 000', ref: true }, C2: { t: '95 %', ref: true }, D2: { t: 'Validé', vert: true } }, refsCouleur: { B2: 'bleu', C2: 'ambre' }, formule: '=SI(ET(B2>100000;C2>90%);"Validé";"À revoir")', actif: 'D2', legende: 'Les DEUX conditions sont vraies (120 000 > 100 000 ET 95 % > 90 %) → « Validé ».' } },
+          { note: 'N\'oublie pas le **%** dans C2>90% : sans lui, Excel comparerait 0,95 à 90 et le test serait toujours faux.', label: 'Attention' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Même construction avec **OU** : cette fois, **une seule** condition vraie suffit. Regarde la zone Sud…',
+      visuel: {
+        type: 'methode',
+        titre: 'SI + OU, argument par argument',
+        blocs: [
+          { etapes: ['Zone Sud : CA = 100 000 €, satisfaction = 90 %. En D2, tape **=SI(** puis insère **OU(**'] },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Zone', entete: true }, B1: { t: 'CA', entete: true }, C1: { t: 'Satisf.', entete: true }, D1: { t: 'Bilan', entete: true }, A2: { t: 'Sud' }, B2: { t: '100 000', ref: true }, C2: { t: '90 %', ref: true }, D2: { t: '=SI(OU(' } }, refsCouleur: { B2: 'bleu', C2: 'ambre' }, formule: '=SI(OU(', actif: 'D2' } },
+          { etapes: ['1re condition + point-virgule : **B2>100000;**'], depart: 2 },
+          { capture: { type: 'formule', formule: '=SI(OU(B2>100000;' } },
+          { etapes: ['2e condition, puis ferme la parenthèse **du OU** : **C2>90%)**'], depart: 3 },
+          { capture: { type: 'formule', formule: '=SI(OU(B2>100000;C2>90%)' } },
+          { etapes: ['Les 2 résultats, ferme, **Entrée** : **;"Validé";"À revoir")**'], depart: 4 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Zone', entete: true }, B1: { t: 'CA', entete: true }, C1: { t: 'Satisf.', entete: true }, D1: { t: 'Bilan', entete: true }, A2: { t: 'Sud' }, B2: { t: '100 000', ref: true }, C2: { t: '90 %', ref: true }, D2: { t: 'À revoir' } }, refsCouleur: { B2: 'bleu', C2: 'ambre' }, formule: '=SI(OU(B2>100000;C2>90%);"Validé";"À revoir")', actif: 'D2', legende: 'Surprise : « À revoir » ! Pourquoi ? Lis la suite…' } },
+          { note: '100 000 n\'est **pas strictement supérieur** à 100 000, et 90 % n\'est **pas strictement supérieur** à 90 %. Les DEUX tests sont donc faux → OU renvoie FAUX → Excel affiche la partie « sinon » : « À revoir ». Pour inclure la valeur exacte, utilise **>=**.', label: 'En résumé' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Alors, **ET ou OU** ? Retiens la différence avec une image simple.',
+      visuel: { type: 'encart', label: 'ET ou OU ? La différence', liste: ['**ET**, c\'est le videur strict : il exige la carte d\'identité **ET** le billet. Une seule pièce manque ? Tu ne rentres pas (FAUX).', '**OU**, c\'est le videur cool : carte **OU** billet, n\'importe lequel des deux ouvre la porte (VRAI).', 'Mêmes données, résultats différents : CA 120 000 € et satisfaction 85 % → avec **ET** : « À revoir » (une condition rate) ; avec **OU** : « Validé » (une condition suffit).'] },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle fonction renvoie **VRAI seulement si les deux** conditions sont vraies ?',
+      visuel: { type: 'question', options: ['OU(condition1; condition2)', 'SI(condition1; condition2; FAUX)', 'ET(condition1; condition2)'], bonne: 2, explication: 'ET exige que TOUTES les conditions soient vraies (le videur strict). OU se contente d\'une seule vraie (le videur cool).' },
+    },
+    { humeur: 'fier', dit: 'Paliers multiples, conditions combinées, pièges du strictement supérieur : ta logique devient redoutable. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 5 : NB.SI.ENS ---
+const NBSIENS = {
+  id: 'fn-nbsiens',
+  titre: 'La fonction NB.SI.ENS',
+  exercices: [EX10.ex74],
+  narration: [
+    { humeur: 'accueil', dit: '**NB.SI.ENS** parcourt tout ton tableau et **compte** les lignes qui remplissent **plusieurs critères en même temps**, sans vérifier ligne à ligne.', visuel: { type: 'formule', formule: '=NB.SI.ENS(plage1 ; critère1 ; [plage2 ; critère2] ; …)' } },
+    {
+      humeur: 'pensif',
+      dit: 'Chaque **paire plage/critère** ajoute une condition :',
+      visuel: { type: 'parties', items: [{ label: '**Plage1** : la colonne à tester (ex. Genre).' }, { label: '**Critère1** : la condition (texte ou comparaison, ex. "Homme", ">50000").' }, { label: '**Plage2 / critère2, …** : des paires en plus pour affiner.' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Exemple : combien d\'**hommes célibataires gagnent plus de 50 000 €** ?',
+      visuel: {
+        type: 'methode',
+        titre: 'NB.SI.ENS pas à pas',
+        blocs: [
+          { etapes: ['Dans la cellule résultat, tape **=NB.SI.ENS(**'] },
+          { etapes: ['1re paire : sélectionne la colonne **Genre** puis **;"Homme";**'], depart: 2 },
+          { capture: { type: 'tableur', cols: ['B', 'C', 'D'], rows: [1, '⋮', 13], cells: { B1: { t: 'Genre', entete: true }, C1: { t: 'Situation', entete: true }, D1: { t: 'Revenu', entete: true }, B13: { t: '…', ref: true }, C13: { t: '…' }, D13: { t: '…' } }, refsCouleur: { B13: 'bleu' }, formule: '=NB.SI.ENS(B2:B13;"Homme";', actif: 'E2', legende: 'On sélectionne la colonne Genre (B2:B13, en bleu) puis on tape ;"Homme";' } },
+          { etapes: ['2e paire : colonne **Situation** puis **;"Célibataire";** ; 3e paire : colonne **Revenu** puis **;">50000")**'], depart: 3 },
+          { capture: { type: 'tableur', cols: ['B', 'C', 'D', 'E'], rows: [1, 2], cells: { B1: { t: 'Genre', entete: true }, C1: { t: 'Situation', entete: true }, D1: { t: 'Revenu', entete: true }, E1: { t: 'Résultat', entete: true }, B2: { t: '…' }, C2: { t: '…' }, D2: { t: '…' }, E2: { t: '2', vert: true } }, formule: '=NB.SI.ENS(B2:B13;"Homme";C2:C13;"Célibataire";D2:D13;">50000")', actif: 'E2', legende: 'Résultat = 2 : seules 2 lignes (Jean 60 000 €, Antoine 51 000 €) remplissent les 3 conditions à la fois.' } },
+          { note: '**NB.SI** (sans ENS) ne gère qu\'**un seul** critère. Adopte NB.SI.ENS d\'emblée : il gère 1 ou plusieurs critères.', label: 'Bon à savoir' },
+        ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. La fonction **NB.SI.ENS** sert à...',
+      visuel: { type: 'question', options: ['additionner toutes les valeurs d\'une colonne', 'compter les cellules selon plusieurs critères', 'appliquer une mise en forme conditionnelle'], bonne: 1, explication: 'NB.SI.ENS compte le nombre de lignes qui satisfont plusieurs critères. Pour additionner, c\'est SOMME.SI.ENS.' },
+    },
+    { humeur: 'fier', dit: 'Tu comptes des dizaines de lignes en une formule, selon autant de critères que tu veux. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 6 : SOMME.SI.ENS & références semi-relatives ---
+const SOMMESIENS = {
+  id: 'fn-sommesiens',
+  titre: 'SOMME.SI.ENS & semi-relatives',
+  exercices: [EX10.ex75],
+  narration: [
+    { humeur: 'accueil', dit: '**SOMME.SI.ENS** fonctionne comme NB.SI.ENS, mais au lieu de compter, elle **additionne** les valeurs. Attention : ici, la **plage à totaliser vient en premier**.', visuel: { type: 'formule', formule: '=SOMME.SI.ENS(plage_somme ; plage_critères1 ; critère1 ; …)' } },
+    {
+      humeur: 'pensif',
+      dit: 'Exemple : le CA d\'**Alice** dans la région **Est**.',
+      visuel: {
+        type: 'methode',
+        titre: 'SOMME.SI.ENS pas à pas',
+        blocs: [
+          { etapes: ['Tape **=SOMME.SI.ENS(** puis sélectionne la **colonne à totaliser** (Chiffre d\'affaires) : **C2:C13;**'] },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, '⋮', 13], cells: { A1: { t: 'Vendeur', entete: true }, B1: { t: 'Région', entete: true }, C1: { t: 'CA', entete: true }, A13: { t: '…' }, B13: { t: '…' }, C13: { t: '…', ref: true } }, refsCouleur: { C13: 'vert' }, formule: '=SOMME.SI.ENS(C2:C13;', actif: 'F2', legende: 'La plage_somme (CA, en vert) vient en PREMIER.' } },
+          { etapes: ['1er critère : colonne **Vendeur** puis **;"Alice";** ; 2e critère : colonne **Région** puis **;"Est")**'], depart: 2 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C', 'F'], rows: [1, 2], cells: { A1: { t: 'Vendeur', entete: true }, B1: { t: 'Région', entete: true }, C1: { t: 'CA', entete: true }, F1: { t: 'Total Alice/Est', entete: true }, A2: { t: '…' }, B2: { t: '…' }, C2: { t: '…' }, F2: { t: '150 000 €', vert: true } }, formule: '=SOMME.SI.ENS(C2:C13;A2:A13;"Alice";B2:B13;"Est")', actif: 'F2', legende: 'Une seule ligne a Alice + Est : son CA = 150 000 €.' } },
+          { note: 'Pour **recopier** cette formule dans un tableau de synthèse, **fige les plages** avec des $ (F4 / ⌘+T) : $C$2:$C$13, $A$2:$A$13… Elles ne bougeront plus.', label: 'Recopie sans erreur' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Astuce : au lieu de taper le critère entre guillemets, **clique la cellule** du tableau de synthèse qui le contient. La formule s\'adapte à la recopie.',
+      visuel: { type: 'encart', label: 'Critères depuis le tableau', texte: 'Positionne le curseur dans la zone Critère de la formule, puis **clique la cellule** (ex. E2 = « Alice »). Excel inscrit E2. En recopiant, il passe à E3, E4… pour prendre Bob, Claire…' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour qu\'**une seule formule** remplisse tout un tableau croisé (vendeurs en lignes, régions en colonnes) : les **références semi-relatives**.',
+      visuel: {
+        type: 'methode',
+        titre: 'Les références semi-relatives',
+        blocs: [
+          { etapes: ['Pour le vendeur, écris **$E2** : le **$E** fige la colonne (toujours les noms), la **ligne 2 libre** suit la recopie vers le bas ($E3, $E4…).'] },
+          { capture: { type: 'reffiger', items: [{ code: '$E2', role: 'Colonne figée', detail: 'la ligne suit vers le bas' }] } },
+          { etapes: ['Pour la région, écris **F$1** : le **$1** fige la ligne (toujours les en-têtes), la **colonne F libre** suit la recopie vers la droite (G$1, H$1…).'], depart: 2 },
+          { capture: { type: 'reffiger', items: [{ code: 'F$1', role: 'Ligne figée', detail: 'la colonne suit vers la droite' }] } },
+          { note: 'Placée en F2, la formule pointe sur $E2 (Alice) et F$1 (Est). Tirée vers le bas → $E3 (Bob). Tirée vers la droite → G$1 (Ouest). Une seule saisie, tout le tableau se remplit !', label: 'La magie du verrouillage' },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Et pour **un seul critère** ?',
+      visuel: { type: 'encart', label: 'SOMME.SI / NB.SI', texte: '**SOMME.SI** additionne selon un seul critère : =SOMME.SI(plage ; critère ; [plage_somme]). Ici la plage à tester vient d\'abord, puis la plage à sommer, l\'inverse de SOMME.SI.ENS. **NB.SI** compte selon un seul critère.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle fonction **additionne** les valeurs selon **plusieurs** paires plage/critère ?',
+      visuel: { type: 'question', options: ['SOMME(plage)', 'SOMME.SI(plage ; critère ; plage_somme)', 'SOMME.SI.ENS(plage_somme ; plage_critères1 ; critère1 ; …)'], bonne: 2, explication: 'SOMME.SI.ENS gère plusieurs critères (jusqu\'à 127) et met la plage à totaliser en premier. SOMME.SI ne gère qu\'un seul critère.' },
+    },
+    { humeur: 'fier', dit: 'Totaux multicritères et verrouillages intelligents : tu construis des tableaux de synthèse en une formule. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 7 : SIERREUR & les erreurs Excel ---
+const SIERREUR = {
+  id: 'fn-sierreur',
+  titre: 'SIERREUR & les erreurs Excel',
+  exercices: [EX10.ex76],
+  narration: [
+    { humeur: 'accueil', dit: 'Quand une formule génère une **erreur** (division par zéro, recherche infructueuse…), **SIERREUR** l\'attrape et affiche ce que tu veux à la place, pour un tableau propre.', visuel: { type: 'formule', formule: '=SIERREUR(valeur ; valeur_si_erreur)' } },
+    {
+      humeur: 'pensif',
+      dit: 'Ses deux arguments :',
+      visuel: { type: 'parties', items: [{ label: '**valeur** : ta formule normale à tester (ex. A2/B2, une RECHERCHEV…).' }, { label: '**valeur_si_erreur** : ce qui s\'affiche en cas d\'erreur (ex. "-", 0, ou "" pour vide).' }] },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Exemple : protéger une division contre le **#DIV/0!**.',
+      visuel: {
+        type: 'methode',
+        titre: 'SIERREUR pas à pas',
+        blocs: [
+          { etapes: ['Sans protection, **=A2/B2** plante quand B2 vaut 0 : Excel affiche **#DIV/0!**'] },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { A1: { t: 'V1', entete: true }, B1: { t: 'V2', entete: true }, C1: { t: '=A/B', entete: true }, A2: { t: '100' }, B2: { t: '20' }, C2: { t: '5' }, A3: { t: '30' }, B3: { t: '0' }, C3: { t: '#DIV/0!' } }, legende: 'Ligne 3 : 30 ÷ 0 impossible → #DIV/0!' } },
+          { etapes: ['En D2, tape **=SIERREUR(** puis ta formule **A2/B2** et un **;**'], depart: 2 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'D'], rows: [1, 2], cells: { A1: { t: 'V1', entete: true }, B1: { t: 'V2', entete: true }, D1: { t: 'Protégé', entete: true }, A2: { t: '100', ref: true }, B2: { t: '20', ref: true }, D2: { t: '=SIERREUR(A2/B2;' } }, refsCouleur: { A2: 'bleu', B2: 'ambre' }, formule: '=SIERREUR(A2/B2;', actif: 'D2' } },
+          { etapes: ['Écris ce que tu veux voir en cas d\'erreur, puis ferme : **"-")**. Étire vers le bas.'], depart: 3 },
+          { capture: { type: 'tableur', cols: ['A', 'B', 'D'], rows: [1, 2, 3], cells: { A1: { t: 'V1', entete: true }, B1: { t: 'V2', entete: true }, D1: { t: 'Protégé', entete: true }, A2: { t: '100' }, B2: { t: '20' }, D2: { t: '5', vert: true }, A3: { t: '30' }, B3: { t: '0' }, D3: { t: '-', vert: true } }, formule: '=SIERREUR(A2/B2;"-")', actif: 'D2', legende: 'APRÈS : quand la division marche, on voit le résultat (5) ; quand elle plante, un simple tiret « - » au lieu de #DIV/0!.' } },
+        ],
+      },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour t\'aider à diagnostiquer, voici les **erreurs Excel** les plus courantes :',
+      visuel: { type: 'erreursexcel' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Que fait la fonction **SIERREUR** ?',
+      visuel: { type: 'question', options: ['Elle supprime définitivement la formule en erreur', 'Elle renvoie une valeur de remplacement si la formule génère une erreur', 'Elle empêche toute saisie d\'erreur dans la cellule'], bonne: 1, explication: 'SIERREUR teste ta formule : si elle marche, elle renvoie le résultat normal ; si elle plante, elle affiche la valeur de remplacement que tu as choisie (« - », 0, "" …).' },
+    },
+    { humeur: 'fier', dit: 'Tes tableaux restent propres même quand un calcul dérape. Et voilà, ceinture bleue-marron à portée de main. Bravo ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR }

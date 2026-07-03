@@ -1,0 +1,124 @@
+{
+  "chapitre": 10,
+  "titre": "Les fonctions conditionnelles",
+  "niveau": 10,
+  "ceinture": "bleue-marron",
+  "objectif": "Analyser et automatiser tes données avec des conditions : mise en forme conditionnelle (surbrillance, valeurs extrêmes, jeux d'icônes), rappels références/noms, fonction SI et SI imbriquée, ET/OU/NON, NB.SI.ENS et SOMME.SI.ENS avec références semi-relatives, et SIERREUR pour gérer les erreurs.",
+  "note_pedago": "Chapitre COMPLET (7 lecons) : mfconditionnelle (surbrillance/haute-basse/jeux d'icones + modifier les plages + 7 familles, Ex.71), rappelrefnoms (rappel relatives/absolues F4 + noms zone Nom/F3/creer a partir selection, pas d'exo), fonctionsi (SI logique + operateurs + assistant fx + saisie directe, Ex.72), siimbrique (SI imbriquee + ET/OU/NON pas a pas, Ex.73), nbsiens (NB.SI.ENS multicriteres, Ex.74), sommesiens (SOMME.SI.ENS + figer + references semi-relatives $E2/F$1 + SOMME.SI/NB.SI, Ex.75), sierreur (SIERREUR + lexique erreurs Excel, Ex.76) + quiz (7) + checklist (10). Nouveaux composants LeconNarree : mfctableau (avant/apres surbrillance/barres/icones), mfcmenu, mfcdialog, gestionregles, regleicones, erreursexcel. Reutilise tableur (refsCouleur, formule progressive), assistant, arguments, operateurs, reffiger, zonenom, listedialog, touche, parties, encart. Memes regles que ch.3-9 (capture par etape, AVANT/APRES sur la MFC, menus sur support, ton positif, mini-question a bonne variee, raccourcis Mac).",
+  "xp_valeurs_note": "Valeurs XP indicatives, a ajuster.",
+  "modules": [
+    { "id": "ch10-mfconditionnelle", "type": "narration", "lecon": "mfconditionnelle", "titre": "La mise en forme conditionnelle", "xp": 30 },
+    { "id": "ch10-rappelrefnoms", "type": "narration", "lecon": "rappelrefnoms", "titre": "Rappels : références & noms", "xp": 30 },
+    { "id": "ch10-fonctionsi", "type": "narration", "lecon": "fonctionsi", "titre": "La fonction SI", "xp": 30 },
+    { "id": "ch10-siimbrique", "type": "narration", "lecon": "siimbrique", "titre": "SI imbriquée, ET, OU", "xp": 30 },
+    { "id": "ch10-nbsiens", "type": "narration", "lecon": "nbsiens", "titre": "La fonction NB.SI.ENS", "xp": 30 },
+    { "id": "ch10-sommesiens", "type": "narration", "lecon": "sommesiens", "titre": "SOMME.SI.ENS & semi-relatives", "xp": 30 },
+    { "id": "ch10-sierreur", "type": "narration", "lecon": "sierreur", "titre": "SIERREUR & les erreurs", "xp": 30 },
+    {
+      "id": "ch10-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 6,
+      "total": 7,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.10 p460-461 (7 questions), repris verbatim. reponses_correctes = index corrects (0-3).",
+      "questions": [
+        {
+          "id": "ch10-qcm-01",
+          "question": "Quelle mise en forme conditionnelle met en évidence les valeurs extrêmes ?",
+          "options": ["Nuances de couleurs tricolores", "Barres de données", "Règles des valeurs de plage haute/basse", "Jeux d'icônes"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch10-qcm-02",
+          "question": "Laquelle de ces notations indique que la cellule B1 est verrouillée ?",
+          "options": ["B$1", "$B1", "$B$1", "B1"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch10-qcm-03",
+          "question": "La fonction SI simple retourne :",
+          "options": ["Une valeur_si_vrai ou valeur_si_faux selon le test logique", "Le compte des lignes correspondant à un critère", "La somme des valeurs supérieures à un seuil", "Une icône selon un palier de valeurs"],
+          "reponses_correctes": [0]
+        },
+        {
+          "id": "ch10-qcm-04",
+          "question": "La fonction SOMME.SI.ENS sert à :",
+          "options": ["Additionner toutes les valeurs d'une colonne quelle que soit la condition", "Compter les cellules selon plusieurs critères", "Totaliser les valeurs d'une plage selon plusieurs paires plage/critère", "Appliquer une mise en forme conditionnelle"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch10-qcm-05",
+          "question": "Quelle option du ruban Excel permet d'accéder aux « Jeux d'icônes » ?",
+          "options": ["Données > Validation des données", "Accueil > Styles > Mise en forme conditionnelle > Jeux d'icônes", "Insertion > Icônes", "Accueil > Styles > Format de cellule"],
+          "reponses_correctes": [1]
+        },
+        {
+          "id": "ch10-qcm-06",
+          "question": "Quelle fonction renvoie VRAI si deux conditions sont toutes vraies ?",
+          "options": ["OU(condition1 ; condition2)", "SI(condition1 ; condition2 ; FAUX)", "ET(condition1 ; condition2)", "SIERREUR(condition1 ; condition2)"],
+          "reponses_correctes": [2]
+        },
+        {
+          "id": "ch10-qcm-07",
+          "question": "Quelle fonction compte les cellules selon plusieurs critères ?",
+          "options": ["NB.SI(plage ; critère)", "NB.SI.ENS(plage1 ; critère1 ; plage2 ; critère2)", "NBVAL(plage)", "NB.VIDE(plage)"],
+          "reponses_correctes": [1]
+        }
+      ]
+    },
+    {
+      "id": "ch10-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist du dojo pour le ch.10 (l'ebook n'a pas de checklist dédiée, il a un Checkpoint p463).",
+      "a_valider": false,
+      "items": [
+        "Je sais appliquer une règle de mise en surbrillance (supérieur/inférieur à, entre, texte, date).",
+        "Je mets en évidence les valeurs extrêmes (X plus élevées/basses, %, moyenne).",
+        "J'applique un jeu d'icônes et je sais modifier ses seuils via Gérer les règles.",
+        "Je distingue une référence relative, absolue ($B$1) et semi-relative ($E2, F$1).",
+        "J'écris une fonction SI simple avec ses trois arguments et les guillemets pour le texte.",
+        "Je construis une SI imbriquée en fermant autant de parenthèses que de SI.",
+        "Je combine SI avec ET (toutes vraies) et OU (au moins une vraie).",
+        "J'utilise NB.SI.ENS pour compter selon plusieurs critères.",
+        "J'utilise SOMME.SI.ENS (plage à totaliser en premier) et je fige les plages pour recopier.",
+        "Je protège mes formules avec SIERREUR et je sais lire les erreurs (#DIV/0!, #VALEUR!, #NOM ?, #N/A…)."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["mise en forme conditionnelle", "surbrillance", "icônes", "couleur", "seuil"],
+      "question": "Comment colorer automatiquement des cellules selon leur valeur ?",
+      "reponse": "Sélectionne ta plage, puis Accueil > Styles > Mise en forme conditionnelle. « Règles de mise en surbrillance » colore selon un seuil (supérieur/inférieur à, entre, texte, date) ; « Valeurs de plage haute/basse » met en avant les extrêmes ; « Jeux d'icônes » ajoute des flèches ou feux. Pour régler toi-même les seuils d'un jeu d'icônes : Mise en forme conditionnelle > Gérer les règles > Modifier la règle."
+    },
+    {
+      "mots_cles": ["SI", "condition", "vrai", "faux", "guillemets"],
+      "question": "Comment utiliser la fonction SI ?",
+      "reponse": "=SI(test_logique ; valeur_si_vrai ; valeur_si_faux). Exemple : =SI(A1>10;\"OK\";\"À refaire\"). Le texte va toujours entre guillemets. Les opérateurs : = (égal), <> (différent), > >= < <=. Tu peux passer par l'assistant fx (catégorie Logique) ou taper la formule directement."
+    },
+    {
+      "mots_cles": ["SI imbriquée", "ET", "OU", "NON", "paliers"],
+      "question": "Comment tester plusieurs conditions dans un SI ?",
+      "reponse": "Pour des paliers : imbrique des SI (=SI(A1>90;\"Excellent\";SI(A1>75;\"Bien\";…))) et ferme autant de parenthèses que de SI. Pour combiner : ET(c1;c2) est vrai si TOUTES les conditions sont vraies, OU(c1;c2) si au moins une l'est, NON(c) inverse le résultat. Ex. =SI(ET(B2>100000;C2>90%);\"Validé\";\"À revoir\")."
+    },
+    {
+      "mots_cles": ["NB.SI.ENS", "SOMME.SI.ENS", "critères", "compter", "additionner"],
+      "question": "Comment compter ou additionner selon plusieurs critères ?",
+      "reponse": "NB.SI.ENS(plage1;critère1;plage2;critère2;…) compte les lignes qui remplissent tous les critères. SOMME.SI.ENS(plage_somme;plage_critères1;critère1;…) les additionne (la plage à totaliser vient en PREMIER). Fige les plages avec des $ pour recopier sans erreur ; ou utilise des références semi-relatives ($E2, F$1) pour remplir tout un tableau croisé avec une seule formule."
+    },
+    {
+      "mots_cles": ["SIERREUR", "erreur", "#DIV/0!", "#N/A", "#VALEUR"],
+      "question": "Comment masquer les erreurs de mes formules ?",
+      "reponse": "=SIERREUR(valeur ; valeur_si_erreur) : Excel teste ta formule ; si elle marche, il renvoie le résultat, sinon il affiche la valeur de remplacement (« - », 0, \"\"). Ex. =SIERREUR(A2/B2;\"-\"). Erreurs fréquentes : #DIV/0! (division par zéro), #VALEUR! (format incompatible), #NOM ? (nom/référence invalide), #N/A (recherche infructueuse), #NUL! (deux-points manquant), ##### (colonne trop étroite)."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "bleue-marron",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture bleue-marron débloquée. Tu combines, croises et automatises tes données avec puissance : mise en forme conditionnelle, SI imbriqué, ET/OU, NB.SI.ENS, SOMME.SI.ENS et SIERREUR. La maîtrise experte est en vue."
+  }
+}

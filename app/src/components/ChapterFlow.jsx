@@ -9,6 +9,7 @@ import FicheMemo from './FicheMemo'
 import Quiz from './Quiz'
 import Checklist from './Checklist'
 import BeltUnlock from './BeltUnlock'
+import KataComplete from './KataComplete'
 import ObjectifsSmart from './ObjectifsSmart'
 import LeconNarree from './LeconNarree'
 import { LECONS_FONCTIONS } from '../data/lecons-fonctions'
@@ -19,6 +20,7 @@ export default function ChapterFlow({ chapitre, onQuitter }) {
   const { etat, debloquerCeinture, validerEcran } = useProgressCtx()
   const [actif, setActif] = useState(null)
   const [celebration, setCelebration] = useState(false)
+  const [kataFini, setKataFini] = useState(null)
   const [smart, setSmart] = useState(false)
 
   if (!ch) return null
@@ -60,6 +62,24 @@ export default function ChapterFlow({ chapitre, onQuitter }) {
     m.type === 'lecon' ? m.ecrans.every((e) => etat.ecransValides[e.id]) : Boolean(etat.ecransValides[m.id])
   const tousFaits = ch.modules.every(estFait)
 
+  if (kataFini) {
+    return (
+      <KataComplete
+        titre={kataFini.titre}
+        xp={kataFini.xp}
+        dejaFait={kataFini.dejaFait}
+        fait={ch.modules.filter(estFait).length}
+        total={ch.modules.length}
+        ceinture={ch.recompense.ceinture_debloquee}
+        onContinuer={() => {
+          setKataFini(null)
+          setActif(null)
+          window.scrollTo({ top: 0 })
+        }}
+      />
+    )
+  }
+
   if (actif === null) {
     const mapProps = {
       ch,
@@ -98,8 +118,10 @@ export default function ChapterFlow({ chapitre, onQuitter }) {
         lecon={LECONS_FONCTIONS[m.lecon]}
         onQuitter={retour}
         onTermine={() => {
+          const dejaFait = Boolean(etat.ecransValides[m.id])
           validerEcran(m.id, m.xp || 0)
-          retour()
+          setKataFini({ titre: LECONS_FONCTIONS[m.lecon].titre, xp: m.xp || 0, dejaFait })
+          window.scrollTo({ top: 0 })
         }}
       />
     )
