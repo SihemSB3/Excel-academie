@@ -4346,6 +4346,11 @@ const RAPPEL3D = {
       visuel: { type: 'encart', label: 'Effet des modifications de feuilles', liste: ['**Ajouter / copier** une feuille **entre** les bornes (AIN…Cantal) : elle est **incluse** automatiquement.', '**Déplacer une feuille hors** des bornes : elle est **retirée** du calcul.', '**Supprimer** une feuille entre les bornes : ses valeurs **sortent** du total.', '**Renommer une borne** (AIN ou Cantal) : Excel **met à jour** la référence tout seul.'] },
     },
     {
+      humeur: 'pensif',
+      dit: 'Sur la sélection des feuilles. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour une référence 3D, on clique la 1re feuille, on maintient Shift, puis on clique la dernière : toutes les feuilles entre les deux sont incluses.', bonne: true, explication: 'Vrai : Shift sélectionne une plage CONTINUE d\'onglets (AIN…Cantal). Pour des feuilles non côte à côte, on utilise plutôt le point-virgule (méthode 1).' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Quelle formule additionne la cellule C10 de la feuille AIN à la feuille Cantal ?',
       visuel: { type: 'question', options: ['=SOMME(AIN;Cantal!C10)', '=SOMME(AIN:Cantal!C10)', '=SOMME(AIN:Cantal!C10:C10)'], bonne: 1, explication: 'Le deux-points entre les onglets (AIN:Cantal) fait la plage 3D, puis !C10 désigne la cellule. Le point-virgule, lui, sert à lister des feuilles non côte à côte.' } },
@@ -4444,6 +4449,11 @@ const CONSOPOSITION = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Sur la case « Lier aux données source ». **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si tu coches « Lier aux données source », la synthèse se met à jour automatiquement quand un chiffre change dans une feuille source.', bonne: true, explication: 'Vrai : avec la liaison, le résultat suit les sources (et tu obtiens les boutons de plan +/–). Sans la liaison, la synthèse est figée au moment du calcul.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. La consolidation par position exige que...',
       visuel: { type: 'question', options: ['les tableaux sources aient des structures différentes', 'les en-têtes soient identiques et placés aux mêmes coordonnées sur chaque feuille', 'on copie-colle manuellement chaque total'], bonne: 1, explication: 'Par position, Excel additionne « case par case » : il faut donc des en-têtes identiques, aux mêmes emplacements sur chaque feuille.' } },
@@ -4481,6 +4491,11 @@ const CONSOCATEGORIE = {
           { capture: { type: 'tableaudonnees', entetes: CONSO_ENTETES, lignes: [['Ebook Excel', '38 200 €'], ['Ebook Shaolin', '28 500 €'], ['Formations', '14 200 €'], ['Coaching', '2 900 €']], feuilles: CONSO_FEUILLES, feuilleActive: 'Synthèse', legende: 'APRÈS : toutes les catégories regroupées par libellé. « Coaching » (présent seulement en Mars) apparaît quand même ; « Formations » (absent de Mars) est totalisé sur ses 2 mois.' } },
         ],
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La différence clé avec la consolidation par position. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'La consolidation par catégorie regroupe les données d\'après leurs LIBELLÉS (les titres), même si l\'ordre des lignes diffère d\'une feuille à l\'autre.', bonne: true, explication: 'Vrai : elle s\'appuie sur les noms (Ligne du haut / Colonne de gauche). Peu importe l\'ordre ou les produits manquants : Excel regroupe par étiquette. La version par position, elle, additionne case par case.' },
     },
     {
       humeur: 'accueil',
@@ -4535,6 +4550,11 @@ const TCDTABLES = {
       },
     },
     {
+      humeur: 'pensif',
+      dit: 'Sur la notion de clé partagée. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Pour relier deux tables, il leur faut une colonne qui porte le même nom et contient les mêmes valeurs (ex. « Zones Vente » avec Ohio, Texas…).', bonne: true, explication: 'Vrai : cette colonne commune est la « clé partagée ». C\'est elle qui permet à Excel de savoir que la vente « Ohio » et la zone « Ohio » parlent de la même chose.' },
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Parmi ces étapes, laquelle n\'est **pas** nécessaire pour un TCD multi-tables ?',
       visuel: { type: 'question', options: ['Transformer chaque plage en Tableau', 'Renommer chaque tableau (ex. T_ventes)', 'Cliquer sur Données > Consolider', 'Utiliser le « Modèle de données » à la création du TCD'], bonne: 2, explication: '« Données > Consolider », c\'est l\'autre méthode (par position/catégorie). Pour un TCD multi-tables, on passe par des Tables nommées + le Modèle de données, pas par Consolider.' } },
@@ -4568,6 +4588,11 @@ const TCDRELATIONS = {
           { capture: { type: 'vuetcd', legende: 'La feuille entière : la zone du rapport (à gauche, encore vide) + la fenêtre des champs, à droite. C\'est là que tout va se jouer.' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour insérer le rapport, dans l\'onglet **Insertion**, **clique le bouton Tableau croisé dynamique.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Tableau croisé dynamique', actif: 'Insertion', groupeNom: 'Tableaux', groupes: [{ icone: '📊', label: 'Tableau croisé dynamique' }, { icone: '📋', label: 'Tableau' }], cible: 'Tableau croisé dynamique', explication: 'Pense à cocher « Ajouter ces données au modèle de données » : c\'est indispensable pour relier plusieurs tables entre elles.' },
     },
     {
       humeur: 'pensif',
