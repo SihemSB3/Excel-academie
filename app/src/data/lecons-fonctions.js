@@ -98,14 +98,14 @@ const SI = {
     { humeur: 'fier', dit: 'Exact : 12 > 10, donc la case affiche OK.', visuel: tabSI({ t: '12' }, fSI, { t: 'OK', vert: true }) },
     { humeur: 'pensif', dit: 'Et si la note avait été 7 ? 7 > 10 ? Non → la case affiche À refaire.', visuel: tabSI({ t: '7' }, fSI, { t: 'À refaire', rouge: true }) },
     {
-      humeur: 'pensif',
-      dit: 'Une astuce à garder en tête.',
-      visuel: { type: 'encart', label: 'Astuce', texte: 'Le texte (comme **OK** ou **À refaire**) va toujours **entre guillemets**. C\'est comme ça qu\'Excel le reconnaît comme du texte.' },
+      humeur: 'accueil',
+      dit: 'À ton avis, avant que je te l\'explique. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Dans un SI, le texte à afficher (OK, À refaire…) doit être entouré de guillemets.', bonne: true, explication: 'Vrai : sans les guillemets, Excel croit que « OK » est un nom de cellule ou de formule, et renvoie une erreur. Les guillemets disent « c\'est du texte ».' },
     },
     {
       humeur: 'pensif',
-      dit: 'Vérifions cette règle. **Vrai ou faux ?**',
-      visuel: { type: 'vraifaux', affirmation: 'Dans un SI, le texte à afficher (OK, À refaire…) doit être entouré de guillemets.', bonne: true, explication: 'Vrai : sans les guillemets, Excel croit que « OK » est un nom de cellule ou de formule, et renvoie une erreur. Les guillemets disent « c\'est du texte ».' },
+      dit: 'Voilà donc l\'astuce à garder :',
+      visuel: { type: 'encart', label: 'Astuce', texte: 'Le texte (comme **OK** ou **À refaire**) va toujours **entre guillemets**. C\'est comme ça qu\'Excel le reconnaît comme du texte.' },
     },
     {
       humeur: 'accueil',
@@ -475,15 +475,15 @@ const COLLAGE = {
       plus: ['1. Copie le tableau. 2. Clique droit à l\'endroit où tu veux le coller. 3. Clique sur Collage spécial > Transposer. 4. Ton tableau s\'inverse automatiquement.'],
     },
     {
-      humeur: 'pensif',
-      dit: 'Une précision utile.',
-      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Certaines options du collage spécial ne marchent **pas** après un Couper (Ctrl + X). Pour le collage spécial, fais plutôt **Copier (Ctrl + C)**.' },
-      plus: ['Certaines options de collage spécial ne fonctionnent pas lorsque tu coupes un élément (Ctrl + X). Pour en profiter pleinement, copie (Ctrl + C) plutôt que couper.'],
+      humeur: 'accueil',
+      dit: 'Un piège avant que je te le dise. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Le collage spécial fonctionne aussi bien après un Couper (Ctrl + X) qu\'après un Copier (Ctrl + C).', bonne: false, explication: 'Non : certaines options du collage spécial sont désactivées après un Couper. Pour en profiter, copie (Ctrl + C) plutôt que couper.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Un dernier réflexe. **Vrai ou faux ?**',
-      visuel: { type: 'vraifaux', affirmation: 'Le collage spécial fonctionne aussi bien après un Couper (Ctrl + X) qu\'après un Copier (Ctrl + C).', bonne: false, explication: 'Non : certaines options du collage spécial sont désactivées après un Couper. Pour en profiter, copie (Ctrl + C) plutôt que couper.' },
+      dit: 'Voilà la précision à retenir :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Certaines options du collage spécial ne marchent **pas** après un Couper (Ctrl + X). Pour le collage spécial, fais plutôt **Copier (Ctrl + C)**.' },
+      plus: ['Certaines options de collage spécial ne fonctionnent pas lorsque tu coupes un élément (Ctrl + X). Pour en profiter pleinement, copie (Ctrl + C) plutôt que couper.'],
     },
     {
       humeur: 'accueil',
@@ -633,15 +633,15 @@ const SERIES = {
       ],
     },
     {
-      humeur: 'pensif',
-      dit: 'Et si tu veux recopier la **même** valeur, sans la transformer en suite ?',
-      visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Maintiens **Ctrl** (sur **Mac** : **⌘**) en tirant la poignée : Excel répète la valeur au lieu de créer une série. À l\'inverse, sur un seul chiffre, Ctrl crée la suite 1, 2, 3...' },
-      plus: ['Par défaut, Excel crée une suite logique. Mais si tu veux recopier exactement la même date ou le même jour, sans l\'incrémenter : maintiens la touche CTRL enfoncée pendant que tu tires la poignée. Excel répétera la valeur au lieu de créer une série.'],
+      humeur: 'accueil',
+      dit: 'Et si tu veux recopier la **même** valeur, sans suite ? Devine avant que je te le dise. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'En maintenant Ctrl (⌘ sur Mac) pendant que tu tires « lundi », Excel répète « lundi » partout au lieu de continuer la série.', bonne: true, explication: 'Vrai : Ctrl inverse le comportement. Sur un jour ou une date, il répète la valeur. (Sur un simple chiffre, c\'est l\'inverse : Ctrl crée la suite 1, 2, 3.)' },
     },
     {
       humeur: 'pensif',
-      dit: 'Vérifions cette astuce. **Vrai ou faux ?**',
-      visuel: { type: 'vraifaux', affirmation: 'En maintenant Ctrl (⌘ sur Mac) pendant que tu tires « lundi », Excel répète « lundi » partout au lieu de continuer la série.', bonne: true, explication: 'Vrai : Ctrl inverse le comportement. Sur un jour ou une date, il répète la valeur. (Sur un simple chiffre, c\'est l\'inverse : Ctrl crée la suite 1, 2, 3.)' },
+      dit: 'Voilà l\'astuce à retenir :',
+      visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Maintiens **Ctrl** (sur **Mac** : **⌘**) en tirant la poignée : Excel répète la valeur au lieu de créer une série. À l\'inverse, sur un seul chiffre, Ctrl crée la suite 1, 2, 3...' },
+      plus: ['Par défaut, Excel crée une suite logique. Mais si tu veux recopier exactement la même date ou le même jour, sans l\'incrémenter : maintiens la touche CTRL enfoncée pendant que tu tires la poignée. Excel répétera la valeur au lieu de créer une série.'],
     },
     {
       humeur: 'accueil',
@@ -1596,14 +1596,14 @@ const RECOPIERFORMULES = {
     },
     { humeur: 'fier', dit: 'En recopiant vers le bas, B2 s\'adapte (B3…) mais $E$2 reste figé. Tous les calculs tombent juste.', visuel: tabREF4({ C2: { t: '36', vert: true }, C3: { t: '24', vert: true } }, '=B3*$E$2', 'C3', 'B3 a changé (bleu), mais $E$2 (orange) est resté le même.', { refsCouleur: { B3: 'bleu', E2: 'ambre' } }) },
     {
-      humeur: 'pensif',
-      dit: 'Le raccourci pour mettre les $ sans les taper :',
-      visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Clique sur la cellule dans ta formule, puis appuie sur **F4** : Excel transforme B1 en $B$1. Si F4 ne marche pas tout seul, essaie **Fn + F4** (claviers portables). Sur **Mac**, utilise **⌘ + T**.' },
+      humeur: 'accueil',
+      dit: 'Il existe un raccourci pour poser les $ sans les taper. Devine lequel. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Sélectionner une référence dans la formule et appuyer sur F4 (⌘ + T sur Mac) ajoute les $ automatiquement.', bonne: true, explication: 'Vrai : F4 (ou ⌘ + T) transforme B1 en $B$1 sans taper les $ à la main. Un appui de plus fige seulement la ligne, puis la colonne.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Vérifions ce raccourci. **Vrai ou faux ?**',
-      visuel: { type: 'vraifaux', affirmation: 'Sélectionner une référence dans la formule et appuyer sur F4 (⌘ + T sur Mac) ajoute les $ automatiquement.', bonne: true, explication: 'Vrai : F4 (ou ⌘ + T) transforme B1 en $B$1 sans taper les $ à la main. Un appui de plus fige seulement la ligne, puis la colonne.' },
+      dit: 'Voilà le raccourci en clair :',
+      visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Clique sur la cellule dans ta formule, puis appuie sur **F4** : Excel transforme B1 en $B$1. Si F4 ne marche pas tout seul, essaie **Fn + F4** (claviers portables). Sur **Mac**, utilise **⌘ + T**.' },
     },
     {
       humeur: 'accueil',
