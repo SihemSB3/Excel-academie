@@ -4449,6 +4449,164 @@ function TrouveErreur({ v, onResolu, onErreur }) {
   )
 }
 
+// « Sélectionne la plage » : l'élève choisit lui-même la plage à calculer en cliquant
+// la 1re puis la dernière cellule (comme un cliquer-glisser). Quand la plage est bonne,
+// la formule se complète (ex. =SOMME(B2:B4)). Sert à SOMME, MOYENNE, MIN/MAX…
+function SelectPlage({ v, onResolu, onErreur }) {
+  const { consigne, cols = [], rows = [], cells = {}, debut, fin, formulePrefixe = '=SOMME(', resultat, explication } = v
+  const [anchor, setAnchor] = useState(null)
+  const [ok, setOk] = useState(false)
+  const [rate, setRate] = useState(false)
+  const parse = (id) => ({ c: (id.match(/[A-Z]+/) || [''])[0], r: parseInt((id.match(/\d+/) || ['0'])[0], 10) })
+  const idsEntre = (a, b) => {
+    const A = parse(a), B = parse(b)
+    if (A.c === B.c) {
+      const [r1, r2] = [A.r, B.r].sort((x, y) => x - y)
+      const out = []
+      for (let r = r1; r <= r2; r++) out.push(A.c + r)
+      return out
+    }
+    if (A.r === B.r) {
+      const i1 = cols.indexOf(A.c), i2 = cols.indexOf(B.c)
+      if (i1 < 0 || i2 < 0) return null
+      const [c1, c2] = [i1, i2].sort((x, y) => x - y)
+      const out = []
+      for (let i = c1; i <= c2; i++) out.push(cols[i] + A.r)
+      return out
+    }
+    return null
+  }
+  const cibleIds = idsEntre(debut, fin) || []
+  const memeEnsemble = (a, b) => a && b && a.length === b.length && a.every((x) => b.includes(x))
+  const rangeLabel = cibleIds.length ? `${cibleIds[0]}:${cibleIds[cibleIds.length - 1]}` : ''
+  const formuleOk = `${formulePrefixe}${rangeLabel})`
+  const clic = (id) => {
+    if (ok) return
+    if (!anchor) {
+      setAnchor(id)
+      return
+    }
+    const sel = idsEntre(anchor, id)
+    if (memeEnsemble(sel, cibleIds)) {
+      setOk(true)
+      onResolu && onResolu()
+    } else {
+      setRate(true)
+      onErreur && onErreur()
+      setTimeout(() => {
+        setRate(false)
+        setAnchor(null)
+      }, 800)
+    }
+  }
+  const dansSel = (id) => ok && cibleIds.includes(id)
+  return (
+    <div className="mt-3">
+      {consigne && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {consigne}</p>}
+      <div className="overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+        <div className="flex items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1.5 text-xs">
+          <span className="font-bold text-navy/50">fx</span>
+          <span className="font-mono text-navy/90">{ok ? coloreFormule(formuleOk) : formulePrefixe ? coloreFormule(formulePrefixe) : <span className="text-navy/30">|</span>}</span>
+        </div>
+        <div className="grid text-xs" style={{ gridTemplateColumns: `28px repeat(${cols.length}, 1fr)` }}>
+          <div className="bg-navy/5" />
+          {cols.map((c) => (
+            <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
+          ))}
+          {rows.map((r) => (
+            <div key={r} className="contents">
+              <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{r}</div>
+              {cols.map((c) => {
+                const id = c + r
+                const cell = cells[id] || {}
+                const estResultat = id === resultat
+                const contenu = estResultat && ok ? formuleOk : cell.t
+                const estFormule = typeof contenu === 'string' && contenu.startsWith('=')
+                const sel = dansSel(id)
+                const estAnchor = anchor === id && !ok
+                const estRate = rate && anchor === id
+                const cliquable = !cell.entete && !ok && !estResultat
+                let cls = 'text-navy/90'
+                if (cell.entete) cls = 'bg-navy/10 font-bold text-navy/70'
+                else if (sel) cls = 'bg-sky-500/25 font-bold text-navy ring-1 ring-inset ring-sky-400'
+                else if (estRate) cls = 'bg-red-500/15 text-navy/50'
+                else if (estAnchor) cls = 'bg-mint/30 ring-2 ring-inset ring-mint'
+                else cls = 'text-navy/90 hover:bg-mint/10'
+                return (
+                  <div
+                    key={id}
+                    onClick={cliquable ? () => clic(id) : undefined}
+                    className={`min-h-[30px] border-b border-l border-navy/10 px-2 py-1 ${cell.num ? 'text-right' : ''} ${cliquable ? 'cursor-pointer' : ''} ${cls}`}
+                  >
+                    {estFormule ? <span className="font-mono text-[10px] leading-tight">{coloreFormule(contenu)}</span> : contenu || ''}
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+      {ok ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ Plage {rangeLabel} sélectionnée ! 🥋</span> {explication}
+        </p>
+      ) : anchor ? (
+        <p className="mt-2 rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">{rate ? 'Pas tout à fait cette plage. On recommence : reclique la première cellule.' : `Première cellule : ${anchor}. Maintenant clique la DERNIÈRE cellule de la plage.`}</p>
+      ) : null}
+    </div>
+  )
+}
+
+// « Clique la suggestion » : quand on tape le début d'une fonction, Excel propose une liste ;
+// l'élève clique lui-même la bonne fonction (au lieu de la voir déjà choisie).
+function ChoixSuggestion({ v, onResolu, onErreur }) {
+  const { saisie = '=', items = [], cible, explication } = v
+  const [rates, setRates] = useState([])
+  const [trouve, setTrouve] = useState(false)
+  const clic = (nom) => {
+    if (trouve) return
+    if (nom === cible) {
+      setTrouve(true)
+      onResolu && onResolu()
+    } else if (!rates.includes(nom)) {
+      setRates((r) => [...r, nom])
+      onErreur && onErreur()
+    }
+  }
+  return (
+    <div className="mt-3">
+      <div className="mx-auto max-w-xs overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+        <div className="border-b border-navy/10 bg-navy/5 px-3 py-1.5 font-mono text-navy/80">{saisie}<span className="animate-pulse">|</span></div>
+        {items.map((it, i) => {
+          const nom = typeof it === 'string' ? it : it.nom
+          const desc = typeof it === 'object' ? it.desc : null
+          const bon = trouve && nom === cible
+          const rate = rates.includes(nom)
+          const cliquable = !trouve && !rate
+          return (
+            <div
+              key={i}
+              onClick={cliquable ? () => clic(nom) : undefined}
+              className={`flex items-center gap-2 px-3 py-1.5 transition ${cliquable ? 'cursor-pointer hover:bg-mint/10' : ''} ${bon ? 'bg-mint/20' : rate ? 'opacity-30' : ''}`}
+            >
+              <span className="grid h-4 w-4 shrink-0 place-items-center rounded-sm bg-[#107c41] text-[8px] font-bold text-white">fx</span>
+              <span className={`font-mono ${bon ? 'font-bold text-navy' : 'text-navy/85'}`}>{nom}</span>
+              {desc && <span className="truncate text-[9px] text-navy/45">{desc}</span>}
+            </div>
+          )
+        })}
+      </div>
+      {trouve ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ {rates.length === 0 ? 'Bien vu, du premier coup ! 🥋' : 'Voilà ! 🥋'}</span> {explication}
+        </p>
+      ) : rates.length > 0 ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">{ENCOURAGEMENTS_Q[(rates.length - 1) % ENCOURAGEMENTS_Q.length]}</p>
+      ) : null}
+    </div>
+  )
+}
+
 // « Clique sur… » : l'élève DÉSIGNE le bon élément directement sur une vraie capture
 // Excel (cellule d'un tableur, bouton d'un ruban, ou entrée de menu). Le geste actif
 // qui remplace « regarde cette capture » par « fais-le ». Cycle réessai + comptage.
@@ -4868,7 +5026,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -4924,6 +5082,10 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <CliqueCible v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'tirepoignee' ? (
             <TirePoignee v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'selectplage' ? (
+            <SelectPlage v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'choixsuggestion' ? (
+            <ChoixSuggestion v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -4947,7 +5109,11 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                           ? 'Clique le bon élément'
                           : s.visuel?.type === 'tirepoignee'
                             ? 'Tire la poignée de recopie'
-                            : 'Réponds pour continuer'
+                            : s.visuel?.type === 'selectplage'
+                              ? 'Sélectionne la plage'
+                              : s.visuel?.type === 'choixsuggestion'
+                                ? 'Clique la bonne fonction'
+                                : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

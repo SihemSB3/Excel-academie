@@ -36,8 +36,8 @@ const SOMME = {
     { humeur: 'accueil', dit: 'Voici trois prix. On veut leur total sur la ligne « Total ». **Clique la cellule qui va recevoir le total.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du total (à droite de « Total »)', cols: colsS, rows: rowsS, cells: { ...S }, cible: 'B5', explication: 'Oui : B5, à droite de « Total ». C\'est là qu\'on écrit la somme.' } },
     { humeur: 'pensif', dit: '**Étape 1 :** dans B5, toute formule commence par le signe =.', visuel: tabS('=') },
     { humeur: 'pensif', dit: '**Étape 2 :** on écrit SOMME et on ouvre une parenthèse.', visuel: tabS('=SOMME(') },
-    { humeur: 'accueil', dit: '**Étape 3 :** on sélectionne la plage à additionner, de B2 à B4 (en bleu).', visuel: tabS('=SOMME(B2:B4', null, ['B2', 'B3', 'B4']) },
-    { humeur: 'pensif', dit: '**Étape 4 :** on ferme la parenthèse. La formule complète est dans la case.', visuel: tabS('=SOMME(B2:B4)') },
+    { humeur: 'accueil', dit: '**Étape 3 :** il faut dire à SOMME quoi additionner. **À toi de sélectionner la plage des prix** : clique la première cellule, puis la dernière.', visuel: { type: 'selectplage', consigne: 'Sélectionne la plage des trois prix', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { ...S, B5: { t: '=SOMME(' } }, debut: 'B2', fin: 'B4', formulePrefixe: '=SOMME(', resultat: 'B5', explication: 'La formule devient =SOMME(B2:B4). Le « B2:B4 » veut dire « de B2 jusqu\'à B4 », les trois prix d\'un coup.' } },
+    { humeur: 'pensif', dit: '**Étape 4 :** Excel ferme la parenthèse tout seul. La formule complète =SOMME(B2:B4) est dans la case.', visuel: tabS('=SOMME(B2:B4)') },
     {
       humeur: 'accueil',
       dit: 'On appuie sur Entrée. Les trois prix sont 30, 20 et 150. **Que va afficher B5 ?**',
@@ -306,7 +306,8 @@ const REFERENCES = {
   narration: [
     { humeur: 'accueil', dit: 'Quand tu recopies une formule, Excel adapte tout seul les cellules. Très pratique ! Et parfois, tu veux qu\'une cellule reste fixe. Voyons les deux cas.', plus: ['Par défaut, Excel utilise des références dites « relatives » : quand tu copies une formule vers une autre cellule, les coordonnées de cellule s\'adaptent en fonction de la nouvelle position.', 'Une référence absolue, elle, reste fixe même si tu copies la formule ailleurs. C\'est utile quand tu veux toujours faire référence à la même cellule, comme un taux de TVA, un seuil, ou une valeur constante.'] },
     { humeur: 'accueil', dit: 'On veut le Prix TTC = Prix HT × le taux. Pour la première ligne, **clique la cellule du Prix TTC.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du Prix TTC de la première ligne', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { ...REFb }, cible: 'B2', explication: 'Oui, B2 : colonne « Prix TTC », première ligne. C\'est là qu\'on écrit la formule.' } },
-    { humeur: 'pensif', dit: 'Dans B2, on écrit =A2*C2 : le Prix HT (A2) multiplié par le taux (C2).', visuel: tabRef({ B2: { t: '=A2*C2' }, A2: { t: '30' }, C2: { t: '1,2' } }, '=A2*C2', 'B2', 'Prix HT (A2) en bleu, Taux (C2) en orange, comme dans Excel.', { refsCouleur: { A2: 'bleu', C2: 'ambre' } }) },
+    { humeur: 'accueil', dit: 'On tape **=** dans B2. Premier morceau : le Prix HT. **Clique la cellule du Prix HT.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du Prix HT (première ligne)', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { ...REFb, B2: { t: '=' } }, formule: '=', resultat: 'B2', cible: 'A2', explication: 'La formule commence : =A2.' } },
+    { humeur: 'accueil', dit: 'On tape le signe **×** (la touche *). Puis le deuxième morceau : le taux. **Clique la cellule du taux.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du taux', cols: ['A', 'B', 'C'], rows: [1, 2, 3], cells: { ...REFb, B2: { t: '=A2*' } }, formule: '=A2*', resultat: 'B2', cible: 'C2', explication: 'La formule est complète : =A2*C2, le Prix HT multiplié par le taux.' } },
     {
       humeur: 'accueil',
       dit: 'Le Prix HT est 30, le taux 1,2. **Que va afficher B2 ?**',
@@ -460,9 +461,10 @@ const COLLAGE = {
       dit: 'Vérifions que la nuance est claire. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'Après un Collage spécial > Valeurs, la cellule contient encore la formule =B2*C2.', bonne: false, explication: 'Non : « Valeurs » colle seulement le résultat affiché (10). La formule disparaît. C\'est justement ce qu\'on veut pour figer un chiffre.' },
     },
+    { humeur: 'accueil', dit: 'Autre option puissante : tu as copié un tableau **en ligne** (Janvier, Février côte à côte) et tu fais clic droit. **Clique l\'option qui échange lignes et colonnes.**', visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Transposer » dans le collage spécial', items: [{ icone: '123', label: 'Valeurs' }, { icone: '%', label: 'Mise en forme' }, { icone: 'fx', label: 'Formules' }, { icone: '⇄', label: 'Transposer' }], cible: 3, explication: 'Transposer fait pivoter le tableau : ce qui était en ligne passe en colonne. Regarde le résultat.' } },
     {
-      humeur: 'accueil',
-      dit: 'Autre option : **Transposer**. Une ligne se colle en colonne : les lignes et les colonnes s\'échangent.',
+      humeur: 'content',
+      dit: 'Et voilà le résultat : le tableau qui était **en ligne** est maintenant **en colonne**. Les lignes et les colonnes ont été échangées.',
       visuel: { type: 'transposer' },
       plus: ['1. Copie le tableau. 2. Clique droit à l\'endroit où tu veux le coller. 3. Clique sur Collage spécial > Transposer. 4. Ton tableau s\'inverse automatiquement.'],
     },
@@ -565,8 +567,8 @@ const ASSISTANT = {
     },
     {
       humeur: 'accueil',
-      dit: 'Quand tu es à l\'aise, tape directement dans la cellule : commence par =NB. Une **liste déroulante** s\'affiche, choisis avec les flèches ↑ ↓ puis Tab.',
-      visuel: { type: 'autocomplete', saisie: '=NB', items: [{ nom: 'NB' }, { nom: 'NB.SI' }, { nom: 'NB.SI.ENS' }, { nom: 'NB.VIDE' }, { nom: 'NBCAR' }, { nom: 'NBVAL', desc: 'Compte le nombre de cellules non vides dans une plage.' }], selection: 5 },
+      dit: 'Quand tu es à l\'aise, tape directement dans la cellule : commence par **=NB**. Une liste s\'affiche. **Clique celle qui compte les cellules non vides.**',
+      visuel: { type: 'choixsuggestion', saisie: '=NB', items: [{ nom: 'NB', desc: 'compte les nombres' }, { nom: 'NB.SI' }, { nom: 'NB.VIDE', desc: 'compte les cellules vides' }, { nom: 'NBCAR' }, { nom: 'NBVAL', desc: 'compte les cellules non vides' }], cible: 'NBVAL', explication: 'NBVAL compte toutes les cellules non vides (nombres, textes, dates). NB, lui, ne compterait que les nombres.' },
       plus: ['Quand tu es un peu plus à l\'aise, tu peux écrire tes formules toi-même : clique dans une cellule, tape = puis commence à écrire le nom de la fonction (ex : =SOMME, =MOYENNE, =NBVAL…). Une liste déroulante s\'affiche : double-clique sur la fonction voulue, ou utilise les flèches ↑ ↓ + TAB.', 'Astuce : tape juste les premières lettres de la fonction (ex : =NB) pour afficher toutes les fonctions qui commencent par ces lettres. Excel t\'assiste même dans la rédaction en te montrant les arguments à remplir.'],
     },
     {
@@ -1343,6 +1345,7 @@ const FONCTIONSSIMPLES = {
     },
     { humeur: 'accueil', dit: 'Un exemple concret : on cherche le produit qui a le **moins** vendu. La fonction MIN trouve la plus petite valeur de la plage. On la construit en la tapant.', visuel: tabMIN() },
     { humeur: 'accueil', dit: 'Le résultat ira sur la ligne « Le + petit ». **Clique la cellule qui va le recevoir.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du résultat (à droite de « Le + petit »)', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5, 6, 7], cells: { ...VENTES }, cible: 'B7', explication: 'Oui, B7 : c\'est là qu\'on écrit =MIN(…) pour afficher la plus petite valeur.' } },
+    { humeur: 'accueil', dit: 'Tu tapes **=MI** et Excel propose des fonctions. **Clique celle qui renvoie la plus petite valeur.**', visuel: { type: 'choixsuggestion', saisie: '=MI', items: [{ nom: 'MILLIONS.OCTETS' }, { nom: 'MIN', desc: 'la plus petite valeur' }, { nom: 'MIN.SI.ENS' }, { nom: 'MINUSCULE' }], cible: 'MIN', explication: 'MIN renvoie la plus petite valeur d\'une plage. (MINUSCULE met un texte en minuscules, rien à voir !)' } },
     {
       humeur: 'pensif',
       dit: 'On la saisit directement dans la cellule, pas à pas.',
