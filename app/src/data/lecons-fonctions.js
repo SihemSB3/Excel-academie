@@ -682,8 +682,13 @@ const LIGNESCOLONNES = {
   narration: [
     { humeur: 'accueil', dit: 'Un tableau, ça vit : on ajoute une ligne oubliée, on enlève une colonne en trop, on ajuste la taille. On va voir tous les gestes, tranquillement.' },
     {
+      humeur: 'accueil',
+      dit: 'Pour **insérer** une ligne ou une colonne, deux méthodes. La première par le ruban : dans **Accueil > groupe Cellules**, **à toi de trouver le bouton Insérer.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Insérer', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format' }], cible: 'Insérer', explication: 'L\'icône ⊞ Insérer : elle ajoute lignes, colonnes ou cellules. Juste à côté, ⊟ Supprimer fait l\'inverse.' },
+    },
+    {
       humeur: 'pensif',
-      dit: 'Pour **insérer** une ligne ou une colonne, tu as deux méthodes. Voici la première, avec le ruban.',
+      dit: 'Voilà la méthode 1 en clair (après avoir cliqué Insérer, tu choisis lignes ou colonnes) :',
       visuel: {
         type: 'methode',
         titre: 'Méthode 1 : le ruban',
@@ -694,11 +699,6 @@ const LIGNESCOLONNES = {
           { capture: { type: 'menu', items: [{ label: 'Insérer des cellules…' }, { label: 'Insérer des lignes dans la feuille', actif: true }, { label: 'Insérer des colonnes dans la feuille', actif: true }, { label: 'Insérer une feuille' }] } },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'Repérons le bon bouton. Dans **Accueil > groupe Cellules**, **clique le bouton Insérer.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Insérer', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer' }, { icone: '▤', label: 'Format' }], cible: 'Insérer', explication: 'L\'icône ⊞ Insérer : elle ajoute lignes, colonnes ou cellules. Juste à côté, ⊟ Supprimer fait l\'inverse.' },
     },
     {
       humeur: 'pensif',
@@ -774,18 +774,13 @@ const MISEENFORME = {
   narration: [
     { humeur: 'accueil', dit: 'Rendre un tableau lisible et agréable, c\'est de la mise en forme. Et tout part d\'un seul endroit : l\'onglet Accueil.' },
     {
-      humeur: 'pensif',
-      dit: '**L\'onglet Accueil :** il regroupe tous les outils de mise en forme, sous forme d\'icônes. Quand tu **survoles** une option, Excel affiche un **aperçu instantané** du résultat, avant même de cliquer.',
-      visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures', actif: true }, { icone: '🪣', label: 'Remplissage' }] },
-    },
-    {
       humeur: 'accueil',
-      dit: 'Repérons un outil ensemble. Dans le groupe **Police**, **clique le bouton Bordures.**',
+      dit: 'Voici le groupe **Police** de l\'onglet Accueil. Pour encadrer des cellules, **à toi de trouver le bouton des bordures.**',
       visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Bordures', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Bordures', explication: 'C\'est l\'icône ▦ : elle ouvre les styles de bordures (toutes, contour, épaisses…).' },
     },
     {
       humeur: 'pensif',
-      dit: 'Un réflexe bien pratique. **Vrai ou faux ?**',
+      dit: '**L\'onglet Accueil** regroupe tous ces outils de mise en forme sous forme d\'icônes. Petit réflexe malin, à deviner. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'En passant simplement la souris au-dessus d\'une option de mise en forme (sans cliquer), Excel montre déjà un aperçu du résultat.', bonne: true, explication: 'Vrai : c\'est l\'aperçu instantané. Tu vois l\'effet AVANT de cliquer, ce qui évite les essais-erreurs.' },
     },
     {
@@ -829,8 +824,13 @@ const COULEURS = {
   narration: [
     { humeur: 'accueil', dit: 'Les couleurs et les bordures rendent ton tableau plus clair et agréable à lire. On va les poser proprement.' },
     {
+      humeur: 'accueil',
+      dit: 'Pour **encadrer ton tableau de bordures**, le plus rapide passe par le ruban. Sélectionne ta plage, puis **à toi de trouver le bouton des bordures.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Bordures', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Bordures', explication: 'L\'icône ▦ : un clic sur la petite flèche à côté déroule tous les styles de traits.' },
+    },
+    {
       humeur: 'pensif',
-      dit: 'Pour **encadrer ton tableau de bordures**, la méthode rapide passe par le ruban.',
+      dit: 'Voilà la méthode rapide, en clair :',
       visuel: {
         type: 'methode',
         titre: 'Méthode rapide',
@@ -841,11 +841,6 @@ const COULEURS = {
           { capture: { type: 'borduresfond', menu: true } },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi de trouver le bon outil. Dans le groupe **Police**, **clique le bouton des bordures.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Bordures', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Bordures', explication: 'L\'icône ▦ : un clic sur la petite flèche à côté déroule tous les styles de traits.' },
     },
     {
       humeur: 'pensif',
@@ -861,7 +856,12 @@ const COULEURS = {
     },
     {
       humeur: 'accueil',
-      dit: '**Modifier la couleur de fond** d\'une cellule, c\'est le pot de peinture.',
+      dit: 'Maintenant **la couleur de fond** d\'une cellule. Un des boutons du groupe Police fait ça (c\'est un pot de peinture). **Trouve-le.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Remplissage (le pot de peinture)', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Remplissage', explication: 'Le pot 🪣 : il colore le FOND de la cellule. À ne pas confondre avec le A coloré, qui colore le texte.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Voilà comment colorer le fond, en clair :',
       visuel: {
         type: 'methode',
         titre: 'Modifier la couleur de fond',
@@ -871,11 +871,6 @@ const COULEURS = {
           { capture: { type: 'borduresfond', avantSelection: true, apres: 'fond' } },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'Le pot de peinture, c\'est pour la couleur de fond. **Clique-le dans le ruban.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Remplissage (le pot de peinture)', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Remplissage', explication: 'Le pot 🪣 : il colore le FOND de la cellule. À ne pas confondre avec le A coloré, qui colore le texte.' },
     },
     {
       humeur: 'accueil',
@@ -994,8 +989,13 @@ const PINCEAUSTYLES = {
   narration: [
     { humeur: 'accueil', dit: 'Tu as passé du temps à formater une cellule (police, couleur, bordure...) et tu veux le même style ailleurs, sans tout refaire ? Deux outils magiques pour ça.' },
     {
+      humeur: 'accueil',
+      dit: 'Le premier, c\'est le **pinceau** (Reproduire la mise en forme). Dans **Accueil > groupe Presse-papiers**, **à toi de le trouver.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Pinceau (Reproduire la mise en forme)', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '🖌️', label: 'Pinceau' }], cible: 'Pinceau', explication: 'Le pinceau 🖌️ : il copie le STYLE d\'une cellule (couleur, police, bordure) pour le repeindre ailleurs, sans toucher au contenu.' },
+    },
+    {
       humeur: 'pensif',
-      dit: 'Le **pinceau** (Reproduire la mise en forme) copie le style d\'une cellule sur une autre.',
+      dit: 'Voilà comment l\'utiliser, pas à pas :',
       visuel: {
         type: 'methode',
         titre: 'Le pinceau (Reproduire la mise en forme)',
@@ -1005,11 +1005,6 @@ const PINCEAUSTYLES = {
           { capture: { type: 'pinceau' } },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'Trouve l\'outil. Dans **Accueil > groupe Presse-papiers**, **clique le pinceau.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Pinceau (Reproduire la mise en forme)', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '🖌️', label: 'Pinceau' }], cible: 'Pinceau', explication: 'Le pinceau 🖌️ : il copie le STYLE d\'une cellule (couleur, police, bordure) pour le repeindre ailleurs, sans toucher au contenu.' },
     },
     {
       humeur: 'pensif',
@@ -1138,8 +1133,13 @@ const MISEENPAGE = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: '**La zone d\'impression** choisit quelles cellules seront imprimées. Dans l\'onglet **Mise en page**, **à toi de trouver ce bouton.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Zone d\'impression', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '🖨', label: 'Zone impression' }, { icone: '📐', label: 'Marges' }, { icone: '📄', label: 'Orientation' }], cible: 'Zone impression', explication: 'C\'est ici que tu choisis « Définir » : seules les cellules sélectionnées seront imprimées, le reste est ignoré.' },
+    },
+    {
       humeur: 'pensif',
-      dit: '**La zone d\'impression** choisit quelles cellules seront imprimées.',
+      dit: 'Voilà la marche à suivre :',
       visuel: {
         type: 'methode',
         titre: 'Définir la zone d\'impression',
@@ -1152,11 +1152,6 @@ const MISEENPAGE = {
           { capture: { type: 'impressionapercu' } },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi. Dans l\'onglet **Mise en page**, **clique le bouton Zone d\'impression.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Zone d\'impression', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '🖨', label: 'Zone impression' }, { icone: '📐', label: 'Marges' }, { icone: '📄', label: 'Orientation' }], cible: 'Zone impression', explication: 'C\'est ici que tu choisis « Définir » : seules les cellules sélectionnées seront imprimées, le reste est ignoré.' },
     },
     {
       humeur: 'accueil',
@@ -1237,14 +1232,13 @@ const IMPRESSION = {
         blocs: [
           { etapes: ['Onglet **Mise en page** > clique sur la petite **flèche** (lanceur ↘) du groupe', 'Va sur l\'onglet **En-tête/Pied de page**'] },
           { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Mise en page', lanceur: true, groupes: [{ icone: '📏', label: 'Marges' }, { icone: '📄', label: 'Orientation' }, { icone: '📐', label: 'Taille' }] } },
-          { etapes: ['Choisis un modèle dans la liste (En-tête en haut, Pied de page en bas)'] },
-          { capture: { type: 'menu', items: [{ label: '(aucun)' }, { label: 'Page 1' }, { label: 'Confidentiel ; Page 1', actif: true }, { label: 'Feuil1' }, { label: 'Personnalisé…' }] } },
+          { etapes: ['Une liste de modèles s\'affiche (En-tête en haut, Pied de page en bas)'] },
         ],
       },
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Dans la liste des modèles, **clique celui qui affiche à la fois « Confidentiel » et le numéro de page.**',
+      dit: 'Voici la liste des modèles. **Clique celui qui affiche à la fois « Confidentiel » et le numéro de page.**',
       visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique le modèle « Confidentiel ; Page 1 »', items: [{ label: '(aucun)' }, { label: 'Page 1' }, { label: 'Confidentiel ; Page 1' }, { label: 'Feuil1' }, { label: 'Personnalisé…' }], cible: 2, explication: 'Ce modèle combine la mention « Confidentiel » et le numéro de page. Et si aucun modèle ne te convient, « Personnalisé… » tout en bas te laisse tout composer.' },
     },
     {
