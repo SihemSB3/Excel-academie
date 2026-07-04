@@ -322,7 +322,8 @@ const REFERENCES = {
       visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Pas besoin de taper les $ à la main : clique sur la cellule dans ta formule et appuie sur **F4**. Sur un PC portable, c\'est parfois **Fn + F4**. Et sur **Mac**, utilise **⌘ + T**.' },
       plus: ['Tu peux activer une référence absolue en appuyant sur F4 juste après avoir cliqué sur une cellule dans la formule. Si F4 ne fonctionne pas tout seul, essaie FN + F4.'],
     },
-    { humeur: 'fier', dit: 'Maintenant, en recopiant, A2 s\'adapte (A3, A4...) mais $C$2 reste fixe. Tous les calculs tombent juste : 36, 24...', visuel: tabRef({ B2: { t: '36', vert: true }, B3: { t: '24', vert: true }, A3: { t: '20' } }, '=A3*$C$2', 'B3', 'A3 a changé de cellule (bleu), mais $C$2 (orange) est resté le même.', { refsCouleur: { A3: 'bleu', C2: 'ambre' } }) },
+    { humeur: 'accueil', dit: 'La formule =A2*$C$2 est écrite dans la 1re ligne. Pour l\'appliquer aux lignes suivantes, tu ne réécris rien : **tire la poignée vers le bas.**', visuel: { type: 'tirepoignee', sens: 'bas', formule: true, entetes: ['B'], departRow: 2, depart: '=A2*$C$2', suite: ['=A3*$C$2', '=A4*$C$2'], promptMsg: '👆 Attrape la poignée verte au coin de la formule et tire vers le bas', okMsg: '✓ A2 devient A3 puis A4… mais $C$2 reste figé partout !' } },
+    { humeur: 'fier', dit: 'Résultat : A2 s\'adapte (A3, A4...) mais $C$2 reste fixe. Tous les calculs tombent juste : 36, 24...', visuel: tabRef({ B2: { t: '36', vert: true }, B3: { t: '24', vert: true }, A3: { t: '20' } }, '=A3*$C$2', 'B3', 'A3 a changé de cellule (bleu), mais $C$2 (orange) est resté le même.', { refsCouleur: { A3: 'bleu', C2: 'ambre' } }) },
     {
       humeur: 'pensif',
       dit: 'Le point clé du chapitre. **Vrai ou faux ?**',

@@ -1586,26 +1586,29 @@ function SeriesOptions({ v }) {
         </ol>
       )}
       <div className="flex flex-col items-center gap-1">
-        <div className="relative overflow-hidden rounded-md border border-navy/15 shadow">
-          <div className="grid text-[10px]" style={{ gridTemplateColumns: '24px repeat(3, 78px)' }}>
-            <div className="bg-navy/10" />
-            {['A', 'B', 'C'].map((c) => (
-              <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
-            ))}
-            <div className="bg-navy/10 py-1 text-center text-navy/50">1</div>
-            <div className="border-b border-l border-navy/10 px-1.5 py-1 text-navy/90">01/05/2025</div>
-            <div className="border-b border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">02/05/2025</div>
-            <div className="border-b border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">03/05/2025</div>
+        {/* pb + overflow visible : la balise déborde sous la grille sans être coupée */}
+        <div className="relative pb-5 pr-2">
+          <div className="overflow-hidden rounded-md border border-navy/15 shadow">
+            <div className="grid text-[10px]" style={{ gridTemplateColumns: '24px repeat(3, 78px)' }}>
+              <div className="bg-navy/10" />
+              {['A', 'B', 'C'].map((c) => (
+                <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
+              ))}
+              <div className="bg-navy/10 py-1 text-center text-navy/50">1</div>
+              <div className="border-l border-navy/10 px-1.5 py-1 text-navy/90">01/05/2025</div>
+              <div className="border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">02/05/2025</div>
+              <div className="relative border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">03/05/2025</div>
+            </div>
           </div>
-          <span className="absolute -bottom-2.5 right-0 flex items-center gap-0.5 rounded-sm border border-navy/25 bg-white px-1 py-0.5 shadow">
-            <svg width="11" height="11" viewBox="0 0 12 12">
+          <span className="animate-glow absolute bottom-0 right-0 flex items-center gap-1 rounded-sm border border-navy/30 bg-white px-1.5 py-1 shadow-md">
+            <svg width="14" height="14" viewBox="0 0 12 12">
               <rect x="1" y="1" width="10" height="10" rx="1" fill="none" stroke="#0a335d" strokeWidth="1" />
               <rect x="1.5" y="6.5" width="9" height="4.5" fill="#0a335d" opacity="0.45" />
             </svg>
-            <span className="text-[8px] leading-none text-navy/60">▾</span>
+            <span className="text-[9px] leading-none text-navy/60">▾</span>
           </span>
         </div>
-        <span className="text-[10px] text-navy/45">↑ la balise « Options de recopie »</span>
+        <span className="text-[10px] text-navy/45">↑ la balise « Options de recopie » (clique-la après avoir tiré la poignée)</span>
         <div className="mt-1 w-64 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-xs shadow-xl">
           {options.map((o, i) => (
             <div key={i} className={`flex items-center gap-2 px-3 py-1.5 ${i === sel ? 'font-semibold text-navy' : 'text-navy/80'}`}>
@@ -4965,7 +4968,10 @@ function TirePoignee({ onResolu, v = {} }) {
     okMsg = '✓ Excel complète la suite tout seul, sans rien retaper !',
   } = v
   const [rempli, setRempli] = useState(false)
+  const vertical = v.sens === 'bas'
   const cols = entetes || ['A', 'B', 'C', 'D', 'E', 'F'].slice(0, 1 + suite.length)
+  const colonne = (entetes && entetes[0]) || 'B'
+  const departRow = v.departRow || 2
   const tirer = () => {
     if (!rempli) {
       setRempli(true)
@@ -4974,33 +4980,56 @@ function TirePoignee({ onResolu, v = {} }) {
   }
   const rendre = (t) => (formule && typeof t === 'string' && t.startsWith('=') ? <span className="font-mono text-[10px]">{coloreFormule(t)}</span> : t)
   const cellCls = `relative min-h-[30px] border-b border-l border-navy/10 px-2 py-1 ${nombres ? 'text-right' : ''}`
+  const poignee = (
+    <button
+      onClick={tirer}
+      title="Tirer la poignée de recopie"
+      className={`absolute -bottom-1.5 -right-1.5 z-10 h-3 w-3 rounded-[2px] border border-white bg-mint shadow ${rempli ? '' : 'animate-glow cursor-crosshair'}`}
+    />
+  )
   return (
     <div className="mt-3">
       <div className="select-none overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
-        <div className="grid text-xs" style={{ gridTemplateColumns: `26px repeat(${cols.length}, 1fr)` }}>
-          <div className="bg-navy/10" />
-          {cols.map((c) => (
-            <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
-          ))}
-          <div className="bg-navy/10 text-center text-navy/50">1</div>
-          <div className={`${cellCls} font-medium text-navy ring-2 ring-inset ring-navy/40`}>
-            {rendre(depart)}
-            <button
-              onClick={tirer}
-              title="Tirer la poignée de recopie"
-              className={`absolute -bottom-1.5 -right-1.5 z-10 h-3 w-3 rounded-[2px] border border-white bg-mint shadow ${rempli ? '' : 'animate-glow cursor-crosshair'}`}
-            />
-          </div>
-          {suite.map((val, i) => (
-            <div
-              key={i}
-              className={`${cellCls} ${rempli ? 'animate-fade-up bg-mint/15 font-medium text-navy' : ''}`}
-              style={rempli ? { animationDelay: `${i * 0.12}s` } : undefined}
-            >
-              {rempli ? rendre(val) : ''}
+        {vertical ? (
+          <div className="grid text-xs" style={{ gridTemplateColumns: '26px 1fr' }}>
+            <div className="bg-navy/10" />
+            <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{colonne}</div>
+            <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{departRow}</div>
+            <div className={`${cellCls} font-medium text-navy ring-2 ring-inset ring-navy/40`}>
+              {rendre(depart)}
+              {poignee}
             </div>
-          ))}
-        </div>
+            {suite.map((val, i) => (
+              <div key={i} className="contents">
+                <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{departRow + 1 + i}</div>
+                <div className={`${cellCls} ${rempli ? 'animate-fade-up bg-mint/15 font-medium text-navy' : ''}`} style={rempli ? { animationDelay: `${i * 0.12}s` } : undefined}>
+                  {rempli ? rendre(val) : ''}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid text-xs" style={{ gridTemplateColumns: `26px repeat(${cols.length}, 1fr)` }}>
+            <div className="bg-navy/10" />
+            {cols.map((c) => (
+              <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
+            ))}
+            <div className="bg-navy/10 text-center text-navy/50">1</div>
+            <div className={`${cellCls} font-medium text-navy ring-2 ring-inset ring-navy/40`}>
+              {rendre(depart)}
+              {poignee}
+            </div>
+            {suite.map((val, i) => (
+              <div
+                key={i}
+                className={`${cellCls} ${rempli ? 'animate-fade-up bg-mint/15 font-medium text-navy' : ''}`}
+                style={rempli ? { animationDelay: `${i * 0.12}s` } : undefined}
+              >
+                {rempli ? rendre(val) : ''}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <p className="mt-3 rounded-full bg-mint/15 px-3 py-2 text-center text-sm font-bold text-mint">{rempli ? okMsg : promptMsg}</p>
     </div>
