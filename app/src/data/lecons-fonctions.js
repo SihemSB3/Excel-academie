@@ -4676,7 +4676,7 @@ const MFCONDITIONNELLE = {
         titre: 'Règles de mise en surbrillance',
         blocs: [
           { etapes: ['Sélectionne ta plage, puis onglet **Accueil** > groupe **Styles** > **Mise en forme conditionnelle**.'] },
-          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme\nconditionnelle', actif: true }, { icone: '▧', label: 'Mettre sous\nforme de tableau' }, { icone: '🎨', label: 'Styles de\ncellules' }] } },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme\nconditionnelle' }, { icone: '▧', label: 'Mettre sous\nforme de tableau' }, { icone: '🎨', label: 'Styles de\ncellules' }] } },
           { etapes: ['Choisis **Règles de mise en surbrillance des cellules**, puis le type (ici **Inférieur à**).'], depart: 2 },
           { capture: { type: 'mfcmenu', actif: 0 } },
           { capture: { type: 'menu', items: [{ label: 'Supérieur à…' }, { label: 'Inférieur à…', actif: true }, { label: 'Entre…' }, { label: 'Égal à…' }, { label: 'Texte qui contient…' }, { label: 'Une date se situant…' }] } },
