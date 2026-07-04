@@ -4452,6 +4452,81 @@ function TrouveErreur({ v, onResolu, onErreur }) {
   )
 }
 
+// Collage spécial > Transposer, en action : le tableau est d'abord EN LIGNE ; l'élève
+// choisit « Transposer » dans la fenêtre du collage spécial, et le tableau bascule EN
+// COLONNE (animé). On voit l'état initial AVANT, puis la transposition APRÈS.
+function CollageTranspose({ v, onResolu, onErreur }) {
+  const source = v.valeurs || ['janvier', 'février', 'mars']
+  const [fait, setFait] = useState(false)
+  const [rates, setRates] = useState([])
+  const options = [
+    { label: 'Coller (tout)', icone: '📋' },
+    { label: 'Formules', icone: 'ƒx' },
+    { label: 'Valeurs', icone: '123' },
+    { label: 'Mise en forme', icone: '🖌' },
+    { label: 'Transposer', icone: '⇄', cible: true },
+  ]
+  const clic = (opt) => {
+    if (fait) return
+    if (opt.cible) {
+      setFait(true)
+      onResolu && onResolu()
+    } else if (!rates.includes(opt.label)) {
+      setRates((r) => [...r, opt.label])
+      onErreur && onErreur()
+    }
+  }
+  return (
+    <div className="mt-3">
+      <p className="mb-2 text-center text-[11px] font-bold uppercase tracking-wide text-navy/45">{fait ? 'Après : transposé (en colonne)' : 'Avant : le tableau en ligne'}</p>
+      <div className="flex min-h-[96px] items-center justify-center">
+        {!fait ? (
+          <div className="overflow-hidden rounded-md border border-navy/15 shadow">
+            <div className="flex">
+              {source.map((s, i) => (
+                <div key={i} className={`min-w-[80px] px-3 py-1.5 text-center text-xs text-navy/90 ${i === 0 ? '' : 'border-l border-navy/10'}`}>{s}</div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-hidden rounded-md border border-mint/50 shadow">
+            {source.map((s, i) => (
+              <div key={i} className="animate-fade-up border-b border-navy/10 bg-mint/15 px-4 py-1.5 text-center text-xs font-medium text-navy" style={{ animationDelay: `${i * 0.12}s` }}>{s}</div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+        <div className="border-b border-navy/10 bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Collage spécial</div>
+        {options.map((opt, i) => {
+          const bon = fait && opt.cible
+          const rate = rates.includes(opt.label)
+          const cliquable = !fait && !rate
+          return (
+            <div
+              key={i}
+              onClick={cliquable ? () => clic(opt) : undefined}
+              className={`flex items-center gap-2 px-3 py-1.5 transition ${cliquable ? 'cursor-pointer hover:bg-mint/10' : ''} ${bon ? 'bg-mint/20 font-bold text-navy' : rate ? 'text-navy/30' : 'text-navy/80'}`}
+            >
+              <span className="grid h-5 w-5 place-items-center rounded-sm border border-navy/15 text-[10px]">{opt.icone}</span>
+              <span>{opt.label}</span>
+            </div>
+          )
+        })}
+      </div>
+      {fait ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ Transposé ! 🥋</span> {v.explication || 'Le tableau qui était en ligne est maintenant en colonne : les lignes et les colonnes ont été échangées.'}
+        </p>
+      ) : rates.length > 0 ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">Ce n'est pas cette option. Cherche celle qui échange lignes et colonnes.</p>
+      ) : (
+        <p className="mt-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 Dans la fenêtre, clique l'option qui échange lignes et colonnes</p>
+      )}
+    </div>
+  )
+}
+
 // « Sélectionne la plage » : l'élève choisit lui-même la plage à calculer en cliquant
 // la 1re puis la dernière cellule (comme un cliquer-glisser). Quand la plage est bonne,
 // la formule se complète (ex. =SOMME(B2:B4)). Sert à SOMME, MOYENNE, MIN/MAX…
@@ -4971,6 +5046,7 @@ function TirePoignee({ onResolu, v = {} }) {
   const vertical = v.sens === 'bas'
   const cols = entetes || ['A', 'B', 'C', 'D', 'E', 'F'].slice(0, 1 + suite.length)
   const colonne = (entetes && entetes[0]) || 'B'
+  const nextCol = String.fromCharCode(colonne.charCodeAt(0) + 1) // colonne vide à droite pour voir la poignée
   const departRow = v.departRow || 2
   const tirer = () => {
     if (!rempli) {
@@ -4980,32 +5056,37 @@ function TirePoignee({ onResolu, v = {} }) {
   }
   const rendre = (t) => (formule && typeof t === 'string' && t.startsWith('=') ? <span className="font-mono text-[10px]">{coloreFormule(t)}</span> : t)
   const cellCls = `relative min-h-[30px] border-b border-l border-navy/10 px-2 py-1 ${nombres ? 'text-right' : ''}`
-  // La vraie poignée de recopie d'Excel : un petit carré NOIR au coin, curseur en croix noire (+).
+  // La vraie poignée de recopie d'Excel : la croix noire (+) au coin bas-droit de la cellule.
   const poignee = (
     <button
       onClick={tirer}
       title="Tirer la poignée de recopie"
-      className={`absolute -bottom-1 -right-1 z-10 h-2.5 w-2.5 border border-white bg-[#0a1f33] shadow ${rempli ? '' : 'cursor-crosshair ring-2 ring-navy/20'}`}
-    />
+      className={`absolute -bottom-2.5 -right-2.5 z-20 grid h-5 w-5 place-items-center leading-none ${rempli ? '' : 'cursor-crosshair'}`}
+    >
+      <span className={`font-black leading-none text-[#0a1f33] ${rempli ? 'text-sm' : 'animate-glow text-lg'}`}>+</span>
+    </button>
   )
   return (
     <div className="mt-3">
       <div className="select-none overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
         {vertical ? (
-          <div className="grid text-xs" style={{ gridTemplateColumns: '26px 1fr' }}>
+          <div className="grid text-xs" style={{ gridTemplateColumns: '26px 1fr 1fr' }}>
             <div className="bg-navy/10" />
             <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{colonne}</div>
+            <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{nextCol}</div>
             <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{departRow}</div>
             <div className={`${cellCls} font-medium text-navy ring-2 ring-inset ring-navy/40`}>
               {rendre(depart)}
               {poignee}
             </div>
+            <div className={cellCls} />
             {suite.map((val, i) => (
               <div key={i} className="contents">
                 <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{departRow + 1 + i}</div>
                 <div className={`${cellCls} ${rempli ? 'animate-fade-up bg-mint/15 font-medium text-navy' : ''}`} style={rempli ? { animationDelay: `${i * 0.12}s` } : undefined}>
                   {rempli ? rendre(val) : ''}
                 </div>
+                <div className={cellCls} />
               </div>
             ))}
           </div>
@@ -5056,20 +5137,26 @@ function BaliseSeries({ v, onResolu }) {
   }
   return (
     <div className="mt-3 flex flex-col items-center gap-2">
-      <div className="relative pb-5 pr-2">
+      <div className="relative">
         <div className="overflow-hidden rounded-md border border-navy/15 shadow">
           <div className="grid text-[10px]" style={{ gridTemplateColumns: '24px repeat(3, 78px)' }}>
             <div className="bg-navy/10" />
             {['A', 'B', 'C'].map((c) => (
               <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
             ))}
-            <div className="bg-navy/10 py-1 text-center text-navy/50">1</div>
-            <div className="border-l border-navy/10 px-1.5 py-1 text-navy/90">01/05/2025</div>
-            <div className="border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">02/05/2025</div>
-            <div className="border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">03/05/2025</div>
+            {/* ligne 1 : la série de dates */}
+            <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">1</div>
+            <div className="border-b border-l border-navy/10 px-1.5 py-1 text-navy/90">01/05/2025</div>
+            <div className="border-b border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">02/05/2025</div>
+            <div className="border-b border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">03/05/2025</div>
+            {/* ligne 2 : vide, la balise se pose ici, SOUS C1 (sans cacher la date) */}
+            <div className="bg-navy/10 py-1 text-center text-navy/50">2</div>
+            <div className="min-h-[26px] border-l border-navy/10" />
+            <div className="min-h-[26px] border-l border-navy/10" />
+            <div className="min-h-[26px] border-l border-navy/10" />
           </div>
         </div>
-        <button onClick={clic} title="Options de recopie" className={`absolute bottom-0 right-0 flex items-center gap-1 rounded-sm border bg-white px-1.5 py-1 shadow-md ${ouvert ? 'border-navy/20' : 'animate-glow cursor-pointer border-navy/40'}`}>
+        <button onClick={clic} title="Options de recopie" className={`absolute right-0 top-[46px] flex items-center gap-1 rounded-sm border bg-white px-1.5 py-1 shadow-md ${ouvert ? 'border-navy/20' : 'animate-glow cursor-pointer border-navy/40'}`}>
           <svg width="14" height="14" viewBox="0 0 12 12">
             <rect x="1" y="1" width="10" height="10" rx="1" fill="none" stroke="#0a335d" strokeWidth="1" />
             <rect x="1.5" y="6.5" width="9" height="4.5" fill="#0a335d" opacity="0.45" />
@@ -5143,7 +5230,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -5207,6 +5294,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <BaliseSeries v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'annulesaisie' ? (
             <AnnuleSaisie v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'collagetranspose' ? (
+            <CollageTranspose v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -5238,7 +5327,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                   ? 'Clique la balise'
                                   : s.visuel?.type === 'annulesaisie'
                                     ? 'Clique la croix rouge'
-                                    : 'Réponds pour continuer'
+                                    : s.visuel?.type === 'collagetranspose'
+                                      ? 'Clique Transposer'
+                                      : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

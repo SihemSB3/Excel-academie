@@ -467,11 +467,10 @@ const COLLAGE = {
       dit: 'Vérifions que la nuance est claire. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'Après un Collage spécial > Valeurs, la cellule contient encore la formule =B2*C2.', bonne: false, explication: 'Non : « Valeurs » colle seulement le résultat affiché (10). La formule disparaît. C\'est justement ce qu\'on veut pour figer un chiffre.' },
     },
-    { humeur: 'accueil', dit: 'Autre option puissante : tu as copié un tableau **en ligne** (Janvier, Février côte à côte) et tu fais clic droit. **Clique l\'option qui échange lignes et colonnes.**', visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Transposer » dans le collage spécial', items: [{ icone: '123', label: 'Valeurs' }, { icone: '%', label: 'Mise en forme' }, { icone: 'fx', label: 'Formules' }, { icone: '⇄', label: 'Transposer' }], cible: 3, explication: 'Transposer fait pivoter le tableau : ce qui était en ligne passe en colonne. Regarde le résultat.' } },
     {
-      humeur: 'content',
-      dit: 'Et voilà le résultat : le tableau qui était **en ligne** est maintenant **en colonne**. Les lignes et les colonnes ont été échangées.',
-      visuel: { type: 'transposer' },
+      humeur: 'accueil',
+      dit: 'Autre option puissante : ton tableau est **en ligne** (janvier, février, mars côte à côte). Tu as copié, tu ouvres le **Collage spécial**. **À toi de trouver l\'option qui échange lignes et colonnes**, et regarde le tableau basculer.',
+      visuel: { type: 'collagetranspose', valeurs: ['janvier', 'février', 'mars'], explication: 'Le tableau qui était en ligne est maintenant en colonne : les lignes et les colonnes ont été échangées.' },
       plus: ['1. Copie le tableau. 2. Clique droit à l\'endroit où tu veux le coller. 3. Clique sur Collage spécial > Transposer. 4. Ton tableau s\'inverse automatiquement.'],
     },
     {
