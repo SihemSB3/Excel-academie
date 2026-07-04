@@ -3923,6 +3923,108 @@ function TcdBuilder({ v, onResolu, onErreur }) {
   )
 }
 
+// « Manipule ton TCD » : le classeur ENTIER (onglets + TCD) reste visible ; l'élève
+// déclenche une action (clic droit → menu, ou bouton du ruban) et VOIT le TCD changer en
+// direct (une ligne s'ajoute à l'actualisation, dates regroupées, valeurs en %…). Props :
+// `avant`/`apres` = { titre, valeurTitre, lignes:[{et,val,nouvelle?}], total }.
+function TcdScene({ v, onResolu, onErreur }) {
+  const { feuilles = ['Ventes', 'Feuil1'], feuilleActive = 'Feuil1', classeur = 'Ventes.xlsx', consigne, declencheur = 'menu', clicDroitLabel = 'Clic droit sur le TCD', items = [], onglets = ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], groupeNom, groupes = [], cible, avant = {}, apres = {}, explication } = v
+  const [fait, setFait] = useState(false)
+  const [rates, setRates] = useState([])
+  const tcd = fait ? apres : avant
+  const choisir = (val) => {
+    if (fait) return
+    if (val === cible) {
+      setFait(true)
+      onResolu && onResolu()
+    } else if (!rates.includes(val)) {
+      setRates((r) => [...r, val])
+      onErreur && onErreur()
+    }
+  }
+
+  const Tcd = () => (
+    <table className="border-collapse text-[10px]">
+      <tbody>
+        <tr>
+          <td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{tcd.titre || 'Étiquettes de lignes'}</td>
+          <td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{tcd.valeurTitre || 'Somme de Montant'}</td>
+        </tr>
+        {(tcd.lignes || []).map((l, i) => (
+          <tr key={i} className={fait && l.nouvelle ? 'animate-fade-up' : ''}>
+            <td className={`border border-navy/15 px-2 py-1 text-navy/85 ${fait && l.nouvelle ? 'bg-mint/20 font-semibold' : ''}`}>{l.et}</td>
+            <td className={`border border-navy/15 px-2 py-1 text-right ${fait ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td>
+          </tr>
+        ))}
+        {tcd.total && (
+          <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{tcd.total}</td></tr>
+        )}
+      </tbody>
+    </table>
+  )
+
+  return (
+    <div className="mt-3">
+      {!fait && consigne && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {consigne}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        {declencheur === 'ruban' && (
+          <div className="border-b border-navy/10 bg-[#f3f3f3] px-2 pt-1">
+            <div className="flex gap-0.5 text-[10px]">{onglets.map((o) => (<span key={o} className={`rounded-t px-2 py-1 ${o === (v.actif || 'Analyse du TCD') ? 'bg-white font-bold text-[#0a7a3d]' : 'text-navy/55'}`}>{o}</span>))}</div>
+            <div className="flex items-start gap-2 bg-white px-2 py-1.5">
+              <div className="rounded-md border border-navy/15 bg-navy/[0.02] px-1.5 pb-1 pt-1">
+                <div className="flex items-end gap-1">
+                  {groupes.map((g, i) => {
+                    const bon = fait && g.label === cible
+                    const rate = rates.includes(g.label)
+                    return (
+                      <div key={i} onClick={!fait && !rate ? () => choisir(g.label) : undefined} className={`flex w-16 flex-col items-center gap-1 rounded px-1 py-1 text-center text-[10px] ${!fait && !rate ? 'cursor-pointer hover:bg-mint/10' : ''} ${bon ? 'bg-mint/20 ring-2 ring-mint' : rate ? 'opacity-30' : ''}`}>
+                        <span className="grid h-6 w-6 place-items-center rounded text-sm text-navy/70">{g.icone}</span>
+                        <span className="leading-tight text-navy/75">{g.label.split('\n').map((l, j) => (<span key={j} className="block">{l}</span>))}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+                {groupeNom && <div className="mt-1 border-t border-navy/10 pt-0.5 text-center text-[9px] font-semibold text-navy/60">{groupeNom}</div>}
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="flex items-start gap-2 p-2">
+          <div className="min-w-0 flex-1 overflow-x-auto"><Tcd /></div>
+          {declencheur === 'menu' && !fait && (
+            <div className="w-40 shrink-0">
+              <p className="mb-1 text-center text-[9px] font-bold uppercase tracking-wide text-navy/40">🖱 {clicDroitLabel}</p>
+              <div className="overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+                {items.map((it, i) => {
+                  const label = typeof it === 'string' ? it : it.label
+                  if (label === '-') return <div key={i} className="my-0.5 border-t border-navy/10" />
+                  const rate = rates.includes(i)
+                  return (
+                    <div key={i} onClick={!rate ? () => choisir(i) : undefined} className={`flex items-center gap-2 px-3 py-1.5 transition ${!rate ? 'cursor-pointer hover:bg-mint/10' : 'text-navy/30'} text-navy/80`}>
+                      {typeof it === 'object' && it.icone && <span className="w-4 text-center">{it.icone}</span>}
+                      <span>{label}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => (<span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>))}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fait ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>
+      ) : rates.length > 0 ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">{ENCOURAGEMENTS_Q[(rates.length - 1) % ENCOURAGEMENTS_Q.length]}</p>
+      ) : null}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -5537,7 +5639,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -5607,6 +5709,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ConstruitFormule v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'tcdbuilder' ? (
             <TcdBuilder v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'tcdscene' ? (
+            <TcdScene v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -5644,7 +5748,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                         ? 'Construis la formule'
                                         : s.visuel?.type === 'tcdbuilder'
                                           ? 'Dépose les champs'
-                                          : 'Réponds pour continuer'
+                                          : s.visuel?.type === 'tcdscene'
+                                            ? 'Fais l\'action sur le TCD'
+                                            : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
