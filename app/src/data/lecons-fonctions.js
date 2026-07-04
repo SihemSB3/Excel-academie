@@ -233,10 +233,15 @@ const SAISIE = {
     },
     { humeur: 'accueil', dit: 'Tu peux changer son **affichage** (court, long, personnalisé) : clic droit sur la cellule > **Format de cellule** > Date.', visuel: { type: 'formatcellule', etapes: ['Clic droit sur la cellule', 'Format de cellule', 'Onglet Nombre > Date', 'Choisis le format qui te plaît'] }, plus: ['Tu peux toujours modifier le format d\'affichage (court, long, personnalisé) en faisant clic droit > Format de cellule > Date.', 'Pour qu\'Excel reconnaisse une date, il faut utiliser un format qu\'il comprend. Tu peux écrire ta date de plusieurs façons : avec des slashs (11/05/2025 ou 11/05) ou avec des tirets (11-05-2025 ou 11-05).'] },
     {
-      humeur: 'pensif',
-      dit: 'Une faute de frappe ? **Échap** (ou la croix ✕ de la barre de formule) annule ta saisie en cours. Et **Ctrl + Z** (sur **Mac** : **⌘ + Z**) annule après avoir validé.',
-      visuel: { type: 'barreformule' },
+      humeur: 'accueil',
+      dit: 'Oups, tu as tapé « Réunionn » avec une faute et tu n\'as pas encore validé. Sans tout effacer au clavier, **annule ta saisie** : clique la bonne icône de la barre de formule.',
+      visuel: { type: 'annulesaisie', saisie: 'Réunionn', cellule: 'A2' },
       plus: ['Quand tu tapes du texte ou un nombre dans une cellule, cela remplace ce qui était déjà dedans (si elle n\'était pas vide).', 'Tu veux annuler ce que tu es en train d\'écrire ? Clique sur la croix dans la barre de formule, ou appuie sur la touche Échap. Si tu valides par erreur, tu peux toujours faire Ctrl + Z pour revenir en arrière.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Et si tu as déjà **validé** ta faute avec Entrée ? Là, c\'est **Ctrl + Z** (sur **Mac** : **⌘ + Z**) qui annule la dernière action.',
+      visuel: { type: 'touche', touches: ['Ctrl', 'Z'], note: 'Ctrl + Z (⌘ + Z sur Mac) annule ta dernière action, même après validation. Tu peux l\'appuyer plusieurs fois pour remonter le temps.' },
     },
     {
       humeur: 'accueil',
@@ -277,7 +282,7 @@ const RECOPIE = {
     { humeur: 'pensif', dit: 'En bas à droite d\'une cellule, il y a une petite croix : la poignée de recopie. Tu cliques dessus et tu tires.', visuel: tabRec({}, null, 'A2', 'La petite croix (+) en bas à droite de la cellule sélectionnée, c\'est la poignée de recopie.'), plus: ['Place ta souris sur le petit carré en bas à droite de la cellule (la poignée de recopie). Clique, maintiens et tire la poignée vers les cellules où tu veux dupliquer le contenu.', 'Tu peux tirer vers le haut, le bas, la gauche ou la droite.'] },
     { humeur: 'accueil', dit: 'On va calculer le total de la ligne « Clavier » (prix × quantité). Dans quelle cellule écrire la formule ? **Clique-la.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du total de la ligne Clavier', cols: ['A', 'B', 'C', 'D', 'E'], rows: [1, 2, 3, 4], cells: { ...REC }, cible: 'D2', explication: 'Oui : ligne « Clavier », colonne « Total » = D2. C\'est là qu\'on écrit =B2*C2.' } },
     { humeur: 'accueil', dit: 'Donc en D2, tu écris =B2*C2 pour le total de la première ligne.', visuel: tabRec({ D2: { t: '=B2*C2' } }, '=B2*C2', 'D2', 'Chaque cellule de la formule prend une couleur, comme dans Excel : B2 en bleu, C2 en orange.', { refsCouleur: { B2: 'bleu', C2: 'ambre' } }) },
-    { humeur: 'pensif', dit: 'Tu tires la poignée vers le bas : Excel adapte la formule à chaque ligne. Regarde le détail : =B2*C2 devient =B3*C3, puis =B4*C4.', visuel: { type: 'recopieanim' } },
+    { humeur: 'accueil', dit: 'Plutôt que de réécrire la formule sur chaque ligne, **tire la poignée vers le bas** toi-même, et regarde comment Excel l\'adapte.', visuel: { type: 'tirepoignee', sens: 'bas', formule: true, entetes: ['D'], departRow: 2, depart: '=B2*C2', suite: ['=B3*C3', '=B4*C4'], promptMsg: '👆 Attrape la poignée noire au coin de la formule et tire vers le bas', okMsg: '✓ =B2*C2 devient =B3*C3 puis =B4*C4 : les lignes suivent toutes seules !' } },
     {
       humeur: 'pensif',
       dit: 'Vérifions que le principe est clair. **Vrai ou faux ?**',
@@ -322,7 +327,7 @@ const REFERENCES = {
       visuel: { type: 'encart', label: 'Astuce clavier', texte: 'Pas besoin de taper les $ à la main : clique sur la cellule dans ta formule et appuie sur **F4**. Sur un PC portable, c\'est parfois **Fn + F4**. Et sur **Mac**, utilise **⌘ + T**.' },
       plus: ['Tu peux activer une référence absolue en appuyant sur F4 juste après avoir cliqué sur une cellule dans la formule. Si F4 ne fonctionne pas tout seul, essaie FN + F4.'],
     },
-    { humeur: 'accueil', dit: 'La formule =A2*$C$2 est écrite dans la 1re ligne. Pour l\'appliquer aux lignes suivantes, tu ne réécris rien : **tire la poignée vers le bas.**', visuel: { type: 'tirepoignee', sens: 'bas', formule: true, entetes: ['B'], departRow: 2, depart: '=A2*$C$2', suite: ['=A3*$C$2', '=A4*$C$2'], promptMsg: '👆 Attrape la poignée verte au coin de la formule et tire vers le bas', okMsg: '✓ A2 devient A3 puis A4… mais $C$2 reste figé partout !' } },
+    { humeur: 'accueil', dit: 'La formule =A2*$C$2 est écrite dans la 1re ligne. Pour l\'appliquer aux lignes suivantes, tu ne réécris rien : **tire la poignée vers le bas.**', visuel: { type: 'tirepoignee', sens: 'bas', formule: true, entetes: ['B'], departRow: 2, depart: '=A2*$C$2', suite: ['=A3*$C$2', '=A4*$C$2'], promptMsg: '👆 Attrape la poignée noire au coin de la formule et tire vers le bas', okMsg: '✓ A2 devient A3 puis A4… mais $C$2 reste figé partout !' } },
     { humeur: 'fier', dit: 'Résultat : A2 s\'adapte (A3, A4...) mais $C$2 reste fixe. Tous les calculs tombent juste : 36, 24...', visuel: tabRef({ B2: { t: '36', vert: true }, B3: { t: '24', vert: true }, A3: { t: '20' } }, '=A3*$C$2', 'B3', 'A3 a changé de cellule (bleu), mais $C$2 (orange) est resté le même.', { refsCouleur: { A3: 'bleu', C2: 'ambre' } }) },
     {
       humeur: 'pensif',
@@ -372,14 +377,14 @@ const DEPLACER = {
     { humeur: 'pensif', dit: 'Pour copier une cellule, tu as le choix entre trois méthodes. Prends celle que tu préfères.' },
     {
       humeur: 'accueil',
-      dit: '**Méthode 1, le ruban :** sélectionne ta cellule, va dans l\'onglet **Accueil** et clique sur **Copier**. Puis clique la destination et **Coller**.',
-      visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier', actif: true }] },
-      plus: ['Copier des cellules : 1. Sélectionne les cellules à copier. 2. Clique sur Accueil > Copier (📄). 3. Clique sur la cellule de destination. 4. Clique sur Coller.', 'Déplacer une cellule ou une plage : sélectionne-la, puis Accueil > Presse-papiers > Couper (✂). Clique sur la cellule de destination, puis Coller. (Ou clic droit > Couper, puis clic droit sur la cible > Insérer les cellules coupées.)'],
+      dit: 'Commençons par le ruban. Sélectionne ta cellule, va dans l\'onglet **Accueil**… et **à toi de trouver le bouton qui copie.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton qui copie', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }], cible: 'Copier', explication: 'C\'est le bouton Copier (📄), à ne pas confondre avec Couper (✂, pour déplacer) ni Coller (📋).' },
     },
     {
       humeur: 'accueil',
-      dit: 'Essayons la méthode 1. Dans le ruban **Accueil**, **clique le bouton pour copier.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Copier', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }], cible: 'Copier', explication: 'Voilà, le bouton Copier (📄). Ensuite tu cliques la destination et tu fais Coller.' },
+      dit: '**Méthode 1, le ruban :** tu l\'as trouvé. On sélectionne la cellule, **Accueil > Copier**, puis on clique la destination et **Coller**.',
+      visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier', actif: true }] },
+      plus: ['Copier des cellules : 1. Sélectionne les cellules à copier. 2. Clique sur Accueil > Copier (📄). 3. Clique sur la cellule de destination. 4. Clique sur Coller.', 'Déplacer une cellule ou une plage : sélectionne-la, puis Accueil > Presse-papiers > Couper (✂). Clique sur la cellule de destination, puis Coller. (Ou clic droit > Couper, puis clic droit sur la cible > Insérer les cellules coupées.)'],
     },
     {
       humeur: 'accueil',
@@ -604,8 +609,8 @@ const SERIES = {
   ],
   narration: [
     { humeur: 'accueil', dit: 'La poignée de recopie ne sert pas qu\'à copier : elle crée aussi des **suites automatiques**, les séries. Un vrai gain de temps.' },
-    { humeur: 'accueil', dit: '« janvier » est écrit dans la 1re case. Plutôt que de retaper les mois suivants, **à toi de tirer la poignée** de recopie pour compléter la suite.', visuel: { type: 'tirepoignee', depart: 'janvier', suite: ['février', 'mars', 'avril'], promptMsg: '👆 Attrape la poignée verte au coin de « janvier » et tire vers la droite', okMsg: '✓ février, mars, avril : Excel a complété la série tout seul !' }, plus: ['Écris un mois dans une cellule (septembre ou sept). Tire la poignée de recopie vers la droite ou vers le bas. Excel complètera automatiquement avec octobre, nov, déc, etc.', 'Tu peux aussi écrire les mois en version abrégée (3 ou 4 lettres) : sept, nov...'] },
-    { humeur: 'accueil', dit: 'Ça marche pareil pour les **jours**. « lundi » est en place : **tire la poignée** pour voir la suite se remplir.', visuel: { type: 'tirepoignee', depart: 'lundi', suite: ['mardi', 'mercredi', 'jeudi'], promptMsg: '👆 Attrape la poignée verte au coin de « lundi » et tire vers la droite', okMsg: '✓ mardi, mercredi, jeudi : la suite des jours se complète toute seule !' }, plus: ['Écris un jour de la semaine dans une cellule (mercredi, mer). Tire la poignée de recopie. Excel continuera avec jeudi, vendredi, samedi, etc.', 'Peu importe si tu tapes le jour en entier ou en version courte, Excel reconnaît la suite.', 'Les trimestres marchent aussi (Trim 1, Trim 2…).'] },
+    { humeur: 'accueil', dit: '« janvier » est écrit dans la 1re case. Plutôt que de retaper les mois suivants, **à toi de tirer la poignée** de recopie pour compléter la suite.', visuel: { type: 'tirepoignee', depart: 'janvier', suite: ['février', 'mars', 'avril'], promptMsg: '👆 Attrape la poignée noire au coin de « janvier » et tire vers la droite', okMsg: '✓ février, mars, avril : Excel a complété la série tout seul !' }, plus: ['Écris un mois dans une cellule (septembre ou sept). Tire la poignée de recopie vers la droite ou vers le bas. Excel complètera automatiquement avec octobre, nov, déc, etc.', 'Tu peux aussi écrire les mois en version abrégée (3 ou 4 lettres) : sept, nov...'] },
+    { humeur: 'accueil', dit: 'Ça marche pareil pour les **jours**. « lundi » est en place : **tire la poignée** pour voir la suite se remplir.', visuel: { type: 'tirepoignee', depart: 'lundi', suite: ['mardi', 'mercredi', 'jeudi'], promptMsg: '👆 Attrape la poignée noire au coin de « lundi » et tire vers la droite', okMsg: '✓ mardi, mercredi, jeudi : la suite des jours se complète toute seule !' }, plus: ['Écris un jour de la semaine dans une cellule (mercredi, mer). Tire la poignée de recopie. Excel continuera avec jeudi, vendredi, samedi, etc.', 'Peu importe si tu tapes le jour en entier ou en version courte, Excel reconnaît la suite.', 'Les trimestres marchent aussi (Trim 1, Trim 2…).'] },
     {
       humeur: 'accueil',
       dit: 'Et pour une **date** ? Tu tapes 01/05/2025 et tu tires la poignée. **Que met Excel dans la case suivante ?**',
@@ -614,8 +619,13 @@ const SERIES = {
     { humeur: 'pensif', dit: 'Voilà : tape 01/05/2025, tire, et Excel ajoute un jour à chaque cellule. (La cellule doit être au format date.)', visuel: tabSerie({ A1: { t: '01/05/2025' }, B1: { t: '02/05/2025', vert: true }, C1: { t: '03/05/2025', vert: true } }, 'A1') },
     {
       humeur: 'accueil',
-      dit: 'Tu peux même choisir le pas des dates : par **jours ouvrés** (sans week-ends), par **mois** ou par **année**.',
-      visuel: { type: 'seriesoptions', etapes: ['Tire la poignée pour créer la série', 'Une petite balise bleue apparaît en bas à droite', 'Clique dessus', 'Choisis : jours ouvrés, mois, années...'] },
+      dit: 'Tu peux même choisir le pas des dates. Après la recopie, une petite **balise** apparaît en bas à droite. **Clique-la** pour voir les options.',
+      visuel: { type: 'baliseclic', sel: 1 },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Voilà les choix : jours ouvrés (sans week-ends), par mois, par année… selon ce dont tu as besoin.',
+      visuel: { type: 'seriesoptions', etapes: ['Tire la poignée pour créer la série', 'Une petite balise apparaît en bas à droite', 'Clique dessus', 'Choisis : jours ouvrés, mois, années...'] },
       plus: [
         'Tu peux aussi utiliser la poignée de recopie pour générer une suite de dates : sans les week-ends (jours ouvrés) ? par mois (01/05 → 01/06 → 01/07) ? par année ?',
         'Tu peux le faire en choisissant l\'option dans le menu (ex : « incrémenter les mois »), ou bien en cliquant sur la petite balise bleue qui apparaît après la recopie.',

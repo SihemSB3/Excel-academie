@@ -4980,11 +4980,12 @@ function TirePoignee({ onResolu, v = {} }) {
   }
   const rendre = (t) => (formule && typeof t === 'string' && t.startsWith('=') ? <span className="font-mono text-[10px]">{coloreFormule(t)}</span> : t)
   const cellCls = `relative min-h-[30px] border-b border-l border-navy/10 px-2 py-1 ${nombres ? 'text-right' : ''}`
+  // La vraie poignée de recopie d'Excel : un petit carré NOIR au coin, curseur en croix noire (+).
   const poignee = (
     <button
       onClick={tirer}
       title="Tirer la poignée de recopie"
-      className={`absolute -bottom-1.5 -right-1.5 z-10 h-3 w-3 rounded-[2px] border border-white bg-mint shadow ${rempli ? '' : 'animate-glow cursor-crosshair'}`}
+      className={`absolute -bottom-1 -right-1 z-10 h-2.5 w-2.5 border border-white bg-[#0a1f33] shadow ${rempli ? '' : 'cursor-crosshair ring-2 ring-navy/20'}`}
     />
   )
   return (
@@ -5014,7 +5015,8 @@ function TirePoignee({ onResolu, v = {} }) {
             {cols.map((c) => (
               <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
             ))}
-            <div className="bg-navy/10 text-center text-navy/50">1</div>
+            {/* ligne 1 : la valeur de départ + la poignée à son coin */}
+            <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">1</div>
             <div className={`${cellCls} font-medium text-navy ring-2 ring-inset ring-navy/40`}>
               {rendre(depart)}
               {poignee}
@@ -5028,10 +5030,96 @@ function TirePoignee({ onResolu, v = {} }) {
                 {rempli ? rendre(val) : ''}
               </div>
             ))}
+            {/* ligne 2 : vide, pour bien voir la poignée au coin de la 1re case */}
+            <div className="bg-navy/10 py-1 text-center text-navy/50">2</div>
+            {cols.map((c) => (
+              <div key={'r2' + c} className="min-h-[28px] border-l border-navy/10" />
+            ))}
           </div>
         )}
       </div>
       <p className="mt-3 rounded-full bg-mint/15 px-3 py-2 text-center text-sm font-bold text-mint">{rempli ? okMsg : promptMsg}</p>
+    </div>
+  )
+}
+
+// La balise « Options de recopie » qu'on CLIQUE : après la recopie, la petite étiquette
+// apparaît ; l'élève clique dessus et le menu des options se déploie (jours ouvrés, mois…).
+function BaliseSeries({ v, onResolu }) {
+  const { options = ['Copier les cellules', 'Incrémenter une série', 'Incrémenter les jours ouvrés', 'Incrémenter les mois', 'Incrémenter les années'], sel = 1 } = v
+  const [ouvert, setOuvert] = useState(false)
+  const clic = () => {
+    if (!ouvert) {
+      setOuvert(true)
+      onResolu && onResolu()
+    }
+  }
+  return (
+    <div className="mt-3 flex flex-col items-center gap-2">
+      <div className="relative pb-5 pr-2">
+        <div className="overflow-hidden rounded-md border border-navy/15 shadow">
+          <div className="grid text-[10px]" style={{ gridTemplateColumns: '24px repeat(3, 78px)' }}>
+            <div className="bg-navy/10" />
+            {['A', 'B', 'C'].map((c) => (
+              <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
+            ))}
+            <div className="bg-navy/10 py-1 text-center text-navy/50">1</div>
+            <div className="border-l border-navy/10 px-1.5 py-1 text-navy/90">01/05/2025</div>
+            <div className="border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">02/05/2025</div>
+            <div className="border-l border-navy/10 bg-mint/30 px-1.5 py-1 font-semibold text-navy">03/05/2025</div>
+          </div>
+        </div>
+        <button onClick={clic} title="Options de recopie" className={`absolute bottom-0 right-0 flex items-center gap-1 rounded-sm border bg-white px-1.5 py-1 shadow-md ${ouvert ? 'border-navy/20' : 'animate-glow cursor-pointer border-navy/40'}`}>
+          <svg width="14" height="14" viewBox="0 0 12 12">
+            <rect x="1" y="1" width="10" height="10" rx="1" fill="none" stroke="#0a335d" strokeWidth="1" />
+            <rect x="1.5" y="6.5" width="9" height="4.5" fill="#0a335d" opacity="0.45" />
+          </svg>
+          <span className="text-[9px] leading-none text-navy/60">▾</span>
+        </button>
+      </div>
+      {!ouvert ? (
+        <p className="rounded-full bg-mint/15 px-4 py-2 text-center text-sm font-bold text-mint">👆 Clique la balise « Options de recopie » (en bas à droite)</p>
+      ) : (
+        <div className="animate-fade-up w-64 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-xs shadow-xl">
+          {options.map((o, i) => (
+            <div key={i} className={`px-3 py-1.5 ${i === sel ? 'bg-mint/20 font-bold text-navy' : 'text-navy/80'}`}>{i === sel ? '● ' : '○ '}{o}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// « Annule ta saisie » : une faute de frappe dans la barre de formule ; l'élève clique la
+// croix rouge ✕ et le mot disparaît (la cellule redevient vide). Interaction bloquante.
+function AnnuleSaisie({ v, onResolu }) {
+  const { saisie = 'Réunionn', cellule = 'A2' } = v
+  const [efface, setEfface] = useState(false)
+  const clic = () => {
+    if (!efface) {
+      setEfface(true)
+      onResolu && onResolu()
+    }
+  }
+  return (
+    <div className="mt-3">
+      <div className="overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+        <div className="flex items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1.5 text-xs">
+          <span className="w-8 text-navy/45">{cellule}</span>
+          <button onClick={clic} title="Annuler la saisie" className={`grid h-5 w-5 place-items-center rounded-sm border text-[13px] font-bold ${efface ? 'border-navy/15 text-navy/25' : 'animate-glow cursor-pointer border-red-400 text-red-500 hover:bg-red-50'}`}>✕</button>
+          <span className="grid h-5 w-5 place-items-center rounded-sm border border-navy/15 text-[13px] font-bold text-mint">✓</span>
+          <span className="font-mono text-navy/90">{efface ? <span className="text-navy/30">|</span> : saisie}</span>
+        </div>
+        <div className="grid text-xs" style={{ gridTemplateColumns: '26px 1fr 1fr' }}>
+          <div className="bg-navy/5" />
+          <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">A</div>
+          <div className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">B</div>
+          <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">2</div>
+          <div className="min-h-[30px] border-b border-l border-navy/10 px-2 py-1 text-navy/90 ring-2 ring-inset ring-navy/40">{efface ? '' : saisie}</div>
+          <div className="min-h-[30px] border-b border-l border-navy/10" />
+        </div>
+      </div>
+      <p className="mt-3 rounded-full bg-mint/15 px-4 py-2 text-center text-sm font-bold text-mint">{efface ? '✓ La saisie disparaît : la cellule redevient vide. (La touche Échap fait pareil.)' : '👆 Tu t\'es trompé(e). Clique la croix rouge ✕ de la barre de formule pour annuler'}</p>
     </div>
   )
 }
@@ -5055,7 +5143,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -5115,6 +5203,10 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <SelectPlage v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'choixsuggestion' ? (
             <ChoixSuggestion v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'baliseclic' ? (
+            <BaliseSeries v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'annulesaisie' ? (
+            <AnnuleSaisie v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -5142,7 +5234,11 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                               ? 'Sélectionne la plage'
                               : s.visuel?.type === 'choixsuggestion'
                                 ? 'Clique la bonne fonction'
-                                : 'Réponds pour continuer'
+                                : s.visuel?.type === 'baliseclic'
+                                  ? 'Clique la balise'
+                                  : s.visuel?.type === 'annulesaisie'
+                                    ? 'Clique la croix rouge'
+                                    : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
