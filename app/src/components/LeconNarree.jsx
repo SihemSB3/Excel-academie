@@ -4833,6 +4833,190 @@ function CliqueCible({ v, onResolu, onErreur }) {
   )
 }
 
+// « Construis la formule » : l'élève BÂTIT une fonction multi-arguments en manipulant,
+// geste par geste (cliquer la cellule-clé, sélectionner une plage sur un autre onglet,
+// choisir le n° de colonne, choisir FAUX). La formule s'écrit toute seule dans la barre
+// au fil des gestes ; à la fin, le résultat s'affiche dans la cellule. Générique : piloté
+// par `sequence` (étapes de type 'clic' | 'plage' | 'choix'), donc réutilisable pour
+// RECHERCHEV/RECHERCHEX/SI… Aucune consigne ne nomme la réponse : on FAIT d'abord.
+function ConstruitFormule({ v, onResolu, onErreur }) {
+  const { prefixe = '=', grilles = {}, sequence = [], resultat, resultatValeur, resultatFeuille, explication } = v
+  const [etape, setEtape] = useState(0)
+  const [faits, setFaits] = useState([])
+  const [anchor, setAnchor] = useState(null)
+  const [rate, setRate] = useState(false)
+  const [rates, setRates] = useState([])
+  const feuilles = Object.keys(grilles)
+  const fini = etape >= sequence.length
+  const stepC = sequence[etape] || {}
+  const feuilleFin = resultatFeuille || feuilles[0]
+  const feuilleActive = fini ? feuilleFin : stepC.feuille || feuilles[0]
+  const grille = grilles[feuilleActive] || { cols: [], rows: [], cells: {} }
+  const formule = prefixe + faits.join('')
+
+  const parse = (id) => ({ c: (id.match(/[A-Z]+/) || [''])[0], r: parseInt((id.match(/\d+/) || ['0'])[0], 10) })
+  const idsEntre = (a, b, cols) => {
+    const A = parse(a), B = parse(b)
+    if (A.c === B.c) {
+      const [r1, r2] = [A.r, B.r].sort((x, y) => x - y)
+      const out = []
+      for (let r = r1; r <= r2; r++) out.push(A.c + r)
+      return out
+    }
+    if (A.r === B.r) {
+      const i1 = cols.indexOf(A.c), i2 = cols.indexOf(B.c)
+      if (i1 < 0 || i2 < 0) return null
+      const [c1, c2] = [i1, i2].sort((x, y) => x - y)
+      const out = []
+      for (let i = c1; i <= c2; i++) out.push(cols[i] + A.r)
+      return out
+    }
+    // plage rectangulaire (plusieurs lignes ET colonnes)
+    const i1 = cols.indexOf(A.c), i2 = cols.indexOf(B.c)
+    if (i1 < 0 || i2 < 0) return null
+    const [c1, c2] = [i1, i2].sort((x, y) => x - y)
+    const [r1, r2] = [A.r, B.r].sort((x, y) => x - y)
+    const out = []
+    for (let r = r1; r <= r2; r++) for (let i = c1; i <= c2; i++) out.push(cols[i] + r)
+    return out
+  }
+  const memeEnsemble = (a, b) => a && b && a.length === b.length && a.every((x) => b.includes(x))
+  const plageCible = stepC.type === 'plage' ? idsEntre(stepC.debut, stepC.fin, grille.cols) || [] : []
+
+  const finirEtape = (ajoute) => {
+    setFaits((f) => [...f, ajoute])
+    setAnchor(null)
+    setRates([])
+    setEtape((e) => e + 1)
+  }
+  // On débloque « Continuer » APRÈS le commit (pas pendant le rendu, sinon React râle
+  // qu'on met à jour le parent en plein rendu).
+  useEffect(() => {
+    if (etape >= sequence.length) onResolu && onResolu()
+  }, [etape])
+  const raterCourt = () => {
+    setRate(true)
+    onErreur && onErreur()
+    setTimeout(() => {
+      setRate(false)
+      setAnchor(null)
+    }, 800)
+  }
+  const clicCellule = (id) => {
+    if (fini) return
+    if (stepC.type === 'clic') {
+      if (id === stepC.cible) finirEtape(stepC.ajoute)
+      else raterCourt()
+    } else if (stepC.type === 'plage') {
+      if (!anchor) {
+        setAnchor(id)
+        return
+      }
+      const sel = idsEntre(anchor, id, grille.cols)
+      if (memeEnsemble(sel, plageCible)) finirEtape(stepC.ajoute)
+      else raterCourt()
+    }
+  }
+  const clicChoix = (val) => {
+    if (fini) return
+    if (val === stepC.cible) finirEtape(stepC.ajoute)
+    else if (!rates.includes(val)) {
+      setRates((r) => [...r, val])
+      onErreur && onErreur()
+    }
+  }
+
+  const choixOptions = (stepC.options || []).map((o) => (typeof o === 'string' ? { label: o, val: o } : o))
+
+  return (
+    <div className="mt-3">
+      {!fini && stepC.consigne && (
+        <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {stepC.consigne}</p>
+      )}
+      <div className="overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+        <div className="flex items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1.5 text-xs">
+          <span className="font-bold text-navy/50">fx</span>
+          <span className="font-mono text-navy/90">{coloreFormule(fini ? formule : formule)}<span className="animate-pulse text-navy/40">{fini ? '' : '|'}</span></span>
+        </div>
+        <div className="grid text-xs" style={{ gridTemplateColumns: `28px repeat(${grille.cols.length}, 1fr)` }}>
+          <div className="bg-navy/5" />
+          {grille.cols.map((c) => (
+            <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
+          ))}
+          {grille.rows.map((r) => (
+            <div key={r} className="contents">
+              <div className="border-b border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{r}</div>
+              {grille.cols.map((c) => {
+                const id = c + r
+                const cell = (grille.cells || {})[id] || {}
+                const estResultat = id === resultat && feuilleActive === feuilleFin
+                const montreValeur = fini && resultatValeur != null
+                let contenu = cell.t
+                if (estResultat) contenu = montreValeur ? resultatValeur : formule
+                const estFormule = typeof contenu === 'string' && contenu.startsWith('=')
+                const dansPlage = anchor && stepC.type === 'plage' && idsEntre(anchor, id, grille.cols) && memeEnsemble(idsEntre(anchor, id, grille.cols), plageCible)
+                const estAnchor = anchor === id
+                const estRate = rate && (estAnchor || stepC.type === 'clic')
+                const cliquable = !cell.entete && !fini && (stepC.type === 'clic' || stepC.type === 'plage') && !estResultat
+                let cls = 'text-navy/90'
+                if (cell.entete) cls = 'bg-navy/10 font-bold text-navy/70'
+                else if (estResultat && montreValeur) cls = 'bg-mint/25 font-bold text-mint-dark'
+                else if (plageCible.includes(id) && (dansPlage || (stepC.type === 'plage' && anchor && estAnchor))) cls = 'bg-sky-500/25 font-bold text-navy ring-1 ring-inset ring-sky-400'
+                else if (estAnchor) cls = 'bg-mint/30 ring-2 ring-inset ring-mint'
+                else if (estRate) cls = 'bg-red-500/15 text-navy/50'
+                else if (cliquable) cls = 'text-navy/90 hover:bg-mint/10'
+                return (
+                  <div
+                    key={id}
+                    onClick={cliquable ? () => clicCellule(id) : undefined}
+                    className={`min-h-[30px] border-b border-l border-navy/10 px-2 py-1 ${cell.num ? 'text-right' : ''} ${cliquable ? 'cursor-pointer' : ''} ${cls}`}
+                  >
+                    {estFormule ? <span className="font-mono text-[10px] leading-tight">{coloreFormule(contenu)}</span> : contenu || ''}
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+        {feuilles.length > 1 && (
+          <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+            {feuilles.map((f) => (
+              <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {!fini && stepC.type === 'choix' && (
+        <div className="mt-3 flex flex-wrap justify-center gap-2">
+          {choixOptions.map((o) => {
+            const rate = rates.includes(o.val)
+            return (
+              <button
+                key={o.val}
+                onClick={rate ? undefined : () => clicChoix(o.val)}
+                className={`rounded-xl border px-4 py-2 text-sm font-bold transition ${rate ? 'border-navy/10 text-navy/30' : 'border-navy/15 text-navy hover:border-mint hover:bg-mint/10'}`}
+              >
+                {o.label}
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      {fini ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90">
+          <span className="font-bold text-mint">✓ Formule construite ! 🥋</span> {explication}
+        </p>
+      ) : stepC.type === 'plage' && anchor ? (
+        <p className="mt-2 rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">{rate ? 'Pas tout à fait cette plage. Reclique la première cellule.' : `Première cellule : ${anchor}. Clique maintenant la DERNIÈRE cellule de la plage.`}</p>
+      ) : rate || rates.length > 0 ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">{ENCOURAGEMENTS_Q[(Math.max(rates.length, 1) - 1) % ENCOURAGEMENTS_Q.length]}</p>
+      ) : null}
+    </div>
+  )
+}
+
 // « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
 // (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
 function ChoixTableau({ v, onResolu, onErreur }) {
@@ -5230,7 +5414,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -5296,6 +5480,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <AnnuleSaisie v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'collagetranspose' ? (
             <CollageTranspose v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'construitformule' ? (
+            <ConstruitFormule v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -5329,7 +5515,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                     ? 'Clique la croix rouge'
                                     : s.visuel?.type === 'collagetranspose'
                                       ? 'Clique Transposer'
-                                      : 'Réponds pour continuer'
+                                      : s.visuel?.type === 'construitformule'
+                                        ? 'Construis la formule'
+                                        : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
