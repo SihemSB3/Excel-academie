@@ -1938,8 +1938,13 @@ const RECHERCHERREMPLACER = {
     },
     { humeur: 'accueil', dit: 'Exemple : dans une colonne de notes, on veut remplacer toutes les notes « 9,5 » par « 10 ».', visuel: tabRR({ B3: { t: '9,5', num: true, ref: true }, B5: { t: '9,5', num: true, ref: true } }) },
     {
+      humeur: 'accueil',
+      dit: 'On passe par le ruban. Dans l\'onglet **Accueil > groupe Édition**, **à toi de trouver l\'outil de recherche** (une loupe).',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Rechercher & sélectionner', actif: 'Accueil', groupeNom: 'Édition', groupes: [{ icone: '∑', label: 'Somme' }, { icone: '⇅', label: 'Trier & filtrer' }, { icone: '🔍', label: 'Rechercher & sélectionner' }], cible: 'Rechercher & sélectionner', explication: 'La loupe 🔍 : elle ouvre le menu Rechercher / Remplacer. Choisis « Remplacer… » pour changer des valeurs en masse.' },
+    },
+    {
       humeur: 'pensif',
-      dit: 'On passe par le ruban, pas à pas.',
+      dit: 'Voilà la marche à suivre, pas à pas :',
       visuel: {
         type: 'methode',
         titre: 'Via le ruban',
@@ -1952,11 +1957,6 @@ const RECHERCHERREMPLACER = {
           { capture: tabRR({ B3: { t: '10', num: true, vert: true }, B5: { t: '10', num: true, vert: true } }) },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi de trouver l\'outil. Dans l\'onglet **Accueil > groupe Édition**, **clique la loupe** (Rechercher & sélectionner).',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Rechercher & sélectionner', actif: 'Accueil', groupeNom: 'Édition', groupes: [{ icone: '∑', label: 'Somme' }, { icone: '⇅', label: 'Trier & filtrer' }, { icone: '🔍', label: 'Rechercher & sélectionner' }], cible: 'Rechercher & sélectionner', explication: 'La loupe 🔍 : elle ouvre le menu Rechercher / Remplacer. Choisis « Remplacer… » pour changer des valeurs en masse.' },
     },
     {
       humeur: 'pensif',
@@ -1986,6 +1986,11 @@ const CONVERTIR = {
     { humeur: 'accueil', dit: 'Tu as une colonne qui mélange deux infos, par exemple « paul dupont » (prénom + nom), et tu veux les séparer en deux colonnes ? L\'outil **Convertir** fait ça automatiquement. Parfait pour structurer un fichier client mal formaté.' },
     { humeur: 'pensif', dit: 'Au départ, tout est collé dans une seule colonne :', visuel: { type: 'tableur', cols: ['A'], rows: [1, 2, 3], cells: { A1: { t: 'Nom complet', entete: true }, A2: { t: 'paul dupont' }, A3: { t: 'marie curie' } }, legende: 'Prénom et nom sont dans la même cellule.' } },
     {
+      humeur: 'accueil',
+      dit: 'L\'outil s\'appelle **Convertir**. Sélectionne la colonne, va dans l\'onglet **Données**, et **à toi de trouver le bouton Convertir.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Convertir', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🔀', label: 'Convertir' }, { icone: '🧹', label: 'Supprimer doublons' }, { icone: '✓', label: 'Validation' }], cible: 'Convertir', explication: 'Convertir 🔀 lance l\'assistant qui découpe une colonne en plusieurs, selon un séparateur (espace, virgule…).' },
+    },
+    {
       humeur: 'pensif',
       dit: 'On sépare la colonne, pas à pas.',
       visuel: {
@@ -2003,11 +2008,6 @@ const CONVERTIR = {
           { capture: { type: 'champs', titre: 'Assistant Conversion (étape 3)', champs: [{ l: 'Destination', v: '=$B$1', actif: true }] } },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi. Dans l\'onglet **Données**, **clique le bouton Convertir.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Convertir', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🔀', label: 'Convertir' }, { icone: '🧹', label: 'Supprimer doublons' }, { icone: '✓', label: 'Validation' }], cible: 'Convertir', explication: 'Convertir 🔀 lance l\'assistant qui découpe une colonne en plusieurs, selon un séparateur (espace, virgule…).' },
     },
     {
       humeur: 'pensif',
@@ -2036,21 +2036,14 @@ const FONCTIONSPARTICULIERES = {
   narration: [
     { humeur: 'accueil', dit: 'Les fonctions Excel automatisent, calculent, vérifient, comparent… Bref, elles te font gagner du temps et évitent les erreurs. Bonne nouvelle : avec quelques fonctions bien choisies, tu fais déjà beaucoup, sans être expert·e.' },
     {
-      humeur: 'pensif',
-      dit: 'Où les trouver ? Toutes rangées par familles.',
-      visuel: {
-        type: 'methode',
-        titre: 'Où trouver les fonctions',
-        blocs: [
-          { etapes: ['Va dans l\'onglet **Formules**', 'Groupe **Bibliothèque de fonctions** : les fonctions y sont classées par catégorie'] },
-          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer une fonction', actif: true }, { icone: '💰', label: 'Financières' }, { icone: '📅', label: 'Date & heure' }, { icone: '🔤', label: 'Texte' }] } },
-        ],
-      },
+      humeur: 'accueil',
+      dit: 'Elles sont rangées par familles dans l\'onglet **Formules**. À toi : tu cherches une fonction pour calculer une durée entre deux dates. **Clique la famille où chercher.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique la catégorie Date & heure', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer fonction' }, { icone: '💰', label: 'Financières' }, { icone: '📅', label: 'Date & heure' }, { icone: '🔤', label: 'Texte' }], cible: 'Date & heure', explication: 'Chaque famille regroupe des fonctions par thème. Les durées, jours ouvrés, mois… sont dans « Date & heure ».' },
     },
     {
-      humeur: 'accueil',
-      dit: 'À toi. Tu cherches une fonction pour calculer une durée entre deux dates. Dans l\'onglet **Formules**, **clique la famille où chercher.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique la catégorie Date & heure', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer fonction' }, { icone: '💰', label: 'Financières' }, { icone: '📅', label: 'Date & heure' }, { icone: '🔤', label: 'Texte' }], cible: 'Date & heure', explication: 'Chaque famille regroupe des fonctions par thème. Les durées, jours ouvrés, mois… sont dans « Date & heure ».' },
+      humeur: 'pensif',
+      dit: 'Voilà où les trouver, en clair : onglet **Formules > Bibliothèque de fonctions**, classées par catégorie.',
+      visuel: { type: 'ruban', actif: 'Formules', groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer une fonction', actif: true }, { icone: '💰', label: 'Financières' }, { icone: '📅', label: 'Date & heure' }, { icone: '🔤', label: 'Texte' }] },
     },
     {
       humeur: 'pensif',
