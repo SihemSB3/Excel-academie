@@ -1,0 +1,162 @@
+{
+  "chapitre": 12,
+  "titre": "Filtrer & extraire les données d'une liste",
+  "niveau": 12,
+  "ceinture": "marron-noire",
+  "objectif": "Contrôler, filtrer et nettoyer une liste : la validation de données (listes déroulantes, messages, alertes), les filtres élaborés (zone de critères ET/OU, extraction), la suppression des doublons et les sous-totaux (rappel) avec la fonction SOUS.TOTAL.",
+  "note_pedago": "Chapitre COMPLET (3 leçons) : validationdonnees (Données > Validation de données > Autoriser Liste + Source, liste dynamique via Table, message de saisie, alerte d'erreur Arrêt/Avertissement/Information, Ex.83), filtreselabores (rappel Convertir, zone de critères ET même ligne / OU lignes séparées, Données > Trier et filtrer > Avancé, 3 destinations, extraction sans doublon, Effacer, Ex.84), doublonssoustotaux (Données > Supprimer les doublons + colonnes cochées, rappel sous-totaux Données > Plan + plan 1/2/3, construction SOUS.TOTAL au clic 109 + plage, Ex.85 + Ex.57 + Ex.58). Beaucoup de MFC/Convertir/sous-totaux sont des rappels (ch.10/ch.5/ch.7) traités brièvement. Source ebook pages 521-570. Interactions chercher-d'abord : clic-cible ruban (Validation, Avancé, Effacer, Supprimer les doublons) + construction SOUS.TOTAL. Réutilise les composants existants (champs, menu, tableaudonnees, soustotaldialog, plan, construitformule).",
+  "xp_valeurs_note": "30 XP par leçon narrée, 40 XP quiz réussi, 10 XP checklist, 80 XP bonus ceinture.",
+  "modules": [
+    {
+      "type": "narration",
+      "id": "ch12-validationdonnees",
+      "lecon": "validationdonnees",
+      "titre": "La validation de données",
+      "xp": 30
+    },
+    {
+      "type": "narration",
+      "id": "ch12-filtreselabores",
+      "lecon": "filtreselabores",
+      "titre": "Les filtres élaborés",
+      "xp": 30
+    },
+    {
+      "type": "narration",
+      "id": "ch12-doublonssoustotaux",
+      "lecon": "doublonssoustotaux",
+      "titre": "Doublons & sous-totaux",
+      "xp": 30
+    },
+    {
+      "id": "ch12-quiz",
+      "titre": "Le Quiz du passage",
+      "type": "quiz",
+      "seuil_reussite": 6,
+      "total": 8,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.12 p572-573 (8 questions), repris verbatim. Ce QCM mêle des questions de révision (ruban, ET, références absolues, F4). Le corrigé (PARTIE 2) a des coches graphiques non extractibles : reponses_correctes déterminées par le contenu (confiance haute), à valider par Sihem.",
+      "questions": [
+        {
+          "id": "ch12-qcm-01",
+          "question": "Qu'est-ce que le ruban dans Excel ?",
+          "options": ["Un espace pour écrire une formule manuellement", "L'ensemble des onglets et groupes de commandes en haut de la fenêtre", "Le nom donné à une cellule sélectionnée", "Une zone de calcul automatique"],
+          "reponses_correctes": [1],
+          "explication": "Le ruban est la barre horizontale en haut de la fenêtre : elle regroupe tous les onglets (Accueil, Insertion, Données…) et leurs groupes de commandes."
+        },
+        {
+          "id": "ch12-qcm-02",
+          "question": "Pour supprimer tous les doublons d'un tableau, quel chemin suivre ?",
+          "options": ["Données > Filtrer > Avancé", "Données > Supprimer les doublons", "Accueil > Supprimer > Supprimer la feuille", "Insertion > Tableau croisé dynamique"],
+          "reponses_correctes": [1],
+          "explication": "Données > groupe Outils de données > Supprimer les doublons repère et enlève les lignes répétées, en gardant une seule occurrence unique."
+        },
+        {
+          "id": "ch12-qcm-03",
+          "question": "Quelle fonctionnalité permet de limiter les saisies à une liste prédéfinie ?",
+          "options": ["Mise en forme conditionnelle", "Filtre avancé", "Validation de données > Autoriser : Liste", "Sous-total"],
+          "reponses_correctes": [2],
+          "explication": "La validation de données en mode « Liste » n'autorise que les valeurs de la source : elle guide la saisie et évite les erreurs."
+        },
+        {
+          "id": "ch12-qcm-04",
+          "question": "Avec les filtres avancés, comment exprimer un critère OU ?",
+          "options": ["Écrire toutes les conditions sur la même ligne", "Mettre chaque condition sur une ligne séparée", "Utiliser l'opérateur <>", "Sélectionner « Copier vers un autre emplacement »"],
+          "reponses_correctes": [1],
+          "explication": "Dans la zone de critères : même ligne = ET (toutes ensemble), lignes différentes = OU (l'une ou l'autre)."
+        },
+        {
+          "id": "ch12-qcm-05",
+          "question": "La fonction SOUS.TOTAL qui IGNORE les lignes masquées (somme) se déclare par ?",
+          "options": ["=SOUS.TOTAL(9;plage)", "=SOUS.TOTAL(1;plage)", "=SOUS.TOTAL(101;plage)", "=SOUS.TOTAL(109;plage)"],
+          "reponses_correctes": [3],
+          "explication": "Les numéros 1 à 11 incluent les lignes masquées ; 101 à 111 les ignorent. Pour une SOMME qui ignore les masqués, c'est 109 (le 9 les inclurait)."
+        },
+        {
+          "id": "ch12-qcm-06",
+          "question": "Quelle formule renvoie VRAI seulement si deux conditions sont toutes les deux vraies ?",
+          "options": ["OU(cond1;cond2)", "SI(cond1;cond2;FAUX)", "ET(cond1;cond2)", "SIERREUR(cond1;cond2)"],
+          "reponses_correctes": [2],
+          "explication": "ET exige que TOUTES les conditions soient vraies. OU se contente d'une seule vraie."
+        },
+        {
+          "id": "ch12-qcm-07",
+          "question": "Quelle référence est absolument verrouillée (colonne ET ligne) ?",
+          "options": ["$A$1", "A1", "A$1", "$A1"],
+          "reponses_correctes": [0],
+          "explication": "$A$1 fige la colonne (A) ET la ligne (1) : la référence ne bouge plus à la recopie. A$1 ne fige que la ligne, $A1 que la colonne, A1 rien du tout."
+        },
+        {
+          "id": "ch12-qcm-08",
+          "question": "Quel raccourci permet de transformer une référence en absolue ?",
+          "options": ["F2", "Ctrl + C", "F4", "Alt"],
+          "reponses_correctes": [2],
+          "explication": "F4 (Fn+F4 ou ⌘+T sur Mac) fait défiler les modes de référence : A1 → $A$1 → A$1 → $A1 → A1."
+        }
+      ]
+    },
+    {
+      "id": "ch12-checklist",
+      "titre": "Validation de ceinture",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist ch.12 (ebook p574) enrichie pour couvrir les 3 leçons.",
+      "a_valider": false,
+      "items": [
+        "Je sais que la validation de données en mode « Liste » limite les saisies aux valeurs autorisées.",
+        "Je peux créer une liste déroulante via Données > Validation de données > Autoriser : Liste + Source.",
+        "Je sais rendre une liste déroulante dynamique en transformant sa source en Table.",
+        "Je comprends la différence entre un message de saisie (aide) et une alerte d'erreur (Arrêt/Avertissement/Information).",
+        "Je sais qu'une zone de critères combine les conditions en ET (même ligne) ou en OU (lignes séparées).",
+        "Je peux lancer un filtre élaboré via Données > Trier et filtrer > Avancé et extraire les résultats ailleurs.",
+        "Je sais copier exactement les mêmes en-têtes dans ma zone de critères que dans le tableau à filtrer.",
+        "Je comprends que Données > Supprimer les doublons élimine les lignes identiques sur les colonnes cochées.",
+        "Je sais insérer des sous-totaux (Données > Plan > Sous-total) et naviguer avec les boutons de plan 1/2/3.",
+        "Je sais que SOUS.TOTAL(109;plage) somme en ignorant les lignes masquées par un filtre."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["validation", "liste déroulante", "liste deroulante", "menu déroulant", "restreindre", "saisie"],
+      "question": "Comment créer une liste déroulante ?",
+      "reponse": "Sélectionne la cellule, puis Données > Validation de données > onglet Options > Autoriser : Liste. Dans Source, pointe la plage des valeurs autorisées (ex. =$C$3:$C$8) ou un nom de plage. Valide par OK : une flèche ▾ apparaît, l'utilisateur choisit au lieu de taper. Astuce : transforme la source en Table (Ctrl+L) pour une liste qui se met à jour toute seule."
+    },
+    {
+      "mots_cles": ["message", "alerte", "erreur", "arrêt", "avertissement", "information"],
+      "question": "À quoi servent le message de saisie et l'alerte d'erreur ?",
+      "reponse": "Dans Validation de données : l'onglet « Message de saisie » affiche une bulle d'aide quand on sélectionne la cellule. L'onglet « Alerte d'erreur » réagit à une valeur interdite, avec un style : Arrêt (bloque la saisie), Avertissement ou Information (préviennent mais laissent passer)."
+    },
+    {
+      "mots_cles": ["filtre avancé", "filtre élaboré", "filtre elabore", "zone de critères", "critères", "extraire"],
+      "question": "Comment fonctionne un filtre élaboré (avancé) ?",
+      "reponse": "Prépare une zone de critères qui reprend EXACTEMENT les mêmes en-têtes que ta liste. Écris tes conditions : même ligne = ET, lignes différentes = OU. Puis Données > Trier et filtrer > Avancé : choisis « Filtrer sur place » ou « Copier vers un autre emplacement », vérifie la Plage, indique la Zone de critères, et coche « Extraction sans doublon » si besoin."
+    },
+    {
+      "mots_cles": ["et", "ou", "critère ou", "critere ou", "plusieurs conditions", "combiner"],
+      "question": "ET ou OU dans une zone de critères ?",
+      "reponse": "Sur une MÊME ligne, les conditions se combinent en ET (toutes vraies en même temps). Sur des lignes DIFFÉRENTES, c'est un OU (l'une ou l'autre suffit). Ex. Paris | ≥2000 | Auto sur la ligne 2, et Lyon | <1500 | Photo sur la ligne 3 = (Paris ET ≥2000 ET Auto) OU (Lyon ET <1500 ET Photo)."
+    },
+    {
+      "mots_cles": ["doublons", "supprimer doublons", "dédoublonner", "lignes identiques", "unique"],
+      "question": "Comment supprimer les doublons ?",
+      "reponse": "Sélectionne une cellule du tableau, puis Données > Outils de données > Supprimer les doublons. Coche « Mes données ont des en-têtes », puis choisis les colonnes de comparaison. Excel ne « voit » que les colonnes cochées : deux lignes identiques sur ces colonnes seront fusionnées en une seule. Attention aux espaces superflus et formats différents qui empêchent la détection."
+    },
+    {
+      "mots_cles": ["sous-total", "sous total", "plan", "regrouper", "synthèse", "synthese"],
+      "question": "Comment insérer des sous-totaux ?",
+      "reponse": "Trie d'abord par la colonne de regroupement. Puis Données > Plan > Sous-total : « À chaque changement de » = la colonne de regroupement, « Utiliser la fonction » = Somme/Moyenne/Nb…, « Ajouter un sous-total à » = coche les colonnes à totaliser. Les boutons de plan 1/2/3 à gauche basculent entre total général, sous-totaux et détail complet."
+    },
+    {
+      "mots_cles": ["sous.total", "soustotal", "109", "ignore masqués", "lignes masquées", "filtre total"],
+      "question": "À quoi sert la fonction SOUS.TOTAL ?",
+      "reponse": "=SOUS.TOTAL(no_fonction; plage). Contrairement à SOMME, elle peut ignorer les lignes masquées par un filtre. Le no_fonction : 1 à 11 inclut les masqués, 101 à 111 les ignore. Ex. SOMME = 9 (inclut) ou 109 (ignore), MOYENNE = 1 ou 101. En filtrant, le total se recalcule automatiquement sur les seules lignes visibles."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "marron-noire",
+    "xp_bonus": 80,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture marron-noire débloquée. Tu ne subis plus tes listes, tu les maîtrises : tu contrôles les saisies, tu filtres avec finesse, tu nettoies et tu synthétises. Il ne te reste qu'un palier avant la ceinture noire, l'ultime maîtrise !"
+  }
+}

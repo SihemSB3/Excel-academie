@@ -5862,4 +5862,190 @@ const RECHERCHEH = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR, rappelsrecherche: RAPPELSRECHERCHE, recherchev: RECHERCHEV, recherchex: RECHERCHEX, recherchexdeux: RECHERCHEXDEUX, rechercheh: RECHERCHEH }
+// ======================= CHAPITRE 12 : FILTRER ET EXTRAIRE LES DONNÉES D'UNE LISTE =======================
+const U12 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX12 = {
+  ex83: { titre: 'Exercice 83 · La validation des données', url: U12('1gjqOfykJ2HYqZlK6EKIQIdgrKOxLrkSS') },
+  ex84: { titre: 'Exercice 84 · Les filtres avancés', url: U12('1kQIVrv507TrRfMHXjewRn0zjnehNZN7S') },
+  ex85: { titre: 'Exercice 85 · La suppression des doublons', url: U12('1u7xpRGT32a3hf8QLSylsXhv96uf2iLgo') },
+  ex57: { titre: 'Exercice 57 · Les sous-totaux', url: U12('1RM6WsBhY3nYP0l_Ho0ibyHG8H_kviq1q') },
+  ex58: { titre: 'Exercice 58 · La fonction SOUS.TOTAL', url: U12('1Uc3I_2N2Sc-8OO6ucHbkCZB7RterbBVl') },
+}
+
+// --- Leçon 1 : La validation de données ---
+const VALIDATIONDONNEES = {
+  id: 'fn-validationdonnees',
+  titre: 'La validation de données',
+  exercices: [EX12.ex83],
+  narration: [
+    { humeur: 'accueil', dit: 'La **validation de données** te permet de **limiter les saisies** d\'une cellule aux valeurs autorisées : une liste déroulante de choix, un nombre dans une plage, une date… Fini les fautes de frappe et les valeurs incohérentes dans tes tableaux !', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Pays', entete: true }, B1: { t: 'Capitale', entete: true }, A2: { t: 'France' }, B2: { t: 'Paris ▾', ref: true } }, legende: 'La cellule B2 propose une petite flèche ▾ : on ne peut y choisir qu\'une valeur de la liste.' }, plus: ['La validation de données est une fonctionnalité qui permet de contrôler et de restreindre le type ou la valeur des données saisies dans une cellule. Elle sert à éviter les erreurs de saisie, à guider l\'utilisateur avec des messages, et à n\'autoriser que certaines valeurs (une liste, un nombre, une date…).'] },
+    {
+      humeur: 'accueil',
+      dit: 'D\'abord, **où se cache cet outil ?** Il n\'est pas dans Accueil… Cherche-le dans l\'onglet qui gère les listes et les analyses.',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Validation de données', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données', 'Révision'], actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir' }, { icone: '✔', label: 'Validation\nde données' }, { icone: '⧉', label: 'Consolider' }], cible: 'Validation\nde données', explication: 'Onglet Données > groupe Outils de données > Validation de données. C\'est de là que partent la liste déroulante, le message de saisie et l\'alerte d\'erreur.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: '**Méthode : créer une liste déroulante.** Dans la boîte, choisis **Autoriser : Liste**, puis indique la **Source** (la plage des valeurs autorisées).',
+      visuel: { type: 'champs', titre: 'Validation des données', champs: [{ l: 'Autoriser', v: 'Liste', actif: true }, { l: 'Ignorer si vide', check: true }, { l: 'Liste déroulante dans la cellule', check: true }, { l: 'Source', v: '=$C$3:$C$8', actif: true }] },
+      plus: ['1. Clique sur ta cellule cible (où tu veux mettre ta liste déroulante). 2. Dans le ruban, va dans l\'onglet Données > Groupe outils de données > Validation de données. 3. Dans Autoriser, choisis « Liste ». 4. Dans Source, tape =NomDeLaListe ou sélectionne la plage contenant les valeurs valides (ex. =$F$2:$F$10). 5. Valide par OK.'],
+    },
+    {
+      humeur: 'content',
+      dit: 'Résultat : un clic sur la petite flèche **▾** de la cellule déroule la liste. L\'élève **choisit**, il ne tape plus rien à la main.',
+      visuel: { type: 'menu', items: [{ label: 'Paris' }, { label: 'Berlin' }, { label: 'Madrid' }, { label: 'Rome' }, { label: 'Lisbonne' }, { label: 'Tunis' }] },
+      plus: ['Une fois la validation posée, chaque cellule concernée affiche une flèche déroulante : l\'utilisateur sélectionne une valeur dans la liste au lieu de la saisir, ce qui évite les fautes de frappe et garantit des données homogènes.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Astuce de pro : une **liste déroulante dynamique** se met à jour toute seule quand tu ajoutes ou retires une valeur. Le secret : transformer ta plage source en **Table**.',
+      visuel: { type: 'encart', label: 'Liste déroulante dynamique', liste: ['Transforme ta plage source en **Table** (**Ctrl+L**, ou ⌘+L sur Mac)', 'Renomme ta Table dans l\'onglet **Création > groupe Propriétés** (ex. NB_Habitants)', 'Dans la Source de la validation, pointe la colonne de la Table (=$C$3:$C$8)', 'Bénéfice : chaque ajout, modification ou suppression se répercute **automatiquement** dans la liste !'] },
+      plus: ['CRÉE DES LISTES DÉROULANTES DYNAMIQUES ! Oublie les mises à jour laborieuses : ta liste déroulante évolue automatiquement avec tes données, plus besoin de l\'ajuster manuellement dès que tu ajoutes ou retires une entrée ! Il te suffit de transformer ta plage en Table, comme nous l\'avons vu dans le chapitre Création de tableau. Chaque ajout, modification ou suppression dans ta Table se répercute instantanément dans ta liste déroulante, c\'est 100 % automatique !'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Deuxième onglet utile : le **Message de saisie**. Il affiche une petite bulle d\'aide **dès qu\'on sélectionne la cellule** (« Choisis parmi cette liste de capitales »).',
+      visuel: { type: 'champs', titre: 'Validation des données · Message de saisie', champs: [{ l: 'Afficher un message quand la cellule est sélectionnée', check: true }, { l: 'Titre', v: 'Capitale', actif: true }, { l: 'Message', v: 'Choisis parmi cette liste', actif: true }] },
+      plus: ['MÉTHODE PAS À PAS : CONFIGURER LE MESSAGE DE SAISIE. 1. Choisis la ou les cellules où appliquer la validation. 2. Dans le ruban, va dans Onglet Données → Groupe outils de données → Validation de données. 3. Dans la boîte de dialogue, va sur l\'onglet Message de saisie → coche « Afficher un message de saisie quand la cellule est sélectionnée ». 4. Saisis un Titre bref et un Message explicatif (ex. « Choisissez parmi cette liste de capitales »). 5. Valide en cliquant sur OK.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Troisième onglet : l\'**Alerte d\'erreur**. Elle réagit quand on tape une valeur interdite. Tu choisis son **Style** : Arrêt, Avertissement ou Information.',
+      visuel: { type: 'champs', titre: 'Validation des données · Alerte d\'erreur', champs: [{ l: 'Quand des données non valides sont tapées', check: true }, { l: 'Style', v: 'Arrêt', actif: true }, { l: 'Titre', v: 'Valeur non autorisée', actif: true }, { l: 'Message', v: 'Choisis une capitale de la liste', actif: true }] },
+      plus: ['MÉTHODE PAS À PAS : CONFIGURER LE MESSAGE D\'ALERTE. 1. Choisis la ou les cellules où appliquer la validation. 2. Dans le ruban, va dans Onglet Données → Groupe outils de données → Validation de données. 3. Dans la boîte de dialogue, va sur l\'onglet Alerte d\'erreur → coche « Quand des données non valides sont tapées ». 4. Choisis un Style (Arrêt, Avertissement, Information). 5. Saisis un Titre et un Message (ex. « Valeur non autorisée »). 6. Valide par OK. Lorsque tu saisis « France » dans la liste déroulante des capitales, le message d\'erreur configuré s\'affiche.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Une nuance à saisir. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Le style « Arrêt » d\'une alerte d\'erreur EMPÊCHE de valider une valeur non autorisée.', bonne: true, explication: 'Vrai : « Arrêt » bloque la saisie (impossible de valider une valeur hors liste). « Avertissement » et « Information » laissent le choix de continuer malgré tout : ils préviennent sans interdire.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Quelle fonctionnalité permet de **limiter les saisies** d\'une cellule à une liste prédéfinie ?',
+      visuel: { type: 'question', options: ['Validation de données > Autoriser : Liste', 'Mise en forme conditionnelle', 'Filtre avancé', 'Sous-total'], bonne: 0, explication: 'La validation de données en mode « Liste » n\'autorise que les valeurs de la source : elle guide la saisie et évite les erreurs. La mise en forme conditionnelle, elle, ne fait que colorer.' },
+    },
+    { humeur: 'fier', dit: 'Des tableaux propres, des saisies maîtrisées : tu tiens la première clé du chapitre. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : Les filtres élaborés ---
+const FILTRESELABORES = {
+  id: 'fn-filtreselabores',
+  titre: 'Les filtres élaborés',
+  exercices: [EX12.ex84],
+  narration: [
+    { humeur: 'accueil', dit: 'Les filtres automatiques (chapitre Exploiter une liste) sont parfaits pour une colonne. Mais pour croiser **plusieurs critères** (ET / OU sur Ville, CA, Domaine…) ou pour **extraire** les résultats ailleurs, on passe au **filtre élaboré** (ou avancé).', visuel: { type: 'tableaudonnees', entetes: ['Ville', 'CA', 'Domaine'], lignes: [['Paris', '2 400 €', 'Auto'], ['Lyon', '1 200 €', 'Photo'], ['Paris', '1 800 €', 'Auto'], ['Lyon', '3 100 €', 'Photo']], legende: 'La liste source. On va en extraire seulement certaines lignes, selon des critères combinés.' }, plus: ['Le filtre avancé (ou élaboré) permet de filtrer une liste selon plusieurs critères combinés (ET / OU) et, si tu le souhaites, de copier les lignes filtrées vers un autre emplacement sans toucher à la liste d\'origine.'] },
+    {
+      humeur: 'pensif',
+      dit: '**Rappel express : l\'outil Convertir.** Il découpe une colonne en plusieurs (ex. « paul dupont » → Prénom | Nom), en cochant le bon séparateur. Utile pour préparer une liste avant de la filtrer.',
+      visuel: { type: 'encart', label: 'Convertir (Données > Convertir)', liste: ['Sélectionne la colonne à découper', 'Données > Convertir (groupe Outils de données)', 'Choisis **Délimité**, puis coche le séparateur (Espace, virgule, point-virgule…)', 'Aperçu en direct, puis **Terminer**'] },
+      plus: ['MÉTHODE PAS À PAS : Convertir. 1. Sélectionne la colonne à découper. 2. Clique sur Données > Convertir dans le groupe « Outils de données ». 3. Choisis Délimité, puis clique sur Suivant. 4. Coche le séparateur : ici Espace → tu vois un aperçu en direct du résultat dans les colonnes. 5. Clique sur Suivant. 6. Avant de cliquer sur Terminer, vérifie ou choisis d\'écraser les colonnes d\'origine (si rien n\'est à droite). Si les noms sont séparés par une virgule ou un point-virgule, coche ce séparateur à la place d\'« Espace ».'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le cœur du filtre avancé : la **zone de critères**. C\'est un petit tableau, à côté, qui reprend **exactement les mêmes en-têtes** que ta liste, avec tes conditions en dessous.',
+      visuel: { type: 'tableaudonnees', brut: true, entetes: ['Ville', 'CA', 'Domaine'], lignes: [['Paris', '>=2000', 'Auto'], ['Lyon', '<1500', 'Photo']], legende: 'Zone de critères $H$1:$J$3. Ligne 1 : Paris ET CA≥2000 ET Auto. Ligne 2 : Lyon ET CA<1500 ET Photo.' },
+      plus: ['Prépare à côté (ou au-dessus) ta zone de critères. Saisis tes conditions : sur une MÊME ligne, les conditions se combinent en ET (ex. Paris | >=2000 | AUTO). Sur une AUTRE ligne, tu ajoutes une alternative en OU (ex. Lyon | <1500 | PHOTO). Excel n\'affichera que les enregistrements qui satisfont toutes les conditions d\'une même ligne (ET), ou celles d\'une autre ligne (OU). Veille à copier EXACTEMENT les mêmes étiquettes d\'en-tête dans ta zone de critères que celles du tableau à filtrer.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Avant d\'aller plus loin, une question de logique. Avec les filtres avancés, **comment exprimer un critère « OU »** (Paris OU Lyon) ?',
+      visuel: { type: 'question', options: ['Mettre chaque condition sur une ligne séparée de la zone de critères', 'Écrire toutes les conditions sur la même ligne', 'Utiliser l\'opérateur <>', 'Sélectionner « Copier vers un autre emplacement »'], bonne: 0, explication: 'Sur une même ligne = ET (toutes les conditions ensemble). Sur des lignes différentes = OU (l\'une OU l\'autre). C\'est la règle d\'or de la zone de critères.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: '**Où lance-t-on le filtre avancé ?** Toujours dans l\'onglet Données, groupe Trier et filtrer. Cherche le bouton qui ouvre les options avancées.',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Avancé', onglets: ['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données', 'Révision'], actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: '⇅', label: 'Trier' }, { icone: '▽', label: 'Filtrer' }, { icone: '⚙', label: 'Avancé' }], cible: 'Avancé', explication: 'Données > Trier et filtrer > Avancé ouvre la boîte du filtre élaboré, où tu renseignes la plage, la zone de critères et (au choix) la destination.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dans la boîte **Filtre avancé**, tu choisis l\'action, tu vérifies la **Plage**, tu indiques ta **Zone de critères**, et tu peux extraire ailleurs.',
+      visuel: { type: 'champs', titre: 'Filtre avancé', champs: [{ l: 'Copier vers un autre emplacement', check: true }, { l: 'Plage', v: '$A$1:$D$13', actif: true }, { l: 'Zone de critères', v: '$H$1:$J$3', actif: true }, { l: 'Copier dans', v: '$H$7', actif: true }, { l: 'Extraction sans doublon', check: true }] },
+      plus: ['1. Place ton curseur dans le tableau. 2. Dans le ruban, va dans Données > Trier et filtrer > Avancé. 3. Choisis « Filtrer la liste sur place » (masque les lignes non retenues) OU « Copier vers un autre emplacement » (extrait les résultats ailleurs). 4. Vérifie que Plage = $A$1:$D$13. 5. Dans Zone de critères, saisis la plage de tes conditions (ex. $H$1:$J$3). 6. Si tu copies ailleurs, clique « Copier dans » et sélectionne la cellule de départ (ex. $H$7). 7. Coche « Extraction sans doublon » pour éliminer les lignes répétées (optionnel). 8. Clique OK.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Tu as **trois destinations** possibles, selon ce que tu veux préserver :',
+      visuel: { type: 'parties', items: [{ label: '**Filtrer sur place** : masque les lignes non retenues, directement dans ta liste.' }, { label: '**Copier vers un autre emplacement** : extrait les résultats plus loin sur la même feuille, la source reste intacte.' }, { label: '**Vers une autre feuille** : lance le filtre depuis la feuille de destination (qui contient les critères), et pointe la Plage vers Donnée!$A$1:$D$13.' }] },
+      plus: ['Filtrer sur place masque les lignes qui ne répondent pas aux critères. Copier vers un autre emplacement conserve ta liste source intacte et pose les résultats dans une zone distincte. Pour extraire vers une autre feuille, il y a une subtilité : lance la procédure depuis la feuille qui reçoit (et qui contient les critères), même si les données d\'origine sont ailleurs ; sélectionne alors la Plage sur la feuille de données (Donnée!$A$1:$D$13) et la Zone de critères sur la feuille d\'analyse.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour tout remettre à zéro : **Données > Trier et filtrer > Effacer** (l\'icône d\'entonnoir barré) retire tous les tris et filtres. Ou **Ctrl+Z** juste après, pour annuler.',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Effacer', onglets: ['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données', 'Révision'], actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: '▽', label: 'Filtrer' }, { icone: '⌫', label: 'Effacer' }, { icone: '⚙', label: 'Avancé' }], cible: 'Effacer', explication: 'L\'icône entonnoir barré retire tous les filtres et tris pour retrouver l\'ordre d\'origine. Astuce complémentaire : Ctrl+Z (⌘+Z) annule immédiatement le dernier tri sans toucher au reste.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Dans la zone de critères, **deux conditions sur la même ligne** signifient…',
+      visuel: { type: 'question', options: ['ET : les deux doivent être vraies en même temps', 'OU : l\'une ou l\'autre suffit', 'Rien, l\'ordre n\'a aucune importance'], bonne: 0, explication: 'Même ligne = ET (toutes ensemble). Lignes différentes = OU. C\'est ainsi qu\'Excel lit ta zone de critères.' },
+    },
+    { humeur: 'fier', dit: 'Zone de critères, ET/OU, extraction : tu filtres désormais comme un(e) analyste. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : Supprimer les doublons & les sous-totaux ---
+const DOUBLONSSOUSTOTAUX = {
+  id: 'fn-doublonssoustotaux',
+  titre: 'Doublons & sous-totaux',
+  exercices: [EX12.ex85, EX12.ex57, EX12.ex58],
+  narration: [
+    { humeur: 'accueil', dit: 'Avant d\'analyser une liste, on la **nettoie** (supprimer les doublons), puis on la **synthétise** (les sous-totaux). Deux réflexes de pro pour finir ce chapitre.', visuel: { type: 'tableaudonnees', entetes: ['Nom', 'Ville'], lignes: [['Marie', 'Lyon'], ['Karim', 'Paris'], ['Marie', 'Lyon'], ['Léa', 'Nice']], legende: 'La ligne « Marie · Lyon » apparaît deux fois : c\'est un doublon à supprimer.' } },
+    {
+      humeur: 'accueil',
+      dit: '**Où supprimer les doublons ?** Encore l\'onglet Données, groupe Outils de données. Cherche le bon bouton.',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Supprimer les doublons', onglets: ['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données', 'Révision'], actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir' }, { icone: '🗑', label: 'Supprimer\nles doublons' }, { icone: '✔', label: 'Validation' }], cible: 'Supprimer\nles doublons', explication: 'Données > Outils de données > Supprimer les doublons. Excel repère et enlève d\'un coup les lignes répétées, en gardant une seule occurrence.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dans la boîte, **coche « Mes données ont des en-têtes »** (pour ne pas traiter le titre comme un doublon), puis **choisis les colonnes** à comparer.',
+      visuel: { type: 'champs', titre: 'Supprimer les doublons', champs: [{ l: 'Mes données ont des en-têtes', check: true }, { l: 'Nom', check: true }, { l: 'Ville', check: true }, { l: 'CA', check: false }] },
+      plus: ['MÉTHODE PAS À PAS : SUPPRIMER LES DOUBLONS. 1. Sélectionne une cellule de ton tableau. 2. Dans le ruban, va dans l\'onglet Données > groupe Outils de données. 3. Clique sur Supprimer les doublons. 4. Coche « Mes données ont des en-têtes » pour que la première ligne ne soit pas traitée comme un doublon. 5. Choisis les colonnes de comparaison : par défaut Excel sélectionne toutes les colonnes ; pour ne traiter que certaines (ex. « Nom » et « Ville »), clique sur Désélectionner tout, puis coche uniquement celles qui t\'intéressent. 6. Clique sur OK : Excel supprime les lignes doublons et affiche un compte rendu du nombre de suppressions.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'À retenir : **Excel ne « voit » que les colonnes cochées** pour juger d\'un doublon.',
+      visuel: { type: 'encart', label: 'À noter', texte: 'Si tu ne coches que « Nom » et « Ville », deux lignes qui ne diffèrent que sur le CA seront considérées comme un doublon. Seules les lignes identiques sur les colonnes cochées sont supprimées. Attention : un espace superflu ou un format différent peut empêcher Excel de reconnaître un doublon.' },
+      plus: ['En décochant certaines colonnes, tu indiques à Excel de ne comparer que les colonnes cochées : seules les lignes parfaitement identiques sur ces colonnes seront supprimées. Si deux lignes ne diffèrent que sur des colonnes non sélectionnées, elles seront conservées. Attention aux subtilités : une cellule vide, un espace superflu ou un format numérique différent peut empêcher Excel de reconnaître un doublon (nettoie tes cellules avant).'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Place à la synthèse : les **sous-totaux**. Rappel du chapitre Exploiter une liste : Données > Plan > Sous-total. Tu choisis le regroupement, la fonction, et les colonnes à totaliser.',
+      visuel: { type: 'soustotaldialog', changement: 'Ville', fonction: 'Somme', colonnes: ['CA'] },
+      plus: ['MÉTHODE PAS À PAS : INSÉRER DES SOUS-TOTAUX. 1. Sélectionne n\'importe quelle cellule de ton tableau (trié par la colonne de regroupement). 2. Dans le ruban, va dans l\'onglet Données > groupe Plan. 3. Clique sur Sous-total. 4. Dans la boîte : « À chaque changement de » = la colonne de regroupement (ex. Ville) ; « Utiliser la fonction » = Somme, Moyenne, Nb… ; « Ajouter un sous-total à » = coche la ou les colonnes concernées (ex. CA). 5. Valide avec OK : Excel insère les sous-totaux imbriqués et affiche le plan sur la gauche.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Les **boutons de plan 1 / 2 / 3** (à gauche) font basculer entre la vue d\'ensemble et le détail.',
+      visuel: { type: 'plan' },
+      plus: ['NAVIGATION DU PLAN. Bouton 1 : uniquement le total général (tous les détails masqués). Bouton 2 : les sous-totaux (à chaque changement de groupe) et le total général, sans le détail ligne à ligne. Bouton 3 : la vue complète, tous les enregistrements détaillés avec les sous-totaux et le total général. Pour retirer les sous-totaux : Données > Plan > Sous-total > Supprimer tout.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Enfin, la fonction **SOUS.TOTAL**. Contrairement à SOMME (qui additionne tout), elle peut **ignorer les lignes masquées** par un filtre. À toi de la **construire** : d\'abord le numéro de fonction, puis la plage.',
+      visuel: {
+        type: 'construitformule',
+        prefixe: '=SOUS.TOTAL(',
+        resultat: 'B7',
+        resultatFeuille: 'Feuille',
+        resultatValeur: '100',
+        grilles: {
+          Feuille: { cols: ['A', 'B'], rows: [1, 2, 3, 4, 5, 6, 7], cells: { A1: { t: 'Région', entete: true }, B1: { t: 'Participants', entete: true }, A2: { t: 'Nord' }, B2: { t: '20', num: true }, A3: { t: 'Sud' }, B3: { t: '15', num: true }, A4: { t: 'Est' }, B4: { t: '30', num: true }, A5: { t: 'Ouest' }, B5: { t: '25', num: true }, A6: { t: 'Centre' }, B6: { t: '10', num: true }, A7: { t: 'Total', entete: true }, B7: { t: '' } } },
+        },
+        sequence: [
+          { type: 'choix', feuille: 'Feuille', options: [{ label: '109 (somme, ignore masqués)', val: '109' }, { label: '9 (somme, inclut masqués)', val: '9' }, { label: '1 (moyenne)', val: '1' }], cible: '109', ajoute: '109;', consigne: 'On veut une SOMME qui ignore les lignes masquées par un filtre. Quel numéro de fonction ?' },
+          { type: 'plage', feuille: 'Feuille', debut: 'B2', fin: 'B6', ajoute: 'B2:B6)', consigne: 'Sélectionne maintenant la plage des participants à additionner.' },
+        ],
+        explication: 'Le 109, c\'est SOMME en ignorant les lignes masquées (le 9 les inclurait). Résultat : 100 tant que rien n\'est filtré ; filtre une région et le total se recalcule tout seul. C\'est là toute la force de SOUS.TOTAL.',
+      },
+      plus: ['La fonction SOUS.TOTAL offre la flexibilité de choisir d\'inclure ou d\'exclure les lignes masquées, tout en proposant une palette de calculs (somme, moyenne, écart-type…). Structure : =SOUS.TOTAL(no_fonction; plage1; …). No_fonction : 1 à 11 (inclut les masqués) ou 101 à 111 (ignore les masqués). Ex. MOYENNE = 1 ou 101, NB = 2 ou 102, MAX = 4 ou 104, MIN = 5 ou 105, SOMME = 9 ou 109. Méthode : 1. Place-toi dans la cellule résultat. 2. Tape =SOUS.TOTAL(. 3. Saisis le numéro 109 pour sommer en ignorant les lignes masquées. 4. Sélectionne la plage à calculer. 5. Entrée. En filtrant, le total se recalcule automatiquement.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. La fonction **SOUS.TOTAL(9;plage)** additionne… et **SOUS.TOTAL(109;plage)** ?',
+      visuel: { type: 'question', options: ['9 = inclut les lignes masquées ; 109 = les ignore', '9 et 109 font exactement la même chose', '109 additionne, 9 fait la moyenne'], bonne: 0, explication: 'Les numéros 1 à 11 incluent les lignes masquées ; 101 à 111 les ignorent. Donc 9 = somme de tout, 109 = somme des seules lignes visibles (idéal avec un filtre).' },
+    },
+    { humeur: 'fier', dit: 'Nettoyer, synthétiser, calculer sur le visible : tu maîtrises tout le chapitre. La ceinture marron-noire est à portée de main ! 🎉' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR, rappelsrecherche: RAPPELSRECHERCHE, recherchev: RECHERCHEV, recherchex: RECHERCHEX, recherchexdeux: RECHERCHEXDEUX, rechercheh: RECHERCHEH, validationdonnees: VALIDATIONDONNEES, filtreselabores: FILTRESELABORES, doublonssoustotaux: DOUBLONSSOUSTOTAUX }
