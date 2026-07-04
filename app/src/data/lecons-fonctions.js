@@ -1463,7 +1463,7 @@ const FONCTIONSCOMPLEXES = {
     { humeur: 'accueil', dit: 'On va la construire pas à pas. Le résultat doit s\'afficher en face de la note. **Clique la cellule du résultat.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule Résultat', cols: ['A', 'B'], rows: [1, 2], cells: { ...baseSI4, A2: { t: '12' } }, cible: 'B2', explication: 'Oui, B2 : colonne « Résultat ». C\'est là qu\'on construit le SI.' } },
     { humeur: 'pensif', dit: '**Étape 1 :** clique dans B2 et tape **=**. Il s\'écrit dans la cellule et dans la barre de formule.', visuel: tabSI4({ t: '12' }, '=') },
     { humeur: 'pensif', dit: '**Étape 2 :** écris **SI** et ouvre une parenthèse.', visuel: tabSI4({ t: '12' }, '=SI(') },
-    { humeur: 'accueil', dit: '**Argument 1, la condition :** on veut comparer la note à 10. **Clique la cellule de la note.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la note à tester', cols: ['A', 'B'], rows: [1, 2], cells: { ...baseSI4, A2: { t: '12' }, B2: { t: '=SI(' } }, formule: '=SI(', cible: 'A2', explication: 'Exact : A2. On écrit =SI(A2>10 : « si la note dépasse 10… ».' } },
+    { humeur: 'accueil', dit: '**Argument 1, la condition :** on veut comparer la note à 10. **Clique la cellule de la note.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la note à tester', cols: ['A', 'B'], rows: [1, 2], cells: { ...baseSI4, A2: { t: '12' }, B2: { t: '=SI(' } }, formule: '=SI(', resultat: 'B2', cible: 'A2', explication: 'Exact : A2. On écrit =SI(A2>10 : « si la note dépasse 10… ».' } },
     { humeur: 'accueil', dit: 'La condition s\'écrit donc **A2>10** : on teste si A2 est supérieur à 10.', visuel: tabSI4({ t: '12', ref: true }, '=SI(A2>10') },
     { humeur: 'pensif', dit: 'Un point-virgule **;** puis **argument 2, le résultat si VRAI**, entre guillemets.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK"') },
     { humeur: 'pensif', dit: 'Encore un **;** puis **argument 3, le résultat si FAUX**.', visuel: tabSI4({ t: '12' }, '=SI(A2>10;"OK";"À refaire"') },
@@ -1505,7 +1505,7 @@ const FONCTIONSCOMPLEXES = {
     { humeur: 'accueil', dit: 'Une autre fonction complexe bien pratique : **ARRONDI**. Elle réduit le nombre de décimales d\'un chiffre. Tu choisis combien de chiffres après la virgule, et Excel arrondit pour toi.', visuel: { type: 'formule', formule: '=ARRONDI(nombre ; nombre_de_chiffres)' } },
     { humeur: 'accueil', dit: 'On l\'écrit pas à pas dans B2, pour arrondir le montant 12,8 placé en A2.', visuel: tabARR() },
     { humeur: 'pensif', dit: '**Étape 1 :** dans B2, tape **=ARRONDI(**.', visuel: tabARR('=ARRONDI(') },
-    { humeur: 'accueil', dit: '**Argument 1, le nombre :** on veut arrondir le montant. **Clique la cellule à arrondir.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du montant à arrondir', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Montant', entete: true }, B1: { t: 'Arrondi', entete: true }, A2: { t: '12,8', num: true }, B2: { t: '=ARRONDI(' } }, formule: '=ARRONDI(', cible: 'A2', explication: 'Oui, A2 : le montant 12,8. On écrit donc =ARRONDI(A2 : « arrondis A2… ».' } },
+    { humeur: 'accueil', dit: '**Argument 1, le nombre :** on veut arrondir le montant. **Clique la cellule à arrondir.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du montant à arrondir', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Montant', entete: true }, B1: { t: 'Arrondi', entete: true }, A2: { t: '12,8', num: true }, B2: { t: '=ARRONDI(' } }, formule: '=ARRONDI(', resultat: 'B2', cible: 'A2', explication: 'Oui, A2 : le montant 12,8. On écrit donc =ARRONDI(A2 : « arrondis A2… ».' } },
     { humeur: 'accueil', dit: 'On a donc **=ARRONDI(A2** : A2 est la valeur à arrondir.', visuel: tabARR('=ARRONDI(A2') },
     { humeur: 'pensif', dit: 'Un **;** puis **argument 2, le nombre de décimales** : 0 pour un entier.', visuel: tabARR('=ARRONDI(A2;0') },
     { humeur: 'pensif', dit: 'On ferme la parenthèse **)**.', visuel: tabARR('=ARRONDI(A2;0)') },
@@ -1656,7 +1656,12 @@ const NOMSFORMULES = {
     },
     {
       humeur: 'accueil',
-      dit: 'Deuxième méthode, via le ruban : pratique pour un nom limité à une feuille précise.',
+      dit: 'Deuxième méthode, via le ruban (pratique pour un nom limité à une feuille). Dans **Formules > groupe Noms définis**, **à toi de trouver le bouton Définir un nom.**',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Définir un nom', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection' }], cible: 'Définir un nom', explication: 'Le bouton 🔖 Définir un nom ouvre la fenêtre où tu choisis le nom, sa portée (classeur ou feuille) et sa plage.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Voilà la méthode 2 en clair :',
       visuel: {
         type: 'methode',
         titre: 'Méthode 2 : via le ruban (Noms définis)',
@@ -1667,11 +1672,6 @@ const NOMSFORMULES = {
           { capture: { type: 'champs', titre: 'Nouveau nom', champs: [{ l: 'Nom', v: 'Prix_Unitaire', actif: true }, { l: 'Champ', v: 'Classeur' }, { l: 'Fait référence à', v: '=Feuil1!$B$2' }] } },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi. Dans l\'onglet **Formules**, **clique le bouton qui définit un nom.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Définir un nom', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection' }], cible: 'Définir un nom', explication: 'Le bouton 🔖 Définir un nom ouvre la fenêtre où tu choisis le nom, sa portée (classeur ou feuille) et sa plage.' },
     },
     {
       humeur: 'accueil',
