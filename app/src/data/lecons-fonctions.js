@@ -135,9 +135,11 @@ const tabC = (opts, formule, resultat) => {
   return { type: 'tableur', cols: colsC, rows: rowsC, cells, actif: 'C2', formule }
 }
 // Version cliquable de la table des calculs : l'élève désigne lui-même la bonne cellule.
+// `resultat` = la cellule où la formule se construit : au bon clic, la référence cliquée
+// s'ajoute à la formule dans cette cellule (comme dans le vrai Excel).
 const clicC = (consigne, cible, formule, explication) => ({
   type: 'cliquecible', support: 'tableur', consigne, cible, explication,
-  cols: colsC, rows: rowsC, formule: formule || undefined,
+  cols: colsC, rows: rowsC, formule: formule || undefined, resultat: 'C2',
   cells: { ...baseC, C2: { t: formule || '' } },
 })
 
@@ -161,16 +163,16 @@ const CALCULS = {
       visuel: { type: 'operateurs', items: [{ s: '%', l: 'pourcentage (=50% donne 0,5)' }, { s: '^', l: 'puissance (=10^2 donne 100)' }] },
     },
     {
-      humeur: 'pensif',
-      dit: 'Un point à garder en tête.',
-      visuel: { type: 'encart', label: 'Astuce', texte: 'Pas d\'**espaces** dans une formule : Excel a besoin que tout soit collé pour la lire correctement.' },
-    },
-    {
       humeur: 'accueil',
-      dit: 'Une croyance à vérifier tout de suite. **Vrai ou faux ?**',
+      dit: 'Avant qu\'on en parle, teste ton intuition. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'On peut mettre des espaces autour des signes dans une formule, ex. = A2 * B2.', bonne: false, explication: 'Non : tout doit être collé, =A2*B2. Un espace au mauvais endroit et Excel ne sait plus lire la formule.' },
     },
-    { humeur: 'accueil', dit: 'Passons à la pratique : un prix (A2) multiplié par une quantité (B2). On veut le total dans C2. Où va-t-on écrire la formule ? **Clique la cellule du total.**', visuel: clicC('Clique la cellule où doit apparaître le total', 'C2', '', 'Exactement, C2 : c\'est là qu\'on écrit la formule, à l\'intersection du produit et de la colonne Total.') },
+    {
+      humeur: 'pensif',
+      dit: 'Voilà donc le réflexe à garder :',
+      visuel: { type: 'encart', label: 'Astuce', texte: 'Pas d\'**espaces** dans une formule : Excel a besoin que tout soit collé pour la lire correctement.' },
+    },
+    { humeur: 'accueil', dit: 'Passons à la pratique : un prix (colonne A) multiplié par une quantité (colonne B). Où doit apparaître le total ? **À toi de trouver la cellule.**', visuel: clicC('Clique la cellule où doit apparaître le total', 'C2', '', 'Exactement, C2 : à l\'intersection de la ligne du produit et de la colonne Total. C\'est là qu\'on écrit la formule.') },
     { humeur: 'pensif', dit: '**Étape 1 :** dans C2, on commence toujours par le signe =.', visuel: tabC({}, '=') },
     { humeur: 'accueil', dit: '**Étape 2 :** au lieu de retaper « 10 », on **clique la cellule du prix**. À toi : clique le prix.', visuel: clicC('Clique la cellule qui contient le prix', 'A2', '=', 'Bravo. En cliquant A2, Excel utilise son contenu : si le prix change plus tard, le total se recalcule tout seul.') },
     { humeur: 'accueil', dit: '**Étape 3 :** on tape l\'opérateur de multiplication, la touche *.', visuel: tabC({ A2ref: true }, '=A2*') },
@@ -182,17 +184,17 @@ const CALCULS = {
     },
     { humeur: 'fier', dit: 'Et voilà : Excel affiche 30. Ta première formule tourne !', visuel: tabC({}, '=A2*B2', { t: '30', vert: true, num: true }) },
     {
+      humeur: 'accueil',
+      dit: 'Corsons un peu, sans explication cette fois : à ton avis, combien fait **=2+3*4** ?',
+      visuel: { type: 'question', options: ['14', '20'], bonne: 0, explication: 'La bonne réponse est 14. Si tu as pensé 20 (2+3 = 5, puis ×4), c\'est logique... mais Excel ne calcule pas de gauche à droite : la multiplication passe avant. Il fait d\'abord 3×4 = 12, puis +2 = 14.' },
+    },
+    {
       humeur: 'pensif',
-      dit: 'Retiens bien cette règle.',
+      dit: 'Voilà la règle que tu viens de découvrir :',
       visuel: { type: 'encart', label: 'Règle de calcul', texte: 'La **multiplication** et la **division** passent toujours avant l\'**addition** et la **soustraction**. Ce n\'est pas propre à Excel : c\'est la règle de priorité des opérations, comme en maths.' },
       plus: ['* et / ont la même priorité (calculés en premier). + et - aussi (calculés après). Si tu imbriques des calculs de même priorité, le calcul se fera de la gauche vers la droite. Les parenthèses permettent de contrôler l\'ordre du calcul.', 'Deux façons d\'écrire un calcul : avec des valeurs directes (=5*12) ou avec des cellules (=A1+B1, le contenu des cellules sera utilisé).'],
     },
-    { humeur: 'accueil', dit: 'Exemple : dans =5+2*3, on calcule d\'abord 2×3 = 6, puis on ajoute 5 → 11. Avec des parenthèses, =(5+2)*3 fait d\'abord 5+2 = 7, puis ×3 → 21.', visuel: { type: 'formule', formule: '=5+2*3' } },
-    {
-      humeur: 'accueil',
-      dit: 'À toi de trancher, en appliquant la règle. Combien fait =2+3*4 ?',
-      visuel: { type: 'question', options: ['14', '20'], bonne: 0, explication: '× passe avant + : on fait d\'abord 3×4 = 12, puis on ajoute 2 = 14. (20 serait faux : ce serait (2+3)×4.)' },
-    },
+    { humeur: 'accueil', dit: 'Et pour choisir toi-même l\'ordre : les **parenthèses**. =5+2*3 fait 11 (2×3 d\'abord, puis +5), mais =(5+2)*3 fait 21 (5+2 d\'abord, puis ×3).', visuel: { type: 'formule', formule: '=(5+2)*3' } },
     { humeur: 'fier', dit: 'Tu sais faire tes calculs dans Excel ! Bravo ! 🎉' },
   ],
 }
@@ -599,8 +601,8 @@ const SERIES = {
   ],
   narration: [
     { humeur: 'accueil', dit: 'La poignée de recopie ne sert pas qu\'à copier : elle crée aussi des **suites automatiques**, les séries. Un vrai gain de temps.' },
-    { humeur: 'accueil', dit: 'Écris « janvier » (ou « janv »), tire la poignée, et Excel complète tout seul.', visuel: tabSerie({ A1: { t: 'janvier' }, B1: { t: 'février', vert: true }, C1: { t: 'mars', vert: true }, D1: { t: 'avril', vert: true } }, 'A1', 'La poignée de recopie : la petite croix (+) en bas à droite de la cellule. Clique dessus et tire pour recopier.'), plus: ['Écris un mois dans une cellule (septembre ou sept). Tire la poignée de recopie vers la droite ou vers le bas. Excel complètera automatiquement avec octobre, nov, déc, etc.', 'Tu peux aussi écrire les mois en version abrégée (3 ou 4 lettres) : sept, nov...'] },
-    { humeur: 'accueil', dit: 'Pareil pour les **jours** (lundi, mardi...) et les **trimestres**. Peu importe la version, entière ou abrégée (mer, sept).', visuel: tabSerie({ A1: { t: 'lundi' }, B1: { t: 'mardi', vert: true }, C1: { t: 'mercredi', vert: true }, D1: { t: 'jeudi', vert: true } }, 'A1'), plus: ['Écris un jour de la semaine dans une cellule (mercredi, mer). Tire la poignée de recopie. Excel continuera avec jeudi, vendredi, samedi, etc.', 'Peu importe si tu tapes le jour en entier ou en version courte, Excel reconnaît la suite.'] },
+    { humeur: 'accueil', dit: '« janvier » est écrit dans la 1re case. Plutôt que de retaper les mois suivants, **à toi de tirer la poignée** de recopie pour compléter la suite.', visuel: { type: 'tirepoignee', depart: 'janvier', suite: ['février', 'mars', 'avril'], promptMsg: '👆 Attrape la poignée verte au coin de « janvier » et tire vers la droite', okMsg: '✓ février, mars, avril : Excel a complété la série tout seul !' }, plus: ['Écris un mois dans une cellule (septembre ou sept). Tire la poignée de recopie vers la droite ou vers le bas. Excel complètera automatiquement avec octobre, nov, déc, etc.', 'Tu peux aussi écrire les mois en version abrégée (3 ou 4 lettres) : sept, nov...'] },
+    { humeur: 'accueil', dit: 'Ça marche pareil pour les **jours**. « lundi » est en place : **tire la poignée** pour voir la suite se remplir.', visuel: { type: 'tirepoignee', depart: 'lundi', suite: ['mardi', 'mercredi', 'jeudi'], promptMsg: '👆 Attrape la poignée verte au coin de « lundi » et tire vers la droite', okMsg: '✓ mardi, mercredi, jeudi : la suite des jours se complète toute seule !' }, plus: ['Écris un jour de la semaine dans une cellule (mercredi, mer). Tire la poignée de recopie. Excel continuera avec jeudi, vendredi, samedi, etc.', 'Peu importe si tu tapes le jour en entier ou en version courte, Excel reconnaît la suite.', 'Les trimestres marchent aussi (Trim 1, Trim 2…).'] },
     {
       humeur: 'accueil',
       dit: 'Et pour une **date** ? Tu tapes 01/05/2025 et tu tires la poignée. **Que met Excel dans la case suivante ?**',

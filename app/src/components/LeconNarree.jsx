@@ -4469,12 +4469,16 @@ function CliqueCible({ v, onResolu, onErreur }) {
 
   let support_ui = null
   if (support === 'tableur') {
-    const { cols = [], rows = [], cells = {}, formule, feuilles, feuilleActive } = v
+    const { cols = [], rows = [], cells = {}, formule, resultat, feuilles, feuilleActive } = v
+    // Quand on clique une cellule référencée, la formule se complète dans la cellule résultat
+    // (ex. clic sur A2 → C2 affiche =A2), exactement comme dans Excel.
+    const construitFormule = trouve && formule && resultat && cible !== resultat
+    const formuleAffichee = construitFormule ? formule + cible : formule
     support_ui = (
       <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
         <div className="flex items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1.5 text-xs">
           <span className="font-bold text-navy/50">fx</span>
-          <span className="font-mono text-navy/90">{formule ? coloreFormule(formule) : <span className="text-navy/30">|</span>}</span>
+          <span className="font-mono text-navy/90">{formuleAffichee ? coloreFormule(formuleAffichee) : <span className="text-navy/30">|</span>}</span>
         </div>
         <div className="grid text-xs" style={{ gridTemplateColumns: `28px repeat(${cols.length}, 1fr)` }}>
           <div className="bg-navy/5" />
@@ -4487,12 +4491,16 @@ function CliqueCible({ v, onResolu, onErreur }) {
               {cols.map((c) => {
                 const id = c + r
                 const cell = cells[id] || {}
-                const estFormule = typeof cell.t === 'string' && cell.t.startsWith('=')
+                // La cellule résultat montre la formule qui se construit ; les autres, leur contenu.
+                const contenu = id === resultat && construitFormule ? formuleAffichee : cell.t
+                const estFormule = typeof contenu === 'string' && contenu.startsWith('=')
                 const bon = trouve && id === cible
+                const refBleu = bon && construitFormule // la cellule cliquée devient une référence bleue
                 const rate = rates.includes(id)
                 const cliquable = !cell.entete && !trouve && !rate
                 let cls = 'text-navy/90'
                 if (cell.entete) cls = 'bg-navy/10 font-bold text-navy/70'
+                else if (refBleu) cls = 'bg-sky-500/25 font-bold text-navy ring-2 ring-inset ring-sky-400'
                 else if (bon) cls = 'bg-mint/40 font-bold text-navy ring-2 ring-inset ring-mint'
                 else if (rate) cls = 'bg-red-500/10 text-navy/35'
                 else cls = 'text-navy/90 hover:bg-mint/10'
@@ -4502,7 +4510,7 @@ function CliqueCible({ v, onResolu, onErreur }) {
                     onClick={cliquable ? () => choisir(id) : undefined}
                     className={`min-h-[30px] border-b border-l border-navy/10 px-2 py-1 ${cell.num ? 'text-right' : ''} ${cliquable ? 'cursor-pointer' : ''} ${cls}`}
                   >
-                    {estFormule ? <span className="font-mono text-[10px] leading-tight">{coloreFormule(cell.t)}</span> : cell.t || ''}
+                    {estFormule ? <span className="font-mono text-[10px] leading-tight">{coloreFormule(contenu)}</span> : contenu || ''}
                   </div>
                 )
               })}
@@ -4665,7 +4673,7 @@ function VraiFaux({ v, onResolu, onErreur }) {
   }
   return (
     <div className="mt-3">
-      <p className="rounded-xl border border-navy/10 bg-white px-4 py-3 text-center font-mono text-sm leading-relaxed text-navy shadow-sm">{affirmation}</p>
+      <p className="rounded-xl border border-mint/50 bg-mint/25 px-4 py-3 text-center font-mono text-sm leading-relaxed text-navy shadow-sm">{affirmation}</p>
       <div className="mt-3 grid grid-cols-2 gap-3">
         {[{ label: 'VRAI', val: true }, { label: 'FAUX', val: false }].map((o) => {
           const estBon = trouve && o.val === bonne
@@ -4785,6 +4793,62 @@ function Elargir({ onResolu, v = {} }) {
   )
 }
 
+// La poignée de recopie qu'on TIRE soi-même : la 1re cellule est remplie, une poignée
+// verte est à son coin bas-droit ; l'élève l'attrape et Excel complète la suite (mois,
+// jours) ou recopie la formule. Interaction bloquante : il faut la tirer pour continuer.
+function TirePoignee({ onResolu, v = {} }) {
+  const {
+    entetes,
+    depart = 'janvier',
+    suite = ['février', 'mars', 'avril'],
+    nombres = false,
+    formule = false,
+    promptMsg = '👆 Attrape la poignée verte (coin bas-droit de la 1re case) et tire vers la droite',
+    okMsg = '✓ Excel complète la suite tout seul, sans rien retaper !',
+  } = v
+  const [rempli, setRempli] = useState(false)
+  const cols = entetes || ['A', 'B', 'C', 'D', 'E', 'F'].slice(0, 1 + suite.length)
+  const tirer = () => {
+    if (!rempli) {
+      setRempli(true)
+      onResolu && onResolu()
+    }
+  }
+  const rendre = (t) => (formule && typeof t === 'string' && t.startsWith('=') ? <span className="font-mono text-[10px]">{coloreFormule(t)}</span> : t)
+  const cellCls = `relative min-h-[30px] border-b border-l border-navy/10 px-2 py-1 ${nombres ? 'text-right' : ''}`
+  return (
+    <div className="mt-3">
+      <div className="select-none overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+        <div className="grid text-xs" style={{ gridTemplateColumns: `26px repeat(${cols.length}, 1fr)` }}>
+          <div className="bg-navy/10" />
+          {cols.map((c) => (
+            <div key={c} className="border-b border-l border-navy/10 bg-navy/10 py-1 text-center text-navy/50">{c}</div>
+          ))}
+          <div className="bg-navy/10 text-center text-navy/50">1</div>
+          <div className={`${cellCls} font-medium text-navy ring-2 ring-inset ring-navy/40`}>
+            {rendre(depart)}
+            <button
+              onClick={tirer}
+              title="Tirer la poignée de recopie"
+              className={`absolute -bottom-1.5 -right-1.5 z-10 h-3 w-3 rounded-[2px] border border-white bg-mint shadow ${rempli ? '' : 'animate-glow cursor-crosshair'}`}
+            />
+          </div>
+          {suite.map((val, i) => (
+            <div
+              key={i}
+              className={`${cellCls} ${rempli ? 'animate-fade-up bg-mint/15 font-medium text-navy' : ''}`}
+              style={rempli ? { animationDelay: `${i * 0.12}s` } : undefined}
+            >
+              {rempli ? rendre(val) : ''}
+            </div>
+          ))}
+        </div>
+      </div>
+      <p className="mt-3 rounded-full bg-mint/15 px-3 py-2 text-center text-sm font-bold text-mint">{rempli ? okMsg : promptMsg}</p>
+    </div>
+  )
+}
+
 // Une leçon racontée par le Shifu, une étape à la fois, ancrée dans un exemple concret.
 export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const steps = lecon.exercices?.length
@@ -4804,7 +4868,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -4858,6 +4922,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <VraiFaux v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'cliquecible' ? (
             <CliqueCible v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'tirepoignee' ? (
+            <TirePoignee v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -4879,7 +4945,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                         ? 'Vrai ou faux ?'
                         : s.visuel?.type === 'cliquecible'
                           ? 'Clique le bon élément'
-                          : 'Réponds pour continuer'
+                          : s.visuel?.type === 'tirepoignee'
+                            ? 'Tire la poignée de recopie'
+                            : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
