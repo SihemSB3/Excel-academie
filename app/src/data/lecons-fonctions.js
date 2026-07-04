@@ -6066,39 +6066,28 @@ const CREERTCD = {
   titre: 'Créer ton premier TCD',
   exercices: [EX13.ex86, EX13.ex87],
   narration: [
-    { humeur: 'accueil', dit: 'Le **tableau croisé dynamique** (TCD) est l\'outil roi pour **synthétiser et analyser** de grands volumes de données en quelques clics, **sans aucune formule**. Tu glisses des champs, Excel calcule et regroupe pour toi. Voici notre liste de ventes :', visuel: { type: 'tableur', ...T13_SOURCE, legende: 'Une liste brute. Objectif : le total des ventes PAR type de bien, en 3 glissers.' }, plus: ['Un tableau croisé dynamique (TCD) permet de synthétiser, analyser et explorer de grands volumes de données rapidement, sans écrire de formule. Tu choisis les champs à croiser (en lignes, en colonnes, en valeurs) et Excel construit automatiquement le rapport.'] },
+    { humeur: 'accueil', dit: 'Le **tableau croisé dynamique** (TCD) est l\'outil roi pour **synthétiser et analyser** de grands volumes de données en quelques clics, **sans aucune formule**. Tu glisses des champs, Excel calcule et regroupe pour toi. Voici notre liste de ventes, sur la feuille **Ventes** :', visuel: { type: 'tableur', ...T13_SOURCE, feuilles: ['Ventes'], feuilleActive: 'Ventes', legende: 'Une liste brute, sur la feuille Ventes. Objectif : le total des ventes PAR type de bien.' }, plus: ['Un tableau croisé dynamique (TCD) permet de synthétiser, analyser et explorer de grands volumes de données rapidement, sans écrire de formule. Tu choisis les champs à croiser (en lignes, en colonnes, en valeurs) et Excel construit automatiquement le rapport.'] },
     {
       humeur: 'accueil',
-      dit: 'Première étape : **sélectionne une cellule de ta liste**, puis cherche le bouton pour créer le TCD. Dans quel onglet insère-t-on un objet dans Excel ?',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Tableau croisé dynamique', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données'], actif: 'Insertion', groupeNom: 'Tableaux', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique' }, { icone: '📋', label: 'Tableau' }, { icone: '📈', label: 'Graphique' }], cible: 'Tableau croisé\ndynamique', explication: 'Onglet Insertion > groupe Tableaux > Tableau croisé dynamique. La première étape, c\'est toujours de sélectionner la plage source, puis d\'insérer le TCD.' },
+      dit: '**Première étape**, toute simple : clique **une cellule de ta liste** (n\'importe laquelle). Excel saura ainsi quelle plage résumer.',
+      visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique une cellule de ta liste', feuilles: ['Ventes'], feuilleActive: 'Ventes', cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Agent', entete: true }, B1: { t: 'Type de bien', entete: true }, C1: { t: 'Montant', entete: true }, A2: { t: 'Alice' }, B2: { t: 'Appartement' }, C2: { t: '210 000', num: true }, A3: { t: 'Bob' }, B3: { t: 'Maison' }, C3: { t: '350 000', num: true }, A4: { t: 'Alice' }, B4: { t: 'Maison' }, C4: { t: '410 000', num: true }, A5: { t: 'Claire' }, B5: { t: 'Appartement' }, C5: { t: '185 000', num: true } }, cible: ['A2', 'B2', 'C2', 'A3', 'B3', 'C3', 'A4', 'B4', 'C4', 'A5', 'B5', 'C5'], explication: 'Bien joué. En te plaçant dans la liste, Excel repère automatiquement toute la plage à analyser : pas besoin de la sélectionner à la main.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Ensuite, cherche le bouton pour créer le TCD. Dans quel onglet insère-t-on un objet dans Excel ?',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Tableau croisé dynamique', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données'], actif: 'Insertion', groupeNom: 'Tableaux', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique' }, { icone: '📋', label: 'Tableau' }, { icone: '📈', label: 'Graphique' }], cible: 'Tableau croisé\ndynamique', explication: 'Onglet Insertion > groupe Tableaux > Tableau croisé dynamique. Tu cliques une cellule de la liste, PUIS ce bouton.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Une boîte s\'ouvre : vérifie la **plage** (titres inclus), puis choisis où placer le TCD, en général une **nouvelle feuille**.',
+      dit: 'Une boîte s\'ouvre : vérifie la **plage** (titres inclus), laisse **Nouvelle feuille de calcul** coché, puis **OK**. Excel va créer une **feuille rien que pour ton TCD**.',
       visuel: { type: 'champs', titre: 'Créer un tableau croisé dynamique', champs: [{ l: 'Tableau/Plage', v: 'Ventes!$A$1:$C$5', actif: true }, { l: 'Nouvelle feuille de calcul', check: true }, { l: 'Feuille de calcul existante', check: false }] },
       plus: ['1. Sélectionne une cellule de ton tableau de données source. 2. Ouvre l\'onglet Insertion et clique sur Tableau croisé dynamique. 3. Vérifie la plage sélectionnée (titres inclus) dans la boîte de dialogue. 4. Choisis d\'insérer le TCD dans une nouvelle feuille (ou une feuille existante) et clique sur OK.'],
     },
     {
-      humeur: 'pensif',
-      dit: 'Le volet **Champs de tableau croisé dynamique** apparaît : en haut la liste des champs, en bas **quatre zones** où les glisser.',
-      visuel: { type: 'champstcd', tables: [{ nom: 'Ventes', champs: [{ nom: 'Agent', coche: false }, { nom: 'Type de bien', coche: false }, { nom: 'Montant', coche: false }] }], lignes: [], colonnes: [], valeurs: [], filtres: [] },
-      plus: ['Tu retrouves la liste des champs à glisser dans les zones : Filtres, Colonnes, Lignes et Valeurs. En glissant un champ dans « Lignes », chaque valeur devient une ligne du rapport ; en le glissant dans « Valeurs », Excel le calcule (par défaut, la Somme).'],
-    },
-    {
       humeur: 'content',
-      dit: 'On attrape un champ dans la liste et on le **dépose dans une zone**. Regarde : « Type de bien » glissé vers **Lignes**.',
-      visuel: { type: 'glisserchamptcd' },
-      plus: ['Fais glisser le champ « Type de bien » (depuis la liste des champs) dans la zone Lignes : chaque type de bien (Appartement, Maison…) devient une ligne du rapport. Puis fais glisser « Montant » dans la zone Valeurs pour obtenir automatiquement la Somme des montants.'],
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi de réfléchir. Pour obtenir la **SOMME des ventes** par type de bien, dans quelle zone glisser le champ **« Montant » ** ?',
-      visuel: { type: 'question', options: ['Zone « Valeurs »', 'Zone « Lignes »', 'Zone « Filtres »'], bonne: 0, explication: 'Un champ à CALCULER (le Montant) va dans « Valeurs » : Excel en fait la Somme par défaut. Les champs qui servent à REGROUPER (Type de bien) vont dans « Lignes » ou « Colonnes ».' },
-    },
-    {
-      humeur: 'content',
-      dit: 'Et voilà ton premier rapport, sans une seule formule : **Appartement, Maison…** en lignes, et la **somme des montants** en face. Trois glissers, une synthèse claire.',
-      visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Étiquettes de lignes', entete: true }, B1: { t: 'Somme de Montant', entete: true }, A2: { t: 'Appartement' }, B2: { t: '395 000', num: true, vert: true }, A3: { t: 'Maison' }, B3: { t: '760 000', num: true, vert: true }, A4: { t: 'Total général', entete: true }, B4: { t: '1 155 000', num: true } }, legende: 'Le TCD a regroupé et additionné tout seul. Change les champs, il se recalcule.' },
+      dit: 'Et voilà une **nouvelle feuille (Feuil1)** ! À **gauche**, l\'emplacement du TCD (encore vide) ; à **droite**, le volet **Champs**. À toi : **attrape un champ** (clique-le) et **dépose-le** dans la bonne zone.',
+      visuel: { type: 'tcdbuilder', feuilles: ['Ventes', 'Feuil1'], feuilleActive: 'Feuil1', champs: ['Agent', 'Type de bien', 'Montant'], sequence: [{ champ: 'Type de bien', zone: 'lignes', consigne: 'Attrape « Type de bien » (clique-le), puis dépose-le dans la zone Lignes.' }, { champ: 'Montant', zone: 'valeurs', consigne: 'Pour la SOMME des ventes par type, où déposer « Montant » ? À toi de le mettre dans la bonne zone.' }], etiquettes: ['Appartement', 'Maison'], valeurLabel: 'Somme de Montant', valeurs: ['395 000 €', '760 000 €'], total: '1 155 000 €', explication: 'Type de bien en Lignes (les catégories), Montant en Valeurs (la somme). Sur une NOUVELLE feuille, sans une seule formule, Excel a tout regroupé et additionné. Change les champs, le rapport se recalcule.' },
+      plus: ['Fais glisser « Type de bien » dans la zone Lignes : chaque type (Appartement, Maison…) devient une ligne. Puis glisse « Montant » dans la zone Valeurs pour obtenir automatiquement la Somme des montants par type. Le rapport s\'affiche sur la nouvelle feuille créée par Excel.'],
     },
     {
       humeur: 'accueil',

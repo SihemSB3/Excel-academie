@@ -3802,6 +3802,127 @@ function GlisserChampTCD() {
   )
 }
 
+// « Construis ton TCD » : comme dans Excel, la feuille (avec ses ONGLETS) à GAUCHE et le
+// volet Champs à DROITE. L'élève ATTRAPE un champ de la liste (clic) puis le DÉPOSE dans
+// une zone (clic) : le tableau croisé se remplit tout seul à chaque dépôt. Piloté par
+// `sequence` [{champ, zone, consigne}] ; on voit qu'une NOUVELLE feuille (Feuil1) est née.
+function TcdBuilder({ v, onResolu, onErreur }) {
+  const { feuilles = ['Ventes', 'Feuil1'], feuilleActive = 'Feuil1', classeur = 'Ventes.xlsx', champs = [], sequence = [], etiquettes = [], valeurLabel = 'Somme de Montant', valeurs = [], total, explication } = v
+  const [placed, setPlaced] = useState({})
+  const [etape, setEtape] = useState(0)
+  const [pris, setPris] = useState(null)
+  const [rate, setRate] = useState(false)
+  const fini = etape >= sequence.length
+  const cur = sequence[etape] || {}
+
+  useEffect(() => {
+    if (etape >= sequence.length) onResolu && onResolu()
+  }, [etape])
+
+  const contenuZone = (k) => Object.keys(placed).filter((n) => placed[n] === k)
+  const lignesPlacees = Object.values(placed).includes('lignes')
+  const valeursPlacees = Object.values(placed).includes('valeurs')
+
+  const attraper = (nom) => {
+    if (fini || placed[nom]) return
+    setPris((p) => (p === nom ? null : nom))
+  }
+  const deposer = (k) => {
+    if (fini || !pris) return
+    if (pris === cur.champ && k === cur.zone) {
+      setPlaced((p) => ({ ...p, [pris]: k }))
+      setPris(null)
+      setEtape((e) => e + 1)
+    } else {
+      setRate(true)
+      onErreur && onErreur()
+      setTimeout(() => {
+        setRate(false)
+        setPris(null)
+      }, 900)
+    }
+  }
+
+  const zones = [
+    { k: 'filtres', nom: '▽ Filtres' },
+    { k: 'colonnes', nom: '▥ Colonnes' },
+    { k: 'lignes', nom: '☰ Lignes' },
+    { k: 'valeurs', nom: 'Σ Valeurs' },
+  ]
+
+  return (
+    <div className="mt-3">
+      {!fini && (
+        <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">
+          👆 {pris ? `« ${pris} » attrapé : clique la zone où le déposer` : cur.consigne}
+        </p>
+      )}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="flex gap-2 p-2">
+          <div className="min-w-0 flex-1">
+            <div className="rounded border border-navy/15 bg-[#fafafa] p-1.5 text-[10px]">
+              {!lignesPlacees ? (
+                <div className="grid min-h-[132px] place-items-center px-1 text-center leading-tight text-navy/40">
+                  <span>Tableau croisé<br />dynamique<br /><span className="text-[9px]">(dépose un champ<br />pour commencer)</span></span>
+                </div>
+              ) : (
+                <table className="w-full border-collapse">
+                  <tbody>
+                    <tr><td className="border border-navy/15 bg-navy/10 px-1.5 py-1 font-bold text-navy/70">Étiquettes de lignes</td>{valeursPlacees && <td className="border border-navy/15 bg-navy/10 px-1.5 py-1 text-right font-bold text-navy/70">{valeurLabel}</td>}</tr>
+                    {etiquettes.map((et, i) => (
+                      <tr key={i}><td className="border border-navy/15 px-1.5 py-1 text-navy/85">{et}</td>{valeursPlacees && <td className="border border-navy/15 px-1.5 py-1 text-right font-semibold text-mint-dark">{valeurs[i]}</td>}</tr>
+                    ))}
+                    {valeursPlacees && <tr><td className="border border-navy/15 bg-navy/5 px-1.5 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-1.5 py-1 text-right font-bold text-navy/80">{total}</td></tr>}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+          <div className="w-40 shrink-0 rounded border border-navy/15 text-[10px]">
+            <div className="border-b border-navy/10 bg-[#f3f3f3] px-1.5 py-1 font-semibold text-navy/70">Champs de TCD</div>
+            <div className="p-1.5">
+              <p className="mb-0.5 font-semibold text-navy/55">▾ Ventes</p>
+              <div className="mb-2 space-y-0.5">
+                {champs.map((nom) => {
+                  const libre = !placed[nom]
+                  const estPris = pris === nom
+                  return (
+                    <div key={nom} onClick={libre ? () => attraper(nom) : undefined} className={`flex items-center gap-1 rounded px-1 py-0.5 ${libre ? 'cursor-pointer hover:bg-mint/10' : 'opacity-30'} ${estPris ? 'bg-mint/25 ring-1 ring-mint' : ''}`}>
+                      <span className={`grid h-3 w-3 shrink-0 place-items-center rounded-sm border text-[8px] ${!libre ? 'border-mint bg-mint text-white' : 'border-navy/40'}`}>{!libre ? '✓' : ''}</span>{nom}
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="grid grid-cols-2 gap-1">
+                {zones.map((z) => {
+                  const items = contenuZone(z.k)
+                  const cible = pris && cur.zone === z.k
+                  return (
+                    <div key={z.k} onClick={pris ? () => deposer(z.k) : undefined} className={`rounded-sm border p-1 transition ${pris ? 'cursor-pointer' : ''} ${cible ? 'animate-pulse border-mint bg-mint/10 ring-1 ring-mint' : 'border-navy/20 bg-[#fafafa]'}`}>
+                      <p className="text-[9px] font-semibold text-navy/50">{z.nom}</p>
+                      <div className="min-h-[16px] space-y-0.5">{items.map((n) => (<span key={n} className="block truncate rounded-sm bg-mint/20 px-1 py-0.5 text-[9px] text-navy ring-1 ring-mint/40">{n}</span>))}</div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => (<span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>))}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fini ? (
+        <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ TCD construit ! 🥋</span> {explication}</p>
+      ) : rate ? (
+        <p className="mt-2 rounded-xl bg-navy/10 px-3 py-2 text-sm font-medium text-navy/90">Pas cette zone. Reclique le champ, puis dépose-le dans la bonne zone.</p>
+      ) : null}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -4692,9 +4813,11 @@ function CliqueCible({ v, onResolu, onErreur }) {
   const { consigne, support = 'tableur', cible, explication } = v
   const [rates, setRates] = useState([])
   const [trouve, setTrouve] = useState(false)
+  // `cible` peut être une seule valeur OU un tableau (ex. « clique n'importe quelle cellule de la liste »).
+  const estCible = (val) => (Array.isArray(cible) ? cible.includes(val) : val === cible)
   const choisir = (val) => {
     if (trouve) return
-    if (val === cible) {
+    if (estCible(val)) {
       setTrouve(true)
       onResolu && onResolu()
     } else if (!rates.includes(val)) {
@@ -4730,7 +4853,7 @@ function CliqueCible({ v, onResolu, onErreur }) {
                 // La cellule résultat montre la formule qui se construit ; les autres, leur contenu.
                 const contenu = id === resultat && construitFormule ? formuleAffichee : cell.t
                 const estFormule = typeof contenu === 'string' && contenu.startsWith('=')
-                const bon = trouve && id === cible
+                const bon = trouve && estCible(id)
                 const refBleu = bon && construitFormule // la cellule cliquée devient une référence bleue
                 const rate = rates.includes(id)
                 const cliquable = !cell.entete && !trouve && !rate
@@ -5414,7 +5537,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -5482,6 +5605,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <CollageTranspose v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'construitformule' ? (
             <ConstruitFormule v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'tcdbuilder' ? (
+            <TcdBuilder v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -5517,7 +5642,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                       ? 'Clique Transposer'
                                       : s.visuel?.type === 'construitformule'
                                         ? 'Construis la formule'
-                                        : 'Réponds pour continuer'
+                                        : s.visuel?.type === 'tcdbuilder'
+                                          ? 'Dépose les champs'
+                                          : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
