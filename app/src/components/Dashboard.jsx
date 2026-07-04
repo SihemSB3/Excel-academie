@@ -170,7 +170,7 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
       </button>
 
       <p className="mt-6 text-center text-[11px] text-navy/30">
-        Pilote, chapitres 1 à 12 sur 13. Progression sauvegardée sur ton compte.
+        Les 13 chapitres, de la ceinture blanche à la noire. Progression sauvegardée sur ton compte.
       </p>
     </div>
   )

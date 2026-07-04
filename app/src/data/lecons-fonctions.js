@@ -6048,4 +6048,162 @@ const DOUBLONSSOUSTOTAUX = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR, rappelsrecherche: RAPPELSRECHERCHE, recherchev: RECHERCHEV, recherchex: RECHERCHEX, recherchexdeux: RECHERCHEXDEUX, rechercheh: RECHERCHEH, validationdonnees: VALIDATIONDONNEES, filtreselabores: FILTRESELABORES, doublonssoustotaux: DOUBLONSSOUSTOTAUX }
+// ======================= CHAPITRE 13 : LES TABLEAUX CROISÉS DYNAMIQUES (ceinture NOIRE) =======================
+const U13 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
+const EX13 = {
+  ex86: { titre: 'Exercice 86 · Ton premier TCD', url: U13('1fE-WYZC_epyM0d4TZksVvnC-kLkMJPna') },
+  ex87: { titre: 'Exercice 87 · Créer un TCD', url: U13('1VrBIuDme7ARcyssPGyjXX1P7USDH09SM') },
+  ex88: { titre: 'Exercice 88 · Créer un nouveau TCD', url: U13('12tEy50LIYJxmvmxN_hvT1E6CrIqvCnYK') },
+  ex89: { titre: 'Exercice 89 · Les champs calculés dans un TCD', url: U13('1mJiKhrqr4YAYMCwWVj2Q0JopPLXf7lvl') },
+}
+
+// Table source fil rouge du chapitre : des ventes immobilières.
+const T13_SOURCE = { cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Agent', entete: true }, B1: { t: 'Type de bien', entete: true }, C1: { t: 'Montant', entete: true }, A2: { t: 'Alice' }, B2: { t: 'Appartement' }, C2: { t: '210 000', num: true }, A3: { t: 'Bob' }, B3: { t: 'Maison' }, C3: { t: '350 000', num: true }, A4: { t: 'Alice' }, B4: { t: 'Maison' }, C4: { t: '410 000', num: true }, A5: { t: 'Claire' }, B5: { t: 'Appartement' }, C5: { t: '185 000', num: true } } }
+
+// --- Leçon 1 : Créer ton premier TCD ---
+const CREERTCD = {
+  id: 'fn-creertcd',
+  titre: 'Créer ton premier TCD',
+  exercices: [EX13.ex86, EX13.ex87],
+  narration: [
+    { humeur: 'accueil', dit: 'Le **tableau croisé dynamique** (TCD) est l\'outil roi pour **synthétiser et analyser** de grands volumes de données en quelques clics, **sans aucune formule**. Tu glisses des champs, Excel calcule et regroupe pour toi. Voici notre liste de ventes :', visuel: { type: 'tableur', ...T13_SOURCE, legende: 'Une liste brute. Objectif : le total des ventes PAR type de bien, en 3 glissers.' }, plus: ['Un tableau croisé dynamique (TCD) permet de synthétiser, analyser et explorer de grands volumes de données rapidement, sans écrire de formule. Tu choisis les champs à croiser (en lignes, en colonnes, en valeurs) et Excel construit automatiquement le rapport.'] },
+    {
+      humeur: 'accueil',
+      dit: 'Première étape : **sélectionne une cellule de ta liste**, puis cherche le bouton pour créer le TCD. Dans quel onglet insère-t-on un objet dans Excel ?',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Tableau croisé dynamique', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données'], actif: 'Insertion', groupeNom: 'Tableaux', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique' }, { icone: '📋', label: 'Tableau' }, { icone: '📈', label: 'Graphique' }], cible: 'Tableau croisé\ndynamique', explication: 'Onglet Insertion > groupe Tableaux > Tableau croisé dynamique. La première étape, c\'est toujours de sélectionner la plage source, puis d\'insérer le TCD.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Une boîte s\'ouvre : vérifie la **plage** (titres inclus), puis choisis où placer le TCD, en général une **nouvelle feuille**.',
+      visuel: { type: 'champs', titre: 'Créer un tableau croisé dynamique', champs: [{ l: 'Tableau/Plage', v: 'Ventes!$A$1:$C$5', actif: true }, { l: 'Nouvelle feuille de calcul', check: true }, { l: 'Feuille de calcul existante', check: false }] },
+      plus: ['1. Sélectionne une cellule de ton tableau de données source. 2. Ouvre l\'onglet Insertion et clique sur Tableau croisé dynamique. 3. Vérifie la plage sélectionnée (titres inclus) dans la boîte de dialogue. 4. Choisis d\'insérer le TCD dans une nouvelle feuille (ou une feuille existante) et clique sur OK.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le volet **Champs de tableau croisé dynamique** apparaît : en haut la liste des champs, en bas **quatre zones** où les glisser.',
+      visuel: { type: 'champstcd', tables: [{ nom: 'Ventes', champs: [{ nom: 'Agent', coche: false }, { nom: 'Type de bien', coche: false }, { nom: 'Montant', coche: false }] }], lignes: [], colonnes: [], valeurs: [], filtres: [] },
+      plus: ['Tu retrouves la liste des champs à glisser dans les zones : Filtres, Colonnes, Lignes et Valeurs. En glissant un champ dans « Lignes », chaque valeur devient une ligne du rapport ; en le glissant dans « Valeurs », Excel le calcule (par défaut, la Somme).'],
+    },
+    {
+      humeur: 'content',
+      dit: 'On attrape un champ dans la liste et on le **dépose dans une zone**. Regarde : « Type de bien » glissé vers **Lignes**.',
+      visuel: { type: 'glisserchamptcd' },
+      plus: ['Fais glisser le champ « Type de bien » (depuis la liste des champs) dans la zone Lignes : chaque type de bien (Appartement, Maison…) devient une ligne du rapport. Puis fais glisser « Montant » dans la zone Valeurs pour obtenir automatiquement la Somme des montants.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi de réfléchir. Pour obtenir la **SOMME des ventes** par type de bien, dans quelle zone glisser le champ **« Montant » ** ?',
+      visuel: { type: 'question', options: ['Zone « Valeurs »', 'Zone « Lignes »', 'Zone « Filtres »'], bonne: 0, explication: 'Un champ à CALCULER (le Montant) va dans « Valeurs » : Excel en fait la Somme par défaut. Les champs qui servent à REGROUPER (Type de bien) vont dans « Lignes » ou « Colonnes ».' },
+    },
+    {
+      humeur: 'content',
+      dit: 'Et voilà ton premier rapport, sans une seule formule : **Appartement, Maison…** en lignes, et la **somme des montants** en face. Trois glissers, une synthèse claire.',
+      visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Étiquettes de lignes', entete: true }, B1: { t: 'Somme de Montant', entete: true }, A2: { t: 'Appartement' }, B2: { t: '395 000', num: true, vert: true }, A3: { t: 'Maison' }, B3: { t: '760 000', num: true, vert: true }, A4: { t: 'Total général', entete: true }, B4: { t: '1 155 000', num: true } }, legende: 'Le TCD a regroupé et additionné tout seul. Change les champs, il se recalcule.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. À quoi sert **principalement** un tableau croisé dynamique ?',
+      visuel: { type: 'question', options: ['Réaliser des graphiques interactifs', 'Synthétiser et analyser rapidement de grands volumes de données', 'Mettre en forme conditionnelle les cellules', 'Importer des données externes'], bonne: 1, explication: 'Le TCD sert à SYNTHÉTISER et ANALYSER de grands volumes de données en un clin d\'œil, en croisant des champs, sans écrire de formule.' },
+    },
+    { humeur: 'fier', dit: 'Ton premier TCD est né : tu résumes des centaines de lignes en trois glissers. Bravo, la maîtrise approche ! 🎉' },
+  ],
+}
+
+// --- Leçon 2 : Manipuler & analyser un TCD ---
+const ANALYSERTCD = {
+  id: 'fn-analysertcd',
+  titre: 'Manipuler & analyser un TCD',
+  exercices: [EX13.ex88, EX13.ex89],
+  narration: [
+    { humeur: 'accueil', dit: 'Un TCD est **vivant** : tu le réorganises, tu l\'actualises, tu le regroupes, tu l\'affines. C\'est là toute sa puissance d\'analyse. Faisons le tour des gestes essentiels.', visuel: { type: 'champstcd', tables: [{ nom: 'Ventes', champs: [{ nom: 'Agent', coche: true }, { nom: 'Type de bien', coche: true }, { nom: 'Montant', coche: true }] }], lignes: ['Type de bien'], colonnes: [], valeurs: ['Somme de Montant'], filtres: [] } },
+    {
+      humeur: 'pensif',
+      dit: 'Le TCD se **réorganise en direct**. Glisse un champ de la zone **Lignes** vers **Colonnes**. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Déplacer un champ de « Lignes » vers « Colonnes » change l\'orientation de la hiérarchie du rapport (les valeurs passent en en-têtes de colonnes).', bonne: true, explication: 'Vrai : c\'est exactement ça. Tu ne changes ni les données ni le calcul, seulement la façon de les LIRE : les catégories basculent de la verticale à l\'horizontale.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Tu as modifié ta liste source ? Le TCD ne bouge pas tout seul, il faut l\'**actualiser**. Fais un **clic droit** sur le TCD et trouve la bonne commande.',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Actualiser »', items: [{ label: 'Copier' }, { label: 'Actualiser' }, { label: 'Trier' }, '-', { label: 'Paramètres de champ…' }], cible: 1, explication: 'Clic droit sur le TCD > Actualiser recharge les données depuis la source. Raccourci pratique : Alt + F5. Sans actualiser, le TCD affiche encore les anciennes données.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Tes données comportent des **dates** ? Le TCD sait les **regrouper** (par mois, trimestre, année). Clic droit sur une date > **Grouper**.',
+      visuel: { type: 'champs', titre: 'Grouper', champs: [{ l: 'Mois', check: true }, { l: 'Trimestres', check: false }, { l: 'Années', check: true }] },
+      plus: ['Pour regrouper des dates : clique droit sur une valeur de date dans le TCD > Grouper, puis choisis le pas (Jours, Mois, Trimestres, Années). Excel crée automatiquement les regroupements, idéal pour une synthèse « ventes par mois » ou « par année ».'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Envie de voir le **poids de chaque ligne** ? Affiche les valeurs en **% du total général** : clic droit sur une valeur > **Afficher les valeurs**.',
+      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Afficher les valeurs »', items: [{ label: 'Résumer les valeurs par' }, { label: 'Afficher les valeurs' }, '-', { label: 'Paramètres de champ de valeurs…' }], cible: 1, explication: 'Clic droit sur une valeur > Afficher les valeurs > « % du total général » : chaque montant devient un pourcentage. Parfait pour comparer les proportions plutôt que les euros bruts.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Deux façons de **filtrer** un TCD, à ne pas confondre :',
+      visuel: { type: 'parties', items: [{ label: '**La zone Filtre** : glisse un champ dans « Filtres » pour n\'afficher qu\'une partie des données, sans toucher aux lignes ni aux colonnes.' }, { label: '**Les segments** (Insertion > Segment) : des boutons cliquables, visuels, pour filtrer d\'un clic, encore plus pratiques pour présenter.' }] },
+      plus: ['Un champ placé dans la zone « Filtre » permet d\'exclure des éléments sans toucher aux lignes ou aux colonnes du rapport. Les segments (onglet Insertion > Segment) offrent le même filtrage sous forme de boutons visuels : d\'un clic, tu isoles un vendeur, une ville, une catégorie.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Un champ placé dans la zone **« Filtre »** d\'un TCD permet de…',
+      visuel: { type: 'question', options: ['Exclure des éléments sans toucher aux lignes ou colonnes', 'Changer la mise en forme du TCD', 'Ajouter un graphique dynamique', 'Appliquer une macro'], bonne: 0, explication: 'La zone Filtre agit comme un entonnoir global : elle restreint les données affichées sans modifier la structure (lignes/colonnes) du rapport.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Dernière pour la route. Quel **raccourci clavier** actualise un TCD ?',
+      visuel: { type: 'question', options: ['Alt + F5', 'Ctrl + R', 'F9', 'Ctrl + Alt + F5'], bonne: 0, explication: 'Alt + F5 actualise le TCD sélectionné (comme le clic droit > Actualiser). Pour tout actualiser d\'un coup dans le classeur : Ctrl + Alt + F5.' },
+    },
+    { humeur: 'fier', dit: 'Réorganiser, actualiser, grouper, filtrer : ton TCD t\'obéit au doigt et à l\'œil. Un vrai tableau de bord vivant ! 🎉' },
+  ],
+}
+
+// --- Leçon 3 : Les graphiques croisés dynamiques ---
+const GRAPHIQUESCROISES = {
+  id: 'fn-graphiquescroises',
+  titre: 'Les graphiques croisés dynamiques',
+  exercices: [EX13.ex89],
+  narration: [
+    { humeur: 'accueil', dit: 'Le **graphique croisé dynamique** (GCD) est l\'**extension visuelle** du TCD : même logique (tu glisses des champs), mais tu obtiens directement un **graphique clair et interactif**, prêt à présenter. Idéal pour un client ou un supérieur.', visuel: { type: 'champstcd', tables: [{ nom: 'Ventes', champs: [{ nom: 'Type de bien', coche: false }, { nom: 'Montant', coche: false }] }], lignes: [], colonnes: [], valeurs: [], filtres: [] }, plus: ['Les graphiques croisés dynamiques sont une extension visuelle des tableaux croisés dynamiques. Ils te permettent de transformer instantanément tes données brutes en graphiques clairs, interactifs et faciles à lire. Le GCD fonctionne sur la même logique que le TCD : tu retrouves la liste des champs à glisser dans les zones Axe, Légende, Valeurs et Filtres. La différence, c\'est qu\'ici, tu obtiens directement une représentation visuelle de tes données.'] },
+    {
+      humeur: 'accueil',
+      dit: 'On le crée comme un TCD, dans l\'onglet **Insertion**. Cherche le bouton du graphique croisé dynamique.',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Graphique croisé dynamique', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données'], actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique' }, { icone: '📈', label: 'Graphique croisé\ndynamique' }, { icone: '📉', label: 'Courbe' }], cible: 'Graphique croisé\ndynamique', explication: 'Insertion > Graphique croisé dynamique. Excel crée en même temps le TCD associé, lié au graphique : modifier l\'un met l\'autre à jour.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'La boîte s\'ouvre : vérifie la **plage** (titres inclus), choisis une **nouvelle feuille**, puis OK. Excel prépare le graphique et son TCD.',
+      visuel: { type: 'champs', titre: 'Créer un graphique croisé dynamique', champs: [{ l: 'Tableau/Plage', v: 'Ventes!$A$1:$C$5', actif: true }, { l: 'Nouvelle feuille de calcul', check: true }] },
+      plus: ['1. Sélectionne une cellule dans ton tableau de données source. 2. Ouvre l\'onglet Insertion et clique sur Graphique croisé dynamique. 3. Vérifie la plage sélectionnée (titres inclus) dans la boîte de dialogue. 4. Choisis d\'insérer le GCD dans une nouvelle feuille et clique sur OK. Tu peux aussi créer un GCD à partir d\'un TCD déjà existant, via la commande Graphique croisé dynamique de l\'onglet Analyse.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Comme pour un TCD, tu **glisses les champs** : « Type de bien » en **Axe** (les catégories), « Montant » en **Valeurs** (la hauteur des barres).',
+      visuel: { type: 'champstcd', tables: [{ nom: 'Ventes', champs: [{ nom: 'Type de bien', coche: true }, { nom: 'Montant', coche: true }] }], lignes: ['Type de bien'], colonnes: [], valeurs: ['Somme de Montant'], filtres: [] },
+      plus: ['Dans le volet Liste de champs, glisse « Type de bien » en Étiquettes de lignes (l\'axe du graphique) et « Montant » en Valeurs pour obtenir la somme des montants par type. Le graphique se dessine automatiquement.'],
+    },
+    {
+      humeur: 'content',
+      dit: 'En un clin d\'œil, tu obtiens la **vue visuelle** de la somme des ventes par type de bien. Plus parlant qu\'un tableau de chiffres !',
+      visuel: { type: 'graphique', forme: 'histogramme', titre: 'Somme des ventes par type de bien', cats: ['Appartement', 'Maison'], series: [{ nom: 'Montant', vals: [395, 760] }], etiquettes: true, legende: 'Le GCD et son TCD sont liés : filtre le graphique, le tableau suit, et inversement.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'À retenir sur le lien graphique-tableau :',
+      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Quand tu insères un graphique croisé dynamique depuis l\'onglet Insertion, Excel crée **automatiquement** le tableau croisé dynamique associé. Les deux sont **liés** : toute modification ou actualisation dans l\'un se reflète dans l\'autre.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Enfin, tu le **personnalises** comme un graphique classique : pour changer le type (colonnes, courbes, secteurs…), passe par **Création > Modifier le type de graphique**.',
+      visuel: { type: 'galeriegraphiques' },
+      plus: ['Le graphique croisé dynamique est entièrement personnalisable. Pour changer son type (colonnes, courbes, secteurs…), tu utilises exactement la même méthode que pour un graphique classique : 1. Sélectionne le graphique. 2. Onglet Création > groupe Type > Modifier le type de graphique. 3. Choisis le type dans la boîte de dialogue. 4. OK. Si besoin, reporte-toi au chapitre « Les graphiques » pour revoir les notions essentielles.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi, la toute dernière. Le graphique croisé dynamique…',
+      visuel: { type: 'question', options: ['fonctionne comme un TCD (on glisse des champs) et reste lié au tableau croisé associé', 'remplace définitivement le TCD', 'ne peut afficher que des secteurs (camemberts)'], bonne: 0, explication: 'Le GCD suit la même logique que le TCD (glisser des champs dans Axe/Légende/Valeurs/Filtres) et reste LIÉ au tableau croisé associé : l\'un actualise l\'autre. Son type se change comme un graphique normal.' },
+    },
+    { humeur: 'fier', dit: 'Tableaux croisés, graphiques croisés : tu transformes des montagnes de données en décisions claires. Le dernier kata est accompli, la ceinture NOIRE t\'attend, maître ! 🥋🖤' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR, rappelsrecherche: RAPPELSRECHERCHE, recherchev: RECHERCHEV, recherchex: RECHERCHEX, recherchexdeux: RECHERCHEXDEUX, rechercheh: RECHERCHEH, validationdonnees: VALIDATIONDONNEES, filtreselabores: FILTRESELABORES, doublonssoustotaux: DOUBLONSSOUSTOTAUX, creertcd: CREERTCD, analysertcd: ANALYSERTCD, graphiquescroises: GRAPHIQUESCROISES }

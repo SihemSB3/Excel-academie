@@ -1,0 +1,176 @@
+{
+  "chapitre": 13,
+  "titre": "Les tableaux croisés dynamiques",
+  "niveau": 13,
+  "ceinture": "noire",
+  "objectif": "Maîtriser l'analyse : créer un tableau croisé dynamique (glisser des champs dans Lignes/Colonnes/Valeurs/Filtres), le manipuler (actualiser, grouper les dates, afficher en % du total, segments) et le transformer en graphique croisé dynamique. Le kata final vers la ceinture noire.",
+  "note_pedago": "Chapitre FINAL (3 leçons), ceinture NOIRE. Le ch.9 (Consolidation & TCD) a déjà couvert les TCD MULTI-TABLES (modèle de données + relations, verbatim ebook ch.13 TCD multi-tables) ; ce ch.13 est donc recentré sur : creertcd (TCD simple à une table, Insertion > TCD, les 4 zones, glisser un champ, où glisser Montant → Valeurs, Ex.86+87), analysertcd (déplacer un champ Lignes↔Colonnes = orientation, actualiser clic droit/Alt+F5, grouper les dates, afficher en % du total général, zone Filtre vs Segments, Ex.88+89), graphiquescroises (Insertion > GCD, glisser les champs Axe/Valeurs, le graphique lié au TCD, personnaliser le type via Création, verbatim ebook, Ex.89). Source ebook pages 630-647. Interactions chercher-d'abord : clic-cible ruban (Insertion TCD/GCD) + clic-cible menu (clic droit Actualiser, Afficher les valeurs) + questions de découverte + glisserchamptcd animé. Réutilise les composants existants (champstcd, glisserchamptcd, graphique, galeriegraphiques, champs, cliquecible menu/ruban). NB : les QCM p648-650 supposent des notions (segments, %, grouper) que le texte ebook ch.13 n'explicite pas toutes ; couvertes dans analysertcd.",
+  "xp_valeurs_note": "30 XP par leçon narrée, 40 XP quiz réussi, 10 XP checklist, 120 XP bonus ceinture noire (chapitre final).",
+  "modules": [
+    {
+      "type": "narration",
+      "id": "ch13-creertcd",
+      "lecon": "creertcd",
+      "titre": "Créer ton premier TCD",
+      "xp": 30
+    },
+    {
+      "type": "narration",
+      "id": "ch13-analysertcd",
+      "lecon": "analysertcd",
+      "titre": "Manipuler & analyser un TCD",
+      "xp": 30
+    },
+    {
+      "type": "narration",
+      "id": "ch13-graphiquescroises",
+      "lecon": "graphiquescroises",
+      "titre": "Les graphiques croisés dynamiques",
+      "xp": 30
+    },
+    {
+      "id": "ch13-quiz",
+      "titre": "L'épreuve finale",
+      "type": "quiz",
+      "seuil_reussite": 7,
+      "total": 10,
+      "xp_reussite": 40,
+      "note": "QCM de l'ebook ch.13 p648-650 (10 questions), repris verbatim. Le corrigé (PARTIE 2) a des coches graphiques non extractibles : reponses_correctes déterminées par le contenu (confiance haute), à valider par Sihem. Une 11e question (modifier la plage source) a été écartée car ses options n'étaient pas extractibles.",
+      "questions": [
+        {
+          "id": "ch13-qcm-01",
+          "question": "À quoi sert principalement un tableau croisé dynamique ?",
+          "options": ["Réaliser des graphiques interactifs", "Synthétiser et analyser rapidement de grands volumes de données", "Mettre en forme conditionnelle les cellules", "Importer des données externes"],
+          "reponses_correctes": [1],
+          "explication": "Le TCD sert à synthétiser et analyser de grands volumes de données en croisant des champs, sans écrire de formule."
+        },
+        {
+          "id": "ch13-qcm-02",
+          "question": "Quelle est la première étape pour créer un tableau croisé dynamique dans Excel ?",
+          "options": ["Sélectionner la plage de données source", "Appliquer un filtre automatique", "Cliquer sur l'onglet « Insertion » puis « Tableau »", "Définir un graphique"],
+          "reponses_correctes": [0],
+          "explication": "On commence toujours par sélectionner (ou se placer dans) la plage de données source, avant d'insérer le TCD via Insertion > Tableau croisé dynamique."
+        },
+        {
+          "id": "ch13-qcm-03",
+          "question": "Dans un tableau croisé dynamique, on place les éléments « Ventes » (les montants à calculer) dans :",
+          "options": ["Zone « Lignes » uniquement", "Zone « Colonnes » uniquement", "Zone « Valeurs »", "Zone « Filtre » uniquement"],
+          "reponses_correctes": [2],
+          "explication": "Les données à calculer (les montants) vont dans la zone « Valeurs » : Excel en fait la Somme par défaut. Les champs de regroupement vont en Lignes ou Colonnes."
+        },
+        {
+          "id": "ch13-qcm-04",
+          "question": "Comment actualiser un TCD après avoir modifié la source de données ?",
+          "options": ["Clic droit sur le TCD > « Actualiser »", "Onglet « Données » > « Trier »", "Double-cliquer sur une cellule du TCD", "Fermeture et réouverture du fichier"],
+          "reponses_correctes": [0],
+          "explication": "Un clic droit sur le TCD > Actualiser recharge les données depuis la source (raccourci Alt + F5). Le TCD ne se met pas à jour tout seul."
+        },
+        {
+          "id": "ch13-qcm-05",
+          "question": "Quelle fonctionnalité permet de regrouper des dates dans un TCD ?",
+          "options": ["Grouper > Par mois/année", "Convertir en tableau Excel", "Filtre chronologique", "Mise en forme conditionnelle"],
+          "reponses_correctes": [0],
+          "explication": "Clic droit sur une date > Grouper permet de regrouper par Jours, Mois, Trimestres ou Années, pour une synthèse temporelle propre."
+        },
+        {
+          "id": "ch13-qcm-06",
+          "question": "Pour afficher (et filtrer) rapidement les résultats d'un TCD avec des boutons visuels cliquables, on utilise :",
+          "options": ["Les filtres du ruban « Données »", "Les segments", "Les tableaux nommés", "Une macro"],
+          "reponses_correctes": [1],
+          "explication": "Les segments (Insertion > Segment) sont des boutons visuels qui filtrent le TCD d'un simple clic, très pratiques pour présenter."
+        },
+        {
+          "id": "ch13-qcm-07",
+          "question": "Lorsqu'on déplace un champ de « Lignes » vers « Colonnes », on modifie :",
+          "options": ["Le type de calcul", "L'orientation de la hiérarchie", "La source de données", "Le graphique lié"],
+          "reponses_correctes": [1],
+          "explication": "On change seulement l'orientation de la hiérarchie (les catégories passent de la verticale à l'horizontale). Ni les données ni le calcul ne changent."
+        },
+        {
+          "id": "ch13-qcm-08",
+          "question": "Un champ placé dans la zone « Filtre » d'un TCD permet de :",
+          "options": ["Exclure des éléments sans toucher aux lignes ou colonnes", "Changer la mise en forme du TCD", "Ajouter un graphique dynamique", "Appliquer une macro"],
+          "reponses_correctes": [0],
+          "explication": "La zone Filtre restreint les données affichées (un entonnoir global) sans modifier la structure lignes/colonnes du rapport."
+        },
+        {
+          "id": "ch13-qcm-09",
+          "question": "Quel est le raccourci clavier pour actualiser un TCD ?",
+          "options": ["Alt + F5", "Ctrl + R", "F9", "Ctrl + Alt + F5"],
+          "reponses_correctes": [0],
+          "explication": "Alt + F5 actualise le TCD sélectionné. Ctrl + Alt + F5 actualise toutes les sources du classeur d'un coup."
+        },
+        {
+          "id": "ch13-qcm-10",
+          "question": "Comment afficher les valeurs en pourcentage du total général dans un TCD ?",
+          "options": ["Clic droit sur une valeur > « Afficher les valeurs »", "Onglet « Création » > « Pourcentage »", "Formule manuelle dans une colonne du TCD", "Option « Valeur absolue »"],
+          "reponses_correctes": [0],
+          "explication": "Clic droit sur une valeur > Afficher les valeurs > « % du total général » convertit les montants en pourcentages, sans aucune formule."
+        }
+      ]
+    },
+    {
+      "id": "ch13-checklist",
+      "titre": "Validation de la ceinture noire",
+      "type": "checklist",
+      "xp_completion": 10,
+      "note": "Checklist finale ch.13, couvre les 3 leçons + rappel TCD multi-tables (ch.9).",
+      "a_valider": false,
+      "items": [
+        "Je sais qu'un TCD sert à synthétiser et analyser rapidement de grands volumes de données.",
+        "Je peux créer un TCD via Insertion > Tableau croisé dynamique après avoir sélectionné la source.",
+        "Je sais glisser les champs dans les 4 zones : Filtres, Colonnes, Lignes et Valeurs.",
+        "Je comprends que les champs à calculer (montants) vont dans « Valeurs » (Somme par défaut).",
+        "Je sais qu'un TCD se réorganise en déplaçant un champ (Lignes ↔ Colonnes change l'orientation).",
+        "Je sais actualiser un TCD (clic droit > Actualiser, ou Alt + F5) après modification de la source.",
+        "Je peux regrouper des dates (clic droit > Grouper > Mois/Trimestres/Années).",
+        "Je sais afficher les valeurs en % du total général (clic droit > Afficher les valeurs).",
+        "Je sais créer un graphique croisé dynamique (Insertion > GCD), lié à son TCD.",
+        "Je sais changer le type d'un GCD via Création > Modifier le type de graphique."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "mots_cles": ["tcd", "tableau croisé", "tableau croise dynamique", "à quoi sert", "synthétiser", "analyser"],
+      "question": "Qu'est-ce qu'un tableau croisé dynamique ?",
+      "reponse": "Un TCD synthétise et analyse de grands volumes de données en croisant des champs, sans écrire de formule. Tu glisses tes champs dans quatre zones (Filtres, Colonnes, Lignes, Valeurs) et Excel regroupe et calcule automatiquement. Change les champs, le rapport se recalcule."
+    },
+    {
+      "mots_cles": ["créer tcd", "creer tcd", "insertion", "nouveau tcd", "première étape"],
+      "question": "Comment créer un TCD ?",
+      "reponse": "1. Sélectionne une cellule de ta liste source. 2. Insertion > Tableau croisé dynamique. 3. Vérifie la plage (titres inclus). 4. Choisis Nouvelle feuille (ou feuille existante), OK. Puis, dans le volet, glisse tes champs : regroupement en Lignes/Colonnes, montants à calculer en Valeurs."
+    },
+    {
+      "mots_cles": ["zones", "lignes", "colonnes", "valeurs", "filtres", "glisser champs", "où placer"],
+      "question": "Dans quelle zone glisser mes champs ?",
+      "reponse": "Lignes = les catégories affichées verticalement (ex. Type de bien). Colonnes = les catégories en en-têtes horizontaux. Valeurs = les données à calculer (ex. Montant, dont Excel fait la Somme). Filtres = un entonnoir global. Déplacer un champ de Lignes à Colonnes change l'orientation, pas le calcul."
+    },
+    {
+      "mots_cles": ["actualiser", "rafraîchir", "mettre à jour", "alt f5", "source modifiée"],
+      "question": "Comment actualiser un TCD ?",
+      "reponse": "Le TCD ne se met pas à jour tout seul. Après avoir modifié la source : clic droit sur le TCD > Actualiser, ou raccourci Alt + F5. Pour actualiser toutes les sources du classeur d'un coup : Ctrl + Alt + F5."
+    },
+    {
+      "mots_cles": ["grouper", "dates", "mois", "année", "trimestre", "regrouper"],
+      "question": "Comment regrouper des dates dans un TCD ?",
+      "reponse": "Clic droit sur une valeur de date dans le TCD > Grouper, puis choisis le pas : Jours, Mois, Trimestres, Années. Excel crée les regroupements automatiquement, parfait pour une synthèse « ventes par mois » ou « par année »."
+    },
+    {
+      "mots_cles": ["pourcentage", "% du total", "afficher les valeurs", "proportion", "part"],
+      "question": "Comment afficher les valeurs en pourcentage ?",
+      "reponse": "Clic droit sur une valeur du TCD > Afficher les valeurs > « % du total général ». Chaque montant devient un pourcentage : idéal pour comparer les proportions plutôt que les euros bruts, sans aucune formule."
+    },
+    {
+      "mots_cles": ["graphique croisé", "gcd", "graphique croise dynamique", "graphique dynamique", "visualiser tcd"],
+      "question": "Qu'est-ce qu'un graphique croisé dynamique ?",
+      "reponse": "C'est l'extension visuelle du TCD : même logique (tu glisses des champs dans Axe/Légende/Valeurs/Filtres), mais tu obtiens directement un graphique interactif. Insertion > Graphique croisé dynamique : Excel crée aussi le TCD associé, lié au graphique (l'un actualise l'autre). Change son type via Création > Modifier le type de graphique."
+    }
+  ],
+  "recompense": {
+    "ceinture_debloquee": "noire",
+    "xp_bonus": 120,
+    "ecran": "animation_deblocage_ceinture",
+    "message": "Ceinture NOIRE. Tu as gravi les treize paliers, du vocabulaire aux tableaux croisés dynamiques. Tu ne subis plus Excel : tu le pilotes, tu l'analyses, tu le fais parler. Le maître ne t'a rien appris que tu n'aies conquis par la répétition et la rigueur. La ceinture noire n'est pas la fin de la Voie, c'est le début de la maîtrise. Félicitations, maître de l'Art du Digital. 🥋🖤"
+  }
+}
