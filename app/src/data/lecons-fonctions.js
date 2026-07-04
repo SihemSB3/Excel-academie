@@ -2693,7 +2693,7 @@ const GERERFEUILLES = {
           { etapes: ['**Méthode rapide** : maintiens **Ctrl** et fais glisser l\'onglet (sur Mac : **⌥ Option** + glisser)'] },
           { capture: { type: 'onglets', onglets: ['Janvier', 'Janvier (2)', 'Février'], actif: 'Janvier (2)', items: [], legende: 'Une copie « Janvier (2) » apparaît à côté de l\'original.' } },
           { etapes: ['**Méthode clic droit** : clic droit sur l\'onglet, puis « Déplacer ou copier… »'], depart: 2 },
-          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { icone: '📑', label: 'Déplacer ou copier…', actif: true }] } },
+          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { icone: '📑', label: 'Déplacer ou copier…' }] } },
           { etapes: ['Dans la fenêtre, **coche « Créer une copie »**, choisis la position, puis **OK**'], depart: 3 },
           { capture: { type: 'deplacercopier', feuilles: ['Janvier', 'Février', '(en dernier)'], selection: 0, copie: true } },
         ],
@@ -2804,7 +2804,7 @@ const GROUPEFEUILLES = {
         titre: 'Sélectionner un groupe de feuilles',
         blocs: [
           { etapes: ['**Toutes les feuilles** : clic droit sur un onglet, puis « Sélectionner toutes les feuilles » (pas besoin d\'autre touche)'] },
-          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { label: 'Déplacer ou copier…' }, '-', { icone: '☑', label: 'Sélectionner toutes les feuilles', actif: true }] } },
+          { capture: { type: 'menu', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { label: 'Déplacer ou copier…' }, '-', { icone: '☑', label: 'Sélectionner toutes les feuilles' }] } },
           { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Mars'], actifs: ['Janvier', 'Février', 'Mars'], items: [], legende: 'Résultat : les 3 feuilles sont sélectionnées (fond blanc), et [Groupe de travail] apparaît dans la barre de titre.' } },
           { etapes: ['**Feuilles côte à côte** : clique la première, maintiens **Shift**, clique la dernière'], depart: 2 },
           { capture: { type: 'touche', touches: ['⇧ Maj'], note: 'La touche Maj (aussi appelée Shift), tout en bas à gauche et à droite du clavier.' } },
@@ -2916,7 +2916,7 @@ const LIAISONSCLASSEURS = {
         titre: 'Gérer les liaisons',
         blocs: [
           { etapes: ['Va dans l\'onglet **Données** du ruban', 'Clique sur **« Liaisons de classeur »** (groupe Requêtes et connexions)'] },
-          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Requêtes et connexions', groupes: [{ icone: '🔄', label: 'Actualiser\ntout' }, { icone: '🔗', label: 'Liaisons de\nclasseur', actif: true }] } },
+          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Requêtes et connexions', groupes: [{ icone: '🔄', label: 'Actualiser\ntout' }, { icone: '🔗', label: 'Liaisons de\nclasseur' }] } },
           { capture: { type: 'liaisonsdialog', fichiers: [{ nom: 'Ventes.xlsx', statut: 'OK' }] } },
           { note: 'Pour chaque liaison, tu peux : **mettre à jour** les valeurs, **modifier la source** (changer de fichier), ou **rompre la liaison** (figer la valeur).', label: 'Bon à savoir' },
         ],
@@ -3063,7 +3063,7 @@ const PROTEGERFEUILLES = {
         titre: 'Protéger la feuille',
         blocs: [
           { etapes: ['Va dans l\'onglet **Révision** du ruban', 'Clique sur **Protéger** > **Protéger la feuille**'] },
-          { capture: { type: 'ruban', actif: 'Révision', groupeNom: 'Protéger', groupes: [{ icone: '🛡', label: 'Protéger\nla feuille', actif: true }, { icone: '🔒', label: 'Protéger\nle classeur' }, { icone: '✎', label: 'Autoriser la\nmodif. de plage' }] } },
+          { capture: { type: 'ruban', actif: 'Révision', groupeNom: 'Protéger', groupes: [{ icone: '🛡', label: 'Protéger\nla feuille' }, { icone: '🔒', label: 'Protéger\nle classeur' }, { icone: '✎', label: 'Autoriser la\nmodif. de plage' }] } },
           { etapes: ['Saisis un **mot de passe** (facultatif), coche les actions que tu autorises, puis **OK**'], depart: 3 },
           { capture: { type: 'protegerfeuilledialog' } },
           { note: 'Si tu mets un mot de passe, Excel te le redemande pour confirmer. Sans mot de passe, n\'importe qui pourra ôter la protection.', label: 'Bon à savoir' },
