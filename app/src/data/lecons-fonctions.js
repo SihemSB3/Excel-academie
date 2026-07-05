@@ -5439,7 +5439,7 @@ const RAPPELSRECHERCHE = {
           { note: 'Les pièges classiques : oublier d\'appuyer sur **Entrée** après avoir tapé le nom, mettre un **espace** dans le nom, ou reprendre un mot déjà utilisé par Excel (comme SOMME).', label: 'Erreurs à éviter' },
         ],
       },
-      plus: ['Utiliser un nom dans une formule rend le fichier plus lisible. Plutôt que d\'écrire =A1+B1, tu peux écrire =Prix+Quantité. Cela facilite la compréhension, surtout si d\'autres personnes utilisent ton fichier.', '1. Sélectionne la cellule ou la plage à nommer. 2. Clique dans la zone Nom (à gauche de la barre de formule). 3. Tape le nom (respecte la syntaxe). 4. Appuie sur Entrée.', 'Erreurs à éviter : oublier d\'appuyer sur [Entrée] après avoir tapé un nom. Utiliser un espace dans le nom (Prix unitaire → erreur). Nommer une cellule avec un mot déjà utilisé dans Excel (comme SOMME).'],
+      plus: ['Utiliser un nom dans une formule rend le fichier plus lisible. Plutôt que d\'écrire =A1+B1, tu peux écrire =Prix+Quantité. Cela facilite la compréhension, surtout si d\'autres personnes utilisent ton fichier.', 'Erreurs à éviter : oublier d\'appuyer sur [Entrée] après avoir tapé un nom. Utiliser un espace dans le nom (Prix unitaire → erreur). Nommer une cellule avec un mot déjà utilisé dans Excel (comme SOMME).'],
     },
     {
       humeur: 'accueil',
@@ -5458,9 +5458,7 @@ const RAPPELSRECHERCHE = {
           { etapes: ['Renseigne le **Nom** (respecte la syntaxe)', 'Choisis la **Zone** : classeur ou feuille', 'Vérifie la plage dans **Fait référence à**', 'Valide avec **OK**'], depart: 3 },
           { capture: { type: 'definirnom', nom: 'PrixHT', zone: 'Classeur', reference: '=Stock!$B$2:$B$5', focus: 'nom' } },
         ],
-      },
-      plus: ['1. Va dans l\'onglet Formules > groupe Noms définis. 2. Clique sur Créer un nom ou Définir un nom. 3. Renseigne : le Nom (respecte la syntaxe), le Champ (classeur ou feuille), la Zone (la plage à laquelle ce nom s\'applique). 4. Valide avec OK.'],
-    },
+      },    },
     {
       humeur: 'pensif',
       dit: '**Méthode 3 :** à la souris, avec le clic droit.',
@@ -5469,9 +5467,7 @@ const RAPPELSRECHERCHE = {
         titre: 'Méthode 3 : le clic droit',
         etapes: ['Sélectionne la cellule ou la plage à nommer', 'Fais un **clic droit** sur la sélection', 'Choisis **Définir un nom** dans le menu', 'Donne un nom explicite (ex : PrixHT), vérifie la référence, puis **OK**'],
         items: [{ icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }, { icone: '📋', label: 'Coller' }, '-', { icone: '🔖', label: 'Définir un nom…', actif: true }, { icone: '🔗', label: 'Lien…' }],
-      },
-      plus: ['1. Sélectionne la cellule ou la plage que tu veux nommer. 2. Fais un clic droit sur la sélection. 3. Choisis Définir un nom dans le menu contextuel (ou « Nommer une plage » selon ta version d\'Excel). 4. Dans la fenêtre qui s\'ouvre : donne un nom explicite (ex : PrixHT), vérifie que la référence est correcte. Clique sur OK.'],
-    },
+      },    },
     {
       humeur: 'pensif',
       dit: '**La syntaxe des noms**, les règles à suivre :',
@@ -5492,7 +5488,7 @@ const RAPPELSRECHERCHE = {
           { note: 'Si une formule utilise ce nom, elle renverra **#NOM ?** après la suppression. Vérifie que le nom n\'est plus utilisé avant de le supprimer.', label: 'Attention' },
         ],
       },
-      plus: ['1. Va dans l\'onglet Formules > groupe Noms définis. 2. Clique sur Gestionnaire de noms. 3. Une fenêtre s\'ouvre : elle affiche tous les noms du classeur. 4. Sélectionne le nom que tu veux supprimer. 5. Clique sur le bouton Supprimer. 6. Confirme si une alerte s\'affiche.', 'Si une formule utilise ce nom, elle renverra une erreur (#NOM ?) après suppression. Vérifie que le nom n\'est plus utilisé avant de le supprimer.'],
+      plus: ['Si une formule utilise ce nom, elle renverra une erreur (#NOM ?) après suppression. Vérifie que le nom n\'est plus utilisé avant de le supprimer.'],
     },
     {
       humeur: 'pensif',
@@ -5508,9 +5504,7 @@ const RAPPELSRECHERCHE = {
           { etapes: ['**Encore plus rapide :** tape = puis les **premières lettres** du nom (ex : =P), Excel propose fonctions + noms, double-clique sur le nom voulu'], depart: 3 },
           { note: 'Tes noms personnalisés apparaissent dans la liste juste après les fonctions Excel. Tu les reconnais facilement, surtout s\'ils sont bien nommés !', label: 'À savoir' },
         ],
-      },
-      plus: ['Les noms te permettent d\'atteindre rapidement une cellule ou une plage de cellules. 1. Clique sur la flèche de la zone Nom (à gauche de la barre de formule). 2. Choisis le nom dans la liste déroulante. 3. Excel te conduit automatiquement à la cellule ou la plage correspondante.', 'Méthode 1 avec le raccourci [F3] : 1. Tape = pour commencer une formule. 2. Appuie sur la touche [F3]. 3. Une boîte « Coller un nom » s\'affiche. 4. Clique sur le nom voulu > clique sur OK.', 'Méthode 2 en tapant les premières lettres : 1. Tape = puis les premières lettres du nom (ex : =C). 2. Excel affiche une liste de propositions (fonctions + noms). 3. Double-clique sur le nom souhaité.'],
-    },
+      },    },
     {
       humeur: 'pensif',
       dit: 'Dernier réflexe : Excel peut créer des noms **tout seul** à partir des titres de ton tableau.',
@@ -5524,7 +5518,7 @@ const RAPPELSRECHERCHE = {
           { capture: { type: 'listedialog', titre: 'Créer des noms à partir de la sélection', intro: 'Créer les noms à partir des valeurs de :', cases: [{ label: 'Ligne du haut', coche: true }, { label: 'Colonne de gauche', coche: false }, { label: 'Ligne du bas', coche: false }, { label: 'Colonne de droite', coche: false }] } },
         ],
       },
-      plus: ['Lorsque tu travailles avec un tableau bien structuré, Excel peut automatiquement créer des noms en se basant sur les titres de colonnes ou de lignes. C\'est rapide, clair, et très pratique !', '1. Sélectionne l\'ensemble du tableau, y compris les titres de colonnes ou de lignes. 2. Va dans l\'onglet Formules > groupe Noms définis. 3. Clique sur le bouton Créer à partir de la sélection. 4. Une boîte de dialogue s\'ouvre : coche la case Ligne du haut si les titres sont en haut, ou Colonne de gauche si les titres sont à gauche. 5. Puis clique sur OK.'],
+      plus: ['Lorsque tu travailles avec un tableau bien structuré, Excel peut automatiquement créer des noms en se basant sur les titres de colonnes ou de lignes. C\'est rapide, clair, et très pratique !'],
     },
     {
       humeur: 'accueil',
@@ -5584,7 +5578,6 @@ const RECHERCHEV = {
           { capture: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '' }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true } }, actif: 'D2', legende: 'La colonne D « Quantité » est prête, le curseur est en D2.' } },
         ],
       },
-      plus: ['1. Ouvrir les deux tableaux. 2. Identifier la clé commune : repère la colonne « Code article » dans chaque tableau. Assure-toi que chaque code est unique dans le référentiel. 3. Ajoute une colonne dans ton tableau principal pour y importer les données issues du second tableau. 4. Sélectionne la cellule où le résultat doit apparaître (D2).'],
     },
     {
       humeur: 'accueil',
@@ -5610,9 +5603,7 @@ const RECHERCHEV = {
           { type: 'choix', feuille: 'Commandes', options: [{ label: 'VRAI (valeur proche)', val: 'VRAI' }, { label: 'FAUX (valeur exacte)', val: 'FAUX' }], cible: 'FAUX', ajoute: 'FAUX)', consigne: 'On veut le code EXACT, pas un à-peu-près. Quel dernier argument choisis-tu ?' },
         ],
         explication: 'Ta RECHERCHEV est prête : cherche A2, dans la zone Stock!A2:B5, renvoie la 2ᵉ colonne, en correspondance exacte (FAUX). Le Stock! devant la plage veut dire « va lire sur l\'onglet Stock ».',
-      },
-      plus: ['5. Tape =RECHERCHEV(. 6. Clique la cellule du code article (A2), ta valeur_cherchée, sur la même ligne que la formule, puis un point-virgule. 7. Sur le second onglet, sélectionne la plage clé + valeur (Stock!A2:B5), puis un point-virgule. 8. Indique le numéro de la colonne à renvoyer (2), puis un point-virgule. 9. Tape FAUX (ou 0) pour une correspondance exacte, ferme la parenthèse et valide avec Entrée.'],
-    },
+      },    },
     {
       humeur: 'pensif',
       dit: 'Tu as vu le **Stock!** apparaître devant la plage ? Quand ta table_matrice se trouve sur un **autre onglet**, Excel préfixe la référence par le nom de cet onglet suivi d\'un **point d\'exclamation**.',
@@ -5627,15 +5618,11 @@ const RECHERCHEV = {
     {
       humeur: 'content',
       dit: '**Étapes 16 et 17 :** te voilà automatiquement de retour sur le tableau principal. Vérifie que la cellule affiche bien la donnée attendue : **5**, la quantité du code A1001. La clé a fait le pont !',
-      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true } }, formule: '=RECHERCHEV(A2;Stock!A2:B5;2;FAUX)', actif: 'D2', legende: 'D2 affiche 5 : la quantité du clavier, rapatriée depuis la feuille Stock.' },
-      plus: ['16. Tu es automatiquement renvoyé vers le tableau principal. 17. Vérifie que la cellule affiche bien la donnée attendue (par ex. « 5 »).'],
-    },
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true } }, formule: '=RECHERCHEV(A2;Stock!A2:B5;2;FAUX)', actif: 'D2', legende: 'D2 affiche 5 : la quantité du clavier, rapatriée depuis la feuille Stock.' },    },
     {
       humeur: 'pensif',
       dit: '**Étapes 18 et 19 :** avant d\'étirer, **fige la plage** du second tableau en références absolues avec des **$** (F4, ou **⌘ + T** sur Mac). Puis étire la formule vers le bas.',
-      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, D3: { t: '#N/A', rouge: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true }, D4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEV(A2;Stock!$A$2:$B$5;2;FAUX)', actif: 'D2', legende: 'Grâce aux $, la plage Stock!$A$2:$B$5 reste figée sur toutes les lignes. Mais que se passe-t-il en D3 ?' },
-      plus: ['18. Avant d\'étirer la formule, convertis la plage du second tableau en références absolues c\'est-à-dire fixe la plage du deuxième tableau en utilisant $ pour bloquer les cellules afin de préserver l\'exactitude des données. 19. Étire la formule.'],
-    },
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, D3: { t: '#N/A', rouge: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true }, D4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEV(A2;Stock!$A$2:$B$5;2;FAUX)', actif: 'D2', legende: 'Grâce aux $, la plage Stock!$A$2:$B$5 reste figée sur toutes les lignes. Mais que se passe-t-il en D3 ?' },    },
     {
       humeur: 'accueil',
       dit: 'Regarde la ligne 3 : le code **A1002** n\'existe PAS dans la feuille Stock. En correspondance exacte, **que va afficher D3 ?**',
@@ -5645,7 +5632,7 @@ const RECHERCHEV = {
       humeur: 'pensif',
       dit: '**#N/A en D3 ?** Bien vu. La valeur d\'erreur **#N/A** apparaît quand une valeur n\'est **pas disponible** : le code A1002 n\'existe pas dans la feuille Stock, et en correspondance exacte, RECHERCHEV le signale. **Comment corriger ?**',
       visuel: { type: 'parties', items: [{ label: '1. Vérifie que le code figure bien dans la colonne clé du second tableau' }, { label: '2. Ajuste ta plage pour exclure l\'en-tête si besoin (Stock!$A$2:$B$5)' }, { label: '3. Si certaines références peuvent manquer : enveloppe dans SIERREUR(… ; "Non trouvé") pour un affichage plus propre' }] },
-      plus: ['Pour la ligne 3, A3 = « A1002 ». Comme « A1002 » n\'existe pas dans la plage de recherche, RECHERCHEV, en mode correspondance exacte (0), renvoie #N/A.', 'La valeur d\'erreur #N/A apparaît lorsque une valeur n\'est pas disponible pour une fonction ou une formule.', 'Comment corriger ? 1. Vérifie que « A1002 » figure bien dans la colonne clé du second tableau. 2. Ajuste ta plage pour exclure l\'en-tête si besoin. 3. Si certaines références peuvent manquer, enveloppe dans un SIERREUR(…; "Non trouvé") pour un affichage plus propre.'],
+      plus: ['Pour la ligne 3, A3 = « A1002 ». Comme « A1002 » n\'existe pas dans la plage de recherche, RECHERCHEV, en mode correspondance exacte (0), renvoie #N/A.', 'La valeur d\'erreur #N/A apparaît lorsque une valeur n\'est pas disponible pour une fonction ou une formule.'],
     },
     {
       humeur: 'pensif',
@@ -5711,14 +5698,12 @@ const RECHERCHEX = {
           { type: 'choix', feuille: 'Commandes', options: [{ label: '"Non trouvé"', val: '"Non trouvé"' }, { label: 'FAUX', val: 'FAUX' }, { label: '0', val: '0' }], cible: '"Non trouvé"', ajoute: '"Non trouvé")', consigne: 'Que veux-tu afficher si le code est absent ? (ici, pas besoin de FAUX ni de SIERREUR)' },
         ],
         explication: 'Deux plages INDÉPENDANTES (recherche puis retour) et un message d\'absence intégré. La correspondance exacte est déjà active : aucun FAUX à ajouter.',
-      },
-      plus: ['5. Tape =RECHERCHEX(. 6. Clique la cellule du code article (A2), ta valeur_cherchée, sur la même ligne que la formule ; point-virgule. 7. Sélectionne la colonne de la clé (Stock!A2:A5) ; point-virgule. 8. Sélectionne, séparément, la colonne à ramener (Stock!B2:B5) ; point-virgule. 9. Écris directement le message à afficher si la clé est absente ("Non trouvé"), sans FAUX ni SIERREUR, puis ferme la parenthèse et Entrée.'],
-    },
+      },    },
     {
       humeur: 'content',
       dit: '**Vérifie et étire :** D2 affiche **5**. Fige les deux plages avec des **$** (F4, Mac : **⌘ + T**), puis étire. Et regarde la ligne du code manquant…',
       visuel: { type: 'tableur', feuilles: ['Commandes', 'Stock'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C', 'D'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Code article', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, D1: { t: 'Quantité', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true }, D2: { t: '5', vert: true, num: true }, A3: { t: 'A1002' }, B3: { t: 'Souris ergonomique' }, C3: { t: '39,90 €', num: true }, D3: { t: 'Non trouvé', vert: true }, A4: { t: 'A1003' }, B4: { t: 'Écran 24 pouces' }, C4: { t: '149,00 €', num: true }, D4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEX(A2;Stock!$A$2:$A$5;Stock!$B$2:$B$5;"Non trouvé")', actif: 'D2', legende: 'APRÈS : le code A1002 absent affiche « Non trouvé » au lieu de #N/A. Propre et lisible.' },
-      plus: ['15. Tu es automatiquement renvoyé vers le tableau principal. 16. Vérifie que la cellule affiche bien la donnée attendue (par ex. « 5 »). 17. Avant d\'étirer la formule, convertis la plage du second tableau en références absolues c\'est-à-dire fixe la plage du deuxième tableau en utilisant $ pour bloquer les cellules afin de préserver l\'exactitude des données. 18. Étire la formule.', 'Sur la ligne 3, le code article A1002 n\'existe pas dans le tableau de référence ; RECHERCHEX renvoie donc la valeur que tu as précisée dans son 4ᵉ argument (ici "non trouvé") au lieu de l\'erreur #N/A. Tu peux personnaliser ce message pour qu\'il soit plus explicite (ex. "Code introuvable"), ce qui rend ton tableau plus lisible et évite les #N/A.'],
+      plus: ['Sur la ligne 3, le code article A1002 n\'existe pas dans le tableau de référence ; RECHERCHEX renvoie donc la valeur que tu as précisée dans son 4ᵉ argument (ici "non trouvé") au lieu de l\'erreur #N/A. Tu peux personnaliser ce message pour qu\'il soit plus explicite (ex. "Code introuvable"), ce qui rend ton tableau plus lisible et évite les #N/A.'],
     },
     {
       humeur: 'pensif',
@@ -5791,9 +5776,7 @@ const RECHERCHEXDEUX = {
           { type: 'plage', feuille: 'Feuille', debut: 'D2', fin: 'D7', ajoute: 'D2:D7)', consigne: 'Enfin, la colonne dont tu veux le résultat : les prix.' },
         ],
         explication: 'La clé « HoodieS » (G9&H9) est comparée aux clés du catalogue (A2:A7&C2:C7), et Excel renvoie le prix correspondant (D2:D7). Le & colle les valeurs pour croiser deux critères, sans colonne auxiliaire.',
-      },
-      plus: ['1. Sélectionne ta cellule de destination (I9). 2. Tape =RECHERCHEX(. 3. Clique G9 (Produit), tape &, clique H9 (Taille), point-virgule. 4. Sélectionne la plage des produits (A2:A7), tape &, la plage des tailles (C2:C7), point-virgule. 5. Sélectionne la plage de retour (D2:D7, les prix), ferme la parenthèse et Entrée.'],
-    },
+      },    },
     {
       humeur: 'accueil',
       dit: 'L\'utilisateur a choisi **Hoodie** + **S**. Dans le catalogue, le Hoodie S coûte 29 €. **Que va afficher I9 ?**',
@@ -5867,9 +5850,7 @@ const RECHERCHEH = {
           { type: 'choix', feuille: 'Commandes', options: [{ label: 'VRAI (valeur proche)', val: 'VRAI' }, { label: 'FAUX (valeur exacte)', val: 'FAUX' }], cible: 'FAUX', ajoute: 'FAUX)', consigne: 'On veut le code EXACT. Quel dernier argument ?' },
         ],
         explication: 'RECHERCHEH cherche B2 sur la 1re LIGNE de Réf!B1:E3, puis descend à la 3ᵉ ligne (Quantité), en correspondance exacte (FAUX). C\'est la RECHERCHEV couchée : on compte les lignes, pas les colonnes.',
-      },
-      plus: ['1. Ouvre les deux tableaux, repère la clé (colonne « Code article » à gauche, ligne « Code article » à droite). 2. Sélectionne C2 et tape =RECHERCHEH(. 3. Clique le code (B2), point-virgule. 4. Sélectionne le bloc Réf!B1:E3 (ligne clé + lignes de données), point-virgule. 5. Compte les lignes jusqu\'à la Quantité (3), point-virgule. 6. Tape FAUX (ou 0) pour la correspondance exacte, ferme la parenthèse et Entrée.'],
-    },
+      },    },
     {
       humeur: 'accueil',
       dit: 'Formule prête : =RECHERCHEH(B2;Réf!B1:E3;3;FAUX), pour le code A1001. Dans le référentiel horizontal, la quantité d\'A1001 est **20**. **Que va afficher C2 ?**',
@@ -5878,9 +5859,7 @@ const RECHERCHEH = {
     {
       humeur: 'content',
       dit: '**Vérifie, fige, étire :** de retour sur le tableau principal, C2 affiche **20** (la quantité du code A1001). Avant d\'étirer, fige la plage avec des **$** (F4, Mac : **⌘ + T**), puis étire la formule.',
-      visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Code article', entete: true }, C1: { t: 'Quantité', entete: true }, A2: { t: 'Clavier sans fil' }, B2: { t: 'A1001' }, C2: { t: '20', vert: true, num: true }, A3: { t: 'Souris ergonomique' }, B3: { t: 'A1002' }, C3: { t: '7', vert: true, num: true }, A4: { t: 'Écran 24 pouces' }, B4: { t: 'A1003' }, C4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEH(B2;Réf!$B$1:$E$3;3;FAUX)', actif: 'C2', legende: 'APRÈS : la plage Réf!$B$1:$E$3 figée, la formule étirée remplit toute la colonne juste.' },
-      plus: ['16. Tu es automatiquement renvoyé vers le tableau principal. 17. Vérifie que la cellule affiche bien la donnée attendue (par ex. « 20 »). 18. Avant d\'étirer la formule, convertis la plage du second tableau en références absolues c\'est-à-dire fixe la plage du deuxième tableau en utilisant $ (F4) pour bloquer les cellules afin de préserver l\'exactitude des données. 19. Étire la formule.'],
-    },
+      visuel: { type: 'tableur', feuilles: ['Commandes', 'Réf'], feuilleActive: 'Commandes', cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Produit', entete: true }, B1: { t: 'Code article', entete: true }, C1: { t: 'Quantité', entete: true }, A2: { t: 'Clavier sans fil' }, B2: { t: 'A1001' }, C2: { t: '20', vert: true, num: true }, A3: { t: 'Souris ergonomique' }, B3: { t: 'A1002' }, C3: { t: '7', vert: true, num: true }, A4: { t: 'Écran 24 pouces' }, B4: { t: 'A1003' }, C4: { t: '12', vert: true, num: true } }, formule: '=RECHERCHEH(B2;Réf!$B$1:$E$3;3;FAUX)', actif: 'C2', legende: 'APRÈS : la plage Réf!$B$1:$E$3 figée, la formule étirée remplit toute la colonne juste.' },    },
     {
       humeur: 'pensif',
       dit: '**La RECHERCHEH, à retenir :**',
@@ -5938,9 +5917,7 @@ const VALIDATIONDONNEES = {
     {
       humeur: 'pensif',
       dit: '**Méthode : créer une liste déroulante.** Dans la boîte, choisis **Autoriser : Liste**, puis indique la **Source** (la plage des valeurs autorisées).',
-      visuel: { type: 'champs', titre: 'Validation des données', champs: [{ l: 'Autoriser', v: 'Liste', actif: true }, { l: 'Ignorer si vide', check: true }, { l: 'Liste déroulante dans la cellule', check: true }, { l: 'Source', v: '=$C$3:$C$8', actif: true }] },
-      plus: ['1. Clique sur ta cellule cible (où tu veux mettre ta liste déroulante). 2. Dans le ruban, va dans l\'onglet Données > Groupe outils de données > Validation de données. 3. Dans Autoriser, choisis « Liste ». 4. Dans Source, tape =NomDeLaListe ou sélectionne la plage contenant les valeurs valides (ex. =$F$2:$F$10). 5. Valide par OK.'],
-    },
+      visuel: { type: 'champs', titre: 'Validation des données', champs: [{ l: 'Autoriser', v: 'Liste', actif: true }, { l: 'Ignorer si vide', check: true }, { l: 'Liste déroulante dans la cellule', check: true }, { l: 'Source', v: '=$C$3:$C$8', actif: true }] },    },
     {
       humeur: 'content',
       dit: 'Résultat : un clic sur la petite flèche **▾** de la cellule déroule la liste. L\'élève **choisit**, il ne tape plus rien à la main.',
@@ -5956,15 +5933,11 @@ const VALIDATIONDONNEES = {
     {
       humeur: 'pensif',
       dit: 'Deuxième onglet utile : le **Message de saisie**. Il affiche une petite bulle d\'aide **dès qu\'on sélectionne la cellule** (« Choisis parmi cette liste de capitales »).',
-      visuel: { type: 'champs', titre: 'Validation des données · Message de saisie', champs: [{ l: 'Afficher un message quand la cellule est sélectionnée', check: true }, { l: 'Titre', v: 'Capitale', actif: true }, { l: 'Message', v: 'Choisis parmi cette liste', actif: true }] },
-      plus: ['MÉTHODE PAS À PAS : CONFIGURER LE MESSAGE DE SAISIE. 1. Choisis la ou les cellules où appliquer la validation. 2. Dans le ruban, va dans Onglet Données → Groupe outils de données → Validation de données. 3. Dans la boîte de dialogue, va sur l\'onglet Message de saisie → coche « Afficher un message de saisie quand la cellule est sélectionnée ». 4. Saisis un Titre bref et un Message explicatif (ex. « Choisissez parmi cette liste de capitales »). 5. Valide en cliquant sur OK.'],
-    },
+      visuel: { type: 'champs', titre: 'Validation des données · Message de saisie', champs: [{ l: 'Afficher un message quand la cellule est sélectionnée', check: true }, { l: 'Titre', v: 'Capitale', actif: true }, { l: 'Message', v: 'Choisis parmi cette liste', actif: true }] },    },
     {
       humeur: 'pensif',
       dit: 'Troisième onglet : l\'**Alerte d\'erreur**. Elle réagit quand on tape une valeur interdite. Tu choisis son **Style** : Arrêt, Avertissement ou Information.',
-      visuel: { type: 'champs', titre: 'Validation des données · Alerte d\'erreur', champs: [{ l: 'Quand des données non valides sont tapées', check: true }, { l: 'Style', v: 'Arrêt', actif: true }, { l: 'Titre', v: 'Valeur non autorisée', actif: true }, { l: 'Message', v: 'Choisis une capitale de la liste', actif: true }] },
-      plus: ['MÉTHODE PAS À PAS : CONFIGURER LE MESSAGE D\'ALERTE. 1. Choisis la ou les cellules où appliquer la validation. 2. Dans le ruban, va dans Onglet Données → Groupe outils de données → Validation de données. 3. Dans la boîte de dialogue, va sur l\'onglet Alerte d\'erreur → coche « Quand des données non valides sont tapées ». 4. Choisis un Style (Arrêt, Avertissement, Information). 5. Saisis un Titre et un Message (ex. « Valeur non autorisée »). 6. Valide par OK. Lorsque tu saisis « France » dans la liste déroulante des capitales, le message d\'erreur configuré s\'affiche.'],
-    },
+      visuel: { type: 'champs', titre: 'Validation des données · Alerte d\'erreur', champs: [{ l: 'Quand des données non valides sont tapées', check: true }, { l: 'Style', v: 'Arrêt', actif: true }, { l: 'Titre', v: 'Valeur non autorisée', actif: true }, { l: 'Message', v: 'Choisis une capitale de la liste', actif: true }] },    },
     {
       humeur: 'pensif',
       dit: 'Une nuance à saisir. **Vrai ou faux ?**',
@@ -5989,9 +5962,7 @@ const FILTRESELABORES = {
     {
       humeur: 'pensif',
       dit: '**Rappel express : l\'outil Convertir.** Il découpe une colonne en plusieurs (ex. « paul dupont » → Prénom | Nom), en cochant le bon séparateur. Utile pour préparer une liste avant de la filtrer.',
-      visuel: { type: 'encart', label: 'Convertir (Données > Convertir)', liste: ['Sélectionne la colonne à découper', 'Données > Convertir (groupe Outils de données)', 'Choisis **Délimité**, puis coche le séparateur (Espace, virgule, point-virgule…)', 'Aperçu en direct, puis **Terminer**'] },
-      plus: ['MÉTHODE PAS À PAS : Convertir. 1. Sélectionne la colonne à découper. 2. Clique sur Données > Convertir dans le groupe « Outils de données ». 3. Choisis Délimité, puis clique sur Suivant. 4. Coche le séparateur : ici Espace → tu vois un aperçu en direct du résultat dans les colonnes. 5. Clique sur Suivant. 6. Avant de cliquer sur Terminer, vérifie ou choisis d\'écraser les colonnes d\'origine (si rien n\'est à droite). Si les noms sont séparés par une virgule ou un point-virgule, coche ce séparateur à la place d\'« Espace ».'],
-    },
+      visuel: { type: 'encart', label: 'Convertir (Données > Convertir)', liste: ['Sélectionne la colonne à découper', 'Données > Convertir (groupe Outils de données)', 'Choisis **Délimité**, puis coche le séparateur (Espace, virgule, point-virgule…)', 'Aperçu en direct, puis **Terminer**'] },    },
     {
       humeur: 'pensif',
       dit: 'Le cœur du filtre avancé : la **zone de critères**. C\'est un petit tableau, à côté, qui reprend **exactement les mêmes en-têtes** que ta liste, avec tes conditions en dessous.',
@@ -6011,9 +5982,7 @@ const FILTRESELABORES = {
     {
       humeur: 'pensif',
       dit: 'Dans la boîte **Filtre avancé**, tu choisis l\'action, tu vérifies la **Plage**, tu indiques ta **Zone de critères**, et tu peux extraire ailleurs.',
-      visuel: { type: 'champs', titre: 'Filtre avancé', champs: [{ l: 'Copier vers un autre emplacement', check: true }, { l: 'Plage', v: '$A$1:$D$13', actif: true }, { l: 'Zone de critères', v: '$H$1:$J$3', actif: true }, { l: 'Copier dans', v: '$H$7', actif: true }, { l: 'Extraction sans doublon', check: true }] },
-      plus: ['1. Place ton curseur dans le tableau. 2. Dans le ruban, va dans Données > Trier et filtrer > Avancé. 3. Choisis « Filtrer la liste sur place » (masque les lignes non retenues) OU « Copier vers un autre emplacement » (extrait les résultats ailleurs). 4. Vérifie que Plage = $A$1:$D$13. 5. Dans Zone de critères, saisis la plage de tes conditions (ex. $H$1:$J$3). 6. Si tu copies ailleurs, clique « Copier dans » et sélectionne la cellule de départ (ex. $H$7). 7. Coche « Extraction sans doublon » pour éliminer les lignes répétées (optionnel). 8. Clique OK.'],
-    },
+      visuel: { type: 'champs', titre: 'Filtre avancé', champs: [{ l: 'Copier vers un autre emplacement', check: true }, { l: 'Plage', v: '$A$1:$D$13', actif: true }, { l: 'Zone de critères', v: '$H$1:$J$3', actif: true }, { l: 'Copier dans', v: '$H$7', actif: true }, { l: 'Extraction sans doublon', check: true }] },    },
     {
       humeur: 'pensif',
       dit: 'Tu as **trois destinations** possibles, selon ce que tu veux préserver :',
@@ -6049,9 +6018,7 @@ const DOUBLONSSOUSTOTAUX = {
     {
       humeur: 'pensif',
       dit: 'Dans la boîte, **coche « Mes données ont des en-têtes »** (pour ne pas traiter le titre comme un doublon), puis **choisis les colonnes** à comparer.',
-      visuel: { type: 'champs', titre: 'Supprimer les doublons', champs: [{ l: 'Mes données ont des en-têtes', check: true }, { l: 'Nom', check: true }, { l: 'Ville', check: true }, { l: 'CA', check: false }] },
-      plus: ['MÉTHODE PAS À PAS : SUPPRIMER LES DOUBLONS. 1. Sélectionne une cellule de ton tableau. 2. Dans le ruban, va dans l\'onglet Données > groupe Outils de données. 3. Clique sur Supprimer les doublons. 4. Coche « Mes données ont des en-têtes » pour que la première ligne ne soit pas traitée comme un doublon. 5. Choisis les colonnes de comparaison : par défaut Excel sélectionne toutes les colonnes ; pour ne traiter que certaines (ex. « Nom » et « Ville »), clique sur Désélectionner tout, puis coche uniquement celles qui t\'intéressent. 6. Clique sur OK : Excel supprime les lignes doublons et affiche un compte rendu du nombre de suppressions.'],
-    },
+      visuel: { type: 'champs', titre: 'Supprimer les doublons', champs: [{ l: 'Mes données ont des en-têtes', check: true }, { l: 'Nom', check: true }, { l: 'Ville', check: true }, { l: 'CA', check: false }] },    },
     {
       humeur: 'pensif',
       dit: 'Une subtilité importante. Tu ne coches que **« Nom »** et **« Ville »**. Deux lignes ont le même Nom et la même Ville, mais un **CA différent**. **Vrai ou faux ?**',
@@ -6061,9 +6028,7 @@ const DOUBLONSSOUSTOTAUX = {
     {
       humeur: 'accueil',
       dit: 'Place à la synthèse : les **sous-totaux**. Rappel du chapitre Exploiter une liste : Données > Plan > Sous-total. Tu choisis le regroupement, la fonction, et les colonnes à totaliser.',
-      visuel: { type: 'soustotaldialog', changement: 'Ville', fonction: 'Somme', colonnes: ['CA'] },
-      plus: ['MÉTHODE PAS À PAS : INSÉRER DES SOUS-TOTAUX. 1. Sélectionne n\'importe quelle cellule de ton tableau (trié par la colonne de regroupement). 2. Dans le ruban, va dans l\'onglet Données > groupe Plan. 3. Clique sur Sous-total. 4. Dans la boîte : « À chaque changement de » = la colonne de regroupement (ex. Ville) ; « Utiliser la fonction » = Somme, Moyenne, Nb… ; « Ajouter un sous-total à » = coche la ou les colonnes concernées (ex. CA). 5. Valide avec OK : Excel insère les sous-totaux imbriqués et affiche le plan sur la gauche.'],
-    },
+      visuel: { type: 'soustotaldialog', changement: 'Ville', fonction: 'Somme', colonnes: ['CA'] },    },
     {
       humeur: 'pensif',
       dit: 'Les **boutons de plan 1 / 2 / 3** (à gauche) font basculer entre la vue d\'ensemble et le détail.',
@@ -6088,7 +6053,7 @@ const DOUBLONSSOUSTOTAUX = {
         ],
         explication: 'Le 109, c\'est SOMME en ignorant les lignes masquées (le 9 les inclurait). Résultat : 100 tant que rien n\'est filtré ; filtre une région et le total se recalcule tout seul. C\'est là toute la force de SOUS.TOTAL.',
       },
-      plus: ['La fonction SOUS.TOTAL offre la flexibilité de choisir d\'inclure ou d\'exclure les lignes masquées, tout en proposant une palette de calculs (somme, moyenne, écart-type…). Structure : =SOUS.TOTAL(no_fonction; plage1; …). No_fonction : 1 à 11 (inclut les masqués) ou 101 à 111 (ignore les masqués). Ex. MOYENNE = 1 ou 101, NB = 2 ou 102, MAX = 4 ou 104, MIN = 5 ou 105, SOMME = 9 ou 109. Méthode : 1. Place-toi dans la cellule résultat. 2. Tape =SOUS.TOTAL(. 3. Saisis le numéro 109 pour sommer en ignorant les lignes masquées. 4. Sélectionne la plage à calculer. 5. Entrée. En filtrant, le total se recalcule automatiquement.'],
+      plus: ['La fonction SOUS.TOTAL offre la flexibilité de choisir d\'inclure ou d\'exclure les lignes masquées, tout en proposant une palette de calculs (somme, moyenne, écart-type…). Structure : =SOUS.TOTAL(no_fonction; plage1; …). No_fonction : 1 à 11 (inclut les masqués) ou 101 à 111 (ignore les masqués). Ex. MOYENNE = 1 ou 101, NB = 2 ou 102, MAX = 4 ou 104, MIN = 5 ou 105, SOMME = 9 ou 109.'],
     },
     {
       humeur: 'accueil',
@@ -6131,9 +6096,7 @@ const CREERTCD = {
     {
       humeur: 'pensif',
       dit: 'Une boîte s\'ouvre : vérifie la **plage** (titres inclus), laisse **Nouvelle feuille de calcul** coché, puis **OK**. Excel va créer une **feuille rien que pour ton TCD**.',
-      visuel: { type: 'champs', titre: 'Créer un tableau croisé dynamique', champs: [{ l: 'Tableau/Plage', v: 'Ventes!$A$1:$C$5', actif: true }, { l: 'Nouvelle feuille de calcul', check: true }, { l: 'Feuille de calcul existante', check: false }] },
-      plus: ['1. Sélectionne une cellule de ton tableau de données source. 2. Ouvre l\'onglet Insertion et clique sur Tableau croisé dynamique. 3. Vérifie la plage sélectionnée (titres inclus) dans la boîte de dialogue. 4. Choisis d\'insérer le TCD dans une nouvelle feuille (ou une feuille existante) et clique sur OK.'],
-    },
+      visuel: { type: 'champs', titre: 'Créer un tableau croisé dynamique', champs: [{ l: 'Tableau/Plage', v: 'Ventes!$A$1:$C$5', actif: true }, { l: 'Nouvelle feuille de calcul', check: true }, { l: 'Feuille de calcul existante', check: false }] },    },
     {
       humeur: 'content',
       dit: 'Et voilà une **nouvelle feuille (Feuil1)** ! À **gauche**, l\'emplacement du TCD (encore vide) ; à **droite**, le volet **Champs**. À toi : **attrape un champ** (clique-le) et **dépose-le** dans la bonne zone.',
@@ -6225,7 +6188,7 @@ const GRAPHIQUESCROISES = {
       humeur: 'pensif',
       dit: 'La boîte s\'ouvre : vérifie la **plage** (titres inclus), choisis une **nouvelle feuille**, puis OK. Excel prépare le graphique et son TCD.',
       visuel: { type: 'champs', titre: 'Créer un graphique croisé dynamique', champs: [{ l: 'Tableau/Plage', v: 'Ventes!$A$1:$C$5', actif: true }, { l: 'Nouvelle feuille de calcul', check: true }] },
-      plus: ['1. Sélectionne une cellule dans ton tableau de données source. 2. Ouvre l\'onglet Insertion et clique sur Graphique croisé dynamique. 3. Vérifie la plage sélectionnée (titres inclus) dans la boîte de dialogue. 4. Choisis d\'insérer le GCD dans une nouvelle feuille et clique sur OK. Tu peux aussi créer un GCD à partir d\'un TCD déjà existant, via la commande Graphique croisé dynamique de l\'onglet Analyse.'],
+      plus: ['Tu peux aussi créer un GCD à partir d\'un TCD déjà existant, via la commande Graphique croisé dynamique de l\'onglet Analyse.'],
     },
     {
       humeur: 'pensif',
@@ -6247,7 +6210,7 @@ const GRAPHIQUESCROISES = {
       humeur: 'pensif',
       dit: 'Enfin, tu le **personnalises** comme un graphique classique : pour changer le type (colonnes, courbes, secteurs…), passe par **Création > Modifier le type de graphique**.',
       visuel: { type: 'galeriegraphiques' },
-      plus: ['Le graphique croisé dynamique est entièrement personnalisable. Pour changer son type (colonnes, courbes, secteurs…), tu utilises exactement la même méthode que pour un graphique classique : 1. Sélectionne le graphique. 2. Onglet Création > groupe Type > Modifier le type de graphique. 3. Choisis le type dans la boîte de dialogue. 4. OK. Si besoin, reporte-toi au chapitre « Les graphiques » pour revoir les notions essentielles.'],
+      plus: ['Le graphique croisé dynamique est entièrement personnalisable : pour changer son type (colonnes, courbes, secteurs…), tu utilises exactement la même méthode que pour un graphique classique (Création > Modifier le type de graphique). Si besoin, reporte-toi au chapitre « Les graphiques » pour revoir les notions essentielles.'],
     },
     {
       humeur: 'accueil',
