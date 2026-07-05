@@ -715,6 +715,11 @@ const LIGNESCOLONNES = {
     },
     {
       humeur: 'accueil',
+      dit: 'Un petit piège à anticiper. Tu sélectionnes la ligne 5 et tu cliques **Insérer une ligne**. La nouvelle ligne vide apparaît… ?',
+      visuel: { type: 'question', options: ['AU-DESSUS (elle devient la nouvelle ligne 5)', 'EN-DESSOUS de la ligne 5', 'tout en bas du tableau'], bonne: 0, explication: 'Excel insère toujours AU-DESSUS de la sélection : ta ligne 5 devient 6, et la nouvelle ligne vide prend la place 5. Même logique pour les colonnes : la nouvelle arrive à GAUCHE.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Et pour **supprimer** ? C\'est exactement la même chose, mais tu cliques sur **Supprimer** au lieu d\'**Insérer** (ou clic droit sur l\'en-tête > Supprimer).',
       visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Cellules', groupes: [{ icone: '⊞', label: 'Insérer' }, { icone: '⊟', label: 'Supprimer', actif: true }, { icone: '▤', label: 'Format' }] },
     },
@@ -917,6 +922,11 @@ const NOMBRES = {
   exercices: [EX3.ex23],
   narration: [
     { humeur: 'accueil', dit: 'Un nombre bien formaté se comprend tout de suite : 1 234,50 € se lit mieux que 1234,5. On va choisir le bon format.' },
+    {
+      humeur: 'accueil',
+      dit: 'Tente d\'abord. Tu tapes **1234,5** et tu appliques le format **Monétaire** (€). La cellule va afficher… ?',
+      visuel: { type: 'question', options: ['1 234,50 €', '1234,5', '123 450 €'], bonne: 0, explication: 'Le format Monétaire ajoute le séparateur de milliers, deux décimales et le symbole € : 1234,5 devient 1 234,50 €. Le nombre stocké ne change pas, seul l\'affichage s\'habille.' },
+    },
     {
       humeur: 'pensif',
       dit: '**Méthode complète :** la boîte Format de cellule donne accès à tous les formats.',
@@ -6018,8 +6028,8 @@ const DOUBLONSSOUSTOTAUX = {
     },
     {
       humeur: 'pensif',
-      dit: 'À retenir : **Excel ne « voit » que les colonnes cochées** pour juger d\'un doublon.',
-      visuel: { type: 'encart', label: 'À noter', texte: 'Si tu ne coches que « Nom » et « Ville », deux lignes qui ne diffèrent que sur le CA seront considérées comme un doublon. Seules les lignes identiques sur les colonnes cochées sont supprimées. Attention : un espace superflu ou un format différent peut empêcher Excel de reconnaître un doublon.' },
+      dit: 'Une subtilité importante. Tu ne coches que **« Nom »** et **« Ville »**. Deux lignes ont le même Nom et la même Ville, mais un **CA différent**. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Ces deux lignes seront considérées comme des doublons, et l\'une sera supprimée.', bonne: true, explication: 'Vrai : Excel ne « voit » que les colonnes cochées. Comme Nom et Ville sont identiques, il y voit un doublon (le CA différent est ignoré). Coche toutes les colonnes si tu veux comparer la ligne entière. Attention aussi aux espaces ou formats différents qui empêchent la détection.' },
       plus: ['En décochant certaines colonnes, tu indiques à Excel de ne comparer que les colonnes cochées : seules les lignes parfaitement identiques sur ces colonnes seront supprimées. Si deux lignes ne diffèrent que sur des colonnes non sélectionnées, elles seront conservées. Attention aux subtilités : une cellule vide, un espace superflu ou un format numérique différent peut empêcher Excel de reconnaître un doublon (nettoie tes cellules avant).'],
     },
     {
