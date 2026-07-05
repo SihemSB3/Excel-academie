@@ -4818,14 +4818,23 @@ function Visuel({ v }) {
     )
   }
   if (v.type === 'etapes') {
+    // Chaque étape est soit une chaîne, soit { texte, capture } pour illustrer l'étape
+    // par sa propre capture d'écran (ruban, tableur, boîte de dialogue…).
     return (
       <ol className="mt-3 space-y-2">
-        {v.items.map((it, i) => (
-          <li key={i} className="flex items-start gap-3 rounded-xl border border-navy/10 bg-navy/5 p-3 animate-fade-up" style={{ animationDelay: `${i * 130}ms` }}>
-            <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-mint text-xs font-bold text-navy-deep">{i + 1}</span>
-            <span className="text-sm text-navy/85">{it}</span>
-          </li>
-        ))}
+        {v.items.map((it, i) => {
+          const texte = typeof it === 'string' ? it : it.texte
+          const capture = typeof it === 'string' ? null : it.capture
+          return (
+            <li key={i} className="rounded-xl border border-navy/10 bg-navy/5 p-3 animate-fade-up" style={{ animationDelay: `${i * 130}ms` }}>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-mint text-xs font-bold text-navy-deep">{i + 1}</span>
+                <span className="text-sm text-navy/85">{gras(texte)}</span>
+              </div>
+              {capture && <div className="mt-2 pl-9">{<CaptureInline c={capture} />}</div>}
+            </li>
+          )
+        })}
       </ol>
     )
   }

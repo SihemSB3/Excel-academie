@@ -551,18 +551,20 @@ const ASSISTANT = {
       humeur: 'pensif',
       dit: 'Cet outil t\'aide à...',
       visuel: { type: 'parties', items: [{ label: 'Choisir la bonne fonction' }, { label: 'Comprendre ses arguments' }, { label: 'Sélectionner facilement les bonnes cellules' }] },
-      plus: ['Utiliser l\'assistant pas à pas : 1. Sélectionne la fonction souhaitée (Excel t\'explique à quoi elle sert en bas). 2. Clique sur OK. 3. Remplis les arguments en cliquant sur les cellules concernées. 4. Clique sur OK → Excel place la bonne formule dans la cellule.'],
     },
     { humeur: 'accueil', dit: 'On veut la **moyenne** des notes, sur la ligne « Moyenne ». Première chose : **clique la cellule qui recevra le résultat.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la Moyenne', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { ...baseAss }, cible: 'B5', explication: 'Oui, B5 : à droite de « Moyenne ». C\'est de cette cellule qu\'on ouvre l\'assistant.' } },
     {
       humeur: 'accueil',
-      dit: '**Pour l\'ouvrir :** clique sur la cellule du résultat, puis va dans l\'onglet **Formules** (ou Accueil).',
-      visuel: { type: 'etapes', items: ['Clique sur la cellule où tu veux le résultat', 'Onglet Formules (ou Accueil)', 'Clique sur Insérer une fonction (fx)', 'La boîte de dialogue s\'ouvre'] },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'Le bouton **Insérer une fonction** (fx) se trouve tout à gauche de l\'onglet Formules. 👇',
-      visuel: { type: 'ruban' },
+      dit: '**Pour l\'ouvrir**, voici les étapes, chacune en image :',
+      visuel: {
+        type: 'etapes',
+        items: [
+          { texte: 'Clique la cellule qui recevra le résultat (ici **B5**).', capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { ...baseAss }, actif: 'B5' } },
+          { texte: 'Va dans l\'onglet **Formules** (ou Accueil).', capture: { type: 'ruban', actif: 'Formules', onglets: ['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données'], groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer une\nfonction' }, { icone: 'Σ', label: 'Somme\nauto' }, { icone: '?', label: 'Logique' }] } },
+          { texte: 'Clique sur **Insérer une fonction** (fx), tout à gauche.', capture: { type: 'ruban', actif: 'Formules', onglets: ['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données'], groupeNom: 'Bibliothèque de fonctions', groupes: [{ icone: 'fx', label: 'Insérer une\nfonction', actif: true }, { icone: 'Σ', label: 'Somme\nauto' }, { icone: '?', label: 'Logique' }] } },
+          { texte: 'La boîte **Insérer une fonction** s\'ouvre : Excel te guide.', capture: { type: 'assistant', categorie: 'Les dernières utilisées', fonctions: ['SI', 'RECHERCHEV', 'MOYENNE', 'SOMME'], selection: 2, signature: 'MOYENNE(nombre1;nombre2;...)', description: 'Renvoie la moyenne (arithmétique) des arguments.', focus: 'liste' } },
+        ],
+      },
     },
     {
       humeur: 'accueil',
