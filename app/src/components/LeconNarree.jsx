@@ -447,9 +447,19 @@ function MenuContextuel({ v }) {
 }
 
 // Glisser-déposer : on attrape le bord d'une cellule (curseur flèche) et on la déplace.
+// Glisser-déposer montré dans le classeur ENTIER : on voit toute la grille, et une PLAGE
+// de 2 cellules (« Souris | 20 ») glisse de sa ligne vers une ligne vide plus bas, curseur
+// flèche 4 directions à l'appui. Rejouable.
 function Glisser() {
+  const [pose, setPose] = useState(false)
+  const [cle, setCle] = useState(0)
+  useEffect(() => {
+    setPose(false)
+    const id = setTimeout(() => setPose(true), 900)
+    return () => clearTimeout(id)
+  }, [cle])
   const MOVE = (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="#0a335d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="#0a335d" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <line x1="12" y1="3" x2="12" y2="21" />
       <line x1="3" y1="12" x2="21" y2="12" />
       <polyline points="9 6 12 3 15 6" />
@@ -458,14 +468,42 @@ function Glisser() {
       <polyline points="18 9 21 12 18 15" />
     </svg>
   )
+  const cols = ['A', 'B']
+  const H = 26 // hauteur d'une ligne (px)
+  // Grille : en-têtes A/B, ligne 1 (titres), ligne 2 (Clavier), ligne 3 (Souris ← glisse), ligne 4 (vide, cible).
+  const contenu = { 1: ['Produit', 'Prix (€)'], 2: ['Clavier', '30'], 3: pose ? ['', ''] : ['Souris', '20'], 4: pose ? ['Souris', '20'] : ['', ''] }
   return (
-    <div className="mt-3 flex justify-center py-2">
-      <div className="relative h-16 w-56">
-        <div className="absolute right-0 top-2 grid h-12 w-16 place-items-center rounded-sm border-2 border-dashed border-mint bg-mint/10 text-sm font-bold text-mint/60">30</div>
-        <div className="animate-glisse absolute left-0 top-2 grid h-12 w-16 place-items-center rounded-sm border-2 border-navy bg-white text-sm font-bold text-navy shadow-md">
-          30
-          <span className="absolute -right-2.5 -top-2.5 rounded-full border border-navy/10 bg-white p-0.5 shadow">{MOVE}</span>
+    <div className="mt-3">
+      <div className="relative mx-auto max-w-[240px] overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#eceae3] px-2 py-1 text-[10px] text-navy/40"><span>Classeur1 — Excel</span></div>
+        <div className="relative grid text-[11px]" style={{ gridTemplateColumns: '22px repeat(2, 1fr)' }}>
+          <div className="bg-navy/5" style={{ height: H }} />
+          {cols.map((c) => (<div key={c} className="grid place-items-center border-b border-l border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{c}</div>))}
+          {[1, 2, 3, 4].map((r) => (
+            <div key={r} className="contents">
+              <div className="grid place-items-center border-b border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{r}</div>
+              {cols.map((c, ci) => {
+                const val = contenu[r][ci]
+                const entete = r === 1
+                return (
+                  <div key={c} className={`flex items-center border-b border-l border-navy/10 px-1.5 ${ci === 1 ? 'justify-end' : ''} ${entete ? 'bg-navy/10 font-bold text-navy/70' : 'text-navy/85'}`} style={{ height: H }}>{val}</div>
+                )
+              })}
+            </div>
+          ))}
+          {/* cible en pointillés sur la ligne 4 */}
+          <div className="pointer-events-none absolute rounded-sm border-2 border-dashed border-mint/70" style={{ left: 22, right: 0, top: H * 4, height: H }} />
+          {/* la plage qui glisse (Souris | 20), en overlay, de la ligne 3 vers la ligne 4 */}
+          <div className="pointer-events-none absolute z-10 flex items-center rounded-sm border-2 border-navy bg-white shadow-md" style={{ left: 22, right: 0, top: pose ? H * 4 : H * 3, height: H, transition: 'top .9s cubic-bezier(.4,0,.2,1)' }}>
+            <span className="flex-1 px-1.5 text-navy/85">Souris</span>
+            <span className="flex-1 px-1.5 text-right text-navy/85">20</span>
+            <span className="absolute -right-2 -top-2 rounded-full border border-navy/10 bg-white p-0.5 shadow">{MOVE}</span>
+          </div>
         </div>
+      </div>
+      <div className="mt-2 flex items-start justify-between gap-3">
+        <p className="flex items-start gap-1.5 text-[11px] leading-snug text-navy/60"><span className="text-navy/40">↳</span><span>{pose ? '« Souris | 20 » a été déposé sur la ligne 4. La plage entière a suivi le curseur.' : 'On attrape le bord de la sélection (curseur flèche à 4 branches) et on la glisse plus bas…'}</span></p>
+        <button onClick={() => setCle((k) => k + 1)} className="shrink-0 rounded-full bg-mint/15 px-3 py-1 text-[11px] font-bold text-mint transition hover:bg-mint/25">↻ Rejouer</button>
       </div>
     </div>
   )
