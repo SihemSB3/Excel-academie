@@ -468,15 +468,18 @@ function Glisser() {
       <polyline points="18 9 21 12 18 15" />
     </svg>
   )
-  const cols = ['A', 'B']
+  // Colonne C vide en plus : la plage « Souris | 20 » n'occupe que A+B, la croix
+  // du curseur déplacement se pose donc dans la colonne C, sans être coupée au bord.
+  const cols = ['A', 'B', 'C']
   const H = 26 // hauteur d'une ligne (px)
-  // Grille : en-têtes A/B, ligne 1 (titres), ligne 2 (Clavier), ligne 3 (Souris ← glisse), ligne 4 (vide, cible).
-  const contenu = { 1: ['Produit', 'Prix (€)'], 2: ['Clavier', '30'], 3: pose ? ['', ''] : ['Souris', '20'], 4: pose ? ['Souris', '20'] : ['', ''] }
+  const LARG_PLAGE = 'calc((100% - 22px) * 2 / 3)' // A + B (2 colonnes sur 3)
+  // Grille : en-têtes A/B/C, ligne 1 (titres), ligne 2 (Clavier), ligne 3 (Souris ← glisse), ligne 4 (vide, cible).
+  const contenu = { 1: ['Produit', 'Prix (€)', ''], 2: ['Clavier', '30', ''], 3: pose ? ['', '', ''] : ['Souris', '20', ''], 4: pose ? ['Souris', '20', ''] : ['', '', ''] }
   return (
     <div className="mt-3">
-      <div className="relative mx-auto max-w-[240px] overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+      <div className="relative mx-auto max-w-[290px] overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
         <div className="flex items-center gap-2 bg-[#eceae3] px-2 py-1 text-[10px] text-navy/40"><span>Classeur1 — Excel</span></div>
-        <div className="relative grid text-[11px]" style={{ gridTemplateColumns: '22px repeat(2, 1fr)' }}>
+        <div className="relative grid text-[11px]" style={{ gridTemplateColumns: '22px repeat(3, 1fr)' }}>
           <div className="bg-navy/5" style={{ height: H }} />
           {cols.map((c) => (<div key={c} className="grid place-items-center border-b border-l border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{c}</div>))}
           {[1, 2, 3, 4].map((r) => (
@@ -491,13 +494,14 @@ function Glisser() {
               })}
             </div>
           ))}
-          {/* cible en pointillés sur la ligne 4 */}
-          <div className="pointer-events-none absolute rounded-sm border-2 border-dashed border-mint/70" style={{ left: 22, right: 0, top: H * 4, height: H }} />
+          {/* cible en pointillés sur la ligne 4 (colonnes A+B seulement) */}
+          <div className="pointer-events-none absolute rounded-sm border-2 border-dashed border-mint/70" style={{ left: 22, width: LARG_PLAGE, top: H * 4, height: H }} />
           {/* la plage qui glisse (Souris | 20), en overlay, de la ligne 3 vers la ligne 4 */}
-          <div className="pointer-events-none absolute z-10 flex items-center rounded-sm border-2 border-navy bg-white shadow-md" style={{ left: 22, right: 0, top: pose ? H * 4 : H * 3, height: H, transition: 'top .9s cubic-bezier(.4,0,.2,1)' }}>
+          <div className="pointer-events-none absolute z-10 flex items-center rounded-sm border-2 border-navy bg-white shadow-md" style={{ left: 22, width: LARG_PLAGE, top: pose ? H * 4 : H * 3, height: H, transition: 'top .9s cubic-bezier(.4,0,.2,1)' }}>
             <span className="flex-1 px-1.5 text-navy/85">Souris</span>
             <span className="flex-1 px-1.5 text-right text-navy/85">20</span>
-            <span className="absolute -right-2 -top-2 rounded-full border border-navy/10 bg-white p-0.5 shadow">{MOVE}</span>
+            {/* curseur déplacement posé dans la colonne C (à droite de la plage), pour ne masquer aucune valeur */}
+            <span className="absolute top-1/2 -translate-y-1/2 rounded-full border border-navy/10 bg-white p-0.5 shadow" style={{ left: 'calc(100% + 6px)' }}>{MOVE}</span>
           </div>
         </div>
       </div>
@@ -531,11 +535,10 @@ function Onglets({ v }) {
           {['Insérer…', 'Supprimer', 'Renommer'].map((l) => (
             <div key={l} className="px-3 py-1.5 text-navy/80">{l}</div>
           ))}
+          <div className="my-1 border-t border-navy/10" />
           <div className="flex items-center gap-2 bg-mint/20 px-3 py-1.5 font-semibold text-navy">
             <span>📑</span>Déplacer ou copier…
           </div>
-          <div className="my-1 border-t border-navy/10" />
-          <div className="px-3 py-1.5 text-navy/70">☑ Créer une copie</div>
         </div>
       ) : items.length > 0 ? (
         <div className="ml-2 mt-1 w-60 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-xs shadow-xl">
@@ -556,6 +559,54 @@ function Onglets({ v }) {
           <span>{legende}</span>
         </p>
       )}
+    </div>
+  )
+}
+
+// La vraie boîte « Déplacer ou copier » : barre d'onglets + fenêtre avec la liste
+// des feuilles et surtout la case « Créer une copie » cochée (pour garder l'original).
+function DeplacerCopierFeuille() {
+  const feuilles = ['Feuil1', 'Feuil2', 'Feuil3', '(déplacer en dernier)']
+  return (
+    <div className="mt-3">
+      <div className="mx-auto max-w-[260px]">
+        <div className={BARRE_ONGLETS}>
+          {['Feuil1', 'Feuil2', 'Feuil3'].map((o) => (
+            <span key={o} className={`rounded-t px-3 py-1 ${o === 'Feuil1' ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/55'}`}>{o}</span>
+          ))}
+          <span className="px-2 text-navy/40">＋</span>
+        </div>
+      </div>
+      <div className="mx-auto mt-2 max-w-[260px] overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+        <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+          <span>Déplacer ou copier</span>
+          <span className="text-navy/40">✕</span>
+        </div>
+        <div className="space-y-2 bg-white p-3">
+          <p className="text-navy/55">Dans le classeur :</p>
+          <div className="flex items-center justify-between rounded-sm border border-navy/30 px-2 py-1 text-navy/80">
+            <span>Classeur1</span><span className="text-navy/40">▾</span>
+          </div>
+          <p className="pt-0.5 text-navy/55">Avant la feuille :</p>
+          <div className="overflow-hidden rounded-sm border border-navy/25">
+            {feuilles.map((f, i) => (
+              <div key={f} className={`px-2 py-1 ${i === 1 ? 'bg-mint/25 font-semibold text-navy' : 'text-navy/75'}`}>{f}</div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 rounded-md border-2 border-mint bg-mint/15 px-2 py-1.5">
+            <span className="grid h-3.5 w-3.5 shrink-0 place-items-center rounded-sm border border-mint bg-mint text-[9px] text-white">✓</span>
+            <span className="font-bold text-navy">Créer une copie</span>
+          </div>
+          <div className="flex justify-end gap-2 border-t border-navy/10 pt-2">
+            <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/80">OK</span>
+            <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/80">Annuler</span>
+          </div>
+        </div>
+      </div>
+      <p className="mx-auto mt-2 flex max-w-[280px] items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>Sans la case « Créer une copie », la feuille serait <b>déplacée</b> : coche-la pour garder l'original et en <b>dupliquer</b> une copie.</span>
+      </p>
     </div>
   )
 }
@@ -828,27 +879,42 @@ function LiaisonsDialog({ v }) {
 
 // La fenêtre « Collage spécial » d'Excel, avec le bouton « Coller avec liaison » mis en avant.
 function CollageSpecialDialog() {
-  const opts = ['Tout', 'Formules', 'Valeurs', 'Formats']
+  // La vraie fenêtre « Collage spécial » : toutes les options de la section « Coller »
+  // (2 colonnes), la section « Opération », et les cases du bas.
+  const collerG = ['Tout', 'Formules', 'Valeurs', 'Formats', 'Commentaires', 'Validation']
+  const collerD = ['Tout en utilisant le thème source', 'Tout sauf la bordure', 'Largeurs de colonnes', 'Formules et format des nombres', 'Valeurs et format des nombres', 'Fusionner la mise en forme cond.']
+  const operation = ['Aucune', 'Addition', 'Soustraction', 'Multiplication', 'Division']
+  const Radio = ({ label, actif }) => (
+    <span className="flex items-center gap-1.5 text-navy/80">
+      <span className={`grid h-3 w-3 shrink-0 place-items-center rounded-full border ${actif ? 'border-navy/70' : 'border-navy/30'}`}>
+        {actif && <span className="h-1.5 w-1.5 rounded-full bg-navy/70" />}
+      </span>
+      <span className={actif ? 'font-semibold text-navy' : ''}>{label}</span>
+    </span>
+  )
   return (
-    <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
-      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">
+    <div className="mx-auto mt-3 max-w-[340px] overflow-hidden rounded-lg border border-navy/25 text-[10.5px] shadow-xl">
+      <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 text-[11px] font-semibold text-navy/80">
         <span>Collage spécial</span>
         <span className="text-navy/40">✕</span>
       </div>
-      <div className="space-y-2 bg-white p-3">
-        <p className="text-navy/55">Coller</p>
-        <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-          {opts.map((o, i) => (
-            <span key={o} className="flex items-center gap-1.5 text-navy/80">
-              <span className={`grid h-3 w-3 place-items-center rounded-full border ${i === 0 ? 'border-navy/60' : 'border-navy/30'}`}>
-                {i === 0 && <span className="h-1.5 w-1.5 rounded-full bg-navy/60" />}
-              </span>
-              {o}
-            </span>
-          ))}
+      <div className="space-y-2.5 bg-white p-3">
+        <div>
+          <p className="mb-1 font-semibold text-navy/55">Coller</p>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+            {collerG.map((o, i) => <Radio key={o} label={o} actif={i === 0} />)}
+            {collerD.map((o) => <Radio key={o} label={o} actif={false} />)}
+          </div>
         </div>
-        <div className="flex items-center gap-2 pt-0.5 text-navy/75">
-          <span className="h-3.5 w-3.5 shrink-0 rounded-sm border border-navy/40" /> Transposé
+        <div className="border-t border-navy/10 pt-2">
+          <p className="mb-1 font-semibold text-navy/55">Opération</p>
+          <div className="grid grid-cols-3 gap-x-3 gap-y-1">
+            {operation.map((o, i) => <Radio key={o} label={o} actif={i === 0} />)}
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-x-5 gap-y-1 border-t border-navy/10 pt-2">
+          <span className="flex items-center gap-1.5 text-navy/75"><span className="h-3.5 w-3.5 shrink-0 rounded-sm border border-navy/40" /> Blancs non compris</span>
+          <span className="flex items-center gap-1.5 text-navy/75"><span className="h-3.5 w-3.5 shrink-0 rounded-sm border border-navy/40" /> Transposé</span>
         </div>
         <div className="flex items-center justify-between border-t border-navy/10 pt-2">
           <span className="rounded-sm border-2 border-mint bg-mint/15 px-2 py-0.5 font-bold text-navy">Coller avec liaison</span>
@@ -1663,6 +1729,18 @@ function SeriesOptions({ v }) {
 }
 
 // Collage spécial : les étapes + les options de collage (Valeurs, Formules, Transposer...).
+// Petit menu contextuel réutilisé dans les captures (clic droit sur une cellule).
+function MiniMenuContextuel({ highlight }) {
+  const items = ['✂ Couper', '📄 Copier', '📋 Coller', 'Collage spécial…', 'Insérer…']
+  return (
+    <div className="w-40 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-[10px] shadow-xl">
+      {items.map((l) => (
+        <div key={l} className={`px-2.5 py-1 ${l === highlight ? 'bg-mint/25 font-semibold text-navy' : 'text-navy/75'}`}>{l}</div>
+      ))}
+    </div>
+  )
+}
+
 function CollageSpecial({ v }) {
   const { etapes = [] } = v
   const opts = [
@@ -1672,31 +1750,163 @@ function CollageSpecial({ v }) {
     { icone: '🎨', label: 'Format' },
     { icone: '⇅', label: 'Transposer' },
   ]
+  // Une mini-capture par étape (même ordre que `etapes`) : on illustre chaque geste.
+  const captures = [
+    // 1 · copier la cellule : contour vert « clignotant » + raccourci
+    <div key="c1" className="flex items-center gap-2">
+      <div className="flex overflow-hidden rounded border border-navy/15 bg-white text-[10px]">
+        <div className="grid h-6 w-14 place-items-center border-r border-navy/10 bg-navy/5 text-navy/70">Total</div>
+        <div className="grid h-6 w-12 place-items-center border-2 border-dashed border-mint bg-mint/10 font-bold text-navy">10</div>
+      </div>
+      <span className="rounded border border-navy/20 bg-navy/5 px-2 py-1 text-[10px] font-bold text-navy/70">Ctrl + C</span>
+    </div>,
+    // 2 · clic droit sur la destination : le menu apparaît
+    <div key="c2" className="flex items-center gap-2">
+      <Pointeur />
+      <MiniMenuContextuel />
+    </div>,
+    // 3 · on clique « Collage spécial… » (surligné)
+    <MiniMenuContextuel key="c3" highlight="Collage spécial…" />,
+    // 4 · on choisit ce qu'on colle : la palette d'options
+    <div key="c4" className="rounded-md border border-navy/20 bg-white p-2 shadow-lg">
+      <div className="flex gap-1.5">
+        {opts.map((o, i) => (
+          <div key={i} className={`flex w-[52px] flex-col items-center gap-1 rounded p-1.5 text-center ${o.actif ? 'bg-mint/20 ring-1 ring-mint' : 'bg-navy/5'}`}>
+            <span className="grid h-6 w-6 place-items-center rounded bg-white text-[11px] font-bold text-navy/80 shadow-sm">{o.icone}</span>
+            <span className="text-[9px] leading-tight text-navy/70">{o.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>,
+  ]
   return (
     <div className="mt-3 space-y-3">
-      {etapes.length > 0 && (
-        <ol className="space-y-1.5">
-          {etapes.map((e, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-navy/85">
-              <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-mint text-[11px] font-bold text-navy-deep">{i + 1}</span>
-              <span>{e}</span>
-            </li>
+      <ol className="space-y-3">
+        {etapes.map((e, i) => (
+          <li key={i} className="flex items-start gap-2.5 text-sm text-navy/85">
+            <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-mint text-[11px] font-bold text-navy-deep">{i + 1}</span>
+            <div className="min-w-0 space-y-1.5">
+              <p>{gras(e)}</p>
+              {captures[i] && <div>{captures[i]}</div>}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  )
+}
+
+// Le ruban Accueil avec le bouton « Coller ▾ » et son menu déroulant ouvert :
+// on y voit bien l'entrée « Collage spécial… » tout en bas (méthode ruban).
+function CollerDropdown() {
+  const icones = [
+    { i: '📋', l: 'Coller' },
+    { i: 'ƒx', l: 'Formules' },
+    { i: '123', l: 'Valeurs' },
+    { i: '🎨', l: 'Format' },
+    { i: '⇅', l: 'Transposer' },
+  ]
+  return (
+    <div className="mx-auto mt-3 max-w-[300px]">
+      <div className="overflow-hidden rounded-lg border border-navy/15 bg-white shadow-lg">
+        <div className="flex gap-4 border-b border-navy/10 bg-[#f3f1ea] px-3 py-1 text-[11px]">
+          {['Fichier', 'Accueil', 'Insertion', 'Mise en page'].map((o) => (
+            <span key={o} className={o === 'Accueil' ? 'font-bold text-mint' : 'text-navy/50'}>{o}</span>
           ))}
-        </ol>
-      )}
-      <div className="flex justify-center">
-        <div className="rounded-md border border-navy/20 bg-white p-2 shadow-xl">
-          <p className="mb-1.5 px-1 text-[10px] font-semibold uppercase tracking-wide text-navy/50">Options de collage</p>
-          <div className="flex gap-1.5">
-            {opts.map((o, i) => (
-              <div key={i} className={`flex w-[58px] flex-col items-center gap-1 rounded p-1.5 text-center ${o.actif ? 'bg-mint/20 ring-1 ring-mint' : 'bg-navy/5'}`}>
-                <span className="grid h-7 w-7 place-items-center rounded bg-white text-xs font-bold text-navy/80 shadow-sm">{o.icone}</span>
-                <span className="text-[9px] leading-tight text-navy/70">{o.label}</span>
-              </div>
-            ))}
+        </div>
+        <div className="flex items-start gap-3 p-3">
+          <div className="flex flex-col items-center">
+            <div className="grid h-9 w-9 place-items-center rounded bg-mint/20 text-lg shadow-sm ring-1 ring-mint">📋</div>
+            <div className="mt-0.5 flex items-center gap-0.5 rounded bg-mint/20 px-1.5 text-[10px] font-bold text-navy ring-1 ring-mint">Coller <span>▾</span></div>
+          </div>
+          <div className="flex gap-3 pt-1 text-[10px] text-navy/60">
+            <span className="flex flex-col items-center gap-0.5"><span className="text-base">✂</span>Couper</span>
+            <span className="flex flex-col items-center gap-0.5"><span className="text-base">📄</span>Copier</span>
           </div>
         </div>
       </div>
+      {/* le menu déroulant qui tombe sous le bouton Coller ▾ (aligné à gauche du ruban) */}
+      <div className="ml-3 w-[200px] overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
+        <p className="px-3 pt-2 text-[10px] font-semibold uppercase tracking-wide text-navy/45">Coller</p>
+        <div className="flex flex-wrap gap-1.5 p-2">
+          {icones.map((o) => (
+            <span key={o.l} title={o.l} className="grid h-7 w-7 place-items-center rounded bg-navy/5 text-[11px] font-bold text-navy/75">{o.i}</span>
+          ))}
+        </div>
+        <div className="border-t border-navy/10" />
+        <div className="flex items-center gap-2 bg-mint/25 px-3 py-2 text-[11px] font-bold text-navy">
+          <span>📋⚙</span> Collage spécial…
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// « Somme automatique » interactive : on clique le bouton ∑ et on VOIT Excel
+// écrire =SOMME(B2:B4) puis calculer 200 tout seul, dans le tableau juste en dessous.
+function SommeAuto({ onResolu }) {
+  const [etape, setEtape] = useState(0) // 0 rien · 1 la formule s'écrit · 2 le résultat
+  const H = 26
+  const lignes = [
+    ['Produit', 'Prix (€)'],
+    ['Clavier', '30'],
+    ['Souris', '20'],
+    ['Écran', '150'],
+    ['Total', ''],
+  ]
+  useEffect(() => {
+    if (etape === 2) onResolu && onResolu()
+  }, [etape])
+  const cliquer = () => {
+    if (etape !== 0) return
+    setEtape(1)
+    setTimeout(() => setEtape(2), 800)
+  }
+  const totalCell = etape === 0 ? '' : etape === 1 ? '=SOMME(B2:B4)' : '200'
+  return (
+    <div className="mt-3">
+      <div className="flex justify-center">
+        <button
+          onClick={cliquer}
+          disabled={etape !== 0}
+          className={`flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-bold shadow-sm transition ${etape === 0 ? 'animate-pulse border-mint bg-mint/15 text-navy hover:bg-mint/25' : 'border-navy/15 bg-navy/5 text-navy/45'}`}
+        >
+          <span className="text-lg leading-none">∑</span> Somme automatique
+        </button>
+      </div>
+      <div className="mx-auto mt-3 max-w-[260px] overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#eceae3] px-2 py-1 text-[10px] text-navy/40"><span>Classeur1 — Excel</span></div>
+        <div className="grid text-[11px]" style={{ gridTemplateColumns: '22px repeat(2, 1fr)' }}>
+          <div className="bg-navy/5" style={{ height: H }} />
+          {['A', 'B'].map((c) => (<div key={c} className="grid place-items-center border-b border-l border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{c}</div>))}
+          {lignes.map((row, ri) => {
+            const r = ri + 1
+            return (
+              <div key={r} className="contents">
+                <div className="grid place-items-center border-b border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{r}</div>
+                {row.map((val, ci) => {
+                  const entete = r === 1 || (ci === 0 && r === 5)
+                  const estTotal = ci === 1 && r === 5
+                  const hi = ci === 1 && etape >= 1 && r >= 2 && r <= 4
+                  return (
+                    <div
+                      key={ci}
+                      className={`flex items-center border-b border-l border-navy/10 px-1.5 ${ci === 1 ? 'justify-end' : ''} ${entete ? 'bg-navy/10 font-bold text-navy/70' : 'text-navy/85'} ${hi ? 'bg-mint/15 ring-1 ring-inset ring-mint/50' : ''} ${estTotal && etape === 2 ? 'bg-mint/20 font-bold text-navy' : ''}`}
+                      style={{ height: H }}
+                    >
+                      {estTotal ? totalCell : val}
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+      <p className="mx-auto mt-2 flex max-w-[280px] items-start gap-1.5 text-[11px] leading-snug text-navy/60">
+        <span className="text-navy/40">↳</span>
+        <span>{etape === 0 ? 'Clique ∑ : Excel devine la plage à additionner.' : etape === 1 ? 'Excel écrit =SOMME(B2:B4) tout seul…' : '✓ La somme est créée : =SOMME(B2:B4) affiche 200, en un seul clic !'}</span>
+      </p>
     </div>
   )
 }
@@ -4556,6 +4766,8 @@ function Visuel({ v }) {
   if (v.type === 'deuxclasseurs') return <DeuxClasseurs v={v} />
   if (v.type === 'liaisonsdialog') return <LiaisonsDialog v={v} />
   if (v.type === 'collagespecialdialog') return <CollageSpecialDialog />
+  if (v.type === 'collerdropdown') return <CollerDropdown />
+  if (v.type === 'deplacerfeuille') return <DeplacerCopierFeuille />
   if (v.type === 'protegerfeuilledialog') return <ProtegerFeuilleDialog />
   if (v.type === 'tableaudonnees') return <TableauDonnees v={v} />
   if (v.type === 'filtremenu') return <FiltreMenu v={v} />
@@ -5702,7 +5914,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -5774,6 +5986,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <TcdBuilder v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'tcdscene' ? (
             <TcdScene v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'sommeauto' ? (
+            <SommeAuto onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -5813,7 +6027,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                           ? 'Dépose les champs'
                                           : s.visuel?.type === 'tcdscene'
                                             ? 'Fais l\'action sur le TCD'
-                                            : 'Réponds pour continuer'
+                                            : s.visuel?.type === 'sommeauto'
+                                              ? 'Clique le bouton ∑'
+                                              : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

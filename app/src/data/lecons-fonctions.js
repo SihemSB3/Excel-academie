@@ -49,6 +49,7 @@ const SOMME = {
       dit: 'Encore plus rapide que taper la formule : le bouton **∑ Somme automatique**. Sélectionne la colonne, puis dans l\'onglet **Accueil**, **à toi de le trouver** dans le ruban.',
       visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Somme automatique', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données', 'Révision', 'Affichage'], actif: 'Accueil', groupeNom: 'Édition', groupes: [{ icone: '∑', label: 'Somme\nautomatique' }, { icone: '↓', label: 'Remplissage' }, { icone: '🧹', label: 'Effacer' }, { icone: '⌕', label: 'Trier &\nfiltrer' }], cible: 'Somme\nautomatique', explication: 'Le bouton ∑ (groupe Édition, à droite du ruban Accueil) : Excel devine la plage à additionner et écrit le =SOMME(…) tout seul. Un vrai gain de temps.' },
     },
+    { humeur: 'accueil', dit: 'Regarde ce qu\'il fait : **clique le bouton ∑** au-dessus du tableau, et vois Excel écrire la formule et calculer le total tout seul.', visuel: { type: 'sommeauto' } },
     { humeur: 'accueil', dit: 'Et pour des cellules qui ne se suivent pas, sépare-les par un point-virgule : =SOMME(B2;B4).' },
     {
       humeur: 'accueil',
@@ -301,7 +302,6 @@ const RECOPIE = {
           { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Calcul', groupes: [{ icone: '🖩', label: 'Options de\ncalcul', actif: true }, { icone: '↻', label: 'Calculer\nmaintenant' }] } },
         ],
       },
-      plus: ['Si le mode de calcul d\'Excel est défini sur « manuel », les formules ne se recalculent pas automatiquement quand tu changes une valeur. Pour revenir au calcul automatique : onglet Formules > groupe Calcul > Options de calcul > Automatique.'],
     },
     { humeur: 'fier', dit: 'Tu gagnes un temps fou avec la recopie. Bravo ! 🎉' },
   ],
@@ -392,7 +392,6 @@ const DEPLACER = {
       humeur: 'accueil',
       dit: '**Méthode 1, le ruban :** tu l\'as trouvé. On sélectionne la cellule, **Accueil > Copier**, puis on clique la destination et **Coller**.',
       visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier', actif: true }] },
-      plus: ['Copier des cellules : 1. Sélectionne les cellules à copier. 2. Clique sur Accueil > Copier (📄). 3. Clique sur la cellule de destination. 4. Clique sur Coller.', 'Déplacer une cellule ou une plage : sélectionne-la, puis Accueil > Presse-papiers > Couper (✂). Clique sur la cellule de destination, puis Coller. (Ou clic droit > Couper, puis clic droit sur la cible > Insérer les cellules coupées.)'],
     },
     {
       humeur: 'accueil',
@@ -414,13 +413,29 @@ const DEPLACER = {
       dit: 'Attention à ne pas confondre. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'Pour DÉPLACER une cellule (la retirer d\'un endroit pour la mettre ailleurs), on utilise Ctrl + C.', bonne: false, explication: 'Non : Ctrl + C copie (l\'original reste). Pour déplacer, c\'est Ctrl + X (couper), qui retire l\'original. Puis Ctrl + V pour coller.' },
     },
+    {
+      humeur: 'accueil',
+      dit: 'Concrètement, **déplacer** une cellule ou une plage (la retirer d\'ici pour la poser ailleurs), c\'est le couper-coller.',
+      visuel: {
+        type: 'methode',
+        titre: 'Déplacer une cellule ou une plage',
+        blocs: [
+          { etapes: ['**Sélectionne** la cellule ou la plage à déplacer.', 'Va dans **Accueil > Couper** (✂), ou fais **Ctrl + X**.', 'Clique sur la **cellule de destination**.', 'Clique sur **Coller** (ou **Ctrl + V**) : l\'original disparaît, tout se pose à la nouvelle place.'] },
+          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋', label: 'Coller' }, { icone: '✂', label: 'Couper', actif: true }, { icone: '📄', label: 'Copier' }] } },
+        ],
+      },
+    },
     { humeur: 'accueil', dit: 'Exemple : tu copies la ligne « Clavier » et tu la colles plus bas. La copie apparaît, l\'original reste en place.', visuel: tabDep({ A2: { t: 'Clavier', ref: true }, B2: { t: '30', num: true, ref: true }, A4: { t: 'Clavier', vert: true }, B4: { t: '30', num: true, vert: true } }, 'A4') },
     { humeur: 'pensif', dit: 'Encore plus direct : le **glisser-déposer**. Sélectionne tes cellules, attrape le **bord** de la sélection (le curseur devient une flèche), et fais-les glisser où tu veux.', visuel: { type: 'glisser' }, plus: ['**1.** Clique sur le **bord** de la sélection (ta souris devient une flèche à 4 branches).', '**2.** Maintiens le clic et **glisse** la ou les cellules là où tu veux.', '**3. Relâche** : Excel dépose toute la plage à la nouvelle position.'] },
     {
       humeur: 'pensif',
-      dit: 'Pour copier vers une **autre feuille** : clic droit sur l\'onglet en bas > **Déplacer ou copier**, et coche « Créer une copie » pour garder l\'original.',
+      dit: 'Pour copier vers une **autre feuille**, tout se passe sur la barre d\'onglets, en bas. **Clic droit** sur l\'onglet de ta feuille.',
       visuel: { type: 'onglets' },
-      plus: ['Pour copier ou déplacer vers une autre feuille, utilise la barre d\'onglets en bas : clic droit sur l\'onglet > Déplacer ou copier. Coche « Créer une copie » si tu veux dupliquer sans toucher à l\'original.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'La boîte **Déplacer ou copier** s\'ouvre. Choisis la feuille de destination, et surtout **coche « Créer une copie »** pour garder l\'original.',
+      visuel: { type: 'deplacerfeuille' },
     },
     {
       humeur: 'accueil',
@@ -463,9 +478,8 @@ const COLLAGE = {
     },
     {
       humeur: 'pensif',
-      dit: 'Tu peux aussi passer par le **ruban** : onglet **Accueil > Coller ▾ > Collage spécial**.',
-      visuel: { type: 'ruban', actif: 'Accueil', groupeNom: 'Presse-papiers', groupes: [{ icone: '📋▾', label: 'Coller', actif: true }, { icone: '✂', label: 'Couper' }, { icone: '📄', label: 'Copier' }] },
-      plus: ['Méthode ruban : onglet Accueil > groupe Presse-papiers > flèche sous Coller > Collage spécial. Tu y trouveras plusieurs icônes (Formule, Mise en forme, 123 Valeurs…). Passe ta souris dessus pour voir un aperçu avant de cliquer.'],
+      dit: 'Tu peux aussi passer par le **ruban** : onglet **Accueil**, clique la **flèche ▾ sous Coller**, et tout en bas du menu : **Collage spécial**.',
+      visuel: { type: 'collerdropdown' },
     },
     {
       humeur: 'accueil',
@@ -488,7 +502,7 @@ const COLLAGE = {
       humeur: 'accueil',
       dit: 'Autre option puissante : ton tableau est **en ligne** (janvier, février, mars côte à côte). Tu as copié, tu ouvres le **Collage spécial**. **À toi de trouver l\'option qui échange lignes et colonnes**, et regarde le tableau basculer.',
       visuel: { type: 'collagetranspose', valeurs: ['janvier', 'février', 'mars'], explication: 'Le tableau qui était en ligne est maintenant en colonne : les lignes et les colonnes ont été échangées.' },
-      plus: ['1. Copie le tableau. 2. Clique droit à l\'endroit où tu veux le coller. 3. Clique sur Collage spécial > Transposer. 4. Ton tableau s\'inverse automatiquement.'],
+      plus: ['**1.** Copie le tableau.', '**2.** Clique droit à l\'endroit où tu veux le coller.', '**3.** Clique sur **Collage spécial > Transposer**.', '**4.** Ton tableau s\'inverse automatiquement.'],
     },
     {
       humeur: 'accueil',
