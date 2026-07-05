@@ -2518,6 +2518,11 @@ const FONCTIONSFINANCIERES = {
       dit: 'Une idée clé à valider. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'Recevoir 100 € dans 5 ans, ça vaut aujourd\'hui un peu MOINS que 100 €.', bonne: true, explication: 'Vrai : c\'est le principe de la valeur actuelle. 100 € placés aujourd\'hui rapporteraient des intérêts, donc 100 € plus tard valent moins qu\'aujourd\'hui. C\'est ce que calcule VA.' },
     },
+    {
+      humeur: 'accueil',
+      dit: 'Tente d\'abord. On te promet **200 € par mois pendant 3 ans**, soit **7 200 €** au total. Selon toi, aujourd\'hui, cette promesse vaut… ?',
+      visuel: { type: 'question', options: ['Un peu MOINS de 7 200 €', 'Exactement 7 200 €', 'Un peu PLUS de 7 200 €'], bonne: 0, explication: 'Un peu moins : l\'argent futur vaut moins qu\'aujourd\'hui (à cause des intérêts qu\'on aurait pu gagner). VA va chiffrer cette valeur d\'aujourd\'hui.' },
+    },
     { humeur: 'pensif', dit: 'Exemple concret : on te promet **200 € par mois pendant 3 ans** (36 mois), avec un taux de 4 % par an. Combien vaut cette promesse aujourd\'hui ? Réponse de VA : environ **6 769 €**.', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Versement /mois', entete: true }, B1: { t: '200 €' }, A2: { t: 'Durée (mois)', entete: true }, B2: { t: '36' }, A3: { t: 'Taux annuel', entete: true }, B3: { t: '4 %' }, A4: { t: 'Valeur aujourd\'hui', entete: true }, B4: { t: '6 769 €', vert: true } }, formule: '=VA(B3/12;B2;-B1)', actif: 'B4', refsCouleur: { B3: 'bleu', B2: 'ambre', B1: 'violet' }, legende: 'Recevoir 200 €/mois pendant 3 ans, ça vaut ≈ 6 769 € aujourd\'hui.' } },
     { humeur: 'pensif', dit: 'Sa structure :', visuel: { type: 'formule', formule: '=VA(taux ; n_périodes ; vpm ; [vc] ; [type])' } },
     {
@@ -5336,6 +5341,11 @@ const RAPPELSRECHERCHE = {
   exercices: [],
   narration: [
     { humeur: 'accueil', dit: 'Avec les fonctions de recherche, Excel devient un **véritable détective** : il parcourt tes tableaux pour retrouver la bonne information en un éclair. Avant l\'enquête, deux rappels d\'échauffement : les **références** et les **noms**.', visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Code', entete: true }, B1: { t: 'Produit', entete: true }, C1: { t: 'Prix', entete: true }, A2: { t: 'A1001' }, B2: { t: 'Clavier sans fil' }, C2: { t: '24,90 €', num: true } }, legende: 'Tout le chapitre consiste à retrouver des infos comme celle-ci, automatiquement.' }, plus: ['Avec les fonctions de recherche, Excel devient un véritable détective : il parcourt tes tableaux pour retrouver la bonne information en un éclair.', 'Dans ce chapitre, tu vas travailler la RECHERCHEV, RECHERCHEX et RECHERCHEH, comprendre comment définir tes critères, et découvrir des astuces pour croiser tes données de manière fiable et rapide.', 'Idéal pour éviter les recherches manuelles interminables et travailler comme un(e) pro, même sur de gros fichiers. C\'est parti !'] },
+    {
+      humeur: 'accueil',
+      dit: 'Un premier réflexe à tester. Tu mets **=B2*C2** en D2, puis tu **tires la poignée vers le bas**. En **D3**, la formule va devenir… ?',
+      visuel: { type: 'question', options: ['=B3*C3', '=B2*C2 (identique)', '=C2*D2'], bonne: 0, explication: 'Vers le bas, la LIGNE s\'incrémente : =B2*C2 devient =B3*C3, puis =B4*C4… C\'est la référence relative, elle s\'ajuste toute seule.' },
+    },
     {
       humeur: 'pensif',
       dit: '**Les références relatives :** quand tu copies une formule, les cellules utilisées s\'ajustent automatiquement selon la nouvelle position.',
