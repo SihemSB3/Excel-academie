@@ -16,9 +16,23 @@
     },
     {
       "type": "narration",
+      "id": "ch13-croiserchamps",
+      "lecon": "croiserchamps",
+      "titre": "Croiser & organiser les champs",
+      "xp": 30
+    },
+    {
+      "type": "narration",
       "id": "ch13-analysertcd",
       "lecon": "analysertcd",
       "titre": "Manipuler & analyser un TCD",
+      "xp": 30
+    },
+    {
+      "type": "narration",
+      "id": "ch13-allerplusloin",
+      "lecon": "allerplusloin",
+      "titre": "Calculer & aller plus loin",
       "xp": 30
     },
     {

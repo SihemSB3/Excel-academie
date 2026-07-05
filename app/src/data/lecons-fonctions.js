@@ -6202,4 +6202,95 @@ const GRAPHIQUESCROISES = {
   ],
 }
 
-export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR, rappelsrecherche: RAPPELSRECHERCHE, recherchev: RECHERCHEV, recherchex: RECHERCHEX, recherchexdeux: RECHERCHEXDEUX, rechercheh: RECHERCHEH, validationdonnees: VALIDATIONDONNEES, filtreselabores: FILTRESELABORES, doublonssoustotaux: DOUBLONSSOUSTOTAUX, creertcd: CREERTCD, analysertcd: ANALYSERTCD, graphiquescroises: GRAPHIQUESCROISES }
+// --- Leçon (ch.13) : Croiser & organiser les champs ---
+const CROISERCHAMPS = {
+  id: 'fn-croiserchamps',
+  titre: 'Croiser & organiser les champs',
+  exercices: [EX13.ex88],
+  narration: [
+    { humeur: 'accueil', dit: 'Ton TCD résume les ventes par localisation. Mais le vrai super-pouvoir du « **croisé** » dynamique, c\'est de **croiser DEUX dimensions** à la fois : localisation × type de bien. Le secret : la zone **Colonnes**.', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Localisation', entete: true }, B1: { t: 'Somme de Montant', entete: true }, A2: { t: 'Paris' }, B2: { t: '420 000 €', num: true }, A3: { t: 'Lyon' }, B3: { t: '310 000 €', num: true }, A4: { t: 'Marseille' }, B4: { t: '180 000 €', num: true }, A5: { t: 'Total général', entete: true }, B5: { t: '910 000 €', num: true } }, feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', legende: 'Pour l\'instant, une seule dimension (la localisation) en lignes.' } },
+    {
+      humeur: 'accueil',
+      dit: 'Réfléchis. Pour comparer les ventes par localisation **ET** par type de bien **côte à côte**, où faut-il glisser le champ **« Type de bien »** ?',
+      visuel: { type: 'question', options: ['Dans la zone Colonnes', 'Dans la zone Valeurs', 'Dans la zone Filtres'], bonne: 0, explication: 'La zone Colonnes déploie une 2ᵉ dimension horizontalement : chaque type de bien devient une colonne, croisée avec les localisations en lignes. C\'est le cœur du « croisé » dynamique.' },
+    },
+    {
+      humeur: 'content',
+      dit: 'À toi de **croiser** ! Dépose Localisation en Lignes, Type de bien en **Colonnes**, et Montant en Valeurs. Regarde le tableau se croiser en direct.',
+      visuel: { type: 'tcdbuilder', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', champs: ['Localisation', 'Type de bien', 'Agent', 'Montant'], sequence: [{ champ: 'Localisation', zone: 'lignes', consigne: 'Dépose « Localisation » dans la zone Lignes (les villes, en vertical).' }, { champ: 'Type de bien', zone: 'colonnes', consigne: 'Pour croiser une 2ᵉ dimension côte à côte, dépose « Type de bien » dans la bonne zone.' }, { champ: 'Montant', zone: 'valeurs', consigne: 'Enfin, dépose « Montant » là où Excel le calcule.' }], etiquettes: ['Paris', 'Lyon', 'Marseille'], colonnesHeaders: ['Appartement', 'Maison'], matrice: [['250 000 €', '170 000 €'], ['180 000 €', '130 000 €'], ['90 000 €', '90 000 €']], totauxLignes: ['420 000 €', '310 000 €', '180 000 €'], totauxColonnes: ['520 000 €', '390 000 €'], total: '910 000 €', explication: 'Localisation en Lignes, Type de bien en Colonnes, Montant en Valeurs : chaque case croise une ville et un type de bien. Paris a vendu 250 000 € d\'appartements et 170 000 € de maisons. Voilà la vraie force du croisé dynamique !' },
+      plus: ['Étiquettes de lignes : les catégories affichées verticalement (ex. Localisation). Étiquettes de colonnes : les catégories affichées horizontalement (ex. Type de bien). Valeurs : les champs à calculer (Somme, Moyenne…). En croisant lignes et colonnes, chaque cellule affiche l\'intersection des deux dimensions.'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un TCD s\'organise à volonté. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Décocher un champ dans le volet (ex. « Agent ») le retire du TCD, mais NE supprime PAS les données source.', bonne: true, explication: 'Vrai : cocher/décocher une case ajoute ou retire un champ du rapport, sans jamais toucher à ta liste d\'origine. Tu peux aussi glisser un champ hors du panneau pour le retirer.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Pour un rapport **à plusieurs niveaux** (Localisation, puis Type de bien en sous-niveau), comment fait-on ?',
+      visuel: { type: 'question', options: ['Glisser un 2ᵉ champ SOUS le premier dans la zone Lignes', 'Créer un deuxième TCD', 'Écrire une formule SI imbriquée'], bonne: 0, explication: 'En empilant deux champs dans la zone Lignes, Excel crée une hiérarchie : d\'abord par Localisation, puis, dépliable, par Type de bien. Idéal pour un plan Continent → Pays → Ville.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Dernière astuce d\'organisation : **masquer** temporairement des éléments, sans les supprimer.',
+      visuel: { type: 'encart', label: 'Masquer des éléments', liste: ['Clique la petite **flèche ▾** à côté de l\'étiquette du champ (ex. Localisation)', 'Décoche les éléments à cacher (ex. Marseille), puis **OK**', 'Ils disparaissent du TCD, tes données source restent intactes', 'Re-coche-les pour les faire réapparaître'] },
+      plus: ['Pour masquer des éléments : clique sur la petite flèche à côté de l\'étiquette de ton champ (ex. Localisation), décoche chaque catégorie que tu ne veux plus voir, puis clique sur OK. Les éléments disparaissent instantanément du TCD, sans altérer la source. Pour les faire réapparaître, rouvre le menu et re-coche les cases.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. La zone **Colonnes** d\'un TCD sert à…',
+      visuel: { type: 'question', options: ['Déployer une 2ᵉ dimension horizontalement (croiser)', 'Calculer une somme', 'Filtrer sans toucher au rapport'], bonne: 0, explication: 'La zone Colonnes affiche une dimension à l\'horizontale, croisée avec les Lignes. Le calcul, c\'est Valeurs ; le filtre global, c\'est Filtres.' },
+    },
+    { humeur: 'fier', dit: 'Croiser deux dimensions, empiler des niveaux, masquer, organiser : tu sculptes tes rapports comme un pro. Bravo ! 🎉' },
+  ],
+}
+
+// --- Leçon (ch.13) : Calculer & aller plus loin ---
+const ALLERPLUSLOIN = {
+  id: 'fn-allerplusloin',
+  titre: 'Calculer & aller plus loin',
+  exercices: [EX13.ex89],
+  narration: [
+    { humeur: 'accueil', dit: 'Un TCD ne fait pas que des sommes. Tu peux **changer le calcul**, **créer tes propres formules** (champs calculés), **extraire le détail** d\'un total, et garder ta source **toujours à jour**. Le grand final de ta maîtrise !', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Agent', entete: true }, B1: { t: 'Somme de Montant', entete: true }, A2: { t: 'Alice' }, B2: { t: '620 000 €', num: true }, A3: { t: 'Bob' }, B3: { t: '410 000 €', num: true }, A4: { t: 'Total général', entete: true }, B4: { t: '1 030 000 €', num: true } }, feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', legende: 'Le TCD des ventes par agent. On va enrichir son analyse.' } },
+    {
+      humeur: 'pensif',
+      dit: 'Par défaut, Excel fait la **Somme**. Tu veux plutôt la **moyenne** des ventes par agent ? Fais un clic droit sur une valeur et trouve la commande.',
+      visuel: { type: 'tcdscene', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', consigne: 'Clic droit sur une valeur, puis choisis la commande qui change le TYPE de calcul', declencheur: 'menu', clicDroitLabel: 'Clic droit sur une valeur', items: [{ label: 'Actualiser' }, { label: 'Synthétiser les valeurs par' }, { label: 'Afficher les valeurs' }, '-', { label: 'Paramètres des champs de valeurs…' }], cible: 1, avant: { titre: 'Agent', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Alice', val: '620 000 €' }, { et: 'Bob', val: '410 000 €' }], total: '1 030 000 €' }, apres: { titre: 'Agent', valeurTitre: 'Moyenne de Montant', lignes: [{ et: 'Alice', val: '310 000 €' }, { et: 'Bob', val: '205 000 €' }], total: '257 500 €' }, explication: 'Clic droit > Synthétiser les valeurs par > Moyenne : le TCD affiche maintenant la moyenne des ventes par agent (Alice : 310 000 € en moyenne). Tu peux aussi choisir Nombre, Max, Min…' },
+      plus: ['Par défaut, Excel résume avec la Somme, mais tu peux changer la fonction de synthèse : clic droit sur une valeur > Synthétiser les valeurs par > Moyenne, Nombre, Max, Min… Méthode 2 : dans le volet Champs, clique le champ en Valeurs > Paramètres des champs de valeur > choisis la fonction > OK.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Un **champ calculé**, c\'est TA formule dans le TCD. Tu veux ajouter une prime de **5 % sur chaque montant**. Quelle formule ?',
+      visuel: { type: 'question', options: ['=Montant * 0,05', '=Montant + 5', '=5%', '=SOMME(Montant)'], bonne: 0, explication: '5 % d\'un montant = Montant × 0,05 (ou Montant × 5%). Un champ calculé s\'écrit à partir des champs existants du TCD, comme une formule classique.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'On crée ce champ calculé via **Analyse du TCD > Calculs > Champs, éléments et jeux > Champ calculé…**, puis on remplit la boîte :',
+      visuel: { type: 'champs', titre: 'Insérer un champ calculé', champs: [{ l: 'Nom', v: 'Prime 5%', actif: true }, { l: 'Formule', v: '= Montant * 0,05', actif: true }] },
+      plus: ['Pour créer un champ calculé : clique dans le TCD pour révéler l\'onglet Analyse > Calculs > Champs, éléments et jeux > Champ calculé…. Dans Nom, écris « Prime 5% ». Dans Formule, saisis =Montant*0,05 (double-clique « Montant » dans la liste des champs pour l\'insérer sans faute de frappe). Clique Ajouter, puis OK : ton champ Prime 5% apparaît dans Valeurs et affiche la prime pour chaque ligne. Pour le supprimer : rouvre la boîte, sélectionne Prime 5%, Supprimer, OK.'],
+    },
+    {
+      humeur: 'content',
+      dit: 'Résultat : une nouvelle colonne **Prime 5%** apparaît dans ton TCD, calculée pour chaque agent. Sans toucher à ta source !',
+      visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Agent', entete: true }, B1: { t: 'Somme de Montant', entete: true }, C1: { t: 'Prime 5%', entete: true }, A2: { t: 'Alice' }, B2: { t: '620 000 €', num: true }, C2: { t: '31 000 €', num: true, vert: true }, A3: { t: 'Bob' }, B3: { t: '410 000 €', num: true }, C3: { t: '20 500 €', num: true, vert: true }, A4: { t: 'Total', entete: true }, B4: { t: '1 030 000 €', num: true }, C4: { t: '51 500 €', num: true } }, feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', legende: 'La colonne Prime 5% = Montant × 0,05, calculée automatiquement.' } },
+    {
+      humeur: 'accueil',
+      dit: 'Astuce détective. Tu veux voir **toutes les lignes** qui composent le total d\'Alice. **Que fais-tu ?**',
+      visuel: { type: 'question', options: ['Un double-clic sur son total', 'Une RECHERCHEV', 'Un clic droit > Supprimer'], bonne: 0, explication: 'Un double-clic sur une valeur du TCD crée automatiquement une nouvelle feuille listant TOUTES les lignes de la source qui composent ce total. Parfait pour vérifier ou approfondir.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Enfin, pour que ton TCD reste **toujours à jour** quand ta liste s\'agrandit : transforme la source en **Tableau** (Ctrl+L) et nomme-la.',
+      visuel: { type: 'encart', label: 'Une source qui grandit toute seule', liste: ['Sélectionne ta plage source > **Insertion > Tableau** (ou **Ctrl+L**, ⌘+L sur Mac)', 'Nomme ton tableau dans **Création de tableau** (ex. T_VentesImmo)', 'Dans le TCD : **Analyse > Changer la source de données** > pointe le **nom** du tableau', 'Chaque nouvelle ligne ajoutée est intégrée automatiquement, un simple **Actualiser** suffit'] },
+      plus: ['Changer la source : clique dans le TCD > Analyse > Changer la source de données ; tu peux étendre la plage à la main ($E$2383 → $E$2400) ou à la souris (poignées vertes). Mieux : transforme d\'abord ta source en Tableau (Ctrl+L), nomme-le (T_VentesImmo), puis pointe ce nom dans la source. Ainsi chaque nouvelle ligne est intégrée automatiquement, sans retoucher la source. Les Options du TCD (clic droit > Options, ou ruban) centralisent tous les réglages sur 5 onglets : Disposition & mise en forme, Totaux et filtres, Affichage, Données, Impression.'],
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Pour qu\'un TCD intègre **automatiquement** les nouvelles lignes de la source, le mieux est de…',
+      visuel: { type: 'question', options: ['Transformer la source en Tableau (Ctrl+L) et pointer son nom', 'Recréer le TCD à chaque fois', 'Copier-coller les lignes dans le TCD'], bonne: 0, explication: 'Un Tableau structuré (Ctrl+L) s\'étend tout seul à chaque ajout. En pointant son nom comme source du TCD, un simple Actualiser suffit pour tout mettre à jour.' },
+    },
+    { humeur: 'fier', dit: 'Changer le calcul, créer tes formules, extraire le détail, garder tout à jour : plus rien ne résiste à ton TCD. La ceinture noire n\'est plus qu\'à un souffle ! 🥋🖤' },
+  ],
+}
+
+export const LECONS_FONCTIONS = { calculs: CALCULS, saisie: SAISIE, recopie: RECOPIE, series: SERIES, deplacer: DEPLACER, collage: COLLAGE, somme: SOMME, assistant: ASSISTANT, references: REFERENCES, si: SI, lignescolonnes: LIGNESCOLONNES, miseenforme: MISEENFORME, couleurs: COULEURS, nombres: NOMBRES, pinceaustyles: PINCEAUSTYLES, miseenpage: MISEENPAGE, impression: IMPRESSION, fonctionssimples: FONCTIONSSIMPLES, fonctionscomplexes: FONCTIONSCOMPLEXES, recopierformules: RECOPIERFORMULES, nomsformules: NOMSFORMULES, argumentsvpm: ARGUMENTSVPM, rechercherremplacer: RECHERCHERREMPLACER, convertir: CONVERTIR, fonctionsparticulieres: FONCTIONSPARTICULIERES, arrondis: ARRONDIS, fonctionsdate: FONCTIONSDATE, fonctionstexte: FONCTIONSTEXTE, fonctionsfinancieres: FONCTIONSFINANCIERES, gererfeuilles: GERERFEUILLES, lierfeuilles: LIERFEUILLES, groupefeuilles: GROUPEFEUILLES, liaisonsclasseurs: LIAISONSCLASSEURS, calculs3d: CALCULS3D, protegerfeuilles: PROTEGERFEUILLES, reglesliste: REGLESLISTE, imprimerliste: IMPRIMERLISTE, creertableau: CREERTABLEAU, saisirliste: SAISIRLISTE, trierliste: TRIERLISTE, filtrerliste: FILTRERLISTE, soustotaux: SOUSTOTAUX, creergraphique: CREERGRAPHIQUE, deplacergraphique: DEPLACERGRAPHIQUE, modifiergraphique: MODIFIERGRAPHIQUE, axesgraphique: AXESGRAPHIQUE, seriesgraphique: SERIESGRAPHIQUE, deplacerimprimer: DEPLACERIMPRIMER, mixtesparkline: MIXTESPARKLINE, rappel3d: RAPPEL3D, consoposition: CONSOPOSITION, consocategorie: CONSOCATEGORIE, tcdtables: TCDTABLES, tcdrelations: TCDRELATIONS, mfconditionnelle: MFCONDITIONNELLE, rappelrefnoms: RAPPELREFNOMS, fonctionsi: FONCTIONSI, siimbrique: SIIMBRIQUE, nbsiens: NBSIENS, sommesiens: SOMMESIENS, sierreur: SIERREUR, rappelsrecherche: RAPPELSRECHERCHE, recherchev: RECHERCHEV, recherchex: RECHERCHEX, recherchexdeux: RECHERCHEXDEUX, rechercheh: RECHERCHEH, validationdonnees: VALIDATIONDONNEES, filtreselabores: FILTRESELABORES, doublonssoustotaux: DOUBLONSSOUSTOTAUX, creertcd: CREERTCD, croiserchamps: CROISERCHAMPS, analysertcd: ANALYSERTCD, allerplusloin: ALLERPLUSLOIN, graphiquescroises: GRAPHIQUESCROISES }

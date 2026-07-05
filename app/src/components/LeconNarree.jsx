@@ -3807,7 +3807,7 @@ function GlisserChampTCD() {
 // une zone (clic) : le tableau croisé se remplit tout seul à chaque dépôt. Piloté par
 // `sequence` [{champ, zone, consigne}] ; on voit qu'une NOUVELLE feuille (Feuil1) est née.
 function TcdBuilder({ v, onResolu, onErreur }) {
-  const { feuilles = ['Ventes', 'Feuil1'], feuilleActive = 'Feuil1', classeur = 'Ventes.xlsx', champs = [], sequence = [], etiquettes = [], valeurLabel = 'Somme de Montant', valeurs = [], total, explication } = v
+  const { feuilles = ['Ventes', 'Feuil1'], feuilleActive = 'Feuil1', classeur = 'Ventes.xlsx', champs = [], sequence = [], etiquettes = [], valeurLabel = 'Somme de Montant', valeurs = [], total, explication, colonnesHeaders = [], matrice = null, totauxLignes = [], totauxColonnes = [] } = v
   const [placed, setPlaced] = useState({})
   const [etape, setEtape] = useState(0)
   const [pris, setPris] = useState(null)
@@ -3821,6 +3821,7 @@ function TcdBuilder({ v, onResolu, onErreur }) {
 
   const contenuZone = (k) => Object.keys(placed).filter((n) => placed[n] === k)
   const lignesPlacees = Object.values(placed).includes('lignes')
+  const colonnesPlacees = Object.values(placed).includes('colonnes')
   const valeursPlacees = Object.values(placed).includes('valeurs')
 
   const attraper = (nom) => {
@@ -3866,6 +3867,30 @@ function TcdBuilder({ v, onResolu, onErreur }) {
                 <div className="grid min-h-[132px] place-items-center px-1 text-center leading-tight text-navy/40">
                   <span>Tableau croisé<br />dynamique<br /><span className="text-[9px]">(dépose un champ<br />pour commencer)</span></span>
                 </div>
+              ) : matrice && colonnesPlacees ? (
+                <table className="w-full border-collapse">
+                  <tbody>
+                    <tr>
+                      <td className="border border-navy/15 bg-navy/10 px-1.5 py-1 font-bold text-navy/60">Somme de Montant</td>
+                      {colonnesHeaders.map((h, j) => (<td key={j} className="border border-navy/15 bg-navy/10 px-1.5 py-1 text-right font-bold text-navy/70">{h}</td>))}
+                      {valeursPlacees && <td className="border border-navy/15 bg-navy/10 px-1.5 py-1 text-right font-bold text-navy/70">Total</td>}
+                    </tr>
+                    {etiquettes.map((et, i) => (
+                      <tr key={i}>
+                        <td className="border border-navy/15 px-1.5 py-1 font-semibold text-navy/85">{et}</td>
+                        {colonnesHeaders.map((_, j) => (<td key={j} className="border border-navy/15 px-1.5 py-1 text-right text-mint-dark">{valeursPlacees ? matrice[i][j] : ''}</td>))}
+                        {valeursPlacees && <td className="border border-navy/15 px-1.5 py-1 text-right font-semibold text-navy/80">{totauxLignes[i]}</td>}
+                      </tr>
+                    ))}
+                    {valeursPlacees && (
+                      <tr>
+                        <td className="border border-navy/15 bg-navy/5 px-1.5 py-1 font-bold text-navy/70">Total</td>
+                        {totauxColonnes.map((t, j) => (<td key={j} className="border border-navy/15 bg-navy/5 px-1.5 py-1 text-right font-bold text-navy/80">{t}</td>))}
+                        <td className="border border-navy/15 bg-navy/5 px-1.5 py-1 text-right font-bold text-navy/80">{total}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               ) : (
                 <table className="w-full border-collapse">
                   <tbody>
