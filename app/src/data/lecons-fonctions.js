@@ -5927,7 +5927,19 @@ const VALIDATIONDONNEES = {
     {
       humeur: 'pensif',
       dit: 'Astuce de pro : une **liste déroulante dynamique** se met à jour toute seule quand tu ajoutes ou retires une valeur. Le secret : transformer ta plage source en **Table**.',
-      visuel: { type: 'encart', label: 'Liste déroulante dynamique', liste: ['Transforme ta plage source en **Table** (**Ctrl+L**, ou ⌘+L sur Mac)', 'Renomme ta Table dans l\'onglet **Création > groupe Propriétés** (ex. NB_Habitants)', 'Dans la Source de la validation, pointe la colonne de la Table (=$C$3:$C$8)', 'Bénéfice : chaque ajout, modification ou suppression se répercute **automatiquement** dans la liste !'] },
+      visuel: {
+        type: 'methode',
+        titre: 'Liste déroulante dynamique',
+        blocs: [
+          { etapes: ['Sélectionne ta plage source, puis transforme-la en **Table** : **Ctrl + L**.'] },
+          { capture: { type: 'touche', touches: ['Ctrl', 'L'], note: 'Sur Mac : ⌘ + L. Ta plage devient une Table qui s\'étend toute seule quand tu ajoutes une ligne.' } },
+          { etapes: ['Donne un **nom** à ta Table dans l\'onglet **Création de tableau**.'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Création de tableau', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de tableau'], groupeNom: 'Propriétés', groupes: [{ icone: '🏷', label: 'Nom :\nNB_Habitants', actif: true }] } },
+          { etapes: ['Dans la **Source** de ta validation, pointe la colonne de la Table.'], depart: 3 },
+          { capture: { type: 'champs', titre: 'Validation des données', champs: [{ l: 'Autoriser', v: 'Liste', actif: true }, { l: 'Source', v: '=NB_Habitants[Ville]', actif: true }] } },
+          { note: 'Chaque ajout ou suppression dans la Table se répercute **automatiquement** dans la liste déroulante.', label: 'Bénéfice' },
+        ],
+      },
       plus: ['CRÉE DES LISTES DÉROULANTES DYNAMIQUES ! Oublie les mises à jour laborieuses : ta liste déroulante évolue automatiquement avec tes données, plus besoin de l\'ajuster manuellement dès que tu ajoutes ou retires une entrée ! Il te suffit de transformer ta plage en Table, comme nous l\'avons vu dans le chapitre Création de tableau. Chaque ajout, modification ou suppression dans ta Table se répercute instantanément dans ta liste déroulante, c\'est 100 % automatique !'],
     },
     {
@@ -5962,7 +5974,20 @@ const FILTRESELABORES = {
     {
       humeur: 'pensif',
       dit: '**Rappel express : l\'outil Convertir.** Il découpe une colonne en plusieurs (ex. « paul dupont » → Prénom | Nom), en cochant le bon séparateur. Utile pour préparer une liste avant de la filtrer.',
-      visuel: { type: 'encart', label: 'Convertir (Données > Convertir)', liste: ['Sélectionne la colonne à découper', 'Données > Convertir (groupe Outils de données)', 'Choisis **Délimité**, puis coche le séparateur (Espace, virgule, point-virgule…)', 'Aperçu en direct, puis **Terminer**'] },    },
+      visuel: {
+        type: 'methode',
+        titre: 'Rappel express : l\'outil Convertir',
+        blocs: [
+          { etapes: ['Sélectionne la **colonne** à découper (ex. « Paul Dupont »).'] },
+          { capture: { type: 'tableur', cols: ['A'], rows: [1, 2, 3], cells: { A1: { t: 'Nom complet', entete: true }, A2: { t: 'Paul Dupont' }, A3: { t: 'Marie Curie' } }, actif: 'A2', legende: 'La colonne à découper est sélectionnée.' } },
+          { etapes: ['Va dans **Données > Convertir** (groupe Outils de données).'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Données', onglets: ['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données'], groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir', actif: true }, { icone: '✔', label: 'Validation' }, { icone: '🗑', label: 'Doublons' }] } },
+          { etapes: ['Choisis **Délimité**, clique Suivant, puis coche le **séparateur** (ici Espace).'], depart: 3 },
+          { capture: { type: 'champs', titre: 'Assistant Conversion (étape 2 sur 3) · Séparateurs', champs: [{ l: 'Tabulation', check: false }, { l: 'Point-virgule', check: false }, { l: 'Virgule', check: false }, { l: 'Espace', check: true }] } },
+          { etapes: ['Un **aperçu** montre le découpage : clique **Terminer**.'], depart: 4 },
+          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3], cells: { A1: { t: 'Prénom', entete: true }, B1: { t: 'Nom', entete: true }, A2: { t: 'Paul', vert: true }, B2: { t: 'Dupont', vert: true }, A3: { t: 'Marie', vert: true }, B3: { t: 'Curie', vert: true } }, legende: 'APRÈS : la colonne est découpée en deux, Prénom et Nom.' } },
+        ],
+      },    },
     {
       humeur: 'pensif',
       dit: 'Le cœur du filtre avancé : la **zone de critères**. C\'est un petit tableau, à côté, qui reprend **exactement les mêmes en-têtes** que ta liste, avec tes conditions en dessous.',
@@ -6300,8 +6325,20 @@ const ALLERPLUSLOIN = {
     {
       humeur: 'pensif',
       dit: 'Enfin, pour que ton TCD reste **toujours à jour** quand ta liste s\'agrandit : transforme la source en **Tableau** (Ctrl+L) et nomme-la.',
-      visuel: { type: 'encart', label: 'Une source qui grandit toute seule', liste: ['Sélectionne ta plage source > **Insertion > Tableau** (ou **Ctrl+L**, ⌘+L sur Mac)', 'Nomme ton tableau dans **Création de tableau** (ex. T_VentesImmo)', 'Dans le TCD : **Analyse > Changer la source de données** > pointe le **nom** du tableau', 'Chaque nouvelle ligne ajoutée est intégrée automatiquement, un simple **Actualiser** suffit'] },
-      plus: ['Changer la source : clique dans le TCD > Analyse > Changer la source de données ; tu peux étendre la plage à la main ($E$2383 → $E$2400) ou à la souris (poignées vertes). Mieux : transforme d\'abord ta source en Tableau (Ctrl+L), nomme-le (T_VentesImmo), puis pointe ce nom dans la source. Ainsi chaque nouvelle ligne est intégrée automatiquement, sans retoucher la source. Les Options du TCD (clic droit > Options, ou ruban) centralisent tous les réglages sur 5 onglets : Disposition & mise en forme, Totaux et filtres, Affichage, Données, Impression.'],
+      visuel: {
+        type: 'methode',
+        titre: 'Une source qui grandit toute seule',
+        blocs: [
+          { etapes: ['Transforme ta source en **Tableau** : sélectionne-la, puis **Insertion > Tableau** (ou **Ctrl + L**).'] },
+          { capture: { type: 'ruban', actif: 'Insertion', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules'], groupeNom: 'Tableaux', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique' }, { icone: '▦', label: 'Tableau', actif: true }] } },
+          { etapes: ['Donne-lui un **nom** dans l\'onglet **Création de tableau** (ex. T_VentesImmo).'], depart: 2 },
+          { capture: { type: 'ruban', actif: 'Création de tableau', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de tableau'], groupeNom: 'Propriétés', groupes: [{ icone: '🏷', label: 'Nom :\nT_VentesImmo', actif: true }] } },
+          { etapes: ['Dans le TCD : **Analyse du TCD > Changer la source de données**, puis pointe le **nom** du tableau.'], depart: 3 },
+          { capture: { type: 'ruban', actif: 'Analyse du TCD', onglets: ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], groupeNom: 'Données', groupes: [{ icone: '🔄', label: 'Actualiser' }, { icone: '🗄', label: 'Changer la source\nde données', actif: true }] } },
+          { note: 'Chaque nouvelle ligne ajoutée à la Table est intégrée toute seule : un simple **Actualiser** suffit.', label: 'Bénéfice' },
+        ],
+      },
+      plus: ['Tu peux aussi étendre la plage à la main dans « Changer la source de données » ($E$2383 → $E$2400) ou à la souris avec les poignées vertes.', 'Les Options du TCD (clic droit > Options, ou ruban) centralisent tous les réglages sur 5 onglets : Disposition & mise en forme, Totaux et filtres, Affichage, Données, Impression.'],
     },
     {
       humeur: 'accueil',
