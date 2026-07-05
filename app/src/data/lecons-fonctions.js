@@ -6162,6 +6162,11 @@ const GRAPHIQUESCROISES = {
     { humeur: 'accueil', dit: 'Le **graphique croisé dynamique** (GCD) est l\'**extension visuelle** du TCD : même logique (tu glisses des champs), mais tu obtiens directement un **graphique clair et interactif**, prêt à présenter. Idéal pour un client ou un supérieur.', visuel: { type: 'champstcd', tables: [{ nom: 'Ventes', champs: [{ nom: 'Type de bien', coche: false }, { nom: 'Montant', coche: false }] }], lignes: [], colonnes: [], valeurs: [], filtres: [] }, plus: ['Les graphiques croisés dynamiques sont une extension visuelle des tableaux croisés dynamiques. Ils te permettent de transformer instantanément tes données brutes en graphiques clairs, interactifs et faciles à lire. Le GCD fonctionne sur la même logique que le TCD : tu retrouves la liste des champs à glisser dans les zones Axe, Légende, Valeurs et Filtres. La différence, c\'est qu\'ici, tu obtiens directement une représentation visuelle de tes données.'] },
     {
       humeur: 'accueil',
+      dit: 'Avant de le créer, teste ta logique. Dans un GCD, le champ que tu déposes en **Axe** (l\'horizontale du graphique) joue, dans le TCD associé, le rôle de la zone… ?',
+      visuel: { type: 'question', options: ['Lignes', 'Valeurs', 'Filtres'], bonne: 0, explication: 'L\'Axe du graphique = les catégories = la zone Lignes du TCD. La Légende = les Colonnes, les Valeurs = les Valeurs. Même logique, deux présentations.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'On le crée comme un TCD, dans l\'onglet **Insertion**. Cherche le bouton du graphique croisé dynamique.',
       visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Graphique croisé dynamique', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules', 'Données'], actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique' }, { icone: '📈', label: 'Graphique croisé\ndynamique' }, { icone: '📉', label: 'Courbe' }], cible: 'Graphique croisé\ndynamique', explication: 'Insertion > Graphique croisé dynamique. Excel crée en même temps le TCD associé, lié au graphique : modifier l\'un met l\'autre à jour.' },
     },
@@ -6184,8 +6189,8 @@ const GRAPHIQUESCROISES = {
     },
     {
       humeur: 'pensif',
-      dit: 'À retenir sur le lien graphique-tableau :',
-      visuel: { type: 'encart', label: 'Bon à savoir', texte: 'Quand tu insères un graphique croisé dynamique depuis l\'onglet Insertion, Excel crée **automatiquement** le tableau croisé dynamique associé. Les deux sont **liés** : toute modification ou actualisation dans l\'un se reflète dans l\'autre.' },
+      dit: 'Un point clé sur le lien graphique-tableau. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Si tu filtres ou modifies le graphique croisé, le tableau croisé associé change aussi (et inversement).', bonne: true, explication: 'Vrai : en insérant un GCD, Excel crée automatiquement le TCD associé, et les deux sont LIÉS. Toute modification ou actualisation de l\'un se reflète instantanément dans l\'autre.' },
     },
     {
       humeur: 'pensif',
@@ -6232,8 +6237,8 @@ const CROISERCHAMPS = {
     },
     {
       humeur: 'pensif',
-      dit: 'Dernière astuce d\'organisation : **masquer** temporairement des éléments, sans les supprimer.',
-      visuel: { type: 'encart', label: 'Masquer des éléments', liste: ['Clique la petite **flèche ▾** à côté de l\'étiquette du champ (ex. Localisation)', 'Décoche les éléments à cacher (ex. Marseille), puis **OK**', 'Ils disparaissent du TCD, tes données source restent intactes', 'Re-coche-les pour les faire réapparaître'] },
+      dit: 'Dernière astuce d\'organisation : **masquer** un élément sans le supprimer. Clique la **flèche ▾** de l\'étiquette Localisation et cache **Marseille**. Regarde-le disparaître du TCD.',
+      visuel: { type: 'tcdscene', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', consigne: 'Clique la flèche ▾ de Localisation, puis choisis de masquer Marseille', declencheur: 'menu', clicDroitLabel: 'Flèche ▾ de Localisation', items: [{ label: 'Trier de A à Z' }, { label: 'Trier de Z à A' }, '-', { label: 'Masquer « Marseille »' }, { label: 'Masquer « Lyon »' }], cible: 3, avant: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], total: '910 000 €' }, apres: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }], total: '730 000 €' }, explication: 'Marseille disparaît du rapport (le total passe à 730 000 €), mais tes données source restent intactes. Pour le faire réapparaître, rouvre le menu et re-coche-le.' },
       plus: ['Pour masquer des éléments : clique sur la petite flèche à côté de l\'étiquette de ton champ (ex. Localisation), décoche chaque catégorie que tu ne veux plus voir, puis clique sur OK. Les éléments disparaissent instantanément du TCD, sans altérer la source. Pour les faire réapparaître, rouvre le menu et re-coche les cases.'],
     },
     {
