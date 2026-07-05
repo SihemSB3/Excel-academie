@@ -2256,6 +2256,11 @@ const FONCTIONSDATE = {
     { humeur: 'accueil', dit: 'Les fonctions de date servent à découper une date (année, mois, jour) ou à calculer des durées : ancienneté, délai, jours restants, jours ouvrés… Très utile pour les plannings et les suivis.' },
     { humeur: 'pensif', dit: '**ANNEE** renvoie l\'année d\'une date, **MOIS** renvoie le numéro du mois (1 = janvier, 12 = décembre).', visuel: { type: 'formule', formule: '=ANNEE(date)   =MOIS(date)' } },
     {
+      humeur: 'accueil',
+      dit: 'Avant de la construire, tente. La date en A2 est le **11/05/2025**. **=ANNEE(A2), ça va donner quoi ?**',
+      visuel: { type: 'question', options: ['2025', '5', '11'], bonne: 0, explication: 'ANNEE extrait l\'année : 2025. (MOIS donnerait 5, JOUR donnerait 11.) On la construit maintenant, tu vas retrouver ton résultat.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'On construit ANNEE pas à pas (MOIS marche pareil).',
       visuel: {
@@ -2267,11 +2272,6 @@ const FONCTIONSDATE = {
           { note: 'Tu peux aussi saisir la date directement entre guillemets : =ANNEE("11/05/2025").' },
         ],
       },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi. La date en A2 est le 11/05/2025. **=ANNEE(A2), ça donne quoi ?**',
-      visuel: { type: 'question', options: ['2025', '5', '11'], bonne: 0, explication: 'ANNEE extrait l\'année : 2025. (MOIS donnerait 5, JOUR donnerait 11.)' },
     },
     { humeur: 'accueil', dit: '**JOURSEM** renvoie le jour de la semaine sous forme de chiffre. Le 2e argument, **type_retour**, choisit par quel jour commence la semaine.', visuel: { type: 'formule', formule: '=JOURSEM(date ; type_retour)' } },
     {
@@ -2402,6 +2402,11 @@ const FONCTIONSTEXTE = {
       visuel: { type: 'encart', label: 'Les codes de format de date', liste: ['**j / jj** : jour sans / avec le zéro (5 ou 05).', '**mmm / mmmm** : mois en abrégé (mar) / en entier (mars).', '**aa / aaaa** : année sur 2 / 4 chiffres (25 ou 2025).'] },
     },
     {
+      humeur: 'accueil',
+      dit: 'Tente avant de construire. Avec la date **15/04/2025** en A2, **=TEXTE(A2 ; "jj mmmm aaaa")** va afficher… ?',
+      visuel: { type: 'question', options: ['15 avril 2025', '15/04/2025', 'avril'], bonne: 0, explication: '« jj » = jour sur 2 chiffres, « mmmm » = mois en toutes lettres, « aaaa » = année sur 4 chiffres → « 15 avril 2025 ». On la construit maintenant.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'On la construit pas à pas.',
       visuel: {
@@ -2422,7 +2427,7 @@ const FONCTIONSTEXTE = {
     {
       humeur: 'pensif',
       dit: 'Vérifions le rôle de TEXTE. **Vrai ou faux ?**',
-      visuel: { type: 'vraifaux', affirmation: '=TEXTE(15/04/2025 ; "jj mmmm aaaa") affiche « 15 avril 2025 ».', bonne: true, explication: 'Vrai : « jj » = jour sur 2 chiffres, « mmmm » = mois en toutes lettres, « aaaa » = année sur 4 chiffres. TEXTE habille la valeur exactement comme tu l\'écris entre guillemets.' },
+      visuel: { type: 'vraifaux', affirmation: '=TEXTE(123 ; "00000") transforme 123 en « 00123 » (5 chiffres, complétés par des zéros).', bonne: true, explication: 'Vrai : le format « 00000 » impose 5 chiffres et ajoute les zéros manquants devant. Parfait pour des codes clients à longueur fixe. TEXTE habille n\'importe quelle valeur selon le format que tu écris entre guillemets.' },
     },
     { humeur: 'accueil', dit: '**GAUCHE** extrait les premiers caractères (par la gauche), **DROITE** les derniers (par la droite).', visuel: { type: 'formule', formule: '=GAUCHE(texte ; no_car)   =DROITE(texte ; no_car)' } },
     {
