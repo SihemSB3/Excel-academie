@@ -15,10 +15,17 @@ import LeconNarree from './LeconNarree'
 import { LECONS_FONCTIONS } from '../data/lecons-fonctions'
 
 // Un chapitre = un parcours. Mobile : carte verticale. PC : chemin horizontal animé.
-export default function ChapterFlow({ chapitre, onQuitter }) {
+export default function ChapterFlow({ chapitre, moduleInitial = null, onQuitter }) {
   const ch = getChapitre(chapitre)
   const { etat, debloquerCeinture, validerEcran, enregistrerKata } = useProgressCtx()
-  const [actif, setActif] = useState(null)
+  // Si on arrive via une « Révision du jour », on ouvre directement le kata concerné.
+  const [actif, setActif] = useState(() => {
+    if (moduleInitial && ch) {
+      const i = ch.modules.findIndex((m) => m.id === moduleInitial)
+      return i >= 0 ? i : null
+    }
+    return null
+  })
   const [celebration, setCelebration] = useState(false)
   const [kataFini, setKataFini] = useState(null)
   const [smart, setSmart] = useState(false)

@@ -1,6 +1,7 @@
 import { chapitres, etapesChapitre } from '../data/chapitres'
 import { useProgressCtx } from '../store/ProgressContext'
 import { CEINTURES, ceintureInfo, indexCeinture } from '../lib/belts'
+import { revisionsDues } from '../lib/revisions'
 import { BeltGraphic, ProgressBar } from './ui'
 import { ShifuBubble } from './Shifu'
 import { MannequinBois } from './icons'
@@ -13,6 +14,8 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
   const prochaine = CEINTURES[indexCeinture(derniere) + 1] || null
 
   const valides = (n) => Object.keys(etat.ecransValides).filter((k) => k.startsWith(`ch${n}-`)).length
+  // Répétition espacée : les katas déjà appris dont l'échéance de révision est atteinte.
+  const revisions = revisionsDues(etat.journal, chapitres)
   // MODE REVUE (temporaire) : tous les chapitres accessibles pour relire le ch.3 sans refaire 1 et 2.
   // Pour réactiver la progression : const estDebloque = (n) => n === 1 || etat.chapitresTermines.includes(n - 1)
   const estDebloque = () => true
@@ -69,6 +72,32 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
           <span className="font-bold text-mint">Entraînement du jour :</span> avance d'au moins une leçon.
         </p>
       </div>
+
+      {revisions.length > 0 && (
+        <div className="mt-3 rounded-2xl border border-[#e8853a]/30 bg-[#e8853a]/[0.07] px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🧠</span>
+            <p className="text-sm font-bold text-navy">Révisions du jour</p>
+            <span className="ml-auto rounded-full bg-[#e8853a] px-2 py-0.5 text-xs font-bold text-white">{revisions.length}</span>
+          </div>
+          <p className="mt-1 text-xs text-navy/55">La répétition espacée ancre ce que tu as appris. Rejoue ces katas, c'est court et ça compte double.</p>
+          <div className="mt-2 space-y-1.5">
+            {revisions.slice(0, 5).map((r) => (
+              <button
+                key={r.id}
+                onClick={() => onOuvrirChapitre(r.chapitre, r.moduleId)}
+                className="flex w-full items-center gap-2 rounded-xl border border-navy/10 bg-cream/70 px-3 py-2 text-left transition hover:bg-cream"
+              >
+                <span className="text-sm">🥋</span>
+                <span className="min-w-0 flex-1 truncate text-sm font-semibold text-navy">{r.titre}</span>
+                <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-navy/40">ch.{r.chapitre}</span>
+                <span className="text-navy/40">›</span>
+              </button>
+            ))}
+            {revisions.length > 5 && <p className="pt-0.5 text-center text-[11px] text-navy/40">… et {revisions.length - 5} autre{revisions.length - 5 > 1 ? 's' : ''}</p>}
+          </div>
+        </div>
+      )}
 
       <button
         onClick={onOuvrirObjectifs}

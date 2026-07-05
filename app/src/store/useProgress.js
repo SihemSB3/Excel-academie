@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { calcNiveau, ajouterJours, INTERVALLES } from '../lib/revisions'
 
 const KEY = 'excel-dojo-progress-v1'
 
@@ -76,12 +77,16 @@ export function useProgress() {
     const erreurs = Math.max(0, stats.erreurs || 0)
     const duree = Math.max(0, stats.duree || 0)
     setEtat((s) => {
-      const avant = s.journal[id] || { fois: 0, erreursTotal: 0, dernierErreurs: 0, dureeTotale: 0, dernierLe: null }
+      const avant = s.journal[id] || { fois: 0, erreursTotal: 0, dernierErreurs: 0, dureeTotale: 0, dernierLe: null, niveau: 0 }
       const auj = jourLocal()
       let streak = s.streak
       if (streak.jour !== auj) {
         streak = { jour: auj, serie: estVeille(streak.jour, auj) ? streak.serie + 1 : 1 }
       }
+      // Répétition espacée : le niveau monte sans faute, redescend avec des erreurs, et
+      // fixe la date de la prochaine révision (intervalle de plus en plus long).
+      const niveau = calcNiveau(avant.niveau || 0, erreurs)
+      const prochaineLe = ajouterJours(auj, INTERVALLES[niveau])
       return {
         ...s,
         journal: {
@@ -92,6 +97,8 @@ export function useProgress() {
             dernierErreurs: erreurs,
             dureeTotale: avant.dureeTotale + duree,
             dernierLe: auj,
+            niveau,
+            prochaineLe,
           },
         },
         streak,

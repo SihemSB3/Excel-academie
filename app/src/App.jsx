@@ -29,7 +29,7 @@ export default function App() {
     setOnboarde(true)
   }
   const [vue, setVue] = useState({ ecran: 'dashboard' })
-  const ouvrirChapitre = (n) => setVue({ ecran: 'chapitre', chapitre: n })
+  const ouvrirChapitre = (n, moduleInitial = null) => setVue({ ecran: 'chapitre', chapitre: n, moduleInitial })
   const ouvrirDemo = (f) => setVue({ ecran: 'demo', fonction: f })
   const ouvrirObjectifs = () => setVue({ ecran: 'objectifs' })
   const ouvrirConnexion = () => setVue({ ecran: 'connexion' })
@@ -50,7 +50,7 @@ export default function App() {
         <Sidebar retourDojo={retourDojo} onConnexion={ouvrirConnexion} />
         <main className="flex min-h-screen min-w-0 flex-1 flex-col bg-cream shadow-2xl">
           {vue.ecran === 'dashboard' && <Dashboard onOuvrirChapitre={ouvrirChapitre} onOuvrirDemo={ouvrirDemo} onOuvrirObjectifs={ouvrirObjectifs} onOuvrirConnexion={ouvrirConnexion} />}
-          {vue.ecran === 'chapitre' && <ChapterFlow chapitre={vue.chapitre} onQuitter={retourDojo} />}
+          {vue.ecran === 'chapitre' && <ChapterFlow chapitre={vue.chapitre} moduleInitial={vue.moduleInitial} onQuitter={retourDojo} />}
           {vue.ecran === 'demo' && <LeconNarree lecon={LECONS_FONCTIONS[vue.fonction]} onQuitter={retourDojo} />}
           {vue.ecran === 'objectifs' && <ObjectifsSmart onTerminer={retourDojo} />}
           {vue.ecran === 'connexion' && <Auth onRetour={retourDojo} onConnecte={retourDojo} />}
