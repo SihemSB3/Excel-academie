@@ -114,7 +114,7 @@ function Blocs({ blocs }) {
 }
 
 // Faux écran Excel, cliquable
-function ExcelMock({ cible, onZone, vert = [], indice = null, fige = false }) {
+function ExcelMock({ cible, onZone, vert = [], indice = null, fige = false, selection = false }) {
   const cols = ['A', 'B', 'C', 'D']
   const rows = [1, 2, 3, 4, 5]
   const cls = (id, base) =>
@@ -146,6 +146,12 @@ function ExcelMock({ cible, onZone, vert = [], indice = null, fige = false }) {
         </span>
         <span className="opacity-80">Insertion</span>
         <span className="opacity-80">Formules</span>
+        {cible === 'graphique' && selection && (
+          <span className="ml-auto flex animate-fade-up items-center gap-1">
+            <span className="rounded-t bg-[#c65fa0] px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm">Création de graphique</span>
+            <span className="rounded-t bg-[#c65fa0] px-1.5 py-0.5 text-[10px] font-bold text-white shadow-sm">Format</span>
+          </span>
+        )}
       </div>
       <div onClick={clic('barre_formule')} className={cls('barre_formule', 'flex cursor-pointer items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1 text-[11px] hover:bg-navy/10')}>
         <span className="font-bold text-navy/60">fx</span>
@@ -249,9 +255,13 @@ function EcranContenu({ ec, module, dernier, avancer }) {
 
       {aCapture && (
         <div className="mt-4 animate-fade-up" style={D(190)}>
-          <ExcelMock cible={cible} onZone={onZone} fige={fini} indice={indice} vert={fini ? ACCEPTE[cible] : []} />
+          <ExcelMock cible={cible} onZone={onZone} fige={fini} indice={indice} vert={fini ? ACCEPTE[cible] : []} selection={cible === 'graphique' && fini} />
           {trouve ? (
-            <p className="mt-3 rounded-full bg-mint/20 px-3 py-2 text-center text-sm font-bold text-mint">✓ Bravo, c'est bien {LABEL[cible]}.</p>
+            <p className="mt-3 rounded-2xl bg-mint/20 px-3 py-2 text-center text-sm font-bold text-mint">
+              {cible === 'graphique'
+                ? "✓ Bravo ! Regarde le ruban : les onglets « Création de graphique » et « Format » viennent d'apparaître. C'est ça, un onglet contextuel."
+                : `✓ Bravo, c'est bien ${LABEL[cible]}.`}
+            </p>
           ) : revele ? (
             <p className="mt-3 rounded-2xl bg-navy/10 px-3 py-2 text-center text-sm font-bold text-navy/90">
               La réponse, c'est {LABEL[cible]} (surligné en vert). Tu peux continuer.
