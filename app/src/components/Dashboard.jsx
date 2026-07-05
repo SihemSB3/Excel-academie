@@ -1,6 +1,6 @@
 import { chapitres, etapesChapitre } from '../data/chapitres'
 import { useProgressCtx } from '../store/ProgressContext'
-import { CEINTURES, ceintureInfo, indexCeinture } from '../lib/belts'
+import { CEINTURES, ceintureInfo, indexCeinture, couleurTexte } from '../lib/belts'
 import { revisionsDues } from '../lib/revisions'
 import { BeltGraphic, ProgressBar } from './ui'
 import { ShifuBubble } from './Shifu'
@@ -142,7 +142,7 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
               <div className="flex items-center gap-3">
                 <span
                   className="grid h-11 w-11 shrink-0 place-items-center rounded-full font-display text-lg"
-                  style={{ background: ceintureCh.couleur, color: '#16243f', border: `2px solid ${ceintureCh.bord}` }}
+                  style={{ background: ceintureCh.couleur, color: couleurTexte(ceintureCh.couleur), border: `2px solid ${ceintureCh.bord}` }}
                 >
                   {ch.chapitre}
                 </span>

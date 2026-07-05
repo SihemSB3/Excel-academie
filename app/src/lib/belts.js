@@ -34,3 +34,16 @@ export const ceintureInfo = (id) =>
   CEINTURES.find((c) => c.id === id) || { id: 'aucune', label: 'Aucune', couleur: '#2a3a5a', bord: '#1c2a44' }
 
 export const indexCeinture = (id) => CEINTURES.findIndex((c) => c.id === id)
+
+// Choisit une couleur de texte LISIBLE sur une couleur de fond donnée (ex. le numéro de
+// chapitre posé sur la pastille de ceinture) : texte crème sur fond foncé (marron, noire…),
+// texte marine sur fond clair (blanche, jaune…). Calcul sur la luminance perçue.
+export function couleurTexte(hex) {
+  const c = String(hex || '').replace('#', '')
+  if (c.length < 6) return '#16243f'
+  const r = parseInt(c.slice(0, 2), 16)
+  const v = parseInt(c.slice(2, 4), 16)
+  const b = parseInt(c.slice(4, 6), 16)
+  const luminance = 0.299 * r + 0.587 * v + 0.114 * b
+  return luminance < 140 ? '#f5f0e8' : '#16243f'
+}
