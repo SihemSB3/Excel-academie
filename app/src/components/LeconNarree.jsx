@@ -5930,6 +5930,10 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
   const feuilleActive = fini ? feuilleFin : stepC.feuille || feuilles[0]
   const grille = grilles[feuilleActive] || { cols: [], rows: [], cells: {} }
   const formule = prefixe + faits.join('')
+  // Pendant une étape « suggestion », on affiche aussi les lettres déjà tapées (ex : =ARRONDI).
+  // On retire un « = » de tête pour ne pas le doubler avec le préfixe.
+  const enSaisie = !fini && stepC.type === 'suggestion' ? (stepC.saisie || '').replace(/^=/, '') : ''
+  const formuleAff = formule + enSaisie
 
   const parse = (id) => ({ c: (id.match(/[A-Z]+/) || [''])[0], r: parseInt((id.match(/\d+/) || ['0'])[0], 10) })
   const idsEntre = (a, b, cols) => {
@@ -6002,6 +6006,15 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
       onErreur && onErreur()
     }
   }
+  // Étape « suggestion » : l'élève choisit la bonne fonction dans l'autocomplétion.
+  const clicSuggestion = (nom) => {
+    if (fini) return
+    if (nom === stepC.cible) finirEtape(stepC.ajoute)
+    else if (!rates.includes(nom)) {
+      setRates((r) => [...r, nom])
+      onErreur && onErreur()
+    }
+  }
 
   const choixOptions = (stepC.options || []).map((o) => (typeof o === 'string' ? { label: o, val: o } : o))
 
@@ -6013,7 +6026,7 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
       <div className="overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
         <div className="flex items-center gap-2 border-b border-navy/10 bg-navy/5 px-3 py-1.5 text-xs">
           <span className="font-bold text-navy/50">fx</span>
-          <span className="font-mono text-navy/90">{coloreFormule(fini ? formule : formule)}<span className="animate-pulse text-navy/40">{fini ? '' : '|'}</span></span>
+          <span className="font-mono text-navy/90">{coloreFormule(formuleAff)}<span className="animate-pulse text-navy/40">{fini ? '' : '|'}</span></span>
         </div>
         <div className="grid text-xs" style={{ gridTemplateColumns: `28px repeat(${grille.cols.length}, 1fr)` }}>
           <div className="bg-navy/5" />
@@ -6029,7 +6042,7 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
                 const estResultat = id === resultat && feuilleActive === feuilleFin
                 const montreValeur = fini && resultatValeur != null
                 let contenu = cell.t
-                if (estResultat) contenu = montreValeur ? resultatValeur : formule
+                if (estResultat) contenu = montreValeur ? resultatValeur : formuleAff
                 const estFormule = typeof contenu === 'string' && contenu.startsWith('=')
                 const dansPlage = anchor && stepC.type === 'plage' && idsEntre(anchor, id, grille.cols) && memeEnsemble(idsEntre(anchor, id, grille.cols), plageCible)
                 const estAnchor = anchor === id
@@ -6078,6 +6091,32 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
               </button>
             )
           })}
+        </div>
+      )}
+
+      {!fini && stepC.type === 'suggestion' && (
+        <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-md border border-navy/20 bg-white text-xs shadow-xl">
+          {(stepC.items || []).map((it) => {
+            const nom = typeof it === 'string' ? it : it.nom
+            const rate = rates.includes(nom)
+            const cible = nom === stepC.cible
+            return (
+              <div key={nom}>
+                <button onClick={rate ? undefined : () => clicSuggestion(nom)} className={`flex w-full items-center gap-2 px-3 py-1.5 text-left font-mono ${rate ? 'text-navy/25' : cible ? 'bg-[#dbe6fb] text-navy hover:bg-[#cddcf7]' : 'text-navy/80 hover:bg-mint/10'}`}>
+                  <span className="grid h-4 w-5 shrink-0 place-items-center rounded bg-[#107c41] text-[8px] font-bold italic text-white">fx</span>{nom}
+                </button>
+                {cible && it.desc && <p className="bg-[#fdf6e3] px-3 py-1 text-[10px] italic text-navy/55">{it.desc}</p>}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {!fini && stepC.type === 'saisir' && (
+        <div className="mt-3 flex justify-center">
+          <button onClick={() => finirEtape(stepC.ajoute)} className="flex animate-pulse items-center gap-2 rounded-xl border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">
+            <span className="text-base leading-none">⌨</span> Tape <span className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[13px]">{stepC.label || stepC.ajoute}</span>
+          </button>
         </div>
       )}
 

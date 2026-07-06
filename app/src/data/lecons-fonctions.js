@@ -2021,22 +2021,17 @@ const ARRONDIS = {
     { humeur: 'accueil', dit: '**ARRONDI.INF** arrondit **toujours vers le bas** (vers zéro). Pratique pour ne pas surestimer un résultat (budgets, prévisions prudentes).', visuel: { type: 'formule', formule: '=ARRONDI.INF(nombre ; no_chiffres)' } },
     {
       humeur: 'pensif',
-      dit: 'On la construit pas à pas.',
+      dit: 'On la construit pas à pas. **À toi de taper la formule** : choisis la fonction, clique la cellule, ajoute les décimales.',
       visuel: {
-        type: 'methode',
-        titre: 'Construire ARRONDI.INF, pas à pas',
-        blocs: [
-          { etapes: ['Clique dans une cellule vide (ici B2) et tape **=**'] },
-          { capture: tabArr5('76,3', '=') },
-          { etapes: ['Tape les premières lettres, puis clique sur la suggestion **ARRONDI.INF**'], depart: 2 },
-          { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=ARRONDI', items: [{ nom: 'ARRONDI', desc: 'Arrondit un nombre au nombre de chiffres indiqué.' }, { nom: 'ARRONDI.INF', desc: 'Arrondit un nombre en tendant vers zéro (vers le bas).' }, { nom: 'ARRONDI.SUP' }, { nom: 'ARRONDI.AU.MULTIPLE' }], selection: 1 } },
-          { etapes: ['Clique sur la cellule à arrondir (A2)'], depart: 3 },
-          { capture: tabArr5('76,3', '=ARRONDI.INF(A2') },
-          { etapes: ['Tape **;** puis le nombre de décimales voulu (0 pour un entier)'], depart: 4 },
-          { capture: tabArr5('76,3', '=ARRONDI.INF(A2;0') },
-          { etapes: ['Ferme la parenthèse **)**, puis appuie sur **Entrée**'], depart: 5 },
-          { capture: tabArr5('76,3', '=ARRONDI.INF(A2;0)', { t: '76', num: true, vert: true }) },
+        type: 'construitformule', prefixe: '=', resultat: 'B2', resultatValeur: '76',
+        grilles: { Feuille: { cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Valeur', entete: true }, B1: { t: 'Résultat', entete: true }, A2: { t: '76,3', num: true }, B2: { t: '' } } } },
+        sequence: [
+          { type: 'suggestion', saisie: '=ARRONDI', consigne: 'Tu tapes « =ARRONDI ». Clique la fonction qui arrondit vers le BAS.', items: [{ nom: 'ARRONDI', desc: 'arrondit au plus proche' }, { nom: 'ARRONDI.INF', desc: 'arrondit vers le bas (vers zéro)' }, { nom: 'ARRONDI.SUP' }, { nom: 'ARRONDI.AU.MULTIPLE' }], cible: 'ARRONDI.INF', ajoute: 'ARRONDI.INF(' },
+          { type: 'clic', feuille: 'Feuille', cible: 'A2', ajoute: 'A2', consigne: 'Clique la cellule à arrondir.' },
+          { type: 'saisir', ajoute: ';0', label: ';0', consigne: 'Tape ; puis 0 (zéro décimale, pour un entier).' },
+          { type: 'saisir', ajoute: ')', label: ')', consigne: 'Ferme la parenthèse, puis Entrée.' },
         ],
+        explication: 'ARRONDI.INF va toujours vers le bas : 76,3 devient 76. Le 0 = zéro décimale.',
       },
     },
     {
@@ -2172,16 +2167,22 @@ const FONCTIONSDATE = {
     },
     {
       humeur: 'pensif',
-      dit: 'On construit ANNEE pas à pas (MOIS marche pareil).',
+      dit: 'On la construit pas à pas (MOIS marche pareil). **À toi de taper la formule.**',
       visuel: {
-        type: 'methode',
-        titre: 'Construire ANNEE',
-        blocs: [
-          { etapes: ['Clique dans une cellule vide', 'Tape **=** puis les premières lettres, clique sur **ANNEE**', 'Clique sur la cellule qui contient la date (A2)', 'Ferme la parenthèse, puis **Entrée**'] },
-          { capture: tabDate('11/05/2025', '=ANNEE(A2)', { t: '2025', num: true, vert: true }) },
-          { note: 'Tu peux aussi saisir la date directement entre guillemets : =ANNEE("11/05/2025").' },
+        type: 'construitformule', prefixe: '=', resultat: 'B2', resultatValeur: '2025',
+        grilles: { Feuille: { cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Date', entete: true }, B1: { t: 'Résultat', entete: true }, A2: { t: '11/05/2025' }, B2: { t: '' } } } },
+        sequence: [
+          { type: 'suggestion', saisie: '=ANN', consigne: 'Tu tapes « =ANN ». Clique la fonction qui renvoie l\'année.', items: [{ nom: 'ANNEE', desc: 'renvoie l\'année d\'une date' }, { nom: 'ANNEES.FRACTION' }, { nom: 'AUJOURDHUI' }], cible: 'ANNEE', ajoute: 'ANNEE(' },
+          { type: 'clic', feuille: 'Feuille', cible: 'A2', ajoute: 'A2', consigne: 'Clique la cellule qui contient la date.' },
+          { type: 'saisir', ajoute: ')', label: ')', consigne: 'Ferme la parenthèse, puis Entrée.' },
         ],
+        explication: 'ANNEE extrait l\'année : le 11/05/2025 donne 2025. (MOIS marche pareil, pour le mois.)',
       },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Un raccourci pratique :',
+      visuel: { type: 'encart', label: 'Astuce', texte: 'Tu peux aussi saisir la date directement entre guillemets : **=ANNEE("11/05/2025")**.' },
     },
     { humeur: 'accueil', dit: '**JOURSEM** renvoie le jour de la semaine sous forme de chiffre. Le 2e argument, **type_retour**, choisit par quel jour commence la semaine.', visuel: { type: 'formule', formule: '=JOURSEM(date ; type_retour)' } },
     {
@@ -2318,15 +2319,17 @@ const FONCTIONSTEXTE = {
     },
     {
       humeur: 'pensif',
-      dit: 'On la construit pas à pas.',
+      dit: 'On la construit pas à pas. **À toi de taper la formule.**',
       visuel: {
-        type: 'methode',
-        titre: 'Construire TEXTE',
-        blocs: [
-          { etapes: ['Clique dans la cellule cible, tape **=TEXTE(**', 'Clique sur la cellule qui contient la valeur (A2)', 'Tape **;** puis le format entre guillemets : "jj mmmm aaaa"', 'Ferme la parenthèse, puis **Entrée**'] },
-          { capture: { type: 'autocomplete', cellule: 'B2', saisie: '=TEX', items: [{ nom: 'TEXTE', desc: 'Convertit une valeur en texte, dans le format que tu choisis.' }, { nom: 'TEXTE.AVANT' }, { nom: 'TEXTE.APRES' }, { nom: 'TEXTEJOINDRE' }], selection: 0 } },
-          { capture: tabTxt('15/04/2025', '=TEXTE(A2;"jj mmmm aaaa")', { t: '15 avril 2025', vert: true }) },
+        type: 'construitformule', prefixe: '=', resultat: 'B2', resultatValeur: '15 avril 2025',
+        grilles: { Feuille: { cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Texte', entete: true }, B1: { t: 'Résultat', entete: true }, A2: { t: '15/04/2025' }, B2: { t: '' } } } },
+        sequence: [
+          { type: 'suggestion', saisie: '=TEX', consigne: 'Tu tapes « =TEX ». Clique la fonction qui met une valeur au format de ton choix.', items: [{ nom: 'TEXTE', desc: 'convertit une valeur en texte, dans le format choisi' }, { nom: 'TEXTE.AVANT' }, { nom: 'TEXTE.APRES' }, { nom: 'TEXTEJOINDRE' }], cible: 'TEXTE', ajoute: 'TEXTE(' },
+          { type: 'clic', feuille: 'Feuille', cible: 'A2', ajoute: 'A2', consigne: 'Clique la cellule qui contient la valeur.' },
+          { type: 'saisir', ajoute: ';"jj mmmm aaaa"', label: ';"jj mmmm aaaa"', consigne: 'Tape ; puis le format entre guillemets : "jj mmmm aaaa".' },
+          { type: 'saisir', ajoute: ')', label: ')', consigne: 'Ferme la parenthèse, puis Entrée.' },
         ],
+        explication: 'TEXTE met la date au format choisi : « jj mmmm aaaa » donne « 15 avril 2025 ».',
       },
     },
     {
