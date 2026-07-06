@@ -3568,18 +3568,17 @@ const SOUSTOTAUX = {
     },
     {
       humeur: 'accueil',
-      dit: 'Exemple : sommer uniquement les lignes visibles après un filtre.',
+      dit: 'Exemple : sommer uniquement les lignes visibles après un filtre. **À toi de taper la formule.**',
       visuel: {
-        type: 'methode',
-        titre: 'Utiliser SOUS.TOTAL',
-        blocs: [
-          { etapes: ['Dans la cellule du résultat, tape **=SOUS.TOTAL(**'] },
-          { capture: { type: 'autocomplete', cellule: 'E2', saisie: '=SOUS.TOTAL(', items: [{ nom: 'SOUS.TOTAL', desc: 'Renvoie un sous-total dans une liste (ignore les lignes masquées selon le code choisi).' }] } },
-          { etapes: ['Mets **109** (la somme qui ignore les lignes masquées), puis **;**'], depart: 2 },
-          { capture: { type: 'tableur', cols: ['D', 'E'], rows: [1, 2], cells: { D1: { t: 'Total participants', entete: true }, E1: { t: '', entete: true }, D2: { t: 'Visibles' }, E2: { t: '=SOUS.TOTAL(109;' } }, formule: '=SOUS.TOTAL(109;', actif: 'E2', legende: '109 = la somme, mais uniquement sur les lignes visibles.' } },
-          { etapes: ['Sélectionne la **plage** (ex : E5:E15), ferme la parenthèse **)** et **Entrée**'], depart: 3 },
-          { capture: { type: 'tableur', cols: ['D', 'E'], rows: [1, 2], cells: { D1: { t: 'Total participants', entete: true }, E1: { t: '', entete: true }, D2: { t: 'Visibles' }, E2: { t: '820', num: true, vert: true } }, formule: '=SOUS.TOTAL(109;E5:E15)', actif: 'E2', legende: 'Si tu filtres par région, le total se recalcule tout seul avec les seules lignes visibles.' } },
+        type: 'construitformule', prefixe: '=', resultat: 'E7', resultatValeur: '820',
+        grilles: { Feuille: { cols: ['D', 'E'], rows: [1, 2, 3, 4, 5, 6, 7], cells: { D1: { t: 'Région', entete: true }, E1: { t: 'Participants', entete: true }, D2: { t: 'Nord' }, E2: { t: '120', num: true }, D3: { t: 'Sud' }, E3: { t: '90', num: true }, D4: { t: 'Est' }, E4: { t: '200', num: true }, D5: { t: 'Ouest' }, E5: { t: '150', num: true }, D6: { t: 'Centre' }, E6: { t: '260', num: true }, D7: { t: 'Total visible', entete: true }, E7: { t: '' } } } },
+        sequence: [
+          { type: 'suggestion', saisie: '=SOUS', consigne: 'Tu tapes « =SOUS ». Clique la fonction qui totalise seulement les lignes VISIBLES.', items: [{ nom: 'SOUS.TOTAL', desc: 'sous-total qui peut ignorer les lignes masquées' }, { nom: 'SOMME' }], cible: 'SOUS.TOTAL', ajoute: 'SOUS.TOTAL(' },
+          { type: 'choix', options: [{ label: '109 (somme, ignore les masqués)', val: '109' }, { label: '9 (somme, inclut les masqués)', val: '9' }, { label: '1 (moyenne)', val: '1' }], cible: '109', ajoute: '109;', consigne: 'Choisis le code : une SOMME qui ignore les lignes masquées par un filtre.' },
+          { type: 'plage', feuille: 'Feuille', debut: 'E2', fin: 'E6', ajoute: 'E2:E6', consigne: 'Sélectionne la plage des participants (première cellule, puis dernière).' },
+          { type: 'saisir', ajoute: ')', label: ')', consigne: 'Ferme la parenthèse, puis Entrée.' },
         ],
+        explication: 'Le code 109 = SOMME sur les seules lignes visibles. Filtre par région et le total (820) se recalcule tout seul.',
       },
     },
     {
