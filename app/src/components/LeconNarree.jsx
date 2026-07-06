@@ -4696,8 +4696,212 @@ function DefinirNom({ v }) {
   )
 }
 
+// « Repérer les zones du ruban Accueil » : ruban numéroté, on clique un bouton
+// pour découvrir sa fonction (exploration, l'élève participe).
+function RubanZones() {
+  const [sel, setSel] = useState(null)
+  const F = { 1: 'Choix de la police', 2: 'Taille du texte', 3: 'Augmenter la taille de la police', 4: 'Réduire la taille de la police', 5: 'Alignement vertical : haut', 6: 'Alignement vertical : milieu', 7: 'Alignement vertical : bas', 8: 'Retour à la ligne automatique', 9: 'Format monétaire (€)', 10: 'Changer le format (standard, texte, monétaire…)', 11: 'Séparateur de milliers', 12: 'Gras', 13: 'Italique', 14: 'Souligner', 15: 'Ajouter une bordure', 16: 'Couleur de remplissage (fond)', 17: 'Couleur de police', 18: 'Alignement horizontal (gauche / centre / droite)', 19: 'Diminuer le retrait', 20: 'Augmenter le retrait', 21: 'Orientation du texte (diagonale, vertical…)', 22: 'Fusionner et centrer', 23: 'Retirer une décimale', 24: 'Ajouter une décimale', 25: 'Mettre la valeur en pourcentage (%)' }
+  const groupes = [
+    { nom: 'Police', btns: [[1, 'Aptos ▾', 1], [2, '11 ▾'], [3, 'A⁺'], [4, 'A⁻'], [12, 'G'], [13, 'I'], [14, 'S'], [15, '⊞'], [16, '🪣'], [17, 'A']] },
+    { nom: 'Alignement', btns: [[5, '▔'], [6, '━'], [7, '▁'], [8, '↵'], [18, '≡'], [19, '⇤'], [20, '⇥'], [21, '⤡'], [22, '⧉']] },
+    { nom: 'Nombre', btns: [[10, 'Standard ▾', 1], [9, '€'], [25, '%'], [11, '000'], [23, '←.0'], [24, '.0→']] },
+  ]
+  return (
+    <div className="mt-3">
+      <div className="space-y-2 rounded-lg border border-navy/15 bg-[#f6f4ee] p-2 shadow-sm">
+        {groupes.map((g) => (
+          <div key={g.nom} className="rounded-md border border-navy/10 bg-white/70 px-2 pb-1 pt-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              {g.btns.map(([n, lbl, wide]) => (
+                <button
+                  key={n}
+                  onClick={() => setSel(n)}
+                  className={`relative grid h-7 place-items-center rounded border text-[10px] font-bold transition ${wide ? 'px-2' : 'w-7'} ${sel === n ? 'border-mint bg-mint/25 text-navy ring-2 ring-mint' : 'border-navy/15 bg-white text-navy/70 hover:bg-navy/5'}`}
+                >
+                  {lbl}
+                  <span className={`absolute -right-1.5 -top-1.5 grid h-3.5 w-3.5 place-items-center rounded-full text-[7px] font-bold text-white ${sel === n ? 'bg-mint' : 'bg-navy/55'}`}>{n}</span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-1 border-t border-navy/10 pt-0.5 text-center text-[8px] font-semibold uppercase tracking-wide text-navy/45">{g.nom}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[11px] text-navy/55">👆 Clique un numéro pour découvrir à quoi il sert.</p>
+      {sel && (
+        <div className="mt-2 flex animate-fade-up items-center gap-2 rounded-xl border border-mint/40 bg-mint/10 px-3 py-2">
+          <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-mint text-xs font-bold text-white">{sel}</span>
+          <span className="text-sm font-semibold text-navy">{F[sel]}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// « Créer ton propre style » interactif : l'élève enchaîne Styles de cellule >
+// Nouveau style > nomme > Format > choisit fond + couleur de texte > OK > OK.
+function StyleBuilder({ onResolu }) {
+  const [etape, setEtape] = useState(0)
+  const [fond, setFond] = useState(null)
+  const [police, setPolice] = useState(null)
+  useEffect(() => { if (etape >= 5) onResolu && onResolu() }, [etape])
+  const fonds = [['#0a335d', 'Marine'], ['#41c1ba', 'Menthe'], ['#e8853a', 'Orange'], ['#f4cf3f', 'Jaune'], ['#ffffff', 'Blanc']]
+  const polices = [['#16243f', 'Marine'], ['#ffffff', 'Blanc'], ['#e8853a', 'Orange']]
+  const consignes = [
+    'Onglet **Accueil** : clique sur « **Styles de cellule** ».',
+    'Tout en bas du menu, clique sur « **Nouveau style de cellule** ».',
+    'Ton style s\'appelle « Mon style devis ». Clique sur « **Format…** » pour le définir.',
+    'Choisis une **couleur de fond** ET une **couleur de texte**, puis clique **OK**.',
+    'Ton style est prêt. Clique sur **OK** pour le créer.',
+  ]
+  const Chip = ({ c, on, sel: s }) => (
+    <button onClick={on} title={c[1]} className={`h-7 w-7 rounded border transition ${s ? 'ring-2 ring-mint ring-offset-1' : 'border-navy/20 hover:scale-110'}`} style={{ background: c[0] }} />
+  )
+  return (
+    <div className="mt-3">
+      <div className="rounded-xl border border-mint/40 bg-mint/[0.07] px-3 py-2 text-sm text-navy/85">
+        {etape >= 5 ? (
+          <span className="font-bold text-mint">✓ Bravo, ton style personnalisé est créé !</span>
+        ) : (
+          <><span className="font-bold text-mint">Étape {etape + 1}/5 · </span>{gras(consignes[etape])}</>
+        )}
+      </div>
+
+      {etape === 0 && (
+        <div className="mx-auto mt-3 max-w-[320px] overflow-hidden rounded-lg border border-navy/15 bg-white shadow-lg">
+          <div className="flex gap-3 border-b border-navy/10 bg-[#f3f1ea] px-3 py-1 text-[11px]">{['Fichier', 'Accueil', 'Insertion', 'Mise en page'].map((o) => (<span key={o} className={o === 'Accueil' ? 'font-bold text-mint' : 'text-navy/50'}>{o}</span>))}</div>
+          <div className="flex items-start gap-2 p-3">
+            <button onClick={() => setEtape(1)} className="flex animate-pulse flex-col items-center gap-1 rounded-md border-2 border-mint bg-mint/15 px-2 py-1.5 ring-1 ring-mint">
+              <span className="text-lg">🎨</span><span className="text-[10px] font-bold text-navy">Styles de<br />cellule</span>
+            </button>
+            <div className="flex flex-col items-center gap-1 rounded-md border border-navy/10 px-2 py-1.5 opacity-60"><span className="text-lg">▦</span><span className="text-[10px] text-navy/60">Sous forme<br />de tableau</span></div>
+          </div>
+          <p className="border-t border-navy/10 pb-1 text-center text-[9px] font-semibold uppercase tracking-wide text-navy/45">Style</p>
+        </div>
+      )}
+
+      {etape === 1 && (
+        <div className="mx-auto mt-3 max-w-[260px] overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl text-[11px]">
+          <p className="px-3 pt-2 text-[9px] font-semibold uppercase tracking-wide text-navy/45">Bon, insatisfaisant et neutre</p>
+          <div className="flex flex-wrap gap-1 p-2">{['Normal', 'Neutre', 'Correct', 'Incorrect', 'Titre', 'Total'].map((s) => (<span key={s} className="rounded border border-navy/15 bg-navy/5 px-2 py-1 text-navy/70">{s}</span>))}</div>
+          <button onClick={() => setEtape(2)} className="flex w-full animate-pulse items-center gap-2 border-t border-navy/10 bg-mint/25 px-3 py-2 text-left font-bold text-navy ring-1 ring-inset ring-mint">
+            <span>➕</span> Nouveau style de cellule…
+          </button>
+        </div>
+      )}
+
+      {etape === 2 && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Style</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-3 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="shrink-0 text-navy/60">Nom du style :</span><span className="flex-1 rounded-sm border border-navy/30 px-2 py-1 text-navy ring-1 ring-mint">Mon style devis</span></div>
+            <div className="flex justify-end"><button onClick={() => setEtape(3)} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-4 py-1 font-bold text-navy">Format…</button></div>
+          </div>
+        </div>
+      )}
+
+      {etape === 3 && (
+        <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Format de cellule</span><span className="text-navy/40">✕</span></div>
+          <div className="flex gap-1 border-b border-navy/15 bg-[#f3f1ea] px-2 pt-1 text-[10px]">{['Nombre', 'Alignement', 'Police', 'Bordure', 'Remplissage'].map((t, i) => (<span key={t} className={`rounded-t px-2 py-1 ${i === 4 ? 'bg-white font-bold text-navy' : 'text-navy/50'}`}>{t}</span>))}</div>
+          <div className="space-y-3 bg-white p-3">
+            <div>
+              <p className="mb-1.5 font-semibold text-navy/60">Couleur de fond :</p>
+              <div className="flex gap-2">{fonds.map((c) => <Chip key={c[0]} c={c} sel={fond === c[0]} on={() => setFond(c[0])} />)}</div>
+            </div>
+            <div>
+              <p className="mb-1.5 font-semibold text-navy/60">Couleur du texte :</p>
+              <div className="flex gap-2">{polices.map((c) => <Chip key={c[0]} c={c} sel={police === c[0]} on={() => setPolice(c[0])} />)}</div>
+            </div>
+            <div className="flex items-center justify-between border-t border-navy/10 pt-2">
+              <span className="grid h-8 w-20 place-items-center rounded border border-navy/15 text-[11px] font-bold" style={{ background: fond || '#fff', color: police || '#16243f' }}>Aperçu</span>
+              <button onClick={() => fond && police && setEtape(4)} disabled={!fond || !police} className={`rounded-sm border-2 px-4 py-0.5 font-bold ${fond && police ? 'border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {etape === 4 && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Style</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="shrink-0 text-navy/60">Nom du style :</span><span className="flex-1 rounded-sm border border-navy/30 px-2 py-1 font-semibold text-navy">Mon style devis</span></div>
+            <p className="text-[10px] text-navy/55">Le style inclut : Police, Remplissage <span className="inline-block h-3 w-3 rounded-sm border border-navy/20 align-middle" style={{ background: fond }} />, Couleur du texte <span className="inline-block h-3 w-3 rounded-sm border border-navy/20 align-middle" style={{ background: police }} />.</p>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => setEtape(5)} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-5 py-0.5 font-bold text-navy">OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/70">Annuler</span></div>
+          </div>
+        </div>
+      )}
+
+      {etape >= 5 && (
+        <div className="mt-3 flex flex-col items-center gap-2 animate-fade-up">
+          <div className="grid h-12 w-40 place-items-center rounded-lg border-2 shadow-md" style={{ background: fond || '#fff', color: police || '#16243f', borderColor: fond === '#ffffff' ? '#0a335d33' : 'transparent' }}>
+            <span className="font-display text-lg">DEVIS 2026</span>
+          </div>
+          <p className="text-center text-[11px] font-semibold text-mint">✓ Ton style « Mon style devis » est créé et prêt à réutiliser !</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// « Personnaliser l'en-tête » interactif : l'élève clique une zone (gauche/centre/
+// droite) puis un élément (date, n° page…) pour l'insérer. Objectif : date à gauche,
+// n° de page à droite.
+function EntetreBuilder({ onResolu }) {
+  const [zones, setZones] = useState({ gauche: '', centre: 'Mon entreprise', droite: '' })
+  const [focus, setFocus] = useState('gauche')
+  const outils = [
+    { i: '📅', label: 'Date', code: '&[Date]' },
+    { i: '🕐', label: 'Heure', code: '&[Heure]' },
+    { i: '#', label: 'N° de page', code: '&[Page]' },
+    { i: '##', label: 'Nb pages', code: '&[Pages]' },
+    { i: '👤', label: 'Auteur', code: '&[Auteur]' },
+    { i: '🖼', label: 'Image', code: '&[Image]' },
+  ]
+  const fait = zones.gauche.includes('&[Date]') && zones.droite.includes('&[Page]')
+  const [valide, setValide] = useState(false)
+  useEffect(() => { if (valide) onResolu && onResolu() }, [valide])
+  const inserer = (code) => setZones((z) => (z[focus].includes(code) ? z : { ...z, [focus]: (z[focus] ? z[focus] + ' ' : '') + code }))
+  const zdef = [['gauche', 'Partie gauche'], ['centre', 'Partie centrale'], ['droite', 'Partie droite']]
+  return (
+    <div className="mt-3">
+      <div className="rounded-xl border border-mint/40 bg-mint/[0.07] px-3 py-2 text-sm text-navy/85">
+        <span className="font-bold text-mint">Objectif : </span>mets la <b>date</b> à <b>gauche</b> et le <b>numéro de page</b> à <b>droite</b>. Clique d'abord une zone, puis un élément à insérer.
+      </div>
+      <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+        <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>En-tête</span><span className="text-navy/40">✕</span></div>
+        <div className="space-y-2 bg-white p-3">
+          <p className="text-navy/60">Insère ce que tu veux (dans la zone sélectionnée) :</p>
+          <div className="flex flex-wrap gap-1.5">
+            {outils.map((o) => (
+              <button key={o.label} onClick={() => inserer(o.code)} title={o.label} className="grid h-8 min-w-[32px] place-items-center rounded border border-navy/20 bg-navy/5 px-1.5 text-sm font-bold text-navy/75 transition hover:bg-mint/15 hover:ring-1 hover:ring-mint">{o.i}</button>
+            ))}
+          </div>
+          <div className="grid grid-cols-3 gap-1.5 pt-1">
+            {zdef.map(([k, lbl]) => (
+              <button key={k} onClick={() => setFocus(k)} className={`text-left ${focus === k ? '' : ''}`}>
+                <p className={`mb-0.5 text-[9px] ${focus === k ? 'font-bold text-mint' : 'text-navy/45'}`}>{lbl}{focus === k ? ' ✎' : ''}</p>
+                <div className={`grid h-14 place-items-center rounded-sm border px-1 text-center text-[9px] transition ${focus === k ? 'border-mint bg-mint/10 ring-1 ring-mint' : 'border-navy/20 bg-white hover:bg-navy/5'} text-navy/80`}>{zones[k] || <span className="text-navy/25">(vide)</span>}</div>
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center justify-between border-t border-navy/10 pt-2">
+            <span className="text-[10px] text-navy/50">{fait ? '✓ Date à gauche, page à droite.' : 'Place les 2 éléments…'}</span>
+            <span className="flex gap-2">
+              <button onClick={() => fait && setValide(true)} disabled={!fait} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${fait ? 'border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button>
+              <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/70">Annuler</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      {valide && <p className="mt-2 text-center text-[11px] font-semibold text-mint animate-fade-up">✓ En-tête personnalisé : date à gauche, « Mon entreprise » au centre, page à droite.</p>}
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
+  if (v.type === 'rubanzones') return <RubanZones />
   if (v.type === 'deuxtableaux') return <DeuxTableaux v={v} />
   if (v.type === 'definirnom') return <DefinirNom v={v} />
   if (v.type === 'gestionnairenoms') return <GestionnaireNoms v={v} />
@@ -5923,7 +6127,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -5997,6 +6201,10 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <TcdScene v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : s.visuel?.type === 'sommeauto' ? (
             <SommeAuto onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'stylebuilder' ? (
+            <StyleBuilder onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'entetebuilder' ? (
+            <EntetreBuilder onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -6038,7 +6246,11 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                             ? 'Fais l\'action sur le TCD'
                                             : s.visuel?.type === 'sommeauto'
                                               ? 'Clique le bouton ∑'
-                                              : 'Réponds pour continuer'
+                                              : s.visuel?.type === 'stylebuilder'
+                                                ? 'Crée ton style pas à pas'
+                                                : s.visuel?.type === 'entetebuilder'
+                                                  ? 'Compose ton en-tête'
+                                                  : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

@@ -806,6 +806,11 @@ const MISEENFORME = {
     { humeur: 'accueil', dit: 'Rendre un tableau lisible et agréable, c\'est de la mise en forme. Et tout part d\'un seul endroit : l\'onglet Accueil.' },
     {
       humeur: 'accueil',
+      dit: 'D\'abord, **repérons les zones importantes** du ruban Accueil : Police, Alignement, Nombre. **Clique un numéro** pour découvrir à quoi sert chaque bouton.',
+      visuel: { type: 'rubanzones' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Voici le groupe **Police** de l\'onglet Accueil. Pour encadrer des cellules, **à toi de trouver le bouton des bordures.**',
       visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Bordures', actif: 'Accueil', groupeNom: 'Police', groupes: [{ icone: 'B', label: 'Gras' }, { icone: 'A', label: 'Couleur' }, { icone: '▦', label: 'Bordures' }, { icone: '🪣', label: 'Remplissage' }], cible: 'Bordures', explication: 'C\'est l\'icône ▦ : elle ouvre les styles de bordures (toutes, contour, épaisses…).' },
     },
@@ -1073,23 +1078,13 @@ const PINCEAUSTYLES = {
     },
     {
       humeur: 'pensif',
-      dit: '**Créer ton propre style** est pratique pour tes devis ou tes factures.',
-      visuel: {
-        type: 'methode',
-        titre: 'Créer ton propre style',
-        blocs: [
-          { etapes: ['Va dans l\'onglet **Accueil**, groupe **Style**, et clique sur **Styles de cellule**'] },
-          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Style', groupes: [{ icone: '🎨', label: 'Styles de cellule', actif: true }, { icone: '▦', label: 'Sous forme de tableau' }] } },
-          { etapes: ['Tout en bas du menu, clique sur **Nouveau style de cellule**'] },
-          { capture: { type: 'menu', items: [{ label: 'Titre' }, { label: 'Total' }, { label: 'Accentuation' }, '-', { label: 'Nouveau style de cellule…', actif: true }] } },
-          { etapes: ['**Nomme** ton style (ex. « Mon style devis »)'] },
-          { capture: { type: 'stylenom' } },
-          { etapes: ['Clique sur **Format** pour définir : police, bordures, couleur de fond, alignement'] },
-          { capture: { type: 'formatcellule' } },
-          { etapes: ['Valide une première fois, puis **OK**'] },
-          { note: 'Tes styles personnalisés sont mémorisés dans le fichier en cours. Pour les réutiliser ailleurs, enregistre ton document comme modèle Excel (.xltx).' },
-        ],
-      },
+      dit: '**Créer ton propre style** est pratique pour tes devis ou tes factures. **À toi de le créer**, pas à pas : clique le bon élément à chaque étape.',
+      visuel: { type: 'stylebuilder' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Deux choses à savoir sur tes styles personnalisés :',
+      visuel: { type: 'encart', label: 'Astuce pratique', liste: ['Tu peux utiliser tes styles personnalisés dans **tous tes fichiers** Excel : ils sont mémorisés dans le **fichier en cours**.', 'Pour les réutiliser dans **d\'autres fichiers**, enregistre ton document comme **modèle Excel (.xltx)**.'] },
     },
     {
       humeur: 'accueil',
@@ -1279,25 +1274,27 @@ const IMPRESSION = {
     },
     {
       humeur: 'accueil',
-      dit: 'Tu peux aussi **personnaliser** entièrement ton en-tête ou ton pied de page.',
-      visuel: {
-        type: 'methode',
-        titre: 'Personnaliser ton en-tête / pied de page',
-        blocs: [
-          { etapes: ['Clique sur le bouton **Personnalisé**'] },
-          { capture: { type: 'enteteperso' } },
-          { etapes: ['Insère ce que tu veux : **date**, **heure**, **nom de l\'auteur**, **titre du fichier**, **numéro de page**, **image/logo**', 'Place chaque élément à gauche, au centre ou à droite', 'Clique sur **OK** pour valider'] },
-        ],
-      },
+      dit: 'Tu peux aussi **personnaliser** entièrement ton en-tête. Clique sur **Personnalisé**, et **à toi de composer** : insère la date, l\'heure, le n° de page, un logo… dans la zone de ton choix (gauche, centre ou droite).',
+      visuel: { type: 'entetebuilder' },
     },
     {
       humeur: 'accueil',
-      dit: 'Enfin, **imprimer** :',
+      dit: 'Enfin, **imprimer**. Tout se passe dans **Fichier > Imprimer** : les réglages à gauche, l\'aperçu à droite.',
       visuel: {
         type: 'methode',
-        titre: 'Imprimer',
+        titre: 'Imprimer, étape par étape',
         blocs: [
-          { etapes: ['Menu **Fichier > Imprimer**', 'Choisis ton **imprimante**', 'Choisis quoi imprimer : feuilles actives, tout le classeur, ou sélection', 'Ajuste : orientation, format papier (A4...), mise à l\'échelle, nombre de copies', 'Vérifie l\'**aperçu** à droite', 'Clique sur **Imprimer**'] },
+          { etapes: ['Menu **Fichier > Imprimer** : la fenêtre d\'impression s\'ouvre (réglages à gauche, aperçu à droite).'] },
+          { capture: { type: 'backstageimprimer', parametre: 'Imprimer les feuilles actives', legende: 'À gauche tous les réglages, à droite l\'aperçu exact du rendu papier.' } },
+          { etapes: ['Choisis ton **imprimante** dans la liste (ou « Microsoft Print to PDF » pour créer un PDF).'], depart: 2 },
+          { capture: { type: 'menu', items: [{ icone: '🖨', label: 'Microsoft Print to PDF', actif: true }, { icone: '🖨', label: 'HP DeskJet (prête)' }, { icone: '📝', label: 'Envoyer vers OneNote' }] } },
+          { etapes: ['Choisis **quoi imprimer** : les feuilles actives, tout le classeur, ou juste la sélection.'], depart: 3 },
+          { capture: { type: 'menu', items: [{ icone: '📄', label: 'Imprimer les feuilles actives', actif: true }, { icone: '📚', label: 'Imprimer le classeur entier' }, { icone: '▦', label: 'Imprimer la sélection' }, '-', { label: 'Ignorer la zone d\'impression' }] } },
+          { etapes: ['**Ajuste** l\'orientation : Portrait (vertical) ou Paysage (horizontal).'], depart: 4 },
+          { capture: { type: 'menu', items: [{ icone: '📄', label: 'Orientation Portrait' }, { icone: '📄', label: 'Orientation Paysage', actif: true }] } },
+          { etapes: ['Choisis le **format papier** (A4 par défaut, ou A3, A5, Lettre US...), le nombre de **copies** et les **pages** à imprimer.'], depart: 5 },
+          { capture: { type: 'menu', items: [{ label: 'Lettre US (21,59 × 27,94 cm)' }, { label: 'Legal US (21,59 × 35,56 cm)' }, { label: 'A3 (29,7 × 42 cm)' }, { label: 'A4 (21 × 29,7 cm)', actif: true }, { label: 'A5 (14,8 × 21 cm)' }] } },
+          { etapes: ['**Vérifie l\'aperçu** à droite (marges, sauts de page, zone d\'impression), puis clique sur **Imprimer**.'], depart: 6 },
           { capture: { type: 'impressionapercu' } },
         ],
       },
