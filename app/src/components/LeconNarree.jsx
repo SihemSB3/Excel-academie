@@ -5116,6 +5116,153 @@ function ConvertirWizard({ onResolu }) {
   )
 }
 
+// Nommer / naviguer avec la Zone Nom, interactif.
+// mode 'nommer' : clique la Zone Nom (le nom s'écrit) puis Entrée.
+// mode 'naviguer' : clique la flèche ▾, choisis un nom, Excel t'y emmène.
+function ZoneNomBuilder({ v, onResolu }) {
+  const { mode = 'nommer', nom = 'Prix_Unitaire', liste = ['Prix_Unitaire', 'Quantite', 'TVA'] } = v
+  const [etape, setEtape] = useState(0)
+  const [choix, setChoix] = useState(null)
+  useEffect(() => { if (etape >= 2) onResolu && onResolu() }, [etape])
+  const consigne = mode === 'nommer'
+    ? (etape === 0 ? 'Clique dans la **Zone Nom** (à gauche de la barre de formule) pour y taper le nom.' : 'Appuie sur **Entrée** pour enregistrer le nom.')
+    : (etape === 0 ? 'Clique la **flèche ▾** de la Zone Nom pour ouvrir la liste de tes noms.' : 'Clique un **nom** : Excel t\'emmène directement à sa cellule.')
+  return (
+    <div className="mt-3">
+      <div className="rounded-xl border border-mint/40 bg-mint/[0.07] px-3 py-2 text-sm text-navy/85">
+        {etape >= 2 ? <span className="font-bold text-mint">{mode === 'nommer' ? `✓ La cellule B2 s'appelle maintenant « ${nom} » !` : `✓ Excel t'a emmené directement à la plage « ${choix} » !`}</span> : gras(consigne)}
+      </div>
+      <div className="mx-auto mt-3 max-w-md">
+        {/* Zone Nom + barre de formule */}
+        <div className="flex items-stretch overflow-hidden rounded-md border border-navy/20 text-[11px] shadow">
+          <div className="relative">
+            <button
+              onClick={() => mode === 'nommer' ? etape === 0 && setEtape(1) : etape === 0 && setEtape(0.5)}
+              className={`flex h-8 w-28 items-center gap-1 border-r border-navy/20 bg-[#f3f1ea] px-2 text-left font-mono ${etape < 1 ? 'animate-pulse text-navy/40 ring-1 ring-inset ring-mint' : 'text-navy'}`}
+            >
+              <span className="truncate">{mode === 'nommer' ? (etape >= 1 ? nom : 'B2') : 'B2'}</span>
+              {mode === 'nommer' && etape >= 1 && etape < 2 && <span className="animate-pulse">|</span>}
+              {mode === 'naviguer' && <span className="ml-auto text-navy/40">▾</span>}
+            </button>
+            {mode === 'naviguer' && etape === 0.5 && (
+              <div className="absolute left-0 top-full z-10 w-32 overflow-hidden rounded-b border border-navy/20 bg-white shadow-xl">
+                {liste.map((n) => <button key={n} onClick={() => { setChoix(n); setEtape(2) }} className="block w-full px-2 py-1 text-left font-mono text-navy/80 hover:bg-mint/15">{n}</button>)}
+              </div>
+            )}
+          </div>
+          <div className="flex flex-1 items-center gap-2 bg-white px-2 text-navy/50"><span className="italic">fx</span><span>{mode === 'nommer' ? '30' : ''}</span></div>
+        </div>
+        {mode === 'nommer' && etape === 1 && (
+          <div className="mt-2 flex justify-center"><button onClick={() => setEtape(2)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-1.5 text-[12px] font-bold text-navy">⏎ Entrée</button></div>
+        )}
+        {/* mini tableur */}
+        <div className="mt-2 overflow-hidden rounded-md border border-navy/10 bg-white text-[11px]">
+          {[['Produit', 'Prix'], ['Clavier', '30']].map((row, ri) => (
+            <div key={ri} className="grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
+              {row.map((c, ci) => <div key={ci} className={`border-b border-l border-navy/10 px-2 py-1 ${ri === 0 ? 'bg-navy/10 font-bold text-navy/70' : ri === 1 && ci === 1 && etape >= 1 && mode === 'nommer' ? 'bg-mint/15 font-semibold text-navy ring-1 ring-inset ring-mint/50' : 'text-navy/85'}`}>{c}</div>)}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Nommer / gérer via le ruban ou le clic droit, interactif : on clique le
+// déclencheur (bouton du ruban ou entrée du menu), puis on agit dans la boîte.
+// dialogue : 'nouveaunom' (remplir le Nom + OK) | 'etiquettes' (cocher Ligne du
+// haut + OK) | 'gestionnaire' (sélectionner un nom + Supprimer).
+function RubanNommage({ v, onResolu }) {
+  const { declencheur = 'ruban', bouton = 'Définir un nom', dialogue = 'nouveaunom', nom = 'PrixHT', noms = [], resultat } = v
+  const [etape, setEtape] = useState(0)
+  const [champRempli, setChampRempli] = useState(false)
+  const [coche, setCoche] = useState(false)
+  const [sel, setSel] = useState(null)
+  useEffect(() => { if (etape >= 2) onResolu && onResolu() }, [etape])
+  const pretOK = dialogue === 'nouveaunom' ? champRempli : dialogue === 'etiquettes' ? coche : sel !== null
+  const consignes0 = declencheur === 'menu' ? `Fais un clic droit, puis clique **${bouton}** dans le menu.` : `Onglet Formules : clique le bouton **${bouton}**.`
+  const consigne1 = dialogue === 'nouveaunom' ? 'Clique le champ **Nom** pour le remplir, puis **OK**.' : dialogue === 'etiquettes' ? 'Coche **Ligne du haut** (les titres sont en haut), puis **OK**.' : 'Sélectionne le nom à supprimer, puis clique **Supprimer**.'
+  const groupes = [
+    { icone: '🔖', label: 'Définir un nom' },
+    { icone: '📋', label: 'Gestionnaire de noms' },
+    { icone: '⊞', label: 'Créer depuis sélection' },
+  ].map((g) => ({ ...g, actif: g.label === bouton || (bouton === 'Créer à partir de la sélection' && g.label === 'Créer depuis sélection') }))
+  return (
+    <div className="mt-3">
+      <div className="rounded-xl border border-mint/40 bg-mint/[0.07] px-3 py-2 text-sm text-navy/85">
+        {etape >= 2 ? <span className="font-bold text-mint">{resultat}</span> : <><span className="font-bold text-mint">Étape {etape + 1}/2 · </span>{gras(etape === 0 ? consignes0 : consigne1)}</>}
+      </div>
+
+      {etape === 0 && declencheur === 'ruban' && (
+        <div className="mx-auto mt-3 max-w-[320px] overflow-hidden rounded-lg border border-navy/15 bg-white shadow-lg text-[11px]">
+          <div className="flex gap-3 border-b border-navy/10 bg-[#f3f1ea] px-3 py-1">{['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données'].map((o) => <span key={o} className={o === 'Formules' ? 'font-bold text-mint' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-start gap-2 p-3">
+            {groupes.map((g, i) => (
+              <button key={i} onClick={() => g.actif && setEtape(1)} disabled={!g.actif} className={`flex w-20 flex-col items-center gap-1 rounded p-1.5 text-center ${g.actif ? 'animate-pulse bg-mint/15 ring-1 ring-mint' : 'opacity-50'}`}>
+                <span className="text-base">{g.icone}</span><span className="text-[9px] leading-tight text-navy/70">{g.label}</span>
+              </button>
+            ))}
+          </div>
+          <p className="border-t border-navy/10 pb-1 text-center text-[9px] font-semibold uppercase tracking-wide text-navy/45">Noms définis</p>
+        </div>
+      )}
+
+      {etape === 0 && declencheur === 'menu' && (
+        <div className="mx-auto mt-3 w-52 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-[11px] shadow-xl">
+          {[{ i: '📄', l: 'Copier' }, { i: '📋', l: 'Coller' }, '-', { i: '🔖', l: 'Définir un nom…', cible: true }, { i: '🔗', l: 'Lien…' }].map((it, i) => it === '-' ? <div key={i} className="my-1 border-t border-navy/10" /> : (
+            <button key={i} onClick={() => it.cible && setEtape(1)} disabled={!it.cible} className={`flex w-full items-center gap-2 px-3 py-1.5 text-left ${it.cible ? 'animate-pulse bg-mint/20 font-semibold text-navy ring-1 ring-inset ring-mint' : 'text-navy/70'}`}><span>{it.i}</span>{it.l}</button>
+          ))}
+        </div>
+      )}
+
+      {etape === 1 && dialogue === 'nouveaunom' && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Nouveau nom</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="w-24 shrink-0 text-right text-navy/60">Nom :</span><button onClick={() => setChampRempli(true)} className={`min-w-0 flex-1 rounded-sm border px-2 py-1 text-left font-mono ${champRempli ? 'border-navy/30 text-navy' : 'animate-pulse border-mint text-navy/35 ring-1 ring-mint'}`}>{champRempli ? nom : 'clique pour taper…'}</button></div>
+            <div className="flex items-center gap-2"><span className="w-24 shrink-0 text-right text-navy/60">Champ :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-1 text-navy/70">Classeur ▾</span></div>
+            <div className="flex items-center gap-2"><span className="w-24 shrink-0 text-right text-navy/60">Fait référence à :</span><span className="min-w-0 flex-1 truncate rounded-sm border border-navy/25 px-2 py-1 font-mono text-navy/70">=Feuil1!$B$2</span></div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => champRempli && setEtape(2)} disabled={!champRempli} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${champRempli ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+
+      {etape === 1 && dialogue === 'etiquettes' && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Créer des noms à partir de la sélection</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <p className="text-navy/55">Créer les noms à partir des valeurs de :</p>
+            <button onClick={() => setCoche(true)} className="flex w-full items-center gap-2 text-left text-navy/80"><span className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm border text-[9px] text-white ${coche ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{coche && '✓'}</span>Ligne du haut</button>
+            <div className="flex items-center gap-2 text-navy/45"><span className="h-4 w-4 shrink-0 rounded-sm border border-navy/30" />Colonne de gauche</div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => coche && setEtape(2)} disabled={!coche} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${coche ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+
+      {etape === 1 && dialogue === 'gestionnaire' && (
+        <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Gestionnaire de noms</span><span className="text-navy/40">✕</span></div>
+          <div className="bg-white p-2">
+            <div className="mb-2 flex gap-1 text-[10px]">
+              <span className="rounded border border-navy/20 bg-[#f0f0f0] px-2 py-0.5 text-navy/50">Nouveau…</span>
+              <span className="rounded border border-navy/20 bg-[#f0f0f0] px-2 py-0.5 text-navy/50">Modifier…</span>
+              <button onClick={() => sel !== null && setEtape(2)} disabled={sel === null} className={`rounded border-2 px-2 py-0.5 font-bold ${sel !== null ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>Supprimer</button>
+            </div>
+            <div className="overflow-hidden rounded border border-navy/15">
+              <div className="grid grid-cols-3 bg-navy/5 text-[9px] font-semibold text-navy/50"><span className="px-2 py-0.5">Nom</span><span className="px-2 py-0.5">Valeur</span><span className="px-2 py-0.5">Fait référence à</span></div>
+              {noms.map((n, i) => (
+                <button key={i} onClick={() => setSel(i)} className={`grid w-full grid-cols-3 text-left ${sel === i ? 'bg-[#2f5fd0] text-white' : 'text-navy/80 hover:bg-navy/5'}`}>
+                  <span className="px-2 py-1 font-mono">{n.nom}</span><span className="px-2 py-1">{n.valeur}</span><span className="truncate px-2 py-1 font-mono">{n.ref}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
   if (v.type === 'rubanzones') return <RubanZones />
@@ -6344,7 +6491,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -6428,6 +6575,10 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <Remplacer onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'convertirwizard' ? (
             <ConvertirWizard onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'zonenombuilder' ? (
+            <ZoneNomBuilder v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'rubannommage' ? (
+            <RubanNommage v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -6479,7 +6630,11 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                       ? 'Fais le remplacement'
                                                       : s.visuel?.type === 'convertirwizard'
                                                         ? 'Suis l\'assistant Conversion'
-                                                        : 'Réponds pour continuer'
+                                                        : s.visuel?.type === 'zonenombuilder'
+                                                          ? 'Utilise la Zone Nom'
+                                                          : s.visuel?.type === 'rubannommage'
+                                                            ? 'Fais l\'action pas à pas'
+                                                            : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

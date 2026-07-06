@@ -1640,16 +1640,8 @@ const NOMSFORMULES = {
     { humeur: 'accueil', dit: 'Justement, voici la **Zone Nom** : repère-la bien, c\'est elle qu\'on va utiliser.', visuel: { type: 'zonenom', nom: 'B2', formule: '30' } },
     {
       humeur: 'pensif',
-      dit: 'Première méthode pour nommer, la plus rapide : directement dans la Zone Nom.',
-      visuel: {
-        type: 'methode',
-        titre: 'Méthode 1 : via la Zone Nom',
-        blocs: [
-          { etapes: ['Sélectionne la cellule ou la plage à nommer', 'Clique dans la **Zone Nom** (à gauche de la barre de formule)', 'Tape le nom (respecte la syntaxe, juste après)', 'Appuie sur **Entrée**'] },
-          { capture: { type: 'zonenom', nom: 'Prix_Unitaire', saisie: true, formule: '30', legende: 'On tape « Prix_Unitaire » dans la Zone Nom, puis Entrée : la cellule B2 s\'appelle désormais Prix_Unitaire.' } },
-          { note: 'N\'oublie pas d\'appuyer sur Entrée : sans ça, le nom n\'est pas enregistré.' },
-        ],
-      },
+      dit: 'Première méthode, la plus rapide : directement dans la **Zone Nom**. **À toi** : la cellule B2 est sélectionnée, nomme-la « Prix_Unitaire » (clique la Zone Nom, puis Entrée).',
+      visuel: { type: 'zonenombuilder', mode: 'nommer', nom: 'Prix_Unitaire' },
     },
     {
       humeur: 'pensif',
@@ -1663,31 +1655,13 @@ const NOMSFORMULES = {
     },
     {
       humeur: 'pensif',
-      dit: 'Voilà la méthode 2 en clair :',
-      visuel: {
-        type: 'methode',
-        titre: 'Méthode 2 : via le ruban (Noms définis)',
-        blocs: [
-          { etapes: ['Va dans l\'onglet **Formules > groupe Noms définis**', 'Clique sur **Définir un nom** (ou Créer un nom)'] },
-          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom', actif: true }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection' }] } },
-          { etapes: ['Renseigne le **Nom**, le **Champ** (classeur ou feuille) et la **Zone** (la plage concernée)', 'Valide avec **OK**'], depart: 3 },
-          { capture: { type: 'champs', titre: 'Nouveau nom', champs: [{ l: 'Nom', v: 'Prix_Unitaire', actif: true }, { l: 'Champ', v: 'Classeur' }, { l: 'Fait référence à', v: '=Feuil1!$B$2' }] } },
-        ],
-      },
+      dit: 'Méthode 2, via le ruban. **À toi de la faire** : clique le bouton, remplis le Nom, puis OK.',
+      visuel: { type: 'rubannommage', declencheur: 'ruban', bouton: 'Définir un nom', dialogue: 'nouveaunom', nom: 'Prix_Unitaire', resultat: '✓ Le nom « Prix_Unitaire » est créé pour la cellule B2 !' },
     },
     {
       humeur: 'accueil',
-      dit: 'Troisième méthode, avec la souris : le clic droit.',
-      visuel: {
-        type: 'methode',
-        titre: 'Méthode 3 : avec le clic droit',
-        blocs: [
-          { etapes: ['Sélectionne la cellule ou la plage à nommer', 'Fais un **clic droit** sur la sélection', 'Choisis **Définir un nom** dans le menu'] },
-          { capture: { type: 'menu', items: [{ icone: '📄', label: 'Copier' }, { icone: '📋', label: 'Coller' }, '-', { icone: '🔖', label: 'Définir un nom…', actif: true }, { label: 'Lien…' }] } },
-          { etapes: ['Dans la fenêtre, donne un nom explicite (ex : PrixHT), vérifie que la référence est correcte', 'Clique sur **OK**'], depart: 4 },
-          { capture: { type: 'champs', titre: 'Nouveau nom', champs: [{ l: 'Nom', v: 'PrixHT', actif: true }, { l: 'Fait référence à', v: '=Feuil1!$B$2' }] } },
-        ],
-      },
+      dit: 'Troisième méthode, à la souris : le **clic droit**. **À toi** : ouvre le menu, choisis « Définir un nom… », nomme la cellule.',
+      visuel: { type: 'rubannommage', declencheur: 'menu', bouton: 'Définir un nom…', dialogue: 'nouveaunom', nom: 'PrixHT', resultat: '✓ Le nom « PrixHT » est créé, via le clic droit !' },
     },
     {
       humeur: 'pensif',
@@ -1706,17 +1680,8 @@ const NOMSFORMULES = {
     },
     {
       humeur: 'pensif',
-      dit: 'Pour **supprimer** un nom devenu inutile :',
-      visuel: {
-        type: 'methode',
-        titre: 'Supprimer un nom de cellule',
-        blocs: [
-          { etapes: ['Va dans **Formules > groupe Noms définis**', 'Clique sur **Gestionnaire de noms**'] },
-          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms', actif: true }, { icone: '⊞', label: 'Créer depuis sélection' }] } },
-          { etapes: ['La fenêtre affiche tous les noms du classeur', 'Sélectionne le nom à supprimer', 'Clique sur **Supprimer**', 'Confirme si une alerte s\'affiche'], depart: 3 },
-          { capture: { type: 'gestionnairenoms', selection: 0, noms: [{ nom: 'PrixHT', valeur: '30', ref: '=Feuil1!$B$2' }, { nom: 'Quantite', valeur: '2', ref: '=Feuil1!$C$2' }, { nom: 'TVA', valeur: '1,2', ref: '=Feuil1!$E$2' }] } },
-        ],
-      },
+      dit: 'Pour **supprimer** un nom devenu inutile, direction le Gestionnaire de noms. **À toi** : ouvre-le, sélectionne un nom et supprime-le.',
+      visuel: { type: 'rubannommage', declencheur: 'ruban', bouton: 'Gestionnaire de noms', dialogue: 'gestionnaire', noms: [{ nom: 'PrixHT', valeur: '30', ref: '=Feuil1!$B$2' }, { nom: 'Quantite', valeur: '2', ref: '=Feuil1!$C$2' }, { nom: 'TVA', valeur: '1,2', ref: '=Feuil1!$E$2' }], resultat: '✓ Le nom sélectionné est supprimé du classeur !' },
     },
     {
       humeur: 'pensif',
@@ -1730,15 +1695,8 @@ const NOMSFORMULES = {
     },
     {
       humeur: 'accueil',
-      dit: 'Maintenant, **utiliser** tes noms. D\'abord pour **naviguer** : la Zone Nom t\'emmène directement à la cellule.',
-      visuel: {
-        type: 'methode',
-        titre: 'Naviguer grâce à un nom',
-        blocs: [
-          { etapes: ['Clique sur la **flèche** de la Zone Nom (à gauche de la barre de formule)', 'Choisis le nom dans la liste déroulante', 'Excel te conduit automatiquement à la cellule ou la plage'] },
-          { capture: { type: 'zonenom', nom: 'Prix_Unitaire', fleche: true, liste: ['Prix_Unitaire', 'Quantite', 'TVA'], legende: 'La flèche ouvre la liste de tous tes noms : un clic et Excel t\'y emmène.' } },
-        ],
-      },
+      dit: 'Maintenant, **utiliser** tes noms. D\'abord pour **naviguer** : la Zone Nom t\'emmène directement à la cellule. **À toi** : ouvre la liste et choisis un nom.',
+      visuel: { type: 'zonenombuilder', mode: 'naviguer', liste: ['Prix_Unitaire', 'Quantite', 'TVA'] },
     },
     {
       humeur: 'accueil',
@@ -1761,32 +1719,13 @@ const NOMSFORMULES = {
     },
     {
       humeur: 'accueil',
-      dit: 'Encore plus rapide : tape les **premières lettres** du nom.',
-      visuel: {
-        type: 'methode',
-        titre: 'Méthode 2 : en tapant les premières lettres',
-        blocs: [
-          { etapes: ['Tape **=** puis les premières lettres du nom (ex : =P)', 'Excel affiche une liste de propositions (fonctions + tes noms)', 'Double-clique sur le nom souhaité'] },
-          { capture: { type: 'autocomplete', saisie: '=P', items: [{ nom: 'Prix_Unitaire', desc: 'Nom personnalisé → Feuil1!$B$2' }, { nom: 'PAIR' }, { nom: 'PENTE' }, { nom: 'PGCD' }, { nom: 'PRODUIT' }], selection: 0 } },
-          { note: 'Tes noms personnalisés apparaissent en haut de la liste, juste après (ou avant) les fonctions Excel. Tu les reconnais facilement, surtout s\'ils sont bien nommés.' },
-        ],
-      },
+      dit: 'Encore plus rapide : tape les **premières lettres** du nom. **À toi** : tu as tapé =P, clique ton nom « Prix_Unitaire » dans la liste.',
+      visuel: { type: 'choixsuggestion', saisie: '=P', items: [{ nom: 'Prix_Unitaire', desc: 'ton nom → Feuil1!$B$2' }, { nom: 'PAIR' }, { nom: 'PENTE' }, { nom: 'PGCD' }, { nom: 'PRODUIT' }], cible: 'Prix_Unitaire', explication: 'Tes noms personnalisés apparaissent dans la liste, comme les fonctions. Un double-clic (ou clic + Tab) et le nom s\'insère dans ta formule.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Dernier bonus : quand ton tableau a des **titres**, Excel peut créer les noms tout seul à partir d\'eux.',
-      visuel: {
-        type: 'methode',
-        titre: 'Créer des noms à partir d\'étiquettes',
-        blocs: [
-          { etapes: ['Sélectionne tout le tableau, **titres compris**'] },
-          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3], cells: { A1: { t: 'Produit', entete: true, ref: true }, B1: { t: 'Prix', entete: true, ref: true }, A2: { t: 'Clavier', ref: true }, B2: { t: '30', ref: true }, A3: { t: 'Souris', ref: true }, B3: { t: '20', ref: true } }, legende: 'Tout le tableau est sélectionné, y compris la ligne de titres.' } },
-          { etapes: ['Va dans **Formules > groupe Noms définis**', 'Clique sur **Créer à partir de la sélection**'], depart: 2 },
-          { capture: { type: 'ruban', actif: 'Formules', groupeNom: 'Noms définis', groupes: [{ icone: '🔖', label: 'Définir un nom' }, { icone: '📋', label: 'Gestionnaire de noms' }, { icone: '⊞', label: 'Créer depuis sélection', actif: true }] } },
-          { etapes: ['Coche **Ligne du haut** (titres en haut) ou **Colonne de gauche** (titres à gauche)', 'Clique sur **OK**'], depart: 4 },
-          { capture: { type: 'listedialog', titre: 'Créer des noms à partir de la sélection', intro: 'Créer les noms à partir des valeurs de :', cases: [{ label: 'Ligne du haut', coche: true }, { label: 'Colonne de gauche', coche: false }] } },
-        ],
-      },
+      dit: 'Dernier bonus : quand ton tableau a des **titres**, Excel crée les noms tout seul à partir d\'eux. Ton tableau (titres compris) est sélectionné. **À toi** : clique le bouton, coche « Ligne du haut », puis OK.',
+      visuel: { type: 'rubannommage', declencheur: 'ruban', bouton: 'Créer à partir de la sélection', dialogue: 'etiquettes', resultat: '✓ Excel a créé les noms « Produit » et « Prix » à partir des titres du tableau !' },
     },
     {
       humeur: 'accueil',
