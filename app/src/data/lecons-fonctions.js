@@ -1384,24 +1384,11 @@ const FONCTIONSSIMPLES = {
     { humeur: 'accueil', dit: 'Le résultat ira sur la ligne « Le + petit ». **Clique la cellule qui va le recevoir.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule du résultat (à droite de « Le + petit »)', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5, 6, 7], cells: { ...VENTES }, cible: 'B7', explication: 'Oui, B7 : c\'est là qu\'on écrit =MIN(…) pour afficher la plus petite valeur.' } },
     { humeur: 'accueil', dit: 'Tu tapes **=MI** et Excel propose des fonctions. **Clique celle qui renvoie la plus petite valeur.**', visuel: { type: 'choixsuggestion', saisie: '=MI', items: [{ nom: 'MILLIONS.OCTETS' }, { nom: 'MIN', desc: 'la plus petite valeur' }, { nom: 'MIN.SI.ENS' }, { nom: 'MINUSCULE' }], cible: 'MIN', explication: 'MIN renvoie la plus petite valeur d\'une plage. (MINUSCULE met un texte en minuscules, rien à voir !)' } },
     {
-      humeur: 'pensif',
-      dit: 'On la saisit directement dans la cellule, pas à pas.',
-      visuel: {
-        type: 'methode',
-        titre: 'Méthode 1 : saisie directe',
-        blocs: [
-          { etapes: ['Clique dans la cellule où tu veux voir le résultat (ici B7)', 'Tape **=** suivi du nom de la fonction (ex : **MIN** pour la valeur la plus petite)', 'Clique sur la suggestion **MIN**'] },
-          { capture: { type: 'autocomplete', cellule: 'B7', saisie: '=MI', items: [{ nom: 'MILLIONS.OCTETS.CONVERTIS' }, { nom: 'MIN', desc: 'Renvoie la plus petite valeur d\'une série de valeurs.' }, { nom: 'MIN.SI.ENS' }, { nom: 'MINUSCULE' }, { nom: 'MINUTE' }], selection: 1 } },
-          { etapes: ['Sélectionne la plage à calculer (ici B2:B6) : elle se surligne en bleu, et la formule s\'écrit dans B7 et dans la barre de formule'], depart: 4 },
-          { capture: tabMIN('=MIN(B2:B6', null, ['B2', 'B3', 'B4', 'B5', 'B6']) },
-          { etapes: ['Ferme la parenthèse **)**'], depart: 5 },
-          { capture: tabMIN('=MIN(B2:B6)') },
-          { etapes: ['Clique sur **Entrée**'], depart: 6 },
-          { capture: tabMIN('=MIN(B2:B6)', { t: '8800', num: true, vert: true }) },
-          { note: 'Dans cette plage (B2 à B6), la valeur 8800 correspond aux ventes du Tablier, le produit qui a eu le moins de ventes.' },
-        ],
-      },
+      humeur: 'accueil',
+      dit: 'Excel écrit **=MIN(** pour toi. **À toi de sélectionner la plage** des ventes à comparer : clique la première cellule, puis la dernière.',
+      visuel: { type: 'selectplage', consigne: 'Sélectionne la plage des 5 ventes (B2 à B6)', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5, 6, 7], cells: { ...VENTES, B7: { t: '=MIN(' } }, debut: 'B2', fin: 'B6', formulePrefixe: '=MIN(', resultat: 'B7', explication: 'La formule devient =MIN(B2:B6) : « la plus petite valeur, de B2 jusqu\'à B6 ». Excel ferme la parenthèse tout seul.' },
     },
+    { humeur: 'fier', dit: 'On appuie sur **Entrée** : =MIN(B2:B6) affiche **8800**, les ventes du Tablier, le produit qui a le moins vendu.', visuel: tabMIN('=MIN(B2:B6)', { t: '8800', num: true, vert: true }) },
     {
       humeur: 'accueil',
       dit: 'Tu as trouvé le produit qui a le moins vendu avec MIN. Et pour trouver celui qui a le **plus** vendu, quelle fonction utilises-tu ?',
@@ -1520,20 +1507,13 @@ const FONCTIONSCOMPLEXES = {
     },
     {
       humeur: 'accueil',
-      dit: 'Si tu préfères être guidé(e), construis SI avec l\'**assistant fonction**.',
-      visuel: {
-        type: 'methode',
-        titre: 'La formule SI avec l\'assistant',
-        blocs: [
-          { etapes: ['Clique dans la cellule où tu veux le résultat (ici B2)', 'Clique sur le bouton **fx** dans la barre de formule'] },
-          { capture: { type: 'barrefx', cellule: 'B2' } },
-          { etapes: ['Choisis une **catégorie** (ex : Logique)', 'Sélectionne ta fonction **SI**', 'Clique sur **OK**'], depart: 3 },
-          { capture: { type: 'assistant', categorie: 'Logique', fonctions: ['ET', 'FAUX', 'OU', 'SI', 'SI.CONDITIONS', 'SIERREUR'], selection: 3, signature: 'SI(test_logique;valeur_si_vrai;valeur_si_faux)', description: 'Vérifie si une condition est respectée et renvoie une valeur si VRAI, une autre si FAUX.', focus: 'liste' } },
-          { etapes: ['Renseigne chaque argument (au moins les obligatoires)', 'Clique sur **OK** → Excel remplit la formule pour toi'], depart: 6 },
-          { capture: { type: 'arguments', fonction: 'SI', args: [{ label: 'Test_logique', ref: 'A2>10', valeur: 'VRAI', obligatoire: true }, { label: 'Valeur_si_vrai', ref: '"OK"', valeur: '"OK"', obligatoire: true }, { label: 'Valeur_si_faux', ref: '"À refaire"', valeur: '"À refaire"' }], apercu: 'OK', description: 'Vérifie si une condition est respectée.', resultat: 'OK', encadre: true } },
-          { note: 'Une fois tous les champs remplis, Excel affiche un aperçu du résultat (ici « OK », car le test est vrai).' },
-        ],
-      },
+      dit: 'Si tu préfères être guidé(e), construis SI avec l\'**assistant fonction**. **À toi** : clique fx, choisis SI, puis remplis les arguments.',
+      visuel: { type: 'assistantformule', cellule: 'B2', categorie: 'Logique', fonctions: ['ET', 'FAUX', 'OU', 'SI', 'SI.CONDITIONS', 'SIERREUR'], cible: 'SI', signature: 'SI(test_logique;valeur_si_vrai;valeur_si_faux)', description: 'Vérifie si une condition est respectée et renvoie une valeur si VRAI, une autre si FAUX.', args: [{ label: 'Test_logique', ref: 'A2>10', apercu: 'VRAI', obligatoire: true }, { label: 'Valeur_si_vrai', ref: '"OK"', apercu: '"OK"', obligatoire: true }, { label: 'Valeur_si_faux', ref: '"À refaire"', apercu: '"À refaire"' }], resultat: 'OK', formuleFinale: '=SI(A2>10;"OK";"À refaire")' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Une fois tous les champs remplis, Excel affiche un **aperçu du résultat** (ici « OK », car la note 12 dépasse 10).',
+      visuel: { type: 'encart', label: 'Astuce', texte: 'Les champs en **gras** dans l\'assistant (Test_logique, Valeur_si_vrai) sont **obligatoires** ; les autres sont facultatifs. À droite de chaque champ, Excel affiche déjà sa valeur calculée.' },
     },
     { humeur: 'accueil', dit: 'Une autre fonction complexe bien pratique : **ARRONDI**. Elle réduit le nombre de décimales d\'un chiffre. Tu choisis combien de chiffres après la virgule, et Excel arrondit pour toi.', visuel: { type: 'formule', formule: '=ARRONDI(nombre ; nombre_de_chiffres)' } },
     { humeur: 'accueil', dit: 'On l\'écrit pas à pas dans B2, pour arrondir le montant 12,8 placé en A2.', visuel: tabARR() },
@@ -1545,19 +1525,8 @@ const FONCTIONSCOMPLEXES = {
     { humeur: 'fier', dit: 'On appuie sur **Entrée** : 12,8 arrondi à l\'entier donne **13**.', visuel: tabARR('=ARRONDI(A2;0)', { t: '13', num: true, vert: true }) },
     {
       humeur: 'accueil',
-      dit: 'Et avec l\'assistant, c\'est exactement la même logique que pour SI.',
-      visuel: {
-        type: 'methode',
-        titre: 'ARRONDI avec l\'assistant',
-        blocs: [
-          { etapes: ['Clique dans la cellule où tu veux le résultat (ici B2)', 'Clique sur le bouton **fx** dans la barre de formule'] },
-          { capture: { type: 'barrefx', cellule: 'B2' } },
-          { etapes: ['Choisis une catégorie ou **tape le nom** dans la barre de recherche', 'Sélectionne ta fonction **ARRONDI**', 'Clique sur **OK**'], depart: 3 },
-          { capture: { type: 'assistant', recherche: 'arrondi', categorie: 'Recommandé', fonctions: ['ARRONDI', 'ARRONDI.INF', 'ARRONDI.SUP'], selection: 0, signature: 'ARRONDI(nombre;no_chiffres)', description: 'Arrondit un nombre au nombre de chiffres indiqué.', focus: 'recherche' } },
-          { etapes: ['Renseigne les deux arguments : **Nombre** = la valeur à arrondir, **No_chiffres** = le nombre de décimales', 'Clique sur **OK**, le résultat s\'affiche'], depart: 6 },
-          { capture: { type: 'arguments', fonction: 'ARRONDI', args: [{ label: 'Nombre', ref: 'A2', valeur: '12,8', obligatoire: true }, { label: 'No_chiffres', ref: '0', valeur: '0', obligatoire: true }], apercu: '13', description: 'Arrondit un nombre au nombre de chiffres indiqué.', resultat: '13', encadre: true } },
-        ],
-      },
+      dit: 'Et avec l\'assistant, c\'est exactement la même logique que pour SI. **À toi de construire ARRONDI** : clique fx, tape « arrondi », choisis-la, puis remplis les deux arguments.',
+      visuel: { type: 'assistantformule', cellule: 'B2', recherche: 'arrondi', categorie: 'Recommandé', fonctions: ['ARRONDI', 'ARRONDI.INF', 'ARRONDI.SUP'], cible: 'ARRONDI', signature: 'ARRONDI(nombre;no_chiffres)', description: 'Arrondit un nombre au nombre de chiffres indiqué.', args: [{ label: 'Nombre', ref: 'A2', apercu: '12,8', obligatoire: true }, { label: 'No_chiffres', ref: '0', apercu: '0', obligatoire: true }], resultat: '13', formuleFinale: '=ARRONDI(A2;0)' },
     },
     {
       humeur: 'pensif',

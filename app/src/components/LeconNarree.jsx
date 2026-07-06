@@ -4899,6 +4899,111 @@ function EntetreBuilder({ onResolu }) {
   )
 }
 
+// Construire une formule AVEC l'assistant fonction, interactif : l'élève clique fx,
+// choisit la bonne fonction dans « Insérer une fonction », puis remplit les arguments
+// dans « Arguments de la fonction ». Réutilisé pour SI et ARRONDI.
+function AssistantFormule({ v, onResolu, onErreur }) {
+  const { cellule = 'B2', categorie = 'Logique', recherche, fonctions = [], cible, signature, description, args = [], resultat, formuleFinale } = v
+  const [etape, setEtape] = useState(0)
+  const [selFn, setSelFn] = useState(null)
+  const [remplis, setRemplis] = useState({})
+  useEffect(() => { if (etape >= 3) onResolu && onResolu() }, [etape])
+  const oblig = args.map((a, i) => (a.obligatoire ? i : -1)).filter((i) => i >= 0)
+  const tousFaits = oblig.every((i) => remplis[i])
+  const choisir = (nom) => { setSelFn(nom); if (nom !== cible) onErreur && onErreur() }
+  const remplir = (i) => setRemplis((r) => (r[i] ? r : { ...r, [i]: true }))
+  const consignes = [
+    'Clique sur le bouton **fx**, à gauche de la barre de formule.',
+    `Sélectionne la fonction **${cible}** dans la liste, puis clique **OK**.`,
+    'Renseigne les arguments : **clique chaque champ**, puis clique **OK**.',
+  ]
+  return (
+    <div className="mt-3">
+      <div className="rounded-xl border border-mint/40 bg-mint/[0.07] px-3 py-2 text-sm text-navy/85">
+        {etape >= 3 ? (
+          <span className="font-bold text-mint">✓ Bravo, l'assistant a construit ta formule {cible} !</span>
+        ) : (
+          <><span className="font-bold text-mint">Étape {etape + 1}/3 · </span>{gras(consignes[etape])}</>
+        )}
+      </div>
+
+      {etape === 0 && (
+        <div className="mx-auto mt-3 flex max-w-md items-center gap-1.5 rounded-md border border-navy/20 bg-white px-2 py-2 text-[11px] shadow">
+          <span className="rounded border border-navy/15 bg-navy/5 px-2 py-0.5 font-semibold text-navy/70">{cellule}</span>
+          <span className="text-navy/25">✕</span><span className="text-navy/25">✓</span>
+          <button onClick={() => setEtape(1)} className="grid h-6 w-7 animate-pulse place-items-center rounded border-2 border-mint bg-mint/15 text-[12px] font-bold italic text-mint ring-1 ring-mint" title="Insérer une fonction">fx</button>
+          <span className="ml-1 flex-1 border-l border-navy/10 pl-2 text-navy/25">|</span>
+        </div>
+      )}
+
+      {etape === 1 && (
+        <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Insérer une fonction</span><span className="text-navy/40">? ✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <p className="text-navy/55">Recherchez une fonction :</p>
+            <div className="flex gap-1"><span className="flex-1 truncate rounded-sm border border-navy/25 px-2 py-1 text-navy/70">{recherche || 'Tapez une brève description…'}</span><span className="shrink-0 rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-1">Rechercher</span></div>
+            <div className="flex items-center gap-2"><span className="shrink-0 text-navy/55">Catégorie :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-1 text-navy/75">{categorie} ▾</span></div>
+            <p className="text-navy/55">Sélectionnez une fonction :</p>
+            <div className="overflow-hidden rounded-sm border-2 border-mint">
+              {fonctions.map((f) => (
+                <button key={f} onClick={() => choisir(f)} className={`block w-full px-2 py-1 text-left font-mono transition ${selFn === f ? (f === cible ? 'bg-[#2f5fd0] text-white' : 'bg-red-100 text-red-700') : 'text-navy/80 hover:bg-navy/5'}`}>{f}</button>
+              ))}
+            </div>
+            <p className="font-mono text-[10px] text-navy/70">{signature}</p>
+            <p className="text-[10px] leading-snug text-navy/55">{description}</p>
+            {selFn && selFn !== cible && <p className="text-[10px] font-semibold text-red-600">Ce n'est pas la bonne fonction, choisis {cible}.</p>}
+            <div className="flex items-center justify-between border-t border-navy/10 pt-2">
+              <span className="text-[10px] text-[#2f5fd0] underline">Aide sur cette fonction</span>
+              <span className="flex gap-2">
+                <button onClick={() => selFn === cible && setEtape(2)} disabled={selFn !== cible} className={`rounded-sm border-2 px-4 py-0.5 font-bold ${selFn === cible ? 'animate-pulse border-[#0a63c9] bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button>
+                <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/70">Annuler</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {etape === 2 && (
+        <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Arguments de la fonction</span><span className="text-navy/40">? ✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <p className="font-semibold text-navy">{cible}</p>
+            {args.map((a, i) => {
+              const rempli = remplis[i] || !a.obligatoire
+              return (
+                <div key={i} className="flex items-center gap-2">
+                  <span className={`w-24 shrink-0 text-right ${a.obligatoire ? 'font-bold text-navy' : 'text-navy/55'}`}>{a.label}</span>
+                  <button onClick={() => remplir(i)} className={`min-w-0 flex-1 truncate rounded-sm border px-2 py-1 text-left font-mono ${rempli ? 'border-navy/30 text-navy' : 'animate-pulse border-mint text-navy/35 ring-1 ring-mint'}`}>{rempli ? a.ref : 'clique ici…'}</button>
+                  <span className="w-16 shrink-0 truncate text-navy/50">= {rempli ? a.apercu : '?'}</span>
+                </div>
+              )
+            })}
+            <div className="rounded-md border-2 border-mint/50 bg-mint/5 p-2 text-navy/70">
+              <p>= {tousFaits ? resultat : '?'}</p>
+              <p className="text-[10px] leading-snug">{description}</p>
+              {tousFaits && <p className="font-bold text-navy">Résultat = {resultat}</p>}
+            </div>
+            <div className="flex items-center justify-between border-t border-navy/10 pt-2">
+              <span className="text-[10px] text-[#2f5fd0] underline">Aide sur cette fonction</span>
+              <span className="flex gap-2">
+                <button onClick={() => tousFaits && setEtape(3)} disabled={!tousFaits} className={`rounded-sm border-2 px-4 py-0.5 font-bold ${tousFaits ? 'animate-pulse border-[#0a63c9] bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button>
+                <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/70">Annuler</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {etape >= 3 && (
+        <div className="mt-3 flex flex-col items-center gap-2 animate-fade-up">
+          <div className="rounded-md bg-[#f3f1ea] px-3 py-1.5 font-mono text-sm text-navy shadow-inner">{cellule} : {formuleFinale || `=${cible}(…)`} → <span className="font-bold text-mint">{resultat}</span></div>
+          <p className="text-center text-[11px] font-semibold text-mint">✓ L'assistant a rempli la formule et affiché le résultat : {resultat}.</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
   if (v.type === 'rubanzones') return <RubanZones />
@@ -6127,7 +6232,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -6205,6 +6310,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <StyleBuilder onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'entetebuilder' ? (
             <EntetreBuilder onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'assistantformule' ? (
+            <AssistantFormule v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -6250,7 +6357,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                 ? 'Crée ton style pas à pas'
                                                 : s.visuel?.type === 'entetebuilder'
                                                   ? 'Compose ton en-tête'
-                                                  : 'Réponds pour continuer'
+                                                  : s.visuel?.type === 'assistantformule'
+                                                    ? 'Suis l\'assistant fonction'
+                                                    : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
