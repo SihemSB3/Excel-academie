@@ -5004,6 +5004,118 @@ function AssistantFormule({ v, onResolu, onErreur }) {
   )
 }
 
+// « Rechercher & remplacer » interactif : l'élève remplit Rechercher (9,5) et
+// Remplacer par (10), clique « Remplacer tout » et voit le tableau se corriger.
+function Remplacer({ onResolu }) {
+  const [rech, setRech] = useState(false)
+  const [remp, setRemp] = useState(false)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const H = 26
+  const notes = [['Léa', '14'], ['Tom', fait ? '10' : '9,5'], ['Sam', '16'], ['Lou', fait ? '10' : '9,5']]
+  const consigne = !rech ? 'Clique le champ **Rechercher** pour y mettre la valeur à trouver (9,5).' : !remp ? 'Clique le champ **Remplacer par** pour la nouvelle valeur (10).' : 'Clique **Remplacer tout**.'
+  return (
+    <div className="mt-3">
+      <div className="rounded-xl border border-mint/40 bg-mint/[0.07] px-3 py-2 text-sm text-navy/85">
+        {fait ? <span className="font-bold text-mint">✓ 2 remplacements effectués : les « 9,5 » sont devenus « 10 » !</span> : gras(consigne)}
+      </div>
+      <div className="mx-auto mt-3 max-w-[240px] overflow-hidden rounded-lg border border-navy/10 bg-white shadow">
+        <div className="grid text-[11px]" style={{ gridTemplateColumns: '22px 1fr 1fr' }}>
+          <div style={{ height: H }} className="bg-navy/5" />
+          {['A', 'B'].map((c) => <div key={c} className="grid place-items-center border-b border-l border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{c}</div>)}
+          {[['Élève', 'Note'], ...notes].map((row, ri) => (
+            <div key={ri} className="contents">
+              <div className="grid place-items-center border-b border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{ri + 1}</div>
+              {row.map((val, ci) => {
+                const ent = ri === 0
+                const changed = fait && ci === 1 && val === '10'
+                return <div key={ci} className={`flex items-center border-b border-l border-navy/10 px-1.5 ${ci === 1 ? 'justify-end' : ''} ${ent ? 'bg-navy/10 font-bold text-navy/70' : changed ? 'bg-mint/20 font-bold text-navy' : 'text-navy/85'}`} style={{ height: H }}>{val}</div>
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+        <div className="flex items-end gap-1 bg-[#e9e9e9] px-3 pt-1.5 font-semibold text-navy/80">
+          <span className="rounded-t border border-b-0 border-navy/15 bg-white px-2 py-0.5 text-navy">Remplacer</span>
+          <span className="px-2 py-0.5 text-navy/45">Rechercher</span>
+          <span className="ml-auto pb-0.5 text-navy/40">✕</span>
+        </div>
+        <div className="space-y-2 bg-white p-3">
+          <div className="flex items-center gap-2"><span className="w-28 shrink-0 text-right text-navy/60">Rechercher :</span><button onClick={() => setRech(true)} className={`min-w-0 flex-1 rounded-sm border px-2 py-1 text-left font-mono ${rech ? 'border-navy/30 text-navy' : 'animate-pulse border-mint text-navy/35 ring-1 ring-mint'}`}>{rech ? '9,5' : 'clique…'}</button></div>
+          <div className="flex items-center gap-2"><span className="w-28 shrink-0 text-right text-navy/60">Remplacer par :</span><button onClick={() => rech && setRemp(true)} disabled={!rech} className={`min-w-0 flex-1 rounded-sm border px-2 py-1 text-left font-mono ${remp ? 'border-navy/30 text-navy' : rech ? 'animate-pulse border-mint text-navy/35 ring-1 ring-mint' : 'border-navy/15 text-navy/25'}`}>{remp ? '10' : 'clique…'}</button></div>
+          <div className="flex justify-end gap-2 border-t border-navy/10 pt-2">
+            <button onClick={() => rech && remp && setFait(true)} disabled={!rech || !remp} className={`rounded-sm border-2 px-3 py-0.5 font-bold ${rech && remp && !fait ? 'animate-pulse border-mint bg-mint/15 text-navy' : rech && remp ? 'border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>Remplacer tout</button>
+            <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5 text-navy/60">Fermer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// « Convertir » (séparer une colonne) interactif : assistant en 3 étapes que
+// l'élève traverse (Délimité > Espace > Terminer), puis la colonne se découpe.
+function ConvertirWizard({ onResolu }) {
+  const [etape, setEtape] = useState(0)
+  const [delim, setDelim] = useState(false)
+  const [espace, setEspace] = useState(false)
+  useEffect(() => { if (etape >= 3) onResolu && onResolu() }, [etape])
+  const H = 26
+  const consignes = ['Choisis **Délimité**, puis clique **Suivant**.', 'Coche le séparateur **Espace**, puis clique **Suivant**.', 'Vérifie la **Destination**, puis clique **Terminer**.']
+  return (
+    <div className="mt-3">
+      <div className="rounded-xl border border-mint/40 bg-mint/[0.07] px-3 py-2 text-sm text-navy/85">
+        {etape >= 3 ? <span className="font-bold text-mint">✓ Colonne séparée : le prénom d'un côté, le nom de l'autre !</span> : <><span className="font-bold text-mint">Étape {etape + 1}/3 · </span>{gras(consignes[etape])}</>}
+      </div>
+      {etape === 0 && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Assistant Conversion (étape 1 sur 3)</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <p className="text-navy/55">Type de données d'origine :</p>
+            <button onClick={() => setDelim(true)} className="flex w-full items-center gap-2 text-left text-navy/80"><span className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm border text-[9px] text-white ${delim ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{delim && '✓'}</span>Délimité (séparé par des espaces, virgules…)</button>
+            <div className="flex items-center gap-2 text-navy/45"><span className="h-4 w-4 shrink-0 rounded-sm border border-navy/30" />Largeur fixe</div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => delim && setEtape(1)} disabled={!delim} className={`rounded-sm border-2 px-4 py-0.5 font-bold ${delim ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>Suivant</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+      {etape === 1 && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Assistant Conversion (étape 2 sur 3)</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-1.5 bg-white p-3">
+            <p className="text-navy/55">Séparateurs :</p>
+            {['Tabulation', 'Point-virgule', 'Virgule'].map((s) => <div key={s} className="flex items-center gap-2 text-navy/45"><span className="h-4 w-4 shrink-0 rounded-sm border border-navy/30" />{s}</div>)}
+            <button onClick={() => setEspace(true)} className="flex w-full items-center gap-2 text-left text-navy/80"><span className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm border text-[9px] text-white ${espace ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{espace && '✓'}</span>Espace</button>
+            {espace && <div className="mt-1 flex animate-fade-up overflow-hidden rounded border border-navy/15 text-[10px]"><div className="flex-1 border-r border-navy/10 bg-mint/5 px-1.5 py-0.5 text-navy/80">paul</div><div className="flex-1 bg-mint/5 px-1.5 py-0.5 text-navy/80">dupont</div></div>}
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => espace && setEtape(2)} disabled={!espace} className={`rounded-sm border-2 px-4 py-0.5 font-bold ${espace ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>Suivant</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+      {etape === 2 && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Assistant Conversion (étape 3 sur 3)</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="shrink-0 text-navy/60">Destination :</span><span className="flex-1 rounded-sm border border-navy/30 px-2 py-1 font-mono text-navy ring-1 ring-mint">=$B$1</span></div>
+            <p className="text-[10px] text-navy/50">On garde l'original en colonne A, le découpage arrive à droite (colonne B).</p>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => setEtape(3)} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-4 py-0.5 font-bold text-navy">Terminer</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+      {etape >= 3 && (
+        <div className="mx-auto mt-3 max-w-[240px] overflow-hidden rounded-lg border border-navy/10 bg-white shadow animate-fade-up">
+          <div className="grid text-[11px]" style={{ gridTemplateColumns: '22px 1fr 1fr' }}>
+            <div style={{ height: H }} className="bg-navy/5" />
+            {['A', 'B'].map((c) => <div key={c} className="grid place-items-center border-b border-l border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{c}</div>)}
+            {[['paul', 'dupont'], ['marie', 'curie']].map((row, ri) => (
+              <div key={ri} className="contents"><div className="grid place-items-center border-b border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{ri + 1}</div>{row.map((val, ci) => <div key={ci} className="flex items-center border-b border-l border-navy/10 bg-mint/10 px-1.5 font-semibold text-navy" style={{ height: H }}>{val}</div>)}</div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function Visuel({ v }) {
   if (!v) return null
   if (v.type === 'rubanzones') return <RubanZones />
@@ -6232,7 +6344,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -6312,6 +6424,10 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <EntetreBuilder onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'assistantformule' ? (
             <AssistantFormule v={s.visuel} onResolu={() => setResolu(true)} onErreur={noterErreur} />
+          ) : s.visuel?.type === 'remplacer' ? (
+            <Remplacer onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'convertirwizard' ? (
+            <ConvertirWizard onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -6359,7 +6475,11 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                   ? 'Compose ton en-tête'
                                                   : s.visuel?.type === 'assistantformule'
                                                     ? 'Suis l\'assistant fonction'
-                                                    : 'Réponds pour continuer'
+                                                    : s.visuel?.type === 'remplacer'
+                                                      ? 'Fais le remplacement'
+                                                      : s.visuel?.type === 'convertirwizard'
+                                                        ? 'Suis l\'assistant Conversion'
+                                                        : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

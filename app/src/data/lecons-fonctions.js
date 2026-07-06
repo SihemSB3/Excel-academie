@@ -1823,7 +1823,7 @@ const ARGUMENTSVPM = {
   titre: 'Fonctions à plusieurs arguments & VPM',
   exercices: [EX4.ex31],
   narration: [
-    { humeur: 'accueil', dit: 'Pour finir la ceinture verte, on s\'attaque aux fonctions un peu plus avancées (VPM, NB.SI, RECHERCHEV). Bonne nouvelle : tu n\'es pas obligé(e) de tout taper, l\'assistant te guide.' },
+    { humeur: 'accueil', dit: 'Pour finir la ceinture verte, on s\'attaque à une fonction à plusieurs arguments bien concrète : **VPM** (la mensualité d\'un prêt). Bonne nouvelle : tu n\'es pas obligé(e) de tout taper, l\'assistant te guide.' },
     { humeur: 'accueil', dit: 'On commence par une fonction très concrète : **VPM** (Valeur des Paiements Mensuels). Elle calcule la **mensualité d\'un prêt** à partir du taux, de la durée et du montant emprunté.' },
     {
       humeur: 'pensif',
@@ -1864,19 +1864,8 @@ const ARGUMENTSVPM = {
     },
     {
       humeur: 'accueil',
-      dit: 'On la construit avec l\'**assistant fonction**.',
-      visuel: {
-        type: 'methode',
-        titre: 'Construire VPM avec l\'assistant',
-        blocs: [
-          { etapes: ['Clique sur la cellule du résultat (ici B4)', 'Clique sur le bouton **fx** (barre de formule) ou **Formules > Insérer une fonction**'] },
-          { capture: { type: 'barrefx', cellule: 'B4' } },
-          { etapes: ['Choisis la catégorie **Financières** (ou tape « VPM » dans la recherche)', 'Sélectionne **VPM**', 'Clique sur **OK**'], depart: 3 },
-          { capture: { type: 'assistant', categorie: 'Financières', fonctions: ['TAUX', 'VA', 'VAN', 'VC', 'VPM'], selection: 4, signature: 'VPM(taux;npm;va;[vc];[type])', description: 'Calcule le remboursement d\'un emprunt sur la base de remboursements et d\'un taux d\'intérêt constants.', focus: 'liste' } },
-          { etapes: ['Renseigne les arguments (les **obligatoires** sont en gras), puis clique sur **OK**'], depart: 6 },
-          { capture: { type: 'arguments', fonction: 'VPM', args: [{ label: 'Taux', ref: '5%/12', valeur: '0,00417', obligatoire: true }, { label: 'Npm', ref: '120', valeur: '120', obligatoire: true }, { label: 'Va', ref: '-15000', valeur: '-15000', obligatoire: true }, { label: 'Vc', ref: '', valeur: 'facultatif' }, { label: 'Type', ref: '', valeur: 'facultatif' }], apercu: '-159,10 €', description: 'Calcule la mensualité d\'un emprunt à taux constant.', resultat: '-159,10 €', encadre: true } },
-        ],
-      },
+      dit: 'On la construit avec l\'**assistant fonction**. **À toi de tout faire** : clique fx, choisis VPM dans les Financières, puis remplis chaque argument.',
+      visuel: { type: 'assistantformule', cellule: 'B4', categorie: 'Financières', fonctions: ['TAUX', 'VA', 'VAN', 'VC', 'VPM'], cible: 'VPM', signature: 'VPM(taux;npm;va;[vc];[type])', description: 'Calcule le remboursement d\'un emprunt sur la base de remboursements et d\'un taux d\'intérêt constants.', args: [{ label: 'Taux', ref: '5%/12', apercu: '0,00417', obligatoire: true }, { label: 'Npm', ref: '120', apercu: '120', obligatoire: true }, { label: 'Va', ref: '-15000', apercu: '-15000', obligatoire: true }, { label: 'Vc', ref: '', apercu: 'facultatif' }, { label: 'Type', ref: '', apercu: 'facultatif' }], resultat: '-159,10 €', formuleFinale: '=VPM(5%/12;120;-15000)' },
     },
     { humeur: 'accueil', dit: 'Exemple complet : tu empruntes 15 000 € à 5 % par an, sur 10 ans (120 mois). =VPM(5%/12 ; 120 ; -15000) donne environ -159,10 € par mois.', visuel: tabVPM(true) },
     {
@@ -1945,20 +1934,14 @@ const RECHERCHERREMPLACER = {
       visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Rechercher & sélectionner', actif: 'Accueil', groupeNom: 'Édition', groupes: [{ icone: '∑', label: 'Somme' }, { icone: '⇅', label: 'Trier & filtrer' }, { icone: '🔍', label: 'Rechercher & sélectionner' }], cible: 'Rechercher & sélectionner', explication: 'La loupe 🔍 : elle ouvre le menu Rechercher / Remplacer. Choisis « Remplacer… » pour changer des valeurs en masse.' },
     },
     {
+      humeur: 'accueil',
+      dit: 'La fenêtre « Remplacer » s\'ouvre. **À toi de faire le remplacement** : remplis Rechercher (9,5), Remplacer par (10), puis clique Remplacer tout.',
+      visuel: { type: 'remplacer' },
+    },
+    {
       humeur: 'pensif',
-      dit: 'Voilà la marche à suivre, pas à pas :',
-      visuel: {
-        type: 'methode',
-        titre: 'Via le ruban',
-        blocs: [
-          { etapes: ['Va dans l\'onglet **Accueil**', 'Clique sur la **loupe** (Rechercher & sélectionner) dans le groupe **Édition**', 'Choisis **Remplacer…**'] },
-          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Édition', groupes: [{ icone: '∑', label: 'Somme' }, { icone: '⇅', label: 'Trier & filtrer' }, { icone: '🔍', label: 'Rechercher & sélectionner', actif: true }] } },
-          { etapes: ['Dans **Rechercher**, tape la valeur à trouver (9,5)', 'Dans **Remplacer par**, tape la nouvelle valeur (10)'], depart: 4 },
-          { capture: { type: 'champs', titre: 'Rechercher et remplacer', champs: [{ l: 'Rechercher', v: '9,5', actif: true }, { l: 'Remplacer par', v: '10' }] } },
-          { etapes: ['Clique sur **Remplacer tout** (si tu es sûr·e), ou **Suivant** puis **Remplacer** au cas par cas'], depart: 6 },
-          { capture: tabRR({ B3: { t: '10', num: true, vert: true }, B5: { t: '10', num: true, vert: true } }) },
-        ],
-      },
+      dit: 'Deux options utiles dans cette fenêtre :',
+      visuel: { type: 'encart', label: 'Bon à savoir', liste: ['**Remplacer tout** change toutes les occurrences d\'un coup.', '**Suivant** puis **Remplacer** avance au cas par cas, pour vérifier chaque changement avant de valider.'] },
     },
     {
       humeur: 'pensif',
@@ -1993,23 +1976,9 @@ const CONVERTIR = {
       visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Convertir', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🔀', label: 'Convertir' }, { icone: '🧹', label: 'Supprimer doublons' }, { icone: '✓', label: 'Validation' }], cible: 'Convertir', explication: 'Convertir 🔀 lance l\'assistant qui découpe une colonne en plusieurs, selon un séparateur (espace, virgule…).' },
     },
     {
-      humeur: 'pensif',
-      dit: 'On sépare la colonne, pas à pas.',
-      visuel: {
-        type: 'methode',
-        titre: 'Séparer une colonne avec Convertir',
-        blocs: [
-          { etapes: ['Sélectionne la colonne à découper', 'Va dans **Données > Convertir** (groupe **Outils de données**)'] },
-          { capture: { type: 'ruban', actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🔀', label: 'Convertir', actif: true }, { icone: '🧹', label: 'Supprimer les doublons' }, { icone: '✓', label: 'Validation des données' }] } },
-          { etapes: ['Choisis **Délimité**, puis **Suivant**'], depart: 3 },
-          { capture: { type: 'listedialog', titre: 'Assistant Conversion (étape 1)', intro: 'Type de données d\'origine :', cases: [{ label: 'Délimité (séparé par des espaces, virgules…)', coche: true }, { label: 'Largeur fixe', coche: false }], ok: 'Suivant' } },
-          { etapes: ['Coche le **séparateur** (ici **Espace**) : un aperçu du découpage s\'affiche en direct', 'Clique sur **Suivant**'], depart: 4 },
-          { capture: { type: 'listedialog', titre: 'Assistant Conversion (étape 2)', intro: 'Séparateurs :', cases: [{ label: 'Tabulation', coche: false }, { label: 'Point-virgule', coche: false }, { label: 'Virgule', coche: false }, { label: 'Espace', coche: true }], ok: 'Suivant' } },
-          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'paul', vert: true }, B1: { t: 'dupont', vert: true }, A2: { t: 'marie', vert: true }, B2: { t: 'curie', vert: true } }, legende: 'Aperçu : le prénom d\'un côté, le nom de l\'autre.' } },
-          { etapes: ['Choisis la **Destination** (ex : $B$1 pour garder l\'original en colonne A), puis clique sur **Terminer**'], depart: 6 },
-          { capture: { type: 'champs', titre: 'Assistant Conversion (étape 3)', champs: [{ l: 'Destination', v: '=$B$1', actif: true }] } },
-        ],
-      },
+      humeur: 'accueil',
+      dit: 'L\'assistant Conversion s\'ouvre en **3 étapes**. **À toi de le suivre** : choisis Délimité, coche le séparateur Espace, puis Termine.',
+      visuel: { type: 'convertirwizard' },
     },
     {
       humeur: 'pensif',
