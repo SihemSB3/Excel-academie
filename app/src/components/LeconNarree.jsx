@@ -5133,24 +5133,25 @@ function ZoneNomBuilder({ v, onResolu }) {
         {etape >= 2 ? <span className="font-bold text-mint">{mode === 'nommer' ? `✓ La cellule B2 s'appelle maintenant « ${nom} » !` : `✓ Excel t'a emmené directement à la plage « ${choix} » !`}</span> : gras(consigne)}
       </div>
       <div className="mx-auto mt-3 max-w-md">
-        {/* Zone Nom + barre de formule */}
-        <div className="flex items-stretch overflow-hidden rounded-md border border-navy/20 text-[11px] shadow">
-          <div className="relative">
+        {/* Zone Nom + barre de formule (dans un conteneur relatif pour que la liste
+            déroulante ne soit PAS coupée par l'overflow-hidden de la barre) */}
+        <div className="relative">
+          <div className="flex items-stretch overflow-hidden rounded-md border border-navy/20 text-[11px] shadow">
             <button
               onClick={() => mode === 'nommer' ? etape === 0 && setEtape(1) : etape === 0 && setEtape(0.5)}
-              className={`flex h-8 w-28 items-center gap-1 border-r border-navy/20 bg-[#f3f1ea] px-2 text-left font-mono ${etape < 1 ? 'animate-pulse text-navy/40 ring-1 ring-inset ring-mint' : 'text-navy'}`}
+              className={`flex h-8 w-28 shrink-0 items-center gap-1 border-r border-navy/20 bg-[#f3f1ea] px-2 text-left font-mono ${etape < 1 ? 'animate-pulse text-navy/40 ring-1 ring-inset ring-mint' : 'text-navy'}`}
             >
-              <span className="truncate">{mode === 'nommer' ? (etape >= 1 ? nom : 'B2') : 'B2'}</span>
+              <span className="truncate">{mode === 'nommer' ? (etape >= 1 ? nom : 'B2') : (etape >= 2 ? choix : 'B2')}</span>
               {mode === 'nommer' && etape >= 1 && etape < 2 && <span className="animate-pulse">|</span>}
               {mode === 'naviguer' && <span className="ml-auto text-navy/40">▾</span>}
             </button>
-            {mode === 'naviguer' && etape === 0.5 && (
-              <div className="absolute left-0 top-full z-10 w-32 overflow-hidden rounded-b border border-navy/20 bg-white shadow-xl">
-                {liste.map((n) => <button key={n} onClick={() => { setChoix(n); setEtape(2) }} className="block w-full px-2 py-1 text-left font-mono text-navy/80 hover:bg-mint/15">{n}</button>)}
-              </div>
-            )}
+            <div className="flex flex-1 items-center gap-2 bg-white px-2 text-navy/50"><span className="italic">fx</span><span>{mode === 'nommer' ? '30' : ''}</span></div>
           </div>
-          <div className="flex flex-1 items-center gap-2 bg-white px-2 text-navy/50"><span className="italic">fx</span><span>{mode === 'nommer' ? '30' : ''}</span></div>
+          {mode === 'naviguer' && etape === 0.5 && (
+            <div className="absolute left-0 top-full z-20 mt-1 w-32 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
+              {liste.map((n) => <button key={n} onClick={() => { setChoix(n); setEtape(2) }} className="block w-full px-2 py-1.5 text-left font-mono text-navy/80 hover:bg-mint/15">{n}</button>)}
+            </div>
+          )}
         </div>
         {mode === 'nommer' && etape === 1 && (
           <div className="mt-2 flex justify-center"><button onClick={() => setEtape(2)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-1.5 text-[12px] font-bold text-navy">⏎ Entrée</button></div>
@@ -5159,7 +5160,7 @@ function ZoneNomBuilder({ v, onResolu }) {
         <div className="mt-2 overflow-hidden rounded-md border border-navy/10 bg-white text-[11px]">
           {[['Produit', 'Prix'], ['Clavier', '30']].map((row, ri) => (
             <div key={ri} className="grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
-              {row.map((c, ci) => <div key={ci} className={`border-b border-l border-navy/10 px-2 py-1 ${ri === 0 ? 'bg-navy/10 font-bold text-navy/70' : ri === 1 && ci === 1 && etape >= 1 && mode === 'nommer' ? 'bg-mint/15 font-semibold text-navy ring-1 ring-inset ring-mint/50' : 'text-navy/85'}`}>{c}</div>)}
+              {row.map((c, ci) => <div key={ci} className={`border-b border-l border-navy/10 px-2 py-1 ${ri === 0 ? 'bg-navy/10 font-bold text-navy/70' : ri === 1 && ci === 1 && ((mode === 'nommer' && etape >= 1) || (mode === 'naviguer' && etape >= 2)) ? 'bg-mint/15 font-semibold text-navy ring-1 ring-inset ring-mint/50' : 'text-navy/85'}`}>{c}</div>)}
             </div>
           ))}
         </div>
