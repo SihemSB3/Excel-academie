@@ -2672,32 +2672,31 @@ const LIERFEUILLES = {
     { humeur: 'accueil', dit: 'On veut afficher un rappel du prix dans la colonne « Rappel prix ». **Clique la cellule qui va recevoir le lien.**', visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule « Rappel prix » du clavier', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Article', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Rappel prix', entete: true }, A2: { t: 'Clavier' }, B2: { t: '30', num: true } }, cible: 'C2', explication: 'Oui, C2 : on y tapera =B2 pour afficher (et suivre) le prix de B2.' } },
     {
       humeur: 'pensif',
-      dit: 'D\'abord, **lier dans la même feuille**.',
+      dit: 'D\'abord, **lier dans la même feuille**. Tu as cliqué C2, il a déjà tapé « = » pour toi : clique la cellule source.',
       visuel: {
-        type: 'methode',
-        titre: 'Lier dans la même feuille',
-        blocs: [
-          { etapes: ['Clique sur la cellule cible (celle qui affichera la valeur)', 'Tape **=**', 'Clique sur la cellule source, puis **Entrée**'] },
-          { capture: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Article', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Rappel prix', entete: true }, A2: { t: 'Clavier' }, B2: { t: '30', num: true, ref: true }, C2: { t: '30', num: true, vert: true } }, formule: '=B2', actif: 'C2', legende: 'C2 affiche la valeur de B2. Si B2 change, C2 suit automatiquement.' } },
+        type: 'construitformule', prefixe: '=', resultat: 'C2', resultatValeur: '30',
+        grilles: { Feuille: { cols: ['A', 'B', 'C'], rows: [1, 2], cells: { A1: { t: 'Article', entete: true }, B1: { t: 'Prix', entete: true }, C1: { t: 'Rappel prix', entete: true }, A2: { t: 'Clavier' }, B2: { t: '30', num: true }, C2: { t: '' } } } },
+        sequence: [
+          { type: 'clic', feuille: 'Feuille', cible: 'B2', ajoute: 'B2', consigne: 'Clique la cellule source, le prix en B2, puis Entrée.' },
         ],
+        explication: 'C2 affiche la valeur de B2. Si B2 change, C2 suit tout seul.',
       },
     },
     {
       humeur: 'accueil',
-      dit: 'Le plus utile : **lier entre deux feuilles**. Exemple : ramener le total de la feuille « Janvier » dans une feuille « Synthèse ».',
+      dit: 'Le plus utile : **lier entre deux feuilles**. Sur « Synthèse », en B2, le « = » est tapé : va chercher le total sur « Janvier ». **À toi.**',
       visuel: {
-        type: 'methode',
-        titre: 'Lier entre deux feuilles',
-        blocs: [
-          { etapes: ['Place-toi sur la feuille de **destination** (Synthèse), dans la cellule cible, et tape **=**'] },
-          { capture: { type: 'tableur', feuilles: ['Janvier', 'Février', 'Synthèse'], feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Mois', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'Janvier' }, B2: { t: '=' } }, formule: '=', actif: 'B2', legende: 'On est sur « Synthèse », dans la cellule cible B2 : on tape =.' } },
-          { etapes: ['Clique sur l\'**onglet** de la feuille **source** (Janvier)'], depart: 2 },
-          { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Synthèse'], actif: 'Janvier', items: [], legende: 'On clique sur l\'onglet « Janvier » : Excel bascule sur cette feuille.' } },
-          { etapes: ['Sur « Janvier », clique la **cellule source** (B5), puis **Entrée**'], depart: 3 },
-          { capture: { type: 'tableur', feuilles: ['Janvier', 'Février', 'Synthèse'], feuilleActive: 'Janvier', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Semaine', entete: true }, B1: { t: 'CA', entete: true }, A2: { t: 'S1' }, B2: { t: '2 000', num: true }, A3: { t: 'S2' }, B3: { t: '2 300', num: true }, A4: { t: 'S3' }, B4: { t: '4 500', num: true }, A5: { t: 'Total' }, B5: { t: '8 800', num: true, ref: true } }, formule: '=Janvier!B5', actif: 'B5', legende: 'On est passé sur « Janvier » : on clique la cellule source B5 (le total).' } },
-          { capture: { type: 'tableur', feuilles: ['Janvier', 'Février', 'Synthèse'], feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Mois', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'Janvier' }, B2: { t: '8 800', vert: true } }, formule: '=Janvier!B5', actif: 'B2', legende: 'De retour sur « Synthèse » : B2 affiche le total de Janvier, et se met à jour tout seul.' } },
-          { note: 'Excel écrit la référence sous la forme **NomDeLaFeuille!Cellule** (ex : =Janvier!B5). Le « ! » sépare la feuille de la cellule.' },
+        type: 'construitformule', prefixe: '=', resultat: 'B2', resultatValeur: '8 800', resultatFeuille: 'Synthèse',
+        grilles: {
+          Synthèse: { cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Mois', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'Janvier' }, B2: { t: '' } } },
+          Janvier: { cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Semaine', entete: true }, B1: { t: 'CA', entete: true }, A2: { t: 'S1' }, B2: { t: '2 000', num: true }, A3: { t: 'S2' }, B3: { t: '2 300', num: true }, A4: { t: 'S3' }, B4: { t: '4 500', num: true }, A5: { t: 'Total' }, B5: { t: '8 800', num: true } } },
+          Février: { cols: ['A', 'B'], rows: [1, 2, 3], cells: { A1: { t: 'Semaine', entete: true }, B1: { t: 'CA', entete: true }, A2: { t: 'S1' }, B2: { t: '2 100', num: true }, A3: { t: 'Total' }, B3: { t: '6 400', num: true } } },
+        },
+        sequence: [
+          { type: 'onglet', cible: 'Janvier', ajoute: 'Janvier!', consigne: 'Le « = » est tapé sur « Synthèse ». Clique l\'onglet « Janvier » pour aller chercher la source.' },
+          { type: 'clic', feuille: 'Janvier', cible: 'B5', ajoute: 'B5', consigne: 'Sur « Janvier », clique la cellule source B5 (le total), puis Entrée.' },
         ],
+        explication: 'Excel écrit la référence NomDeLaFeuille!Cellule (=Janvier!B5). Le « ! » sépare la feuille de la cellule. B2 sur « Synthèse » suit maintenant le total de Janvier.',
       },
     },
     {
@@ -2811,21 +2810,18 @@ const LIAISONSCLASSEURS = {
     { humeur: 'accueil', dit: 'Une liaison externe récupère la valeur d\'une cellule située dans un AUTRE fichier Excel. Idéal pour centraliser des synthèses même quand les données sont réparties dans plusieurs classeurs.' },
     {
       humeur: 'pensif',
-      dit: 'Créons une liaison entre deux fichiers, pas à pas.',
+      dit: 'Créons une liaison entre deux fichiers. Dans « Synthèse.xlsx », en B2, le « = » est tapé : va chercher la valeur dans « Ventes.xlsx ». **À toi.**',
       visuel: {
-        type: 'methode',
-        titre: 'Créer une liaison externe',
-        blocs: [
-          { etapes: ['Ouvre les **deux classeurs** : le fichier **source** (la donnée) et le fichier **cible** (où l\'afficher)'] },
-          { capture: { type: 'deuxclasseurs', source: 'Ventes.xlsx', cible: 'Synthèse.xlsx' } },
-          { etapes: ['Dans le classeur **cible**, clique sur la cellule où tu veux la valeur, et tape **=**'], depart: 2 },
-          { capture: { type: 'tableur', classeur: 'Synthèse.xlsx', role: 'cible', feuilles: ['Synthèse'], feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Poste', entete: true }, B1: { t: 'Valeur', entete: true }, A2: { t: 'Total ventes' }, B2: { t: '=' } }, formule: '=', actif: 'B2', legende: 'On est dans le classeur CIBLE (Synthèse.xlsx), cellule B2 : on tape =.' } },
-          { etapes: ['Passe dans le classeur **source** : Affichage > **Changer de fenêtre**, puis choisis-le'], depart: 3 },
-          { capture: { type: 'ruban', actif: 'Affichage', groupeNom: 'Fenêtre', groupes: [{ icone: '⊞', label: 'Réorganiser\ntout' }, { icone: '🗗', label: 'Changer de\nfenêtre', actif: true }] } },
-          { etapes: ['Clique sur la **cellule source** (ex : B5), puis appuie sur **Entrée**'], depart: 4 },
-          { capture: { type: 'tableur', classeur: 'Ventes.xlsx', role: 'source', feuilles: ['Modèle'], feuilleActive: 'Modèle', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Poste', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'Ventes' }, B2: { t: '8 800', num: true, ref: true } }, formule: '=[Ventes.xlsx]Modèle!$B$5', actif: 'B2', legende: 'On est passé sur le classeur SOURCE (Ventes.xlsx) : on clique la cellule source.' } },
-          { capture: { type: 'tableur', classeur: 'Synthèse.xlsx', role: 'cible', feuilles: ['Synthèse'], feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Poste', entete: true }, B1: { t: 'Valeur', entete: true }, A2: { t: 'Total ventes' }, B2: { t: '8 800', vert: true } }, formule: '=[Ventes.xlsx]Modèle!$B$5', actif: 'B2', legende: 'De retour sur le classeur CIBLE : B2 affiche la valeur du fichier source, et se met à jour tout seul.' } },
+        type: 'construitformule', prefixe: '=', resultat: 'B2', resultatFeuille: 'Synthèse.xlsx', resultatValeur: '8 800',
+        grilles: {
+          'Synthèse.xlsx': { cols: ['A', 'B'], rows: [1, 2], cells: { A1: { t: 'Poste', entete: true }, B1: { t: 'Valeur', entete: true }, A2: { t: 'Total ventes' }, B2: { t: '' } } },
+          'Ventes.xlsx': { cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Mois', entete: true }, B1: { t: 'Montant', entete: true }, A2: { t: 'Janvier' }, B2: { t: '2 000', num: true }, A3: { t: 'Février' }, B3: { t: '2 300', num: true }, A4: { t: 'Mars' }, B4: { t: '4 500', num: true }, A5: { t: 'Total' }, B5: { t: '8 800', num: true } } },
+        },
+        sequence: [
+          { type: 'onglet', cible: 'Ventes.xlsx', ajoute: '[Ventes.xlsx]Modèle!', consigne: 'Le « = » est tapé dans « Synthèse.xlsx ». Clique l\'onglet du fichier source « Ventes.xlsx » (comme Affichage > Changer de fenêtre).' },
+          { type: 'clic', feuille: 'Ventes.xlsx', cible: 'B5', ajoute: '$B$5', consigne: 'Dans « Ventes.xlsx », clique la cellule source, le total en B5, puis Entrée.' },
         ],
+        explication: 'Excel écrit =[Ventes.xlsx]Modèle!$B$5 : le classeur entre [crochets], la feuille « Modèle », puis la cellule $B$5 (figée). B2 suit maintenant la valeur du fichier source.',
       },
     },
     {
@@ -2887,6 +2883,14 @@ const feuillesDept = ['AIN', 'Allier', 'Hautes Alpes', 'Cantal', 'Synthèse']
 const rowsDept = [1, '⋮', 10]
 const cellsDept = (total) => ({ A1: { t: 'Mois', entete: true }, B1: { t: 'Zone', entete: true }, C1: { t: 'CA', entete: true }, A10: { t: 'Total' }, C10: { t: total, num: true, ref: true } })
 const cellsSynth = (val, vert) => ({ A1: { t: 'Zone', entete: true }, B1: { t: 'Total', entete: true }, A2: { t: 'France' }, B2: vert ? { t: val, vert: true } : { t: val } })
+// Grilles cliquables pour les calculs 3D (Synthèse en 1er, puis AIN..Cantal côte à côte).
+const grilles3D = {
+  Synthèse: { cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('') },
+  AIN: { cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 000') },
+  Allier: { cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 500') },
+  'Hautes Alpes': { cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('2 000') },
+  Cantal: { cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('4 000') },
+}
 
 // --- Leçon 5 : Calculs 3D & références 3D ---
 const CALCULS3D = {
@@ -2904,38 +2908,33 @@ const CALCULS3D = {
       humeur: 'pensif',
       dit: '**Méthode 1 : feuille par feuille.** Tu cliques chaque feuille et tu sépares par un point-virgule.',
       visuel: {
-        type: 'methode',
-        titre: 'Méthode 1 : le séparateur ;',
-        blocs: [
-          { etapes: ['Dans la cellule cible (feuille « Synthèse »), tape **=SOMME(**'] },
-          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('=SOMME('), formule: '=SOMME(', actif: 'B2', legende: 'Sur « Synthèse », dans la cellule cible B2 : on tape =SOMME(' } },
-          { etapes: ['Clique l\'onglet de la **1re feuille** (AIN), puis sa cellule **C10**'], depart: 2 },
-          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'AIN', cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 000'), formule: '=SOMME(AIN!C10', actif: 'C10', legende: 'On est sur « AIN » : on clique sa cellule C10. La formule devient =SOMME(AIN!C10' } },
-          { etapes: ['Tape **;** puis clique la **feuille suivante** (Allier) et sa cellule **C10**'], depart: 3 },
-          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Allier', cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 500'), formule: '=SOMME(AIN!C10;Allier!C10', actif: 'C10', legende: 'On est passé sur « Allier » : on tape ; puis on clique sa cellule C10.' } },
-          { etapes: ['**Pareil pour les autres feuilles** (Hautes Alpes, Cantal), puis ferme la parenthèse **)** et **Entrée**'], depart: 4 },
-          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('12 500', true), formule: '=SOMME(AIN!C10;Allier!C10;\'Hautes Alpes\'!C10;Cantal!C10)', actif: 'B2', legende: 'De retour sur « Synthèse » : la formule complète additionne les 4 départements = 12 500.' } },
-          { note: 'Le point-virgule **;** sépare chaque feuille à additionner. La même méthode marche avec MOYENNE, MIN, MAX ou NB.', label: 'Bon à savoir' },
+        type: 'construitformule', prefixe: '=', resultat: 'B2', resultatFeuille: 'Synthèse', resultatValeur: '12 500',
+        grilles: grilles3D,
+        sequence: [
+          { type: 'suggestion', saisie: '=SOMME', consigne: 'Sur « Synthèse », en B2, tape =SOMME et choisis la fonction.', items: [{ nom: 'SOMME', desc: 'additionne des cellules' }, { nom: 'SOMME.SI' }, { nom: 'SOMMEPROD' }], cible: 'SOMME', ajoute: 'SOMME(' },
+          { type: 'onglet', cible: 'AIN', ajoute: 'AIN!', consigne: 'Clique l\'onglet de la 1re feuille, « AIN ».' },
+          { type: 'clic', feuille: 'AIN', cible: 'C10', ajoute: 'C10', consigne: 'Sur « AIN », clique son total en C10.' },
+          { type: 'saisir', ajoute: ';', label: ';', consigne: 'Tape un point-virgule pour séparer la feuille suivante.' },
+          { type: 'onglet', cible: 'Allier', ajoute: 'Allier!', consigne: 'Clique l\'onglet de la feuille suivante, « Allier ».' },
+          { type: 'clic', feuille: 'Allier', cible: 'C10', ajoute: 'C10', consigne: 'Sur « Allier », clique son total en C10.' },
+          { type: 'saisir', ajoute: ';\'Hautes Alpes\'!C10;Cantal!C10)', label: ';\'Hautes Alpes\'!C10;Cantal!C10)', consigne: 'Fais pareil pour les 2 dernières feuilles, puis ferme la parenthèse et Entrée.' },
         ],
+        explication: 'Le point-virgule ; sépare chaque feuille. =SOMME(AIN!C10;Allier!C10;\'Hautes Alpes\'!C10;Cantal!C10) additionne les 4 départements = 12 500. La même méthode marche avec MOYENNE, MIN, MAX ou NB.',
       },
     },
     {
       humeur: 'accueil',
       dit: '**Méthode 2 : la référence 3D.** Plus rapide quand les feuilles sont côte à côte : tu sélectionnes de la première à la dernière avec Shift.',
       visuel: {
-        type: 'methode',
-        titre: 'Méthode 2 : la référence 3D (Shift)',
-        blocs: [
-          { etapes: ['Dans la cellule cible (feuille « Synthèse »), tape **=SOMME(**'] },
-          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('=SOMME('), formule: '=SOMME(', actif: 'B2', legende: 'Sur « Synthèse », dans la cellule cible B2 : on tape =SOMME(' } },
-          { etapes: ['Clique l\'onglet de la **première** feuille (AIN)'], depart: 2 },
-          { capture: { type: 'onglets', onglets: ['AIN', 'Allier', 'Hautes Alpes', 'Cantal', 'Synthèse'], actif: 'AIN', items: [], legende: 'On clique d\'abord l\'onglet « AIN » (la première feuille) : elle devient la feuille active.' } },
-          { etapes: ['Maintiens **Shift** et clique l\'onglet de la **dernière** feuille (Cantal)'], depart: 3 },
-          { capture: { type: 'onglets', onglets: ['AIN', 'Allier', 'Hautes Alpes', 'Cantal', 'Synthèse'], actifs: ['AIN', 'Allier', 'Hautes Alpes', 'Cantal'], items: [], legende: 'Shift sélectionne AIN, Cantal et toutes les feuilles entre les deux.' } },
-          { etapes: ['Clique la cellule **C10**, ferme la parenthèse **)** et **Entrée**'], depart: 4 },
-          { capture: { type: 'tableur', classeur: 'Départements.xlsx', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('12 500', true), formule: '=SOMME(AIN:Cantal!C10)', actif: 'B2', legende: 'Résultat sur « Synthèse » : la référence 3D =SOMME(AIN:Cantal!C10) additionne AIN à Cantal = 12 500.' } },
-          { note: 'Les feuilles doivent être **côte à côte** : toutes celles situées entre AIN et Cantal sont incluses. Pour en exclure une, réorganise les onglets ou utilise la méthode 1 (le point-virgule).', label: 'Bon à savoir' },
+        type: 'construitformule', prefixe: '=', resultat: 'B2', resultatFeuille: 'Synthèse', resultatValeur: '12 500',
+        grilles: grilles3D,
+        sequence: [
+          { type: 'suggestion', saisie: '=SOMME', consigne: 'Sur « Synthèse », en B2, tape =SOMME et choisis la fonction.', items: [{ nom: 'SOMME', desc: 'additionne des cellules' }, { nom: 'SOMME.SI' }, { nom: 'SOMMEPROD' }], cible: 'SOMME', ajoute: 'SOMME(' },
+          { type: 'ongletplage', debut: 'AIN', fin: 'Cantal', ajoute: 'AIN:Cantal!', consigne: 'Clique l\'onglet « AIN », puis maintiens Shift et clique « Cantal » : tu sélectionnes toutes les feuilles entre les deux.' },
+          { type: 'clic', feuille: 'AIN', cible: 'C10', ajoute: 'C10', consigne: 'Clique la cellule C10 : un seul clic suffit pour les 4 feuilles groupées.' },
+          { type: 'saisir', ajoute: ')', label: ')', consigne: 'Ferme la parenthèse, puis Entrée.' },
         ],
+        explication: 'La référence 3D =SOMME(AIN:Cantal!C10) additionne AIN, Cantal ET toutes les feuilles entre les deux = 12 500. Le « : » couvre la plage de feuilles. Elles doivent être côte à côte.',
       },
     },
     {

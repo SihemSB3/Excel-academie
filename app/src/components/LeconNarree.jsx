@@ -5922,13 +5922,15 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
   const [etape, setEtape] = useState(0)
   const [faits, setFaits] = useState([])
   const [anchor, setAnchor] = useState(null)
+  const [feuilleVue, setFeuilleVue] = useState(null) // onglet cliqué par l'élève (formules inter-feuilles)
+  const [ongletAnchor, setOngletAnchor] = useState(null) // 1re feuille d'une sélection 3D (Shift)
   const [rate, setRate] = useState(false)
   const [rates, setRates] = useState([])
   const feuilles = Object.keys(grilles)
   const fini = etape >= sequence.length
   const stepC = sequence[etape] || {}
   const feuilleFin = resultatFeuille || feuilles[0]
-  const feuilleActive = fini ? feuilleFin : stepC.feuille || feuilles[0]
+  const feuilleActive = fini ? feuilleFin : stepC.feuille || feuilleVue || feuilles[0]
   const grille = grilles[feuilleActive] || { cols: [], rows: [], cells: {} }
   const formule = prefixe + faits.join('')
   // Pendant une étape « suggestion », on affiche aussi les lettres déjà tapées (ex : =ARRONDI).
@@ -5968,6 +5970,7 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
   const finirEtape = (ajoute) => {
     setFaits((f) => [...f, ajoute])
     setAnchor(null)
+    setOngletAnchor(null)
     setRates([])
     setEtape((e) => e + 1)
   }
@@ -5982,6 +5985,7 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
     setTimeout(() => {
       setRate(false)
       setAnchor(null)
+      setOngletAnchor(null)
     }, 800)
   }
   const clicCellule = (id) => {
@@ -6015,6 +6019,28 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
       setRates((r) => [...r, nom])
       onErreur && onErreur()
     }
+  }
+  // Étape « onglet »/« ongletplage » : l'élève clique l'onglet d'une autre feuille
+  // (formule inter-feuilles =Janvier!B5, ou référence 3D =SOMME(AIN:Cantal!C10)).
+  const clicOnglet = (f) => {
+    if (fini) return
+    if (stepC.type === 'onglet') {
+      if (f === stepC.cible) { setFeuilleVue(f); finirEtape(stepC.ajoute) }
+      else raterCourt()
+    } else if (stepC.type === 'ongletplage') {
+      if (!ongletAnchor) {
+        if (f === stepC.debut) { setOngletAnchor(f); setFeuilleVue(f) }
+        else raterCourt()
+      } else if (f === stepC.fin) { setFeuilleVue(stepC.debut); finirEtape(stepC.ajoute) }
+      else raterCourt()
+    }
+  }
+  const idxFeuille = (f) => feuilles.indexOf(f)
+  const dansPlageOnglets = (f) => {
+    if (stepC.type !== 'ongletplage') return false
+    const [i1, i2] = [idxFeuille(ongletAnchor || stepC.debut), idxFeuille(stepC.fin)].sort((a, b) => a - b)
+    const i = idxFeuille(f)
+    return i >= 0 && i >= i1 && i <= i2
   }
 
   const choixOptions = (stepC.options || []).map((o) => (typeof o === 'string' ? { label: o, val: o } : o))
@@ -6070,10 +6096,19 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
           ))}
         </div>
         {feuilles.length > 1 && (
-          <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
-            {feuilles.map((f) => (
-              <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>
-            ))}
+          <div className="flex flex-wrap items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+            {feuilles.map((f) => {
+              const actif = f === feuilleActive
+              const ongletStep = !fini && (stepC.type === 'onglet' || stepC.type === 'ongletplage')
+              if (ongletStep) {
+                const estCible = stepC.type === 'onglet' ? f === stepC.cible : dansPlageOnglets(f)
+                const pulse = stepC.type === 'onglet' ? f === stepC.cible : f === (ongletAnchor ? stepC.fin : stepC.debut)
+                return (
+                  <button key={f} onClick={() => clicOnglet(f)} className={`rounded-t px-2.5 py-0.5 ${estCible ? 'bg-mint/25 font-bold text-navy ring-1 ring-inset ring-mint' : actif ? 'bg-white font-semibold text-navy/70' : 'bg-navy/10 text-navy/50 hover:bg-navy/20'} ${pulse ? 'animate-pulse' : ''}`}>{f}</button>
+                )
+              }
+              return <span key={f} className={`rounded-t px-2.5 py-0.5 ${actif ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>
+            })}
           </div>
         )}
       </div>
