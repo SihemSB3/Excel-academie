@@ -3025,6 +3025,16 @@ const PROTEGERFEUILLES = {
       visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Protéger la feuille', actif: 'Révision', groupeNom: 'Protéger', groupes: [{ icone: '🛡', label: 'Protéger la feuille' }, { icone: '🔒', label: 'Protéger le classeur' }, { icone: '✎', label: 'Autoriser plages' }], cible: 'Protéger la feuille', explication: 'Tu choisis alors les actions autorisées et, si tu veux, un mot de passe. Sans mot de passe, n\'importe qui peut ôter la protection.' },
     },
     {
+      humeur: 'accueil',
+      dit: 'La boîte « Protéger la feuille » s\'ouvre. **Tape un mot de passe**, puis clique **OK**.',
+      visuel: { type: 'boitedialogue', titre: 'Protéger la feuille', champs: [
+        { type: 'case', label: 'Protéger la feuille et le contenu des cellules verrouillées', coche: true },
+        { type: 'champ', label: 'Mot de passe', valeur: '••••', requis: true },
+        { type: 'case', label: 'Sélectionner les cellules verrouillées', coche: true },
+        { type: 'case', label: 'Sélectionner les cellules déverrouillées', coche: true },
+      ], boutonOK: 'OK', resultat: 'La feuille est protégée ! Les cellules verrouillées ne peuvent plus être modifiées.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Tu veux laisser certaines cellules modifiables malgré la protection ? Utilise les **autorisations de plage** (facultatif).',
       visuel: {
@@ -3080,6 +3090,11 @@ const PROTEGERFEUILLES = {
           { note: 'Pour vraiment empêcher l\'accès, combine **masquer + protéger le classeur** (avec mot de passe) : la feuille masquée ne pourra plus être réaffichée sans le mot de passe.', label: 'Bon à savoir' },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Fais un **clic droit** sur l\'onglet « Confidentiel », puis **Masquer** pour le cacher.',
+      visuel: { type: 'ongletsinteractif', mode: 'masquer', onglets: ['Janvier', 'Confidentiel', 'Synthèse'], cible: 'Confidentiel', resultat: 'Feuille masquée ! Elle disparaît des onglets. Combine masquer + protéger le classeur pour vraiment la verrouiller.' },
     },
     {
       humeur: 'pensif',

@@ -6171,6 +6171,80 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
 
 // « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
 // (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
+// Boîte de dialogue Excel générique et interactive : l'élève remplit les contrôles
+// REQUIS (cases à cocher, champs, listes déroulantes), puis clique OK → résultat.
+// champs: [{ type:'case'|'champ'|'liste', label, valeur, options, coche, requis }]
+function BoiteDialogue({ v, onResolu }) {
+  const { titre = 'Boîte de dialogue', intro, champs = [], boutonOK = 'OK', resultat = '' } = v
+  const [vals, setVals] = useState(() => { const o = {}; champs.forEach((c, i) => { o[i] = c.type === 'case' ? !!c.coche : (c.requis ? null : (c.valeur ?? '')) }); return o })
+  const [ouverte, setOuverte] = useState(null)
+  const [fini, setFini] = useState(false)
+  useEffect(() => { if (fini) onResolu && onResolu() }, [fini])
+
+  const satisfait = (c, i) => !c.requis || (c.type === 'case' ? vals[i] === true : vals[i] != null && vals[i] !== '')
+  const pretOK = champs.every((c, i) => satisfait(c, i))
+  const doitAgir = (c, i) => !fini && c.requis && !satisfait(c, i)
+  const activer = (c, i) => {
+    if (fini) return
+    if (c.type === 'case') setVals((s) => ({ ...s, [i]: !s[i] }))
+    else if (c.type === 'champ') setVals((s) => ({ ...s, [i]: c.valeur }))
+    else setOuverte((o) => (o === i ? null : i))
+  }
+  const choisirListe = (i, opt) => { setVals((s) => ({ ...s, [i]: opt })); setOuverte(null) }
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fini ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fini ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 Remplis la boîte, puis clique <b>{boutonOK}</b>.</span>}
+      </div>
+      {!fini && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>{titre}</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            {intro && <p className="text-navy/55">{intro}</p>}
+            {champs.map((c, i) => {
+              if (c.type === 'case') {
+                const on = vals[i] === true
+                return (
+                  <button key={i} onClick={() => activer(c, i)} className="flex w-full items-start gap-2 text-left text-navy/80">
+                    <span className={`mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-sm border text-[9px] text-white ${on ? 'border-mint bg-mint' : doitAgir(c, i) ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/30'}`}>{on && '✓'}</span>
+                    <span>{c.label}</span>
+                  </button>
+                )
+              }
+              if (c.type === 'champ') {
+                const rempli = vals[i] != null && vals[i] !== ''
+                return (
+                  <div key={i} className="flex items-center gap-2">
+                    <span className="w-24 shrink-0 text-right text-navy/60">{c.label} :</span>
+                    <button onClick={() => activer(c, i)} className={`min-w-0 flex-1 rounded-sm border px-2 py-1 text-left font-mono ${rempli ? 'border-navy/30 text-navy' : doitAgir(c, i) ? 'animate-pulse border-mint text-navy/35 ring-1 ring-mint' : 'border-navy/25 text-navy/40'}`}>{rempli ? vals[i] : (c.requis ? 'clique pour remplir…' : (c.valeur ?? ''))}</button>
+                  </div>
+                )
+              }
+              const val = vals[i]
+              return (
+                <div key={i} className="relative flex items-center gap-2">
+                  <span className="w-24 shrink-0 text-right text-navy/60">{c.label} :</span>
+                  <button onClick={() => activer(c, i)} className={`flex min-w-0 flex-1 items-center justify-between rounded-sm border px-2 py-1 text-left ${val ? 'border-navy/30 text-navy' : doitAgir(c, i) ? 'animate-pulse border-mint text-navy/50 ring-1 ring-mint' : 'border-navy/25 text-navy/50'}`}><span className="truncate">{val || 'choisir…'}</span><span className="ml-1 text-navy/40">▾</span></button>
+                  {ouverte === i && (
+                    <div className="absolute right-0 top-full z-20 mt-1 w-36 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
+                      {(c.options || []).map((opt) => <button key={opt} onClick={() => choisirListe(i, opt)} className="block w-full px-2 py-1.5 text-left hover:bg-mint/15">{opt}</button>)}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2">
+              <button onClick={() => pretOK && setFini(true)} disabled={!pretOK} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${pretOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>{boutonOK}</button>
+              <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Manipulation directe de la barre d'onglets (feuilles). Un mode = une action :
 // renommer (double-clic), ajouter (bouton +), deplacer (clic onglet puis emplacement),
 // colorer (clic droit > Couleur d'onglet), grouper (Ctrl+clic multiple), masquer (clic droit > Masquer).
@@ -6690,7 +6764,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -6780,6 +6854,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <RubanNommage v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'ongletsinteractif' ? (
             <OngletsInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'boitedialogue' ? (
+            <BoiteDialogue v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -6837,7 +6913,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                             ? 'Fais l\'action pas à pas'
                                                             : s.visuel?.type === 'ongletsinteractif'
                                                               ? 'Agis sur l\'onglet'
-                                                              : 'Réponds pour continuer'
+                                                              : s.visuel?.type === 'boitedialogue'
+                                                                ? 'Remplis la boîte'
+                                                                : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
