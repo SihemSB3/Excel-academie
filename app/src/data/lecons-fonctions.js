@@ -1762,7 +1762,7 @@ const ARGUMENTSVPM = {
   titre: 'Fonctions à plusieurs arguments & VPM',
   exercices: [EX4.ex31],
   narration: [
-    { humeur: 'accueil', dit: 'Pour finir la ceinture verte, on s\'attaque à une fonction à plusieurs arguments bien concrète : **VPM** (la mensualité d\'un prêt). Bonne nouvelle : tu n\'es pas obligé(e) de tout taper, l\'assistant te guide.' },
+    { humeur: 'accueil', dit: 'Pour finir la ceinture verte, on s\'attaque à une fonction à plusieurs arguments bien concrète : **VPM** (la mensualité d\'un prêt). Bonne nouvelle : on va la construire ensemble, pas à pas.' },
     { humeur: 'accueil', dit: 'On commence par une fonction très concrète : **VPM** (Valeur des Paiements Mensuels). Elle calcule la **mensualité d\'un prêt** à partir du taux, de la durée et du montant emprunté.' },
     {
       humeur: 'pensif',
@@ -1783,8 +1783,8 @@ const ARGUMENTSVPM = {
     },
     {
       humeur: 'pensif',
-      dit: 'Dans la fenêtre de l\'assistant, l\'affichage te dit l\'essentiel :',
-      visuel: { type: 'encart', label: 'Détails utiles sur les arguments', liste: ['**Gras** = argument **obligatoire**.', 'Normal = argument **facultatif**.', 'La valeur affichée à droite = la valeur **par défaut** si tu ne changes rien.'] },
+      dit: 'Un repère utile pour lire la syntaxe :',
+      visuel: { type: 'encart', label: 'Détails utiles sur les arguments', liste: ['Un argument **sans crochets** est **obligatoire**.', 'Un argument **entre [crochets]** est **facultatif**.', 'S\'il est facultatif et que tu ne mets rien, Excel prend une **valeur par défaut** (souvent 0).'] },
     },
     {
       humeur: 'accueil',
@@ -1793,18 +1793,31 @@ const ARGUMENTSVPM = {
     },
     {
       humeur: 'pensif',
-      dit: 'Un réflexe de lecture de l\'assistant. **Vrai ou faux ?**',
-      visuel: { type: 'vraifaux', affirmation: 'Dans la fenêtre de l\'assistant, un argument affiché en gras est facultatif.', bonne: false, explication: 'Non : le gras signale un argument OBLIGATOIRE. Les facultatifs sont en écriture normale (et souvent entre crochets dans la syntaxe).' },
+      dit: 'Un réflexe de lecture de la syntaxe. **Vrai ou faux ?**',
+      visuel: { type: 'vraifaux', affirmation: 'Un argument écrit entre crochets [ ] dans la syntaxe est obligatoire.', bonne: false, explication: 'Non : les crochets [ ] signalent un argument FACULTATIF. Les arguments obligatoires sont écrits sans crochets (taux ; nb_périodes ; valeur_actuelle).' },
     },
     {
       humeur: 'accueil',
-      dit: 'Maintenant qu\'on sait ce que fait VPM, on la construit avec l\'**assistant fonction**. Le résultat ira sur la ligne « Mensualité ». **Clique la cellule du résultat.**',
-      visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la Mensualité', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Montant emprunté', entete: true }, B1: { t: '15 000 €' }, A2: { t: 'Taux annuel', entete: true }, B2: { t: '5 %' }, A3: { t: 'Durée (mois)', entete: true }, B3: { t: '120' }, A4: { t: 'Mensualité', entete: true } }, cible: 'B4', explication: 'Oui, B4 : à droite de « Mensualité ». C\'est de là qu\'on ouvre l\'assistant pour écrire le VPM.' },
+      dit: 'Maintenant qu\'on sait ce que fait VPM, on la construit **soi-même**, pas à pas. Le résultat ira sur la ligne « Mensualité ». **Clique la cellule du résultat.**',
+      visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule de la Mensualité', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Montant emprunté', entete: true }, B1: { t: '15 000 €' }, A2: { t: 'Taux annuel', entete: true }, B2: { t: '5 %' }, A3: { t: 'Durée (mois)', entete: true }, B3: { t: '120' }, A4: { t: 'Mensualité', entete: true } }, cible: 'B4', explication: 'Oui, B4 : à droite de « Mensualité ». C\'est là qu\'on va écrire la formule VPM, pas à pas.' },
     },
     {
       humeur: 'accueil',
-      dit: 'On la construit avec l\'**assistant fonction**. **À toi de tout faire** : clique fx, choisis VPM dans les Financières, puis remplis chaque argument.',
-      visuel: { type: 'assistantformule', cellule: 'B4', categorie: 'Financières', fonctions: ['TAUX', 'VA', 'VAN', 'VC', 'VPM'], cible: 'VPM', signature: 'VPM(taux;npm;va;[vc];[type])', description: 'Calcule le remboursement d\'un emprunt sur la base de remboursements et d\'un taux d\'intérêt constants.', args: [{ label: 'Taux', ref: '5%/12', apercu: '0,00417', obligatoire: true }, { label: 'Npm', ref: '120', apercu: '120', obligatoire: true }, { label: 'Va', ref: '-15000', apercu: '-15000', obligatoire: true }, { label: 'Vc', ref: '', apercu: 'facultatif' }, { label: 'Type', ref: '', apercu: 'facultatif' }], resultat: '-159,10 €', formuleFinale: '=VPM(5%/12;120;-15000)' },
+      dit: 'Étape par étape, dans la cellule B4 :',
+      visuel: {
+        type: 'construitformule', prefixe: '=', resultat: 'B4', resultatValeur: '-159,10 €',
+        grilles: { Feuille: { cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Montant emprunté', entete: true }, B1: { t: '15 000 €' }, A2: { t: 'Taux annuel', entete: true }, B2: { t: '5 %' }, A3: { t: 'Durée (mois)', entete: true }, B3: { t: '120' }, A4: { t: 'Mensualité', entete: true }, B4: { t: '' } } } },
+        sequence: [
+          { type: 'suggestion', saisie: '=VPM', consigne: 'Tu tapes « =VPM ». Clique la fonction qui calcule la mensualité d\'un prêt.', items: [{ nom: 'VPM', desc: 'mensualité d\'un emprunt à versements constants' }, { nom: 'VA' }, { nom: 'VC' }], cible: 'VPM', ajoute: 'VPM(' },
+          { type: 'clic', feuille: 'Feuille', cible: 'B2', ajoute: 'B2', consigne: 'Clique le taux annuel (on va le ramener au mois).' },
+          { type: 'saisir', ajoute: '/12;', label: '/12;', consigne: 'Divise par 12 pour le taux par mois, puis mets un point-virgule.' },
+          { type: 'clic', feuille: 'Feuille', cible: 'B3', ajoute: 'B3;', consigne: 'Clique la durée : le nombre de mensualités.' },
+          { type: 'saisir', ajoute: '-', label: '-', consigne: 'Le montant emprunté est une sortie d\'argent : on le met en négatif. Tape le signe moins.' },
+          { type: 'clic', feuille: 'Feuille', cible: 'B1', ajoute: 'B1', consigne: 'Clique le montant emprunté.' },
+          { type: 'saisir', ajoute: ')', label: ')', consigne: 'Ferme la parenthèse, puis Entrée.' },
+        ],
+        explication: 'Un prêt de 15 000 € à 5 %/an sur 120 mois : la mensualité est d\'environ -159,10 € (négatif car c\'est une sortie d\'argent).',
+      },
     },
     { humeur: 'accueil', dit: 'Exemple complet : tu empruntes 15 000 € à 5 % par an, sur 10 ans (120 mois). =VPM(5%/12 ; 120 ; -15000) donne environ -159,10 € par mois.', visuel: tabVPM(true) },
     {
@@ -2443,8 +2456,26 @@ const FONCTIONSFINANCIERES = {
     },
     {
       humeur: 'accueil',
-      dit: 'On la construit avec l\'assistant (c\'est une formule costaude, autant être guidé·e). **À toi** : clique fx, choisis VA dans les Financières, remplis les arguments.',
-      visuel: { type: 'assistantformule', cellule: 'B2', categorie: 'Financières', fonctions: ['TAUX', 'VA', 'VAN', 'VC', 'VPM'], cible: 'VA', signature: 'VA(taux;npm;vpm;[vc];[type])', description: 'Renvoie la valeur actuelle : ce que vaut aujourd\'hui une série de versements futurs.', args: [{ label: 'Taux', ref: '4%/12', apercu: '0,00333', obligatoire: true }, { label: 'Npm', ref: '36', apercu: '36', obligatoire: true }, { label: 'Vpm', ref: '-200', apercu: '-200', obligatoire: true }, { label: 'Vc', ref: '', apercu: 'facultatif' }, { label: 'Type', ref: '', apercu: 'facultatif' }], resultat: '6 769 €', formuleFinale: '=VA(4%/12;36;-200)' },
+      dit: 'On la construit **soi-même**, pas à pas (comme NPM). Le résultat ira sur « Valeur aujourd\'hui ». **Clique la cellule du résultat.**',
+      visuel: { type: 'cliquecible', support: 'tableur', consigne: 'Clique la cellule Valeur aujourd\'hui', cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Versement /mois', entete: true }, B1: { t: '200 €' }, A2: { t: 'Durée (mois)', entete: true }, B2: { t: '36' }, A3: { t: 'Taux annuel', entete: true }, B3: { t: '4 %' }, A4: { t: 'Valeur aujourd\'hui', entete: true } }, cible: 'B4', explication: 'Oui, B4 : à droite de « Valeur aujourd\'hui ». C\'est là qu\'on écrit =VA(…), pas à pas.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Étape par étape, dans la cellule B4 :',
+      visuel: {
+        type: 'construitformule', prefixe: '=', resultat: 'B4', resultatValeur: '6 769 €',
+        grilles: { Feuille: { cols: ['A', 'B'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Versement /mois', entete: true }, B1: { t: '200 €' }, A2: { t: 'Durée (mois)', entete: true }, B2: { t: '36' }, A3: { t: 'Taux annuel', entete: true }, B3: { t: '4 %' }, A4: { t: 'Valeur aujourd\'hui', entete: true }, B4: { t: '' } } } },
+        sequence: [
+          { type: 'suggestion', saisie: '=VA', consigne: 'Tu tapes « =VA ». Clique la fonction qui calcule la valeur d\'aujourd\'hui.', items: [{ nom: 'VA', desc: 'valeur actuelle d\'une série de versements' }, { nom: 'VC' }, { nom: 'VPM' }], cible: 'VA', ajoute: 'VA(' },
+          { type: 'clic', feuille: 'Feuille', cible: 'B3', ajoute: 'B3', consigne: 'Clique le taux annuel (on va le ramener au mois).' },
+          { type: 'saisir', ajoute: '/12;', label: '/12;', consigne: 'Divise par 12 pour le taux par mois, puis un point-virgule.' },
+          { type: 'clic', feuille: 'Feuille', cible: 'B2', ajoute: 'B2;', consigne: 'Clique la durée : le nombre de versements.' },
+          { type: 'saisir', ajoute: '-', label: '-', consigne: 'Chaque versement est une sortie d\'argent : on le met en négatif. Tape le signe moins.' },
+          { type: 'clic', feuille: 'Feuille', cible: 'B1', ajoute: 'B1', consigne: 'Clique le montant du versement mensuel.' },
+          { type: 'saisir', ajoute: ')', label: ')', consigne: 'Ferme la parenthèse, puis Entrée.' },
+        ],
+        explication: 'Recevoir 200 €/mois pendant 36 mois à 4 %/an, ça vaut environ 6 769 € aujourd\'hui.',
+      },
     },
     { humeur: 'accueil', dit: '**NPM** calcule le **nombre de paiements** nécessaires pour rembourser un emprunt, quand tu connais la mensualité et le capital.', visuel: { type: 'formule', formule: '=NPM(taux ; vpm ; va ; [vc] ; [type])' } },
     { humeur: 'pensif', dit: 'Exemple : un prêt de 10 000 € à 2 %/an, remboursé 102,45 €/mois. On cherche la durée, en construisant NPM pas à pas.', visuel: tabNpm('') },
