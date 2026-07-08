@@ -2561,8 +2561,13 @@ const GERERFEUILLES = {
     },
     {
       humeur: 'accueil',
-      dit: 'Pour **ajouter** une feuille, le plus simple : le bouton **＋** en bas, à côté des onglets.',
-      visuel: { type: 'ajouteronglet' },
+      dit: 'À toi de renommer. **Double-clique** l\'onglet « Feuil1 » et appelle-le « Budget ».',
+      visuel: { type: 'ongletsinteractif', mode: 'renommer', onglets: ['Feuil1', 'Feuil2'], cible: 'Feuil1', nouveauNom: 'Budget', resultat: 'Feuille renommée « Budget » ! Un classeur bien nommé, c\'est un classeur qu\'on relit sans se perdre.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'Pour **ajouter** une feuille, le plus simple : le bouton **＋**. **À toi, clique-le.**',
+      visuel: { type: 'ongletsinteractif', mode: 'ajouter', onglets: ['Budget', 'Feuil2'], nouveau: 'Feuil3', resultat: 'Une nouvelle feuille est apparue ! Tu peux en ajouter autant que tu veux.' },
     },
     {
       humeur: 'pensif',
@@ -2615,6 +2620,11 @@ const GERERFEUILLES = {
     },
     {
       humeur: 'accueil',
+      dit: 'À toi. **Attrape** l\'onglet « Mars » (clique-le) et fais-le glisser tout au début.',
+      visuel: { type: 'ongletsinteractif', mode: 'deplacer', onglets: ['Janvier', 'Février', 'Mars'], cible: 'Mars', versIndex: 0, resultat: 'Mars est passé en tête ! Tu réorganises tes feuilles dans l\'ordre qui t\'arrange.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'Pour **dupliquer** une feuille (garder l\'original et créer une copie).',
       visuel: {
         type: 'methode',
@@ -2647,6 +2657,11 @@ const GERERFEUILLES = {
           { capture: { type: 'onglets', onglets: ['Janvier', 'Février', 'Synthèse'], actif: 'Synthèse', items: [], couleurs: { Janvier: '#41c1ba', Février: '#d97706', Synthèse: '#8b5cf6' }, legende: 'Résultat : des onglets colorés pour repérer tes feuilles en un instant.' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Fais un **clic droit** sur « Budget », puis **Couleur d\'onglet**, et choisis une teinte.',
+      visuel: { type: 'ongletsinteractif', mode: 'colorer', onglets: ['Budget', 'Ventes', 'Synthèse'], cible: 'Budget', couleur: '#e8853a', resultat: 'Onglet coloré ! Un coup d\'œil suffit maintenant pour repérer tes feuilles.' },
     },
     {
       humeur: 'pensif',
@@ -2748,6 +2763,11 @@ const GROUPEFEUILLES = {
       humeur: 'accueil',
       dit: 'À toi. Tu fais clic droit sur un onglet pour tout sélectionner d\'un coup. **Clique la bonne entrée.**',
       visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Sélectionner toutes les feuilles »', items: [{ label: 'Insérer…' }, { label: 'Supprimer' }, { label: 'Renommer' }, { label: 'Déplacer ou copier…' }, '-', { icone: '☑', label: 'Sélectionner toutes les feuilles' }], cible: 5, explication: 'Toutes les feuilles passent en groupe de travail : ce que tu tapes ou mets en forme s\'applique alors à toutes en même temps.' },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi les **feuilles séparées**. Garde **Ctrl** et clique « Janvier » puis « Mars » (pas Février) pour les sélectionner ensemble.',
+      visuel: { type: 'ongletsinteractif', mode: 'grouper', onglets: ['Janvier', 'Février', 'Mars', 'Avril'], cibles: ['Janvier', 'Mars'], resultat: 'Janvier et Mars sont groupés (Février reste à part) ! Ce que tu tapes s\'appliquera aux deux d\'un coup.' },
     },
     {
       humeur: 'pensif',

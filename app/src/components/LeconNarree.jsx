@@ -6171,6 +6171,130 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
 
 // « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
 // (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
+// Manipulation directe de la barre d'onglets (feuilles). Un mode = une action :
+// renommer (double-clic), ajouter (bouton +), deplacer (clic onglet puis emplacement),
+// colorer (clic droit > Couleur d'onglet), grouper (Ctrl+clic multiple), masquer (clic droit > Masquer).
+function OngletsInteractif({ v, onResolu }) {
+  const { mode = 'renommer', onglets = [], cible, cibles = [], nouveauNom = 'Budget', nouveau = 'Feuil2', couleur = '#e8853a', versIndex = 0, resultat = '' } = v
+  const [liste, setListe] = useState(onglets)
+  const [etape, setEtape] = useState(0) // 0 = action, 1 = sous-étape (saisie/menu), 2 = fini
+  const [menu, setMenu] = useState(false)
+  const [palette, setPalette] = useState(false)
+  const [sel, setSel] = useState([])
+  const [grab, setGrab] = useState(false)
+  const [couleurs, setCouleurs] = useState({})
+  const [caches, setCaches] = useState([])
+  const [actif, setActif] = useState(cible || onglets[0])
+  const fait = etape >= 2
+  useEffect(() => { if (fait) onResolu && onResolu() }, [etape])
+  useEffect(() => {
+    if (mode === 'grouper' && !fait && cibles.length && sel.length === cibles.length && cibles.every((c) => sel.includes(c))) setEtape(2)
+  }, [sel])
+  const PALETTE = ['#e8853a', '#41c1ba', '#2f5fd0', '#d64550', '#8b5cf6', '#3aa757']
+
+  const consigne = () => {
+    switch (mode) {
+      case 'renommer': return etape === 0 ? `**Double-clique** l'onglet « ${cible} » pour le renommer.` : 'Le nouveau nom est tapé : appuie sur **Entrée** pour valider.'
+      case 'ajouter': return 'Clique le bouton **+** (à droite des onglets) pour ajouter une feuille.'
+      case 'deplacer': return grab ? `Clique la **flèche de dépôt** tout à gauche pour y placer « ${cible} ».` : `**Attrape** l'onglet « ${cible} » (clique-le) pour le déplacer.`
+      case 'colorer': return palette ? 'Choisis une **couleur** dans la palette.' : menu ? 'Clique **Couleur d\'onglet**.' : `Fais un **clic droit** sur l'onglet « ${cible} ».`
+      case 'grouper': return `Garde **Ctrl** enfoncé et clique **${cibles.join(' puis ')}** pour les sélectionner ensemble.`
+      case 'masquer': return menu ? 'Clique **Masquer**.' : `Fais un **clic droit** sur l'onglet « ${cible} », puis Masquer.`
+      default: return ''
+    }
+  }
+
+  const clicTab = (f) => {
+    if (fait) return
+    setActif(f)
+    if (mode === 'deplacer') { if (!grab && f === cible) setGrab(true) }
+    else if ((mode === 'colorer' || mode === 'masquer') && f === cible) { setMenu(true); setPalette(false) }
+    else if (mode === 'grouper') setSel((s) => (s.includes(f) ? s.filter((x) => x !== f) : [...s, f]))
+  }
+  const dblTab = (f) => { if (!fait && mode === 'renommer' && f === cible) setEtape(1) }
+  const deposer = () => { if (grab) { setListe((l) => { const a = l.filter((x) => x !== cible); a.splice(versIndex, 0, cible); return a }); setEtape(2) } }
+  const choisirCouleur = (c) => { setCouleurs((m) => ({ ...m, [cible]: c })); setEtape(2) }
+
+  const visibles = liste.filter((f) => !caches.includes(f))
+  const tabCls = (f) => {
+    if (sel.includes(f)) return 'bg-mint/25 font-bold text-navy ring-1 ring-inset ring-mint'
+    if (f === actif) return 'bg-white font-bold text-navy'
+    return 'bg-navy/10 text-navy/60 hover:bg-navy/20'
+  }
+  const pulseTab = (f) => !fait && f === cible && (
+    (mode === 'renommer' && etape === 0) ||
+    (mode === 'deplacer' && !grab) ||
+    ((mode === 'colorer' || mode === 'masquer') && !menu)
+  )
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/15 bg-white shadow">
+        <div className="grid place-items-center gap-1 px-3 py-6 text-center text-[11px] text-navy/40">
+          <span className="text-2xl">📄</span>
+          <span>Feuille active : <span className="font-bold text-navy/70">{fait && mode === 'renommer' ? nouveauNom : actif}</span></span>
+        </div>
+        <div className="flex flex-wrap items-end gap-1 border-t border-navy/10 bg-[#f3f1ea] px-2 pt-1 text-[11px]">
+          {visibles.map((f, i) => {
+            const enSaisie = mode === 'renommer' && etape >= 1 && f === cible
+            const nomAff = fait && mode === 'renommer' && f === cible ? nouveauNom : f
+            return (
+              <div key={f} className="flex items-end">
+                {mode === 'deplacer' && grab && i === versIndex && (
+                  <button onClick={deposer} className="mr-1 animate-pulse rounded bg-mint/20 px-1 text-mint ring-1 ring-mint" title="Déposer ici">▸</button>
+                )}
+                {enSaisie ? (
+                  <span className="rounded-t border border-b-0 border-mint bg-white px-2 py-0.5 font-mono text-navy ring-1 ring-mint">{nouveauNom}<span className="animate-pulse">|</span></span>
+                ) : (
+                  <button
+                    onClick={() => clicTab(f)}
+                    onDoubleClick={() => dblTab(f)}
+                    style={couleurs[f] ? { borderBottom: `3px solid ${couleurs[f]}` } : undefined}
+                    className={`rounded-t px-2.5 py-0.5 ${tabCls(f)} ${pulseTab(f) ? 'animate-pulse ring-1 ring-inset ring-mint' : ''}`}
+                  >{nomAff}</button>
+                )}
+              </div>
+            )
+          })}
+          <button
+            onClick={() => { if (!fait && mode === 'ajouter') { setListe((l) => [...l, nouveau]); setActif(nouveau); setEtape(2) } }}
+            className={`ml-1 rounded px-1.5 py-0.5 font-bold ${!fait && mode === 'ajouter' ? 'animate-pulse bg-mint/20 text-mint ring-1 ring-mint' : 'text-navy/40'}`}
+          >+</button>
+        </div>
+      </div>
+
+      {mode === 'renommer' && etape === 1 && (
+        <div className="mt-2 flex justify-center"><button onClick={() => setEtape(2)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-1.5 text-[12px] font-bold text-navy">⏎ Entrée</button></div>
+      )}
+
+      {menu && !palette && (mode === 'colorer' || mode === 'masquer') && (
+        <div className="mx-auto mt-2 w-52 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-[11px] shadow-xl">
+          {[{ l: 'Renommer' }, { l: 'Couleur d\'onglet', fleche: true, cible: mode === 'colorer' }, { l: 'Masquer', cible: mode === 'masquer' }].map((it, i) => (
+            <button key={i} onClick={() => { if (it.cible) { if (mode === 'colorer') setPalette(true); else { setCaches((c) => [...c, cible]); setEtape(2) } } }} disabled={!it.cible}
+              className={`flex w-full items-center justify-between px-3 py-1.5 text-left ${it.cible ? 'animate-pulse bg-mint/15 font-semibold text-navy ring-1 ring-inset ring-mint' : 'text-navy/40'}`}>
+              <span>{it.l}</span>{it.fleche && <span>▸</span>}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {palette && mode === 'colorer' && (
+        <div className="mx-auto mt-2 flex w-52 flex-wrap gap-2 rounded-md border border-navy/20 bg-white p-2 shadow-xl">
+          {PALETTE.map((c) => (
+            <button key={c} onClick={() => choisirCouleur(c)} style={{ background: c }} className={`h-6 w-6 rounded ${c === couleur ? 'animate-pulse ring-2 ring-offset-1 ring-navy' : 'ring-1 ring-black/10'}`} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
+// (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
 function ChoixTableau({ v, onResolu, onErreur }) {
   const { options = [], bonne = 0, explication } = v
   const [essais, setEssais] = useState([])
@@ -6566,7 +6690,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -6654,6 +6778,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ZoneNomBuilder v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'rubannommage' ? (
             <RubanNommage v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'ongletsinteractif' ? (
+            <OngletsInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -6709,7 +6835,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                           ? 'Utilise la Zone Nom'
                                                           : s.visuel?.type === 'rubannommage'
                                                             ? 'Fais l\'action pas à pas'
-                                                            : 'Réponds pour continuer'
+                                                            : s.visuel?.type === 'ongletsinteractif'
+                                                              ? 'Agis sur l\'onglet'
+                                                              : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
