@@ -5028,7 +5028,7 @@ function SommeSiEnsCroise({ v, onResolu }) {
   const { resultat = '' } = v
   const eur = (n) => n.toLocaleString('fr-FR') + ' €'
   const somme = (vend, reg) => SSE_SOURCE.filter((r) => r[0] === vend && r[1] === reg).reduce((s, r) => s + r[2], 0)
-  const appends = ['$C$2:$C$6;', '$A$2:$A$6;', '$E2;', '$B$2:$B$6;', 'F$1)']  // clics 1→5 (le clic 0 = F2 ouvre la formule)
+  const appends = ['$C$2:$C$7;', '$A$2:$A$7;', '$E2;', '$B$2:$B$7;', 'F$1)']  // clics 1→5 (le clic 0 = F2 ouvre la formule) ; 6 lignes de données = $2:$7
   const [i, setI] = useState(0)      // clics faits (0..6)
   const [rempli, setRempli] = useState(false)
   useEffect(() => { if (rempli) onResolu && onResolu() }, [rempli])
@@ -5038,19 +5038,21 @@ function SommeSiEnsCroise({ v, onResolu }) {
   const consigne = () => {
     if (rempli) return ''
     switch (i) {
-      case 0: return 'Clique la cellule **F2** du tableau croisé (ligne Alice, colonne Est) : c\'est là qu\'on écrit la formule.'
-      case 1: return 'Plage à **totaliser** : clique la colonne **CA** de la source. On la fige ($C$2:$C$6), elle ne doit jamais bouger.'
-      case 2: return 'Colonne qui **teste le vendeur** : clique la colonne **Vendeur** de la source (figée aussi).'
-      case 3: return 'Le **critère vendeur** : au lieu de taper « Alice », **clique la cellule E2** du tableau croisé. Elle devient **$E2** (colonne figée).'
-      case 4: return 'Colonne qui **teste la région** : clique la colonne **Région** de la source (figée).'
-      case 5: return 'Le **critère région** : **clique l\'en-tête F1** (Est). Il devient **F$1** (ligne figée).'
+      case 0: return 'Clique la cellule **F2** (colonne F, ligne 2 = Alice × Est) du tableau croisé : c\'est là qu\'on écrit la formule.'
+      case 1: return 'Plage à **totaliser** : clique la colonne **CA** de la source (colonne C). On la fige : **$C$2:$C$7**, elle ne doit jamais bouger.'
+      case 2: return 'Colonne qui **teste le vendeur** : clique la colonne **Vendeur** (colonne A). Figée : **$A$2:$A$7**.'
+      case 3: return 'Le **critère vendeur** : au lieu de taper « Alice », **clique la cellule E2** (colonne E, ligne 2). Elle devient **$E2** (colonne figée, ligne libre).'
+      case 4: return 'Colonne qui **teste la région** : clique la colonne **Région** (colonne B). Figée : **$B$2:$B$7**.'
+      case 5: return 'Le **critère région** : **clique l\'en-tête F1** (colonne F, ligne 1 = Est). Il devient **F$1** (ligne figée, colonne libre).'
       default: return 'F2 = 150 000 € ! Maintenant **tire la poignée de recopie** (le petit carré en bas à droite) pour remplir tout le tableau.'
     }
   }
   const clicSource = (col) => { if (rempli) return; if ((i === 1 && col === 2) || (i === 2 && col === 0) || (i === 4 && col === 1)) setI(i + 1) }
   const colActive = i === 1 ? 2 : i === 2 ? 0 : i === 4 ? 1 : -1
 
-  const Cell = ({ children, cls = '', ...p }) => <div className={`border-b border-navy/10 px-2 py-1 ${cls}`} {...p}>{children}</div>
+  // En-tête Excel : lettre de colonne (grise, surlignée si c'est la colonne à cliquer) et numéro de ligne.
+  const colLettre = (l, actif) => <div key={l} className={`grid place-items-center border-b border-r border-navy/10 py-0.5 text-[9px] font-bold ${actif ? 'animate-pulse bg-mint/25 text-navy ring-1 ring-inset ring-mint' : 'bg-navy/[0.06] text-navy/45'}`}>{l}</div>
+  const numLigne = (n) => <div className="grid place-items-center border-b border-r border-navy/10 bg-navy/[0.06] text-[9px] font-bold text-navy/45">{n}</div>
 
   return (
     <div className="mt-3">
@@ -5059,49 +5061,60 @@ function SommeSiEnsCroise({ v, onResolu }) {
       </div>
 
       {/* barre de formule */}
-      <div className="mx-auto mt-3 max-w-md rounded-md border border-navy/15 bg-white px-3 py-1.5 font-mono text-[11px] shadow">
-        <span className="text-navy/40">fx </span>{formule ? <span className="text-navy/85">{formule}{!complet && <span className="animate-pulse">|</span>}</span> : <span className="text-navy/30">clique F2 pour commencer…</span>}
+      <div className="mx-auto mt-3 max-w-md overflow-x-auto rounded-md border border-navy/15 bg-white px-3 py-1.5 font-mono text-[11px] shadow">
+        <span className="text-navy/40">fx </span>{formule ? <span className="whitespace-nowrap text-navy/85">{formule}{!complet && <span className="animate-pulse">|</span>}</span> : <span className="text-navy/30">clique F2 pour commencer…</span>}
       </div>
 
       <div className="mx-auto mt-3 flex max-w-md flex-col gap-3">
-        {/* TABLE SOURCE */}
+        {/* TABLE SOURCE : colonnes A B C, lignes 1 à 7 */}
         <div>
           <p className="mb-1 text-[10px] font-semibold text-navy/45">Table source</p>
-          <div className="overflow-hidden rounded-md border border-navy/15 text-[10px] shadow">
-            <div className="grid grid-cols-3">
-              {['Vendeur', 'Région', 'CA'].map((h, c) => <div key={h} className={`border-b px-2 py-1 font-bold ${colActive === c ? 'animate-pulse border-mint bg-mint/20 text-navy ring-1 ring-inset ring-mint' : 'border-navy/15 bg-navy/5 text-navy/70'}`}>{h}</div>)}
-              {SSE_SOURCE.map((r, ri) => r.map((cell, ci) => (
-                <button key={ri + '-' + ci} onClick={() => clicSource(ci)} disabled={colActive !== ci} className={`border-b border-navy/5 px-2 py-1 text-left ${colActive === ci ? 'cursor-pointer bg-mint/[0.08] hover:bg-mint/20' : 'bg-white'} ${ci === 2 ? 'text-right font-mono text-navy/70' : 'text-navy/85'}`}>{ci === 2 ? eur(cell) : cell}</button>
-              )))}
+          <div className="overflow-hidden rounded-md border border-navy/20 text-[10px] shadow">
+            <div className="grid" style={{ gridTemplateColumns: '1.1rem 1.1fr 1fr 1.1fr' }}>
+              <div className="border-b border-r border-navy/10 bg-navy/10" />
+              {['A', 'B', 'C'].map((l, c) => colLettre(l, colActive === c))}
+              {numLigne(1)}
+              {['Vendeur', 'Région', 'CA'].map((h, c) => <div key={h} className={`border-b border-navy/10 px-2 py-1 font-bold ${colActive === c ? 'bg-mint/15 text-navy' : 'bg-white text-navy/70'} ${c === 2 ? 'text-right' : ''}`}>{h}</div>)}
+              {SSE_SOURCE.map((r, ri) => (
+                <Fragment key={ri}>
+                  {numLigne(ri + 2)}
+                  {r.map((cell, ci) => (
+                    <button key={ci} onClick={() => clicSource(ci)} disabled={colActive !== ci} className={`border-b border-navy/5 px-2 py-1 ${colActive === ci ? 'cursor-pointer bg-mint/[0.10] ring-1 ring-inset ring-mint/40 hover:bg-mint/25' : 'bg-white'} ${ci === 2 ? 'text-right font-mono text-navy/70' : 'text-left text-navy/85'}`}>{ci === 2 ? eur(cell) : cell}</button>
+                  ))}
+                </Fragment>
+              ))}
             </div>
           </div>
+          <p className="mt-1 text-[9px] leading-snug text-navy/40">↳ Clique une cellule d’une colonne pour sélectionner toute sa plage (ex. colonne C → $C$2:$C$7).</p>
         </div>
 
-        {/* TABLE CROISÉE */}
+        {/* TABLE CROISÉE : colonnes E F G, lignes 1 à 4 */}
         <div>
-          <p className="mb-1 text-[10px] font-semibold text-navy/45">Tableau croisé à remplir (une seule formule !)</p>
-          <div className="overflow-hidden rounded-md border border-navy/15 text-[10px] shadow">
-            <div className="grid grid-cols-3">
-              <div className="border-b border-r border-navy/10 bg-navy/5 px-2 py-1" />
+          <p className="mb-1 text-[10px] font-semibold text-navy/45">Tableau croisé à remplir (colonnes E, F, G)</p>
+          <div className="overflow-hidden rounded-md border border-navy/20 text-[10px] shadow">
+            <div className="grid" style={{ gridTemplateColumns: '1.1rem 1.1fr 1fr 1fr' }}>
+              <div className="border-b border-r border-navy/10 bg-navy/10" />
+              {['E', 'F', 'G'].map((l) => colLettre(l, false))}
+              {numLigne(1)}
+              <div className="border-b border-r border-navy/10 bg-navy/5" />
               {SSE_REGIONS.map((reg, ci) => {
-                const estF1 = ci === 0
-                const cibleF1 = i === 5 && estF1
-                return <button key={reg} onClick={() => { if (cibleF1) setI(6) }} disabled={!cibleF1} className={`border-b border-navy/10 px-2 py-1 text-center font-bold ${cibleF1 ? 'animate-pulse bg-mint/20 text-navy ring-1 ring-inset ring-mint' : i >= 6 && estF1 ? 'bg-mint/10 text-navy' : 'bg-navy/5 text-navy/70'}`}>{reg}{i >= 6 && estF1 && <span className="ml-0.5 text-[8px] text-mint">F$1</span>}</button>
+                const cibleF1 = i === 5 && ci === 0
+                return <button key={reg} onClick={() => { if (cibleF1) setI(6) }} disabled={!cibleF1} className={`border-b border-navy/10 px-1 py-1 text-center font-bold ${cibleF1 ? 'animate-pulse bg-mint/25 text-navy ring-1 ring-inset ring-mint' : i >= 6 && ci === 0 ? 'bg-mint/15 text-navy' : 'bg-navy/5 text-navy/70'}`}>{reg}{i >= 6 && ci === 0 && <span className="ml-0.5 text-[8px] text-mint">F$1</span>}</button>
               })}
               {SSE_VENDEURS.map((vend, ri) => (
                 <Fragment key={vend}>
+                  {numLigne(ri + 2)}
                   {(() => {
-                    const estE2 = ri === 0
-                    const cibleE2 = i === 3 && estE2
-                    return <button onClick={() => { if (cibleE2) setI(4) }} disabled={!cibleE2} className={`border-b border-r border-navy/10 px-2 py-1 text-left font-semibold ${cibleE2 ? 'animate-pulse bg-mint/20 text-navy ring-1 ring-inset ring-mint' : i >= 4 && estE2 ? 'bg-mint/10 text-navy' : 'bg-navy/5 text-navy/70'}`}>{vend}{i >= 4 && estE2 && <span className="ml-0.5 text-[8px] text-mint">$E{ri + 2}</span>}</button>
+                    const cibleE2 = i === 3 && ri === 0
+                    return <button onClick={() => { if (cibleE2) setI(4) }} disabled={!cibleE2} className={`border-b border-r border-navy/10 px-2 py-1 text-left font-semibold ${cibleE2 ? 'animate-pulse bg-mint/25 text-navy ring-1 ring-inset ring-mint' : i >= 4 && ri === 0 ? 'bg-mint/15 text-navy' : 'bg-navy/5 text-navy/70'}`}>{vend}{i >= 4 && ri === 0 && <span className="ml-0.5 text-[8px] text-mint">$E2</span>}</button>
                   })()}
                   {SSE_REGIONS.map((reg, ci) => {
                     const estF2 = ri === 0 && ci === 0
                     const cibleF2 = i === 0 && estF2
                     const affiche = rempli || (estF2 && complet)
-                    return <button key={reg} onClick={() => { if (cibleF2) setI(1) }} disabled={!cibleF2} className={`relative border-b border-navy/5 px-2 py-1 text-right font-mono ${cibleF2 ? 'animate-pulse bg-mint/15 ring-1 ring-inset ring-mint' : estF2 && complet ? 'bg-mint/20 font-semibold text-navy' : rempli ? 'bg-mint/[0.06] text-navy/80' : 'bg-white text-navy/25'}`}>
+                    return <button key={reg} onClick={() => { if (cibleF2) setI(1) }} disabled={!cibleF2} className={`relative border-b border-navy/5 px-2 py-1 text-right font-mono ${cibleF2 ? 'animate-pulse bg-mint/15 ring-1 ring-inset ring-mint' : estF2 && complet ? 'bg-mint/25 font-semibold text-navy' : rempli ? 'bg-mint/[0.07] text-navy/80' : 'bg-white text-navy/25'}`}>
                       {affiche ? eur(somme(vend, reg)) : (estF2 ? '?' : '')}
-                      {estF2 && complet && !rempli && <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 cursor-grab rounded-sm bg-mint ring-1 ring-white" />}
+                      {estF2 && complet && !rempli && <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-sm bg-mint ring-1 ring-white" />}
                     </button>
                   })}
                 </Fragment>
