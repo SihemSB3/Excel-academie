@@ -4855,6 +4855,8 @@ function MFCTableau({ v }) {
   })
   const icone = (n) => (n >= 12000 ? { s: '▲', c: '#1f9d57' } : n >= 7000 ? { s: '▬', c: '#d9a406' } : { s: '▼', c: '#d33' })
   const nuance = (n) => (n >= 12000 ? '#c6efce' : n >= 7000 ? '#ffeb9c' : '#ffc7ce')
+  const triDesc = [...rows.map((r) => r[2])].sort((a, b) => b - a)
+  const seuilHaut = triDesc[1] ?? triDesc[0]  // les 2 plus hautes valeurs
   return (
     <div className="mt-3 flex flex-col items-center gap-2">
       <div className="overflow-hidden rounded-md border border-navy/15 shadow">
@@ -4863,7 +4865,7 @@ function MFCTableau({ v }) {
           <tbody>
             {rows.map(([nom, aff, n], i) => {
               const rouge = !avant && style === 'surbrillance' && n < seuil
-              const vert = !avant && style === 'formule' && n >= 12000
+              const vert = !avant && ((style === 'formule' && n >= 12000) || (style === 'hautebasse' && n >= seuilHaut))
               const doublon = !avant && style === 'doublons' && counts[nom] > 1
               const fondNuance = !avant && style === 'nuances' ? { background: nuance(n) } : vert ? { background: '#c6efce' } : undefined
               return (
@@ -4891,10 +4893,11 @@ function MFCTableau({ v }) {
 // (surbrillance seuil, barres de données…), et le tableau se met en forme EN DIRECT (réutilise
 // le rendu de MFCTableau via avant:!fait). Modes : surbrillance, barres, nuances, icones, hautebasse.
 function MfcBuilder({ v, onResolu }) {
-  const { mode = 'barres', seuil = 7000, resultat = '' } = v
+  const { mode = 'barres', seuil = 7000, formule = '=B2>=12000', data, resultat = '' } = v
   const [menu, setMenu] = useState(false)
   const [sous, setSous] = useState(false)
-  const [dialog, setDialog] = useState(false)
+  const [dialog, setDialog] = useState(false)   // seuil (surbrillance) ou formule
+  const [saisieF, setSaisieF] = useState(false)  // formule tapée
   const [fait, setFait] = useState(false)
   useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
 
@@ -4904,24 +4907,29 @@ function MfcBuilder({ v, onResolu }) {
     { k: 'barres', label: 'Barres de données' },
     { k: 'nuances', label: 'Nuances de couleurs' },
     { k: 'icones', label: 'Jeux d\'icônes' },
+    { k: 'formule', label: 'Nouvelle règle…' },
   ]
   const sousOptions = {
-    surbrillance: ['Supérieur à…', 'Inférieur à…', 'Entre…', 'Égal à…', 'Texte qui contient…'],
+    surbrillance: ['Supérieur à…', 'Inférieur à…', 'Entre…', 'Égal à…', 'Texte qui contient…', 'Valeurs en double…'],
+    hautebasse: ['10 valeurs les plus élevées…', '10 valeurs les moins élevées…', 'Valeurs supérieures à la moyenne'],
     barres: ['Remplissage dégradé', 'Remplissage uni'],
     nuances: ['Dégradé vert - jaune - rouge', 'Dégradé rouge - jaune - vert'],
     icones: ['3 flèches (colorées)', '3 feux tricolores', '5 formes géométriques'],
   }
-  const sousCible = { surbrillance: 'Inférieur à…', barres: 'Remplissage dégradé', nuances: 'Dégradé vert - jaune - rouge', icones: '3 flèches (colorées)' }[mode]
+  const familleCible = mode === 'doublons' ? 'surbrillance' : mode  // les doublons passent par « surbrillance »
+  const familleLabel = (familles.find((f) => f.k === familleCible) || {}).label
+  const sousCible = { surbrillance: 'Inférieur à…', doublons: 'Valeurs en double…', hautebasse: '10 valeurs les plus élevées…', barres: 'Remplissage dégradé', nuances: 'Dégradé vert - jaune - rouge', icones: '3 flèches (colorées)' }[mode]
+  const styleAff = mode === 'doublons' ? 'doublons' : mode
 
-  const choisirFamille = (k) => { if (k !== mode) return; if (mode === 'hautebasse') { setMenu(false); setFait(true); return } setSous(true) }
+  const choisirFamille = (k) => { if (k !== familleCible) return; if (mode === 'formule') { setMenu(false); setDialog(true); return } setSous(true) }
   const choisirSous = (opt) => { if (opt !== sousCible) return; if (mode === 'surbrillance') { setSous(false); setDialog(true) } else { setMenu(false); setSous(false); setFait(true) } }
 
   const consigne = () => {
     if (fait) return ''
-    if (!menu) return 'Clique **Mise en forme conditionnelle** dans le ruban.'
-    if (dialog) return `Le seuil **${seuil}** est déjà saisi : clique **OK**.`
+    if (dialog) return mode === 'formule' ? (saisieF ? 'Clique sur **OK**.' : `Tape la formule **${formule}** (VRAI/FAUX), puis choisis le format vert.`) : `Le seuil **${seuil}** est déjà saisi : clique sur **OK**.`
+    if (!menu) return 'Clique sur **Mise en forme conditionnelle** dans le ruban.'
     if (sous) return `Choisis **${sousCible}**.`
-    return `Choisis **${(familles.find((f) => f.k === mode) || {}).label}**.`
+    return `Choisis **${familleLabel}**.`
   }
 
   return (
@@ -4929,7 +4937,7 @@ function MfcBuilder({ v, onResolu }) {
       <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
         {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
       </div>
-      <MFCTableau v={{ style: mode, avant: !fait, seuil }} />
+      <MFCTableau v={{ style: styleAff, avant: !fait, seuil, data }} />
       {!fait && (
         <div className="mx-auto mt-3 max-w-md text-[11px]">
           <div className="flex items-center gap-2 rounded-md border border-navy/15 bg-white px-2 py-1.5 shadow">
@@ -4938,21 +4946,35 @@ function MfcBuilder({ v, onResolu }) {
           </div>
           {menu && !sous && !dialog && (
             <div className="mt-1 w-72 max-w-full overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
-              {familles.map((f) => { const cible = f.k === mode; return <button key={f.k} onClick={() => choisirFamille(f.k)} className={`flex w-full items-center justify-between px-2 py-1.5 text-left ${cible ? 'animate-pulse bg-mint/15 font-semibold text-navy' : 'text-navy/45'}`}><span>{f.label}</span><span className="text-navy/30">▸</span></button> })}
+              {familles.map((f) => { const cible = f.k === familleCible; return <button key={f.k} onClick={() => choisirFamille(f.k)} className={`flex w-full items-center justify-between px-2 py-1.5 text-left ${cible ? 'animate-pulse bg-mint/15 font-semibold text-navy' : 'text-navy/45'}`}><span>{f.label}</span>{f.k !== 'formule' && <span className="text-navy/30">▸</span>}</button> })}
             </div>
           )}
           {menu && sous && !dialog && (
-            <div className="mt-1 w-60 max-w-full overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
-              {(sousOptions[mode] || []).map((opt) => { const cible = opt === sousCible; return <button key={opt} onClick={() => choisirSous(opt)} className={`block w-full px-2 py-1.5 text-left ${cible ? 'animate-pulse bg-mint/15 font-semibold text-navy' : 'text-navy/45'}`}>{opt}</button> })}
+            <div className="mt-1 w-64 max-w-full overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
+              {(sousOptions[familleCible] || []).map((opt) => { const cible = opt === sousCible; return <button key={opt} onClick={() => choisirSous(opt)} className={`block w-full px-2 py-1.5 text-left ${cible ? 'animate-pulse bg-mint/15 font-semibold text-navy' : 'text-navy/45'}`}>{opt}</button> })}
             </div>
           )}
-          {dialog && (
+          {dialog && mode !== 'formule' && (
             <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 shadow-xl">
               <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Inférieur à</div>
               <div className="space-y-2 bg-white p-3">
                 <p className="text-navy/60">Mettre en forme les cellules INFÉRIEURES À :</p>
                 <div className="flex items-center gap-2"><span className="flex-1 rounded-sm border border-navy/30 px-2 py-1 font-mono text-navy/80">{seuil}</span><span className="text-navy/50">avec</span><span className="rounded-sm border border-red-300 bg-red-100 px-2 py-1 text-red-700">Rouge clair</span></div>
                 <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => { setDialog(false); setFait(true) }} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-5 py-0.5 font-bold text-navy">OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+              </div>
+            </div>
+          )}
+          {dialog && mode === 'formule' && (
+            <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 shadow-xl">
+              <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Nouvelle règle de mise en forme</div>
+              <div className="space-y-2 bg-white p-3">
+                <p className="text-navy/60">Appliquer une mise en forme aux cellules qui vérifient :</p>
+                <div className="flex items-center gap-1">
+                  {saisieF ? <span className="flex-1 rounded-sm border border-mint px-2 py-1 font-mono text-navy ring-1 ring-mint">{formule}</span>
+                    : <button onClick={() => setSaisieF(true)} className="flex-1 animate-pulse rounded-sm border border-mint px-2 py-1 text-left font-mono text-navy/40 ring-1 ring-mint">⌨ taper la formule…</button>}
+                </div>
+                <div className="flex items-center gap-2 text-navy/60">Format : <span className="rounded-sm border border-[#1f9d57]/40 bg-[#c6efce] px-2 py-0.5 text-[#1f7a4d]">Fond vert</span></div>
+                <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => saisieF && setFait(true)} disabled={!saisieF} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${saisieF ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
               </div>
             </div>
           )}

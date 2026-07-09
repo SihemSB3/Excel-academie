@@ -4588,76 +4588,23 @@ const MFCONDITIONNELLE = {
     { humeur: 'accueil', dit: 'La **mise en forme conditionnelle** applique automatiquement un style (couleur, icône, barre) à une cellule **selon son contenu**. En un coup d\'œil, tu repères les valeurs clés. Voici un tableau brut :', visuel: { type: 'mfctableau', avant: true, legende: 'AVANT : rien ne ressort. Difficile de repérer les faibles ou les fortes ventes.' } },
     {
       humeur: 'pensif',
-      dit: 'Première famille : **colorer les cellules selon un seuil** (Règles de mise en surbrillance).',
-      visuel: {
-        type: 'methode',
-        titre: 'Règles de mise en surbrillance',
-        blocs: [
-          { etapes: ['Sélectionne ta plage, puis onglet **Accueil** > groupe **Styles** > **Mise en forme conditionnelle**.'] },
-          { capture: { type: 'ruban', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme\nconditionnelle' }, { icone: '▧', label: 'Mettre sous\nforme de tableau' }, { icone: '🎨', label: 'Styles de\ncellules' }] } },
-          { etapes: ['Choisis **Règles de mise en surbrillance des cellules**, puis le type (ici **Inférieur à**).'], depart: 2 },
-          { capture: { type: 'mfcmenu', actif: 0 } },
-          { capture: { type: 'menu', items: [{ label: 'Supérieur à…' }, { label: 'Inférieur à…', actif: true }, { label: 'Entre…' }, { label: 'Égal à…' }, { label: 'Texte qui contient…' }, { label: 'Une date se situant…' }] } },
-          { etapes: ['Saisis le **seuil** (7000), choisis un **style**, puis **OK**.'], depart: 3 },
-          { capture: { type: 'mfcdialog', titre: 'Inférieur à', valeur: '7000' } },
-          { capture: { type: 'mfctableau', style: 'surbrillance', seuil: 7000, legende: 'APRÈS : les ventes sous 7 000 € (Léa, Nina) ressortent en rouge. On voit tout de suite les plus basses.' } },
-        ],
-      },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi. Applique une **règle de surbrillance** : fais ressortir en rouge les ventes **inférieures à 7 000 €**. Ouvre le menu, choisis la famille, puis le type.',
+      dit: 'Première famille : **colorer selon un seuil** (Règles de mise en surbrillance). À toi : fais ressortir en rouge les ventes **inférieures à 7 000 €**. Ouvre le menu, choisis la famille, puis le type et le seuil.',
       visuel: { type: 'mfcbuilder', mode: 'surbrillance', seuil: 7000, resultat: 'Les ventes sous 7 000 € (Léa, Nina) ressortent en rouge ! D\'un coup d\'œil, tu repères les plus faibles.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Deuxième famille : **mettre en avant les extrêmes** (valeurs hautes/basses).',
-      visuel: {
-        type: 'methode',
-        titre: 'Valeurs de plage haute/basse',
-        blocs: [
-          { etapes: ['Mise en forme conditionnelle > **Règles des valeurs de plage haute/basse**.'] },
-          { capture: { type: 'mfcmenu', actif: 1 } },
-          { capture: { type: 'menu', items: [{ label: '10 valeurs les plus élevées…', actif: true }, { label: '10 valeurs les moins élevées…' }, { label: '10 % les plus élevés…' }, { label: 'Valeurs supérieures à la moyenne' }, { label: 'Valeurs inférieures à la moyenne' }] } },
-          { note: 'Ajuste le nombre ou le pourcentage (ex. les **10 % les plus élevés**), choisis un format, puis **OK**. Parfait pour les meilleures ou pires performances.', label: 'Astuce' },
-        ],
-      },
+      dit: 'Deuxième famille : **mettre en avant les extrêmes** (valeurs hautes/basses). À toi : surligne les **10 valeurs les plus élevées** (ici, les 2 plus fortes ventes).',
+      visuel: { type: 'mfcbuilder', mode: 'hautebasse', resultat: 'Tom (15 800 €) et Karim (12 500 €), les 2 plus fortes ventes, ressortent en vert. Idéal pour repérer d\'un coup les meilleures (ou pires) performances. Tu peux régler le nombre ou passer en pourcentage.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Troisième famille : les **nuances de couleurs**, un dégradé du plus bas au plus haut.',
-      visuel: {
-        type: 'methode',
-        titre: 'Les nuances de couleurs (dégradés)',
-        blocs: [
-          { etapes: ['Sélectionne ta plage, puis Mise en forme conditionnelle > **Nuances de couleurs**.'] },
-          { capture: { type: 'mfcmenu', actif: 3 } },
-          { etapes: ['**Survole** les modèles pour voir l\'effet en direct sur ton tableau, puis **clique** celui qui te convient.'], depart: 2 },
-          { capture: { type: 'menu', items: [{ label: 'Dégradé vert - jaune - rouge', actif: true }, { label: 'Dégradé rouge - jaune - vert' }, { label: 'Dégradé bicolore vert - blanc' }, { label: 'Dégradé bicolore blanc - rouge' }] } },
-          { capture: { type: 'mfctableau', style: 'nuances', legende: 'APRÈS : chaque cellule prend sa teinte selon sa valeur, du vert (élevé) au rouge (bas), en passant par le jaune.' } },
-          { note: 'Pour des comparaisons claires, privilégie un dégradé à **deux couleurs** (vert/rouge) : le vert pour les valeurs élevées, le rouge pour les basses.', label: 'Astuce' },
-        ],
-      },
+      dit: 'Troisième famille : les **nuances de couleurs**, un dégradé du plus bas au plus haut. À toi de l\'appliquer (dégradé vert-jaune-rouge).',
+      visuel: { type: 'mfcbuilder', mode: 'nuances', resultat: 'Chaque cellule prend sa teinte selon sa valeur : du vert (élevé) au rouge (bas), en passant par le jaune. La « chaleur » du tableau se lit d\'un regard.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Quatrième famille : les **barres de données**, une barre proportionnelle à la valeur, directement dans la cellule.',
-      visuel: {
-        type: 'methode',
-        titre: 'Les barres de données',
-        blocs: [
-          { etapes: ['Sélectionne ta plage, puis Mise en forme conditionnelle > **Barres de données**.'] },
-          { capture: { type: 'mfcmenu', actif: 2 } },
-          { etapes: ['Choisis un remplissage **dégradé** (fondu subtil) ou **uni** (bande pleine).'], depart: 2 },
-          { capture: { type: 'menu', items: [{ label: 'Remplissage dégradé', actif: true }, { label: 'Remplissage uni' }] } },
-          { capture: { type: 'mfctableau', style: 'barres', legende: 'APRÈS : plus la vente est grande, plus la barre est longue. Un mini-graphique directement dans le tableau !' } },
-        ],
-      },
-    },
-    {
-      humeur: 'accueil',
-      dit: 'À toi. Ajoute des **barres de données** : un mini-graphique directement dans les cellules.',
-      visuel: { type: 'mfcbuilder', mode: 'barres', resultat: 'Chaque cellule a sa barre : plus la vente est grande, plus la barre est longue. Tom (15 800 €) déborde, Léa (4 300 €) reste courte.' },
+      dit: 'Quatrième famille : les **barres de données**, une barre proportionnelle à la valeur, dans la cellule. À toi de les ajouter (remplissage dégradé).',
+      visuel: { type: 'mfcbuilder', mode: 'barres', resultat: 'Chaque cellule a sa barre : plus la vente est grande, plus la barre est longue. Tom (15 800 €) déborde, Léa (4 300 €) reste courte. Un mini-graphique dans le tableau !' },
     },
     {
       humeur: 'pensif',
@@ -4666,50 +4613,13 @@ const MFCONDITIONNELLE = {
     },
     {
       humeur: 'pensif',
-      dit: 'Cinquième famille : **classer visuellement avec des icônes** (flèches, feux…).',
-      visuel: {
-        type: 'methode',
-        titre: 'Les jeux d\'icônes',
-        blocs: [
-          { etapes: ['Mise en forme conditionnelle > **Jeux d\'icônes**, puis choisis un style (ex. **3 flèches**).'] },
-          { capture: { type: 'mfcmenu', actif: 4 } },
-          { capture: { type: 'menu', items: [{ label: '3 flèches (colorées)', actif: true }, { label: '3 feux tricolores' }, { label: '5 formes géométriques' }] } },
-          { capture: { type: 'mfctableau', style: 'icones', legende: 'Résultat : flèche verte ▲ pour les fortes ventes, jaune ▬ pour les moyennes, rouge ▼ pour les faibles.' } },
-        ],
-      },
+      dit: 'Cinquième famille : **classer avec des icônes** (flèches, feux…). À toi : applique le jeu **3 flèches**.',
+      visuel: { type: 'mfcbuilder', mode: 'icones', resultat: 'Flèche verte ▲ pour les fortes ventes, jaune ▬ pour les moyennes, rouge ▼ pour les faibles. Astuce : via « Gérer les règles > Modifier la règle », tu peux régler toi-même les seuils de chaque icône (ex. ▲ si ≥ 67 %) pour coller à TES paliers.' },
     },
     {
       humeur: 'pensif',
-      dit: 'Tu peux **régler toi-même les seuils** d\'un jeu d\'icônes, pour coller à TES paliers.',
-      visuel: {
-        type: 'methode',
-        titre: 'Modifier les plages d\'un jeu d\'icônes',
-        blocs: [
-          { etapes: ['Mise en forme conditionnelle > **Gérer les règles**.'] },
-          { capture: { type: 'mfcmenu', actif: 7 } },
-          { etapes: ['Sélectionne la règle, clique **Modifier la règle…**'], depart: 2 },
-          { capture: { type: 'gestionregles', regles: [{ desc: 'Jeu d\'icônes (3 flèches)', plage: '=$B$2:$B$6' }], selection: 0 } },
-          { etapes: ['Change les **valeurs** de chaque icône (ex. ▲ si ≥ 67, ▬ si ≥ 33, ▼ sinon), puis **OK** (2 fois).'], depart: 3 },
-          { capture: { type: 'regleicones', lignes: [{ icone: '▲', c: '#1f9d57', op: '≥', val: '67' }, { icone: '▬', c: '#d9a406', op: '≥', val: '33' }, { icone: '▼', c: '#d33', op: '<', val: '33' }] } },
-          { note: 'Adapter les seuils évite les interprétations trompeuses des bornes par défaut, et rend ta lecture instantanée.', label: 'Pourquoi c\'est utile' },
-        ],
-      },
-    },
-    {
-      humeur: 'pensif',
-      dit: 'Sixième famille : la **règle basée sur une formule**, pour des critères sur mesure.',
-      visuel: {
-        type: 'methode',
-        titre: 'Règle basée sur une formule',
-        blocs: [
-          { etapes: ['Sélectionne ta plage, puis Mise en forme conditionnelle > **Nouvelle règle…**'] },
-          { capture: { type: 'mfcmenu', actif: 5 } },
-          { etapes: ['Choisis **« Utiliser une formule pour déterminer pour quelles cellules le format sera appliqué »**.'], depart: 2 },
-          { etapes: ['Écris une formule qui renvoie **VRAI ou FAUX** (ex. **=B2>=12000**), choisis le **Format…** (ici fond vert), puis **OK**.'], depart: 3 },
-          { capture: { type: 'nouvelleregle', formule: '=B2>=12000' } },
-          { capture: { type: 'mfctableau', style: 'formule', legende: 'APRÈS : la formule renvoie VRAI pour Karim (12 500 €) et Tom (15 800 €) : leurs cellules passent en vert.' } },
-        ],
-      },
+      dit: 'Sixième famille : la **règle basée sur une formule**, pour des critères sur mesure. À toi : passe en vert les ventes **≥ 12 000 €** avec la formule =B2>=12000 (via Nouvelle règle).',
+      visuel: { type: 'mfcbuilder', mode: 'formule', formule: '=B2>=12000', resultat: 'La formule renvoie VRAI pour Karim (12 500 €) et Tom (15 800 €) : leurs cellules passent en vert. C\'est la règle la plus souple, tu peux tester n\'importe quelle condition.' },
     },
     {
       humeur: 'pensif',
@@ -4718,18 +4628,8 @@ const MFCONDITIONNELLE = {
     },
     {
       humeur: 'pensif',
-      dit: 'Septième famille : la **détection des doublons**, pour repérer les valeurs en double.',
-      visuel: {
-        type: 'methode',
-        titre: 'Détecter les doublons',
-        blocs: [
-          { etapes: ['Sélectionne la colonne à vérifier, puis Mise en forme conditionnelle > Règles de mise en surbrillance > **Valeurs en double…**'] },
-          { capture: { type: 'menu', items: [{ label: 'Supérieur à…' }, { label: 'Inférieur à…' }, { label: 'Texte qui contient…' }, { label: 'Valeurs en double…', actif: true }] } },
-          { etapes: ['Choisis **en double** (ou **uniques** pour l\'inverse) et un style, puis **OK**.'], depart: 2 },
-          { capture: { type: 'mfcdialog', titre: 'Valeurs en double', phrase: 'contenant des valeurs', valeur: 'en double' } },
-          { capture: { type: 'mfctableau', style: 'doublons', data: [['Marie', '8 200 €', 8200], ['Karim', '12 500 €', 12500], ['Marie', '4 300 €', 4300], ['Tom', '15 800 €', 15800], ['Karim', '6 100 €', 6100]], legende: 'APRÈS : « Marie » et « Karim » apparaissent deux fois : toutes leurs occurrences ressortent en rouge. Pratique pour nettoyer une liste !' } },
-        ],
-      },
+      dit: 'Septième famille : la **détection des doublons**. À toi : surligne les valeurs en double (« Marie » et « Karim » sont deux fois). Passe par Règles de mise en surbrillance > Valeurs en double.',
+      visuel: { type: 'mfcbuilder', mode: 'doublons', data: [['Marie', '8 200 €', 8200], ['Karim', '12 500 €', 12500], ['Marie', '4 300 €', 4300], ['Tom', '15 800 €', 15800], ['Karim', '6 100 €', 6100]], resultat: '« Marie » et « Karim » apparaissent deux fois : toutes leurs occurrences ressortent en rouge. Parfait pour repérer (et nettoyer) les doublons d\'une liste.' },
     },
     {
       humeur: 'pensif',
