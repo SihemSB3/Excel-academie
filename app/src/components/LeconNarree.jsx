@@ -4563,6 +4563,35 @@ function MfcBuilder({ v, onResolu }) {
   )
 }
 
+// F4 INTERACTIF : le user appuie sur F4 et voit la référence défiler G10 → $G$10 → G$10 → $G10
+// → G10. Objectif : atteindre la cible (figer entièrement = $G$10).
+function RefBuilder({ v, onResolu }) {
+  const { base = 'G10', cible = '$G$10', avant = '=C2*', resultat = '' } = v
+  const m = String(base).match(/^([A-Z]+)(\d+)$/)
+  const col = m ? m[1] : 'G'
+  const lig = m ? m[2] : '10'
+  const cycle = [`${col}${lig}`, `$${col}$${lig}`, `${col}$${lig}`, `$${col}${lig}`]
+  const desc = ['Rien de figé (référence relative)', 'Colonne ET ligne figées', 'Ligne figée seulement', 'Colonne figée seulement']
+  const [i, setI] = useState(0)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const presser = () => { if (fait) return; const n = (i + 1) % 4; setI(n); if (cycle[n] === cible) setTimeout(() => setFait(true), 450) }
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 Appuie sur <b>F4</b> jusqu'à obtenir <b>{cible}</b> (fige la colonne ET la ligne).</span>}
+      </div>
+      <div className="mx-auto mt-3 flex max-w-md flex-col items-center gap-3">
+        <div className="w-full rounded-md border border-navy/15 bg-white px-3 py-2 font-mono text-sm shadow">
+          <span className="text-navy/40">fx </span><span className="text-navy/80">{avant}</span><span className={`rounded px-1 ${fait ? 'bg-mint/25 text-navy' : 'bg-amber-200/70 text-navy ring-1 ring-amber-400'}`}>{cycle[i]}</span>
+        </div>
+        <button onClick={presser} disabled={fait} className={`rounded-lg border-2 px-6 py-2 font-bold shadow-sm ${fait ? 'border-navy/15 bg-navy/5 text-navy/30' : 'animate-pulse border-navy bg-navy/5 text-navy'}`}>⌨ F4</button>
+        <p className="text-center text-[11px] text-navy/60"><span className="font-mono font-semibold text-navy/80">{cycle[i]}</span> — {desc[i]}</p>
+      </div>
+    </div>
+  )
+}
+
 // Le menu déroulant « Mise en forme conditionnelle » (Accueil > Styles), une entrée surlignée.
 function MFCMenu({ v }) {
   const actif = v?.actif ?? 0
@@ -7422,7 +7451,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -7520,6 +7549,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <GraphiqueInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'mfcbuilder' ? (
             <MfcBuilder v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'refbuilder' ? (
+            <RefBuilder v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -7585,7 +7616,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                     ? 'Agis sur le graphique'
                                                                     : s.visuel?.type === 'mfcbuilder'
                                                                       ? 'Applique la règle'
-                                                                      : 'Réponds pour continuer'
+                                                                      : s.visuel?.type === 'refbuilder'
+                                                                        ? 'Appuie sur F4'
+                                                                        : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
