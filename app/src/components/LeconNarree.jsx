@@ -6474,7 +6474,7 @@ function GraphiqueInteractif({ v, onResolu }) {
   const {
     mode = 'inserer', donnees, titre = 'Ventes par mois', typeInitial = 'histogramme', typeCible = 'courbe',
     element = 'serie:0', couleurCible = '#e8853a', styleCible = 2, elementBascule = 'etiquettes',
-    filtreCat, axeMinCible = 10, resultat = '',
+    filtreCat, axeMinCible = 10, titreCible = 'Chiffre d\'affaires 2025', resultat = '',
   } = v
   const [type, setType] = useState(typeInitial)
   const [data, setData] = useState(donnees || GRAPHE_DEF)
@@ -6515,7 +6515,7 @@ function GraphiqueInteractif({ v, onResolu }) {
       case 'style': return `Clique le **Style ${styleCible}** : le graphe change complètement d\'habillage.`
       case 'elements': return `Ouvre le **＋**, puis coche **${elementBascule === 'etiquettes' ? 'Étiquettes de données' : elementBascule}** pour l\'ajouter au graphe.`
       case 'filtre': return `Ouvre le **▽ filtre**, décoche **${filtreCat}**, puis Applique : sa barre disparaît.`
-      case 'titre': return saisieTitre ? 'Tape le nouveau titre, puis **Entrée**.' : '**Double-clique le titre** « ' + tCourant + ' », en haut du graphe.'
+      case 'titre': return saisieTitre ? `Tape le nouveau titre (ex. « ${titreCible} »), puis **Entrée**.` : '**Double-clique le titre**, en haut du graphe, pour le modifier.'
       case 'axe': return sel === 'axeY' ? `Monte le **Minimum** de l\'axe à ${axeMinCible} : les écarts se creusent.` : 'Ouvre la Sélection active et choisis **Axe vertical (Valeurs)**.'
       case 'intervertir': return 'Onglet **Création de graphique** : clique **Intervertir les lignes/colonnes**. Les séries et les catégories s\'échangent.'
       case 'supprimer': return !selectionne ? 'Clique le graphe pour le **sélectionner** (les poignées apparaissent).' : menuContext ? 'Clique **Supprimer** dans le menu.' : '**Clic droit** sur le graphe, puis **Supprimer**.'
@@ -6563,7 +6563,7 @@ function GraphiqueInteractif({ v, onResolu }) {
             onContextMenu={(e) => { if (mode === 'supprimer' && selectionne) { e.preventDefault(); setMenuContext(true) } }}
             className={`rounded-lg border-2 bg-white p-1 ${selectionne && (mode === 'ongletscontextuels' || mode === 'supprimer' || mode === 'redimensionner' || mode === 'titre') ? 'border-mint' : 'border-transparent'}`}
           >
-            {mode === 'titre' && saisieTitre ? petitGraphe({ options: { ...opts, titre: false } }) : petitGraphe()}
+            {mode === 'titre' && saisieTitre && !fait ? petitGraphe({ options: { ...opts, titre: false } }) : petitGraphe()}
           </div>
           {/* Poignées de redimensionnement : la poignée du coin bas-droit se tire vraiment */}
           {mode === 'redimensionner' && !fait && [['-top-1.5 -left-1.5', 'nwse-resize'], ['-top-1.5 left-1/2 -translate-x-1/2', 'ns-resize'], ['-top-1.5 -right-1.5', 'nesw-resize'], ['top-1/2 -right-1.5 -translate-y-1/2', 'ew-resize'], ['-bottom-1.5 -right-1.5', 'nwse-resize'], ['-bottom-1.5 left-1/2 -translate-x-1/2', 'ns-resize'], ['-bottom-1.5 -left-1.5', 'nesw-resize'], ['top-1/2 -left-1.5 -translate-y-1/2', 'ew-resize']].map(([pos, cur], i) => {
@@ -6573,7 +6573,7 @@ function GraphiqueInteractif({ v, onResolu }) {
           {/* Le titre se modifie directement sur le graphe (double-clic) */}
           {mode === 'titre' && !fait && !saisieTitre && <div onDoubleClick={() => setSaisieTitre(true)} className="absolute inset-x-0 top-0 h-7 cursor-text" />}
           {mode === 'titre' && !fait && saisieTitre && (
-            <input autoFocus defaultValue={tCourant} onKeyDown={(e) => { if (e.key === 'Enter') { setTitre(e.currentTarget.value.trim() || 'Chiffre d\'affaires 2025'); setFait(true) } }} className="absolute left-1/2 top-1 w-48 -translate-x-1/2 rounded border border-mint bg-white px-1 text-center text-[12px] font-bold text-navy outline-none ring-1 ring-mint" />
+            <input autoFocus placeholder={titreCible} onKeyDown={(e) => { if (e.key === 'Enter') { setTitre(e.currentTarget.value.trim() || titreCible); setFait(true) } }} onBlur={(e) => { setTitre(e.currentTarget.value.trim() || titreCible); setFait(true) }} className="absolute left-1/2 top-1 w-56 -translate-x-1/2 rounded border border-mint bg-white px-1 text-center text-[12px] font-bold text-navy outline-none ring-1 ring-mint placeholder:font-normal placeholder:text-navy/30" />
           )}
           {/* Menu clic droit → Supprimer */}
           {mode === 'supprimer' && menuContext && !fait && (
