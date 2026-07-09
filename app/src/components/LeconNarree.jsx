@@ -6492,25 +6492,34 @@ function GraphiqueInteractif({ v, onResolu }) {
   const [cachees, setCachees] = useState([]) // catégories masquées (mode filtre)
   const [feuille, setFeuille] = useState(false)
   const [saisieTitre, setSaisieTitre] = useState(false)
+  const [menuContext, setMenuContext] = useState(false) // menu clic droit (supprimer)
   const [fait, setFait] = useState(false)
   useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  // Glissement RÉEL de la poignée d'angle (redimensionner) : on suit le pointeur.
+  const onHandleDown = (e) => {
+    e.preventDefault(); e.stopPropagation()
+    const sx = e.clientX, sy = e.clientY, se = echelle
+    const move = (ev) => { const d = (ev.clientX - sx + (ev.clientY - sy)) / 260; setEchelle(Math.min(1.5, Math.max(0.7, se + d))) }
+    const up = (ev) => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); const d = (ev.clientX - sx + (ev.clientY - sy)) / 260; if (se + d >= 1.18) setFait(true); else setEchelle(1) }
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
+  }
 
   const GALERIE = [{ t: 'histogramme', i: '📊', l: 'Histogramme' }, { t: 'courbe', i: '📈', l: 'Courbe' }, { t: 'aires', i: '⛰', l: 'Aires' }, { t: 'secteurs', i: '🥧', l: 'Secteurs' }, { t: 'barres', i: '📶', l: 'Barres' }]
   const consigne = () => {
     switch (mode) {
       case 'inserer': return !insere ? 'Clique un **type de graphique** dans la galerie pour l\'insérer.' : `Change de type : clique **${GALERIE.find((g) => g.t === typeCible)?.l}** pour voir le graphe se transformer.`
       case 'type': return `Clique **${GALERIE.find((g) => g.t === typeCible)?.l}** : le graphe passe d\'histogramme à ${GALERIE.find((g) => g.t === typeCible)?.l.toLowerCase()}.`
-      case 'redimensionner': return 'Attrape la **poignée d\'angle** (en bas à droite) et agrandis le graphe.'
+      case 'redimensionner': return 'Attrape le **carré (poignée) du coin bas-droit** et **tire-le** vers l\'extérieur pour agrandir le graphe.'
       case 'ongletscontextuels': return selectionne ? 'Les onglets **Création** et **Format** sont là. **Clique en dehors** du graphe pour les faire disparaître.' : 'Vois : les onglets contextuels ont disparu. **Reclique le graphe** pour les faire revenir.'
       case 'selectionformat': return sousMenu ? 'Choisis **Série « Ventes »** dans la liste.' : sel === element ? 'Choisis une **couleur** pour repeindre la série.' : 'Ouvre la **Sélection active** (▾) pour choisir un élément à mettre en forme.'
       case 'style': return `Clique le **Style ${styleCible}** : le graphe change complètement d\'habillage.`
       case 'elements': return `Ouvre le **＋**, puis coche **${elementBascule === 'etiquettes' ? 'Étiquettes de données' : elementBascule}** pour l\'ajouter au graphe.`
       case 'filtre': return `Ouvre le **▽ filtre**, décoche **${filtreCat}**, puis Applique : sa barre disparaît.`
-      case 'titre': return saisieTitre ? 'Tape le nouveau titre, puis valide.' : '**Double-clique le titre** du graphe pour le modifier.'
+      case 'titre': return saisieTitre ? 'Tape le nouveau titre, puis **Entrée**.' : '**Double-clique le titre** « ' + tCourant + ' », en haut du graphe.'
       case 'axe': return sel === 'axeY' ? `Monte le **Minimum** de l\'axe à ${axeMinCible} : les écarts se creusent.` : 'Ouvre la Sélection active et choisis **Axe vertical (Valeurs)**.'
-      case 'intervertir': return 'Clique **Intervertir les lignes/colonnes** : les séries et les catégories s\'échangent.'
-      case 'supprimer': return 'Sélectionne le graphe (clique son bord) puis **Suppr** pour l\'effacer.'
-      case 'deplacerfeuille': return dialog ? 'Choisis **Nouvelle feuille**, nomme-la, puis **OK**.' : 'Clique **Déplacer le graphique**.'
+      case 'intervertir': return 'Onglet **Création de graphique** : clique **Intervertir les lignes/colonnes**. Les séries et les catégories s\'échangent.'
+      case 'supprimer': return !selectionne ? 'Clique le graphe pour le **sélectionner** (les poignées apparaissent).' : menuContext ? 'Clique **Supprimer** dans le menu.' : '**Clic droit** sur le graphe, puis **Supprimer**.'
+      case 'deplacerfeuille': return dialog ? 'Choisis **Nouvelle feuille**, puis **OK**.' : 'Onglet **Création de graphique** : clique **Déplacer le graphique**.'
       default: return ''
     }
   }
@@ -6548,15 +6557,52 @@ function GraphiqueInteractif({ v, onResolu }) {
       ) : supprime ? (
         <div className="mx-auto mt-3 flex h-40 max-w-md items-center justify-center rounded-lg border-2 border-dashed border-navy/15 bg-white text-sm text-navy/40">Le graphique a été supprimé.</div>
       ) : (
-        <button
-          onClick={() => {
-            if (mode === 'ongletscontextuels' && !selectionne) { setSelectionne(true); setFait(true) }
-            if (mode === 'supprimer' && !selectionne) setSelectionne(true)
-          }}
-          className={`mx-auto mt-3 block w-full max-w-md rounded-lg border-2 bg-white p-1 ${selectionne && (mode === 'ongletscontextuels' || mode === 'supprimer' || mode === 'imprimer') ? 'border-mint ring-1 ring-mint' : 'border-transparent'}`}
-        >
-          {petitGraphe()}
-        </button>
+        <div className="relative mx-auto mt-3 w-full max-w-md">
+          <div
+            onClick={() => { if ((mode === 'ongletscontextuels' || mode === 'supprimer') && !selectionne) { setSelectionne(true); if (mode === 'ongletscontextuels') setFait(true) } }}
+            onContextMenu={(e) => { if (mode === 'supprimer' && selectionne) { e.preventDefault(); setMenuContext(true) } }}
+            className={`rounded-lg border-2 bg-white p-1 ${selectionne && (mode === 'ongletscontextuels' || mode === 'supprimer' || mode === 'redimensionner' || mode === 'titre') ? 'border-mint' : 'border-transparent'}`}
+          >
+            {mode === 'titre' && saisieTitre ? petitGraphe({ options: { ...opts, titre: false } }) : petitGraphe()}
+          </div>
+          {/* Poignées de redimensionnement : la poignée du coin bas-droit se tire vraiment */}
+          {mode === 'redimensionner' && !fait && [['-top-1.5 -left-1.5', 'nwse-resize'], ['-top-1.5 left-1/2 -translate-x-1/2', 'ns-resize'], ['-top-1.5 -right-1.5', 'nesw-resize'], ['top-1/2 -right-1.5 -translate-y-1/2', 'ew-resize'], ['-bottom-1.5 -right-1.5', 'nwse-resize'], ['-bottom-1.5 left-1/2 -translate-x-1/2', 'ns-resize'], ['-bottom-1.5 -left-1.5', 'nesw-resize'], ['top-1/2 -left-1.5 -translate-y-1/2', 'ew-resize']].map(([pos, cur], i) => {
+            const br = i === 4
+            return <span key={i} onPointerDown={br ? onHandleDown : undefined} style={{ cursor: cur, touchAction: 'none' }} className={`absolute ${pos} h-3 w-3 rounded-sm border border-navy bg-white ${br ? 'animate-pulse ring-2 ring-mint' : ''}`} />
+          })}
+          {/* Le titre se modifie directement sur le graphe (double-clic) */}
+          {mode === 'titre' && !fait && !saisieTitre && <div onDoubleClick={() => setSaisieTitre(true)} className="absolute inset-x-0 top-0 h-7 cursor-text" />}
+          {mode === 'titre' && !fait && saisieTitre && (
+            <input autoFocus defaultValue={tCourant} onKeyDown={(e) => { if (e.key === 'Enter') { setTitre(e.currentTarget.value.trim() || 'Chiffre d\'affaires 2025'); setFait(true) } }} className="absolute left-1/2 top-1 w-48 -translate-x-1/2 rounded border border-mint bg-white px-1 text-center text-[12px] font-bold text-navy outline-none ring-1 ring-mint" />
+          )}
+          {/* Menu clic droit → Supprimer */}
+          {mode === 'supprimer' && menuContext && !fait && (
+            <div className="absolute left-1/2 top-10 z-20 w-40 -translate-x-1/2 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-[11px] shadow-xl">
+              {[{ i: '✂️', l: 'Couper' }, { i: '📋', l: 'Copier' }, '-', { i: '🗑', l: 'Supprimer', cible: true }].map((it, i) => it === '-' ? <div key={i} className="my-1 border-t border-navy/10" /> : <button key={i} onClick={() => { if (it.cible) { setSupprime(true); setFait(true) } }} disabled={!it.cible} className={`flex w-full items-center gap-2 px-3 py-1 text-left ${it.cible ? 'animate-pulse bg-mint/15 font-semibold text-navy ring-1 ring-inset ring-mint' : 'text-navy/40'}`}><span>{it.i}</span>{it.l}</button>)}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Vrai ruban « Création de graphique » (intervertir / déplacer le graphique) */}
+      {(mode === 'intervertir' || mode === 'deplacerfeuille') && !fait && !dialog && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-md border border-navy/15 bg-white text-[10px] shadow">
+          <div className="flex gap-2.5 border-b border-navy/10 bg-[#f3f1ea] px-2 py-1">{['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'].map((o) => <span key={o} className={o === 'Création de graphique' ? 'rounded bg-[#1a7a44]/15 px-1 font-bold text-[#1a7a44]' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-stretch gap-2 p-2">
+            {mode === 'intervertir' ? (
+              <>
+                <button onClick={() => { setData((d) => { const nc = d.series.map((s) => s.nom); const ns = d.cats.map((c, ci) => ({ nom: c, vals: d.series.map((s) => s.vals[ci]) })); return { cats: nc, series: ns } }); setFait(true) }} className="flex w-24 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center ring-1 ring-mint"><span className="text-base">🔁</span><span className="leading-tight text-navy/75">Intervertir les lignes/colonnes</span></button>
+                <div className="flex w-24 flex-col items-center gap-1 rounded p-1 text-center opacity-50"><span className="text-base">⊞</span><span className="leading-tight text-navy/60">Sélectionner des données</span></div>
+                <span className="self-end pb-0.5 text-[8px] uppercase tracking-wide text-navy/35">Données</span>
+              </>
+            ) : (
+              <>
+                <button onClick={() => setDialog(true)} className="flex w-24 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center ring-1 ring-mint"><span className="text-base">↗</span><span className="leading-tight text-navy/75">Déplacer le graphique</span></button>
+                <span className="self-end pb-0.5 text-[8px] uppercase tracking-wide text-navy/35">Emplacement</span>
+              </>
+            )}
+          </div>
+        </div>
       )}
 
       {/* Clic « en dehors » (ongletscontextuels) */}
@@ -6573,11 +6619,6 @@ function GraphiqueInteractif({ v, onResolu }) {
             </button>
           ))}
         </div>
-      )}
-
-      {/* Redimensionner : bouton poignée */}
-      {mode === 'redimensionner' && !fait && (
-        <div className="mt-3 flex justify-center"><button onClick={() => { setEchelle(1.3); setFait(true) }} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">⤡ Tire la poignée d'angle pour agrandir</button></div>
       )}
 
       {/* Sélection active + couleur (selectionformat / axe) */}
@@ -6636,30 +6677,9 @@ function GraphiqueInteractif({ v, onResolu }) {
         </div>
       )}
 
-      {/* Titre : double-clic */}
-      {mode === 'titre' && !fait && (
-        <div className="mt-3 flex justify-center">
-          {!saisieTitre
-            ? <button onClick={() => setSaisieTitre(true)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">✎ Double-clique le titre</button>
-            : <button onClick={() => { setTitre('Chiffre d\'affaires 2025'); setFait(true) }} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">⏎ Valider « Chiffre d'affaires 2025 »</button>}
-        </div>
-      )}
-
-      {/* Intervertir */}
-      {mode === 'intervertir' && !fait && (
-        <div className="mt-3 flex justify-center"><button onClick={() => { setData((d) => { const nc = d.series.map((s) => s.nom); const ns = d.cats.map((c, ci) => ({ nom: c, vals: d.series.map((s) => s.vals[ci]) })); return { cats: nc, series: ns } }); setFait(true) }} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">🔁 Intervertir les lignes/colonnes</button></div>
-      )}
-
-      {/* Supprimer */}
-      {mode === 'supprimer' && !fait && selectionne && (
-        <div className="mt-3 flex justify-center"><button onClick={() => { setSupprime(true); setFait(true) }} className="animate-pulse rounded-md border-2 border-red-400 bg-red-400/10 px-4 py-2 text-sm font-bold text-navy">⌫ Suppr</button></div>
-      )}
-
-      {/* Déplacer vers une feuille */}
-      {mode === 'deplacerfeuille' && !fait && (
-        !dialog
-          ? <div className="mt-3 flex justify-center"><button onClick={() => setDialog(true)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">↗ Déplacer le graphique</button></div>
-          : <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+      {/* Déplacer vers une feuille : la boîte (déclenchée par le ruban ci-dessus) */}
+      {mode === 'deplacerfeuille' && dialog && !fait && (
+          <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
             <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Déplacer le graphique</span><span className="text-navy/40">✕</span></div>
             <div className="space-y-2 bg-white p-3">
               <button onClick={() => { setFeuille(true) }} className={`flex w-full items-center gap-2 text-left ${feuille ? 'text-navy' : 'animate-pulse text-navy/60'}`}><span className={`grid h-4 w-4 place-items-center rounded-full border text-[9px] ${feuille ? 'border-mint bg-mint text-white' : 'border-mint ring-1 ring-mint'}`}>{feuille && '●'}</span>Nouvelle feuille : <span className="font-mono">Graphique1</span></button>
