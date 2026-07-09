@@ -6248,8 +6248,8 @@ const GRAPHIQUESCROISES = {
     },
     {
       humeur: 'pensif',
-      dit: 'Comme pour un TCD, tu **glisses les champs** : « Type de bien » en **Axe** (les catégories), « Montant » en **Valeurs** (la hauteur des barres).',
-      visuel: { type: 'champstcd', tables: [{ nom: 'Ventes', champs: [{ nom: 'Type de bien', coche: true }, { nom: 'Montant', coche: true }] }], lignes: ['Type de bien'], colonnes: [], valeurs: ['Somme de Montant'], filtres: [] },
+      dit: 'Comme pour un TCD, tu **glisses les champs**. À toi : « Type de bien » en **Axe** (= la zone Lignes, les catégories), « Montant » en **Valeurs** (la hauteur des barres).',
+      visuel: { type: 'tcdbuilder', feuilles: ['Ventes', 'GCD'], feuilleActive: 'GCD', champs: ['Agent', 'Type de bien', 'Montant'], sequence: [{ champ: 'Type de bien', zone: 'lignes', consigne: 'Glisse « Type de bien » dans la zone Axe du graphique (la zone Lignes du TCD associé).' }, { champ: 'Montant', zone: 'valeurs', consigne: 'Glisse « Montant » dans la zone Valeurs : c\'est ce qui donne la hauteur des barres.' }], etiquettes: ['Appartement', 'Maison'], valeurLabel: 'Somme de Montant', valeurs: ['395 000 €', '760 000 €'], total: '1 155 000 €', explication: 'Type de bien en Axe (Lignes), Montant en Valeurs : à partir de ce croisement, le graphique se dessine tout seul. Le TCD et le graphique restent liés.' },
       plus: ['Dans le volet Liste de champs, glisse « Type de bien » en Étiquettes de lignes (l\'axe du graphique) et « Montant » en Valeurs pour obtenir la somme des montants par type. Le graphique se dessine automatiquement.'],
     },
     {
@@ -6340,8 +6340,17 @@ const ALLERPLUSLOIN = {
     },
     {
       humeur: 'pensif',
-      dit: 'On crée ce champ calculé via **Analyse du TCD > Calculs > Champs, éléments et jeux > Champ calculé…**, puis on remplit la boîte :',
-      visuel: { type: 'champs', titre: 'Insérer un champ calculé', champs: [{ l: 'Nom', v: 'Prime 5%', actif: true }, { l: 'Formule', v: '= Montant * 0,05', actif: true }] },
+      dit: 'On le crée via **Analyse du TCD > Calculs > Champs, éléments et jeux > Champ calculé…**. À toi de remplir la boîte : le **Nom** du champ, puis ta **Formule**, et valide par **Ajouter**.',
+      visuel: {
+        type: 'boitedialogue',
+        titre: 'Insérer un champ calculé',
+        champs: [
+          { type: 'champ', label: 'Nom', valeur: 'Prime 5%', requis: true },
+          { type: 'champ', label: 'Formule', valeur: '= Montant * 0,05', requis: true },
+        ],
+        boutonOK: 'Ajouter',
+        resultat: 'Champ calculé créé ! Une colonne « Prime 5% » = Montant × 0,05 apparaît pour chaque agent, sans toucher à ta source. C\'est TA formule, directement dans le TCD.',
+      },
       plus: ['Pour créer un champ calculé : clique dans le TCD pour révéler l\'onglet Analyse > Calculs > Champs, éléments et jeux > Champ calculé…. Dans Nom, écris « Prime 5% ». Dans Formule, saisis =Montant*0,05 (double-clique « Montant » dans la liste des champs pour l\'insérer sans faute de frappe). Clique Ajouter, puis OK : ton champ Prime 5% apparaît dans Valeurs et affiche la prime pour chaque ligne. Pour le supprimer : rouvre la boîte, sélectionne Prime 5%, Supprimer, OK.'],
     },
     {
