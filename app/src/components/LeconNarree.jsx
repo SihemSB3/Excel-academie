@@ -6175,27 +6175,55 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
 // et VOIT le résultat changer (le tableau se transforme, se réordonne, se filtre, s'étend).
 // mode: 'creertableau' | 'trier' | 'filtrer'
 function ListeInteractive({ v, onResolu }) {
-  const { mode = 'creertableau', colonnes = [], lignes = [], triCol = 0, triLabel = 'Trier du plus grand au plus petit', filtreCol = 0, garder = [], nouvelle = [], resultat = '' } = v
+  const {
+    mode = 'creertableau', colonnes = [], lignes = [], triCol = 0, triLabel = 'Trier du plus grand au plus petit',
+    filtreCol = 0, garder = [], nouvelle = [], colCible = 1, amorce = 'Par', complet = 'Paris',
+    nouvelleForm = [], stCol = 1, stTotalCol = 2, resultat = '',
+  } = v
   const num = (s) => { const n = parseInt(String(s).replace(/[^\d-]/g, ''), 10); return isNaN(n) ? null : n }
+  const eur = (n) => n.toLocaleString('fr-FR').replace(/ /g, ' ') + ' €'
   const [rows, setRows] = useState(lignes)
   const [estTable, setEstTable] = useState(mode !== 'creertableau')
   const [etape, setEtape] = useState(0) // creertableau : 0 liste brute, 1 boîte, 2 tableau, 3 étendu
   const [menuCol, setMenuCol] = useState(null)
   const [coches, setCoches] = useState(() => { const o = {}; [...new Set(lignes.map((l) => l[filtreCol]))].forEach((val) => (o[val] = true)); return o })
   const [funnel, setFunnel] = useState(false)
+  const [ghost, setGhost] = useState(false)        // saisieauto : suggestion grise affichée
+  const [menuCible, setMenuCible] = useState(false) // listechoix : liste déroulante ouverte
+  const [form, setForm] = useState(null)           // formulaire : valeurs (null tant que « Nouveau »)
+  const [dialog, setDialog] = useState(false)      // soustotal / reptitres : boîte ouverte
+  const [champRep, setChampRep] = useState(false)  // reptitres : champ « lignes à répéter » rempli
   const [fait, setFait] = useState(false)
   useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
   const distinctes = [...new Set(lignes.map((l) => l[filtreCol]))]
+  const distinctesCible = [...new Set(lignes.map((l) => l[colCible]))]
 
-  const consigne = () => {
-    if (mode === 'creertableau') return etape === 0 ? 'Clique **Mettre sous forme de tableau** pour transformer ta liste.' : etape === 1 ? 'Vérifie que **« Mon tableau comporte des en-têtes »** est coché, puis **OK**.' : 'Ta liste est un tableau ! **Clique la ligne vide** en dessous pour l\'étendre.'
-    if (mode === 'trier') return menuCol === triCol ? `Clique **${triLabel}**.` : `Clique la **flèche ▾** de la colonne « ${colonnes[triCol]} ».`
-    if (mode === 'filtrer') return menuCol === filtreCol ? `Décoche tout sauf **${garder.join(', ')}**, puis **OK**.` : `Clique la **flèche ▾** de la colonne « ${colonnes[filtreCol]} ».`
-    return ''
-  }
   const trier = () => { setRows((r) => [...r].sort((a, b) => { const x = num(a[triCol]), y = num(b[triCol]); return x != null ? y - x : String(b[triCol]).localeCompare(String(a[triCol])) })); setMenuCol(null); setFait(true) }
   const appliquerFiltre = () => { setRows(lignes.filter((l) => coches[l[filtreCol]])); setMenuCol(null); setFunnel(true); setFait(true) }
   const clicFleche = (ci) => { if (fait) return; if ((mode === 'trier' && ci === triCol) || (mode === 'filtrer' && ci === filtreCol)) setMenuCol(menuCol === ci ? null : ci) }
+  const rowsSousTotal = () => {
+    const out = []; let grp = null, somme = 0, total = 0
+    const flush = () => { if (grp != null) { const l = Array(colonnes.length).fill(''); l[stCol] = `Total ${grp}`; l[stTotalCol] = eur(somme); out.push({ st: true, cells: l }) } }
+    lignes.forEach((li) => { const g = li[stCol], val = num(li[stTotalCol]) || 0; if (g !== grp) { flush(); grp = g; somme = 0 } somme += val; total += val; out.push({ cells: li }) })
+    flush(); const tg = Array(colonnes.length).fill(''); tg[stCol] = 'Total général'; tg[stTotalCol] = eur(total); out.push({ st: true, grand: true, cells: tg }); return out
+  }
+
+  const consigne = () => {
+    switch (mode) {
+      case 'creertableau': return etape === 0 ? 'Clique **Mettre sous forme de tableau** pour transformer ta liste.' : etape === 1 ? 'Vérifie que **« Mon tableau comporte des en-têtes »** est coché, puis **OK**.' : 'Ta liste est un tableau ! **Clique la ligne vide** en dessous pour l\'étendre.'
+      case 'trier': return menuCol === triCol ? `Clique **${triLabel}**.` : `Clique la **flèche ▾** de la colonne « ${colonnes[triCol]} ».`
+      case 'filtrer': return menuCol === filtreCol ? `Décoche tout sauf **${garder.join(', ')}**, puis **OK**.` : `Clique la **flèche ▾** de la colonne « ${colonnes[filtreCol]} ».`
+      case 'listechoix': return menuCible ? 'Choisis une **ville** dans la liste.' : `Clique la **flèche ▾** de la cellule vide (colonne « ${colonnes[colCible]} »).`
+      case 'saisieauto': return !ghost ? `Commence à taper **« ${amorce} »** dans la cellule vide.` : `Excel propose **« ${complet} »** en gris : appuie sur **Entrée**.`
+      case 'soustotal': return dialog ? 'Vérifie les réglages (Ville · Somme · CA), puis **OK**.' : 'Clique **Sous-total** pour regrouper par ville.'
+      case 'formulaire': return form == null ? 'Clique **Nouveau** pour saisir une ligne.' : 'Les champs sont remplis : clique **Ajouter** pour l\'insérer dans le tableau.'
+      case 'reptitres': return !dialog ? 'Clique **Imprimer les titres** pour régler la répétition.' : !champRep ? 'Clique **Lignes à répéter en haut** (la ligne de titres), puis **OK**.' : 'Clique **OK** : les titres apparaissent en haut de la page 2.'
+      default: return ''
+    }
+  }
+
+  const affiche = mode === 'soustotal' && fait ? rowsSousTotal() : rows.map((c) => ({ cells: c }))
+  const grilleVisible = mode !== 'reptitres'
 
   return (
     <div className="mt-3">
@@ -6203,26 +6231,43 @@ function ListeInteractive({ v, onResolu }) {
         {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
       </div>
 
-      <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/15 text-[11px] shadow">
-        <div className="grid" style={{ gridTemplateColumns: `repeat(${colonnes.length}, 1fr)` }}>
-          {colonnes.map((c, ci) => {
-            const cliquable = (mode === 'trier' && ci === triCol) || (mode === 'filtrer' && ci === filtreCol)
-            return (
-              <div key={ci} className={`flex items-center justify-between gap-1 border-b border-navy/10 px-2 py-1.5 font-bold ${estTable ? 'bg-mint text-white' : 'bg-navy/10 text-navy/70'}`}>
-                <span>{c}</span>
-                {estTable && <button onClick={() => clicFleche(ci)} className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm bg-white/25 text-[9px] ${cliquable && !fait ? 'animate-pulse ring-1 ring-white' : ''}`}>{funnel && ci === filtreCol ? '▽' : '▾'}</button>}
-              </div>
-            )
-          })}
-          {rows.map((l, ri) => l.map((cell, ci) => (
-            <div key={ri + '-' + ci} className={`border-b border-navy/5 px-2 py-1 ${estTable && ri % 2 ? 'bg-mint/[0.08]' : 'bg-white'} ${ci === colonnes.length - 1 ? 'text-right font-mono text-navy/85' : 'text-navy/85'}`}>{cell}</div>
-          )))}
-          {mode === 'creertableau' && estTable && etape >= 2 && (
-            <button onClick={() => { if (etape === 2) { setRows((r) => [...r, nouvelle]); setEtape(3); setFait(true) } }} style={{ gridColumn: `1 / ${colonnes.length + 1}` }}
-              className={`px-2 py-1.5 text-left text-navy/40 ${etape === 2 ? 'animate-pulse bg-mint/10 ring-1 ring-inset ring-mint' : ''}`}>＋ clique pour saisir une nouvelle ligne…</button>
-          )}
+      {grilleVisible && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/15 text-[11px] shadow">
+          <div className="grid" style={{ gridTemplateColumns: `repeat(${colonnes.length}, 1fr)` }}>
+            {colonnes.map((c, ci) => {
+              const cliquable = (mode === 'trier' && ci === triCol) || (mode === 'filtrer' && ci === filtreCol)
+              return (
+                <div key={ci} className={`flex items-center justify-between gap-1 border-b border-navy/10 px-2 py-1.5 font-bold ${estTable ? 'bg-mint text-white' : 'bg-navy/10 text-navy/70'}`}>
+                  <span>{c}</span>
+                  {estTable && (mode === 'trier' || mode === 'filtrer') && <button onClick={() => clicFleche(ci)} className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm bg-white/25 text-[9px] ${cliquable && !fait ? 'animate-pulse ring-1 ring-white' : ''}`}>{funnel && ci === filtreCol ? '▽' : '▾'}</button>}
+                </div>
+              )
+            })}
+            {affiche.map((r, ri) => r.cells.map((cell, ci) => (
+              <div key={ri + '-' + ci} className={`border-b border-navy/5 px-2 py-1 ${r.grand ? 'bg-navy/10 font-bold' : r.st ? 'bg-mint/15 font-semibold' : estTable && ri % 2 ? 'bg-mint/[0.08]' : 'bg-white'} ${ci === colonnes.length - 1 ? 'text-right font-mono' : ''} text-navy/85`}>{cell}</div>
+            )))}
+            {(mode === 'listechoix' || mode === 'saisieauto') && !fait && colonnes.map((c, ci) => {
+              if (ci !== colCible) return <div key={'t' + ci} className="border-b border-navy/5 bg-white px-2 py-1 text-navy/25">{ci === 0 ? '(nouvelle)' : ''}</div>
+              return (
+                <div key={'t' + ci} className="relative border-b border-navy/5 bg-white px-1 py-1">
+                  {mode === 'listechoix' ? (
+                    <>
+                      <button onClick={() => setMenuCible(!menuCible)} className="flex w-full animate-pulse items-center justify-between rounded-sm border border-mint px-1.5 py-0.5 text-navy/40 ring-1 ring-mint"><span>choisir…</span><span className="ml-1">▾</span></button>
+                      {menuCible && <div className="absolute left-0 top-full z-20 mt-0.5 w-28 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">{distinctesCible.map((val) => <button key={val} onClick={() => { setFait(true) }} className="block w-full px-2 py-1 text-left hover:bg-mint/15">{val}</button>)}</div>}
+                    </>
+                  ) : (
+                    <span className="font-mono text-navy/80">{ghost ? <>{amorce}<span className="text-navy/30">{complet.slice(amorce.length)}</span></> : <span className="animate-pulse text-navy/30">saisie…</span>}</span>
+                  )}
+                </div>
+              )
+            })}
+            {mode === 'creertableau' && estTable && etape >= 2 && (
+              <button onClick={() => { if (etape === 2) { setRows((r) => [...r, nouvelle]); setEtape(3); setFait(true) } }} style={{ gridColumn: `1 / ${colonnes.length + 1}` }}
+                className={`px-2 py-1.5 text-left text-navy/40 ${etape === 2 ? 'animate-pulse bg-mint/10 ring-1 ring-inset ring-mint' : ''}`}>＋ clique pour saisir une nouvelle ligne…</button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {mode === 'creertableau' && etape === 0 && (
         <div className="mt-3 flex justify-center"><button onClick={() => setEtape(1)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">▧ Mettre sous forme de tableau</button></div>
@@ -6254,6 +6299,76 @@ function ListeInteractive({ v, onResolu }) {
           ))}
           <div className="mt-1 flex justify-end border-t border-navy/10 pt-1"><button onClick={appliquerFiltre} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-4 py-0.5 font-bold text-navy">OK</button></div>
         </div>
+      )}
+
+      {mode === 'saisieauto' && !fait && (
+        <div className="mt-3 flex justify-center">
+          {!ghost
+            ? <button onClick={() => setGhost(true)} className="flex animate-pulse items-center gap-2 rounded-xl border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy"><span>⌨</span> Tape <span className="rounded bg-white/70 px-1.5 py-0.5 font-mono">{amorce}</span></button>
+            : <button onClick={() => setFait(true)} className="animate-pulse rounded-xl border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">⏎ Entrée — valider « {complet} »</button>}
+        </div>
+      )}
+
+      {mode === 'soustotal' && !fait && !dialog && (
+        <div className="mt-3 flex justify-center"><button onClick={() => setDialog(true)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">Σ Sous-total</button></div>
+      )}
+      {mode === 'soustotal' && dialog && !fait && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Sous-total</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="w-36 shrink-0 text-right text-navy/60">À chaque changement de :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-0.5 text-navy/80">Ville ▾</span></div>
+            <div className="flex items-center gap-2"><span className="w-36 shrink-0 text-right text-navy/60">Utiliser la fonction :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-0.5 text-navy/80">Somme ▾</span></div>
+            <p className="text-navy/60">Ajouter un sous-total à :</p>
+            <div className="flex items-center gap-2 text-navy/80"><span className="grid h-4 w-4 place-items-center rounded-sm border border-mint bg-mint text-[9px] text-white">✓</span>CA</div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => { setDialog(false); setFait(true) }} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-5 py-0.5 font-bold text-navy">OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+
+      {mode === 'formulaire' && !fait && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Feuille1</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-1.5 bg-white p-3">
+            {colonnes.map((c, i) => (
+              <div key={i} className="flex items-center gap-2"><span className="w-16 shrink-0 text-right text-navy/60">{c} :</span><span className={`min-w-0 flex-1 rounded-sm border px-2 py-1 font-mono ${form ? 'border-navy/30 text-navy' : 'border-navy/20 text-navy/30'}`}>{form ? form[i] : ' '}</span></div>
+            ))}
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2">
+              {form == null
+                ? <button onClick={() => setForm(nouvelleForm)} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-4 py-0.5 font-bold text-navy">Nouveau</button>
+                : <button onClick={() => { setRows((r) => [...r, form]); setFait(true) }} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-4 py-0.5 font-bold text-navy">Ajouter</button>}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {mode === 'reptitres' && (
+        <>
+          <div className="mx-auto mt-3 flex max-w-md gap-3">
+            {[0, 1].map((pg) => (
+              <div key={pg} className="flex-1 rounded border border-navy/15 bg-white p-1.5 shadow-sm">
+                <p className="mb-1 text-center text-[8px] uppercase tracking-wide text-navy/40">Page {pg + 1}</p>
+                {pg === 0 || champRep ? (
+                  <div className="grid grid-cols-3 bg-mint text-[8px] font-bold text-white">{colonnes.map((c, i) => <span key={i} className="px-1 py-0.5">{c}</span>)}</div>
+                ) : (
+                  <div className="bg-navy/5 px-1 py-0.5 text-center text-[8px] italic text-navy/30">(sans titres)</div>
+                )}
+                {(pg === 0 ? lignes.slice(0, 2) : lignes.slice(2, 4)).map((l, ri) => (
+                  <div key={ri} className="grid grid-cols-3 text-[8px]">{l.map((cell, ci) => <span key={ci} className="border-b border-navy/5 px-1 py-0.5 text-navy/80">{cell}</span>)}</div>
+                ))}
+              </div>
+            ))}
+          </div>
+          {!dialog && !fait && <div className="mt-3 flex justify-center"><button onClick={() => setDialog(true)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">📄 Imprimer les titres</button></div>}
+          {dialog && !fait && (
+            <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+              <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Mise en page</span><span className="text-navy/40">✕</span></div>
+              <div className="space-y-2 bg-white p-3">
+                <div className="flex items-center gap-2"><span className="shrink-0 text-navy/60">Lignes à répéter en haut :</span><button onClick={() => setChampRep(true)} className={`min-w-0 flex-1 rounded-sm border px-2 py-1 text-left font-mono ${champRep ? 'border-navy/30 text-navy' : 'animate-pulse border-mint text-navy/35 ring-1 ring-mint'}`}>{champRep ? '$1:$1' : 'clique la ligne de titres…'}</button></div>
+                <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => { if (champRep) { setDialog(false); setFait(true) } }} disabled={!champRep} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${champRep ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   )

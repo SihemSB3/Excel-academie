@@ -3223,8 +3223,8 @@ const IMPRIMERLISTE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Dans l\'onglet **Mise en page**, **clique le bouton Imprimer les titres.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Imprimer les titres', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '🔲', label: 'Zone impression' }, { icone: '📄', label: 'Imprimer les titres' }, { icone: '✂', label: 'Sauts de page' }], cible: 'Imprimer les titres', explication: 'De là, tu indiques « Lignes à répéter en haut » ($1:$1) : la ligne d\'en-tête réapparaîtra en haut de CHAQUE page imprimée.' },
+      dit: 'À toi. Ta liste tient sur 2 pages, mais la page 2 n\'a **pas de titres**. **Règle « Imprimer les titres »** et regarde-les apparaître en haut de la page 2.',
+      visuel: { type: 'listeinteractive', mode: 'reptitres', colonnes: LISTE_ENTETES, lignes: LISTE_LIGNES, resultat: 'Les titres se répètent maintenant en haut de la page 2 (et de toutes les suivantes) : ta longue liste reste lisible, page après page.' },
     },
     {
       humeur: 'accueil',
@@ -3375,8 +3375,8 @@ const SAISIRLISTE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Tu fais clic droit dans une cellule pour choisir une valeur déjà saisie. **Clique la bonne entrée du menu.**',
-      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Liste déroulante de choix »', items: [{ icone: '✂️', label: 'Couper' }, { icone: '📋', label: 'Copier' }, '-', { label: 'Liste déroulante de choix' }], cible: 3, explication: 'Une liste des valeurs déjà présentes dans la colonne s\'ouvre : tu choisis au lieu de retaper. Au clavier, c\'est Alt + ↓ (⌥ + ↓ sur Mac).' },
+      dit: 'À toi. Dans la cellule vide de la colonne **Ville**, ouvre la liste (**Alt + ↓**) et choisis une valeur déjà saisie, au lieu de la retaper.',
+      visuel: { type: 'listeinteractive', mode: 'listechoix', colonnes: LISTE_ENTETES, lignes: LISTE_LIGNES, colCible: 1, resultat: 'La cellule s\'est remplie avec la ville choisie, sans rien retaper : plus rapide et zéro faute de frappe.' },
     },
     {
       humeur: 'pensif',
@@ -3395,17 +3395,8 @@ const SAISIRLISTE = {
     },
     {
       humeur: 'accueil',
-      dit: 'Ensuite, place-toi dans le tableau et clique sur l\'icône **Formulaire** : chaque colonne devient un champ. Ce que tu saisis s\'ajoute en bas du tableau.',
-      visuel: {
-        type: 'methode',
-        titre: 'Saisir avec le formulaire',
-        blocs: [
-          { etapes: ['Clique **Nouveau**, remplis les champs (ils reprennent tes en-têtes), puis valide'] },
-          { capture: { type: 'formulaire', champs: [{ l: 'Date', v: '09/03/2025' }, { l: 'Vendeur', v: 'Nina' }, { l: 'Ville', v: 'Paris' }, { l: 'CA', v: '7 300' }], index: 5, total: 5 } },
-          { etapes: ['La nouvelle ligne s\'ajoute automatiquement à la fin du tableau'], depart: 2 },
-          { capture: { type: 'tableaudonnees', entetes: ['Date', 'Vendeur', 'Ville', 'CA'], lignes: [['05/03', 'Marie', 'Lyon', '8 200 €'], ['06/03', 'Karim', 'Paris', '12 500 €'], ['07/03', 'Léa', 'Lyon', '6 400 €'], ['09/03', 'Nina', 'Paris', '7 300 €']], filtres: true, legende: 'La ligne « Nina » saisie au formulaire ci-dessus apparaît en bas du tableau.' } },
-        ],
-      },
+      dit: 'Place-toi dans le tableau et ouvre le **Formulaire** : chaque colonne devient un champ. **Clique Nouveau, puis Ajouter**, et regarde la ligne apparaître en bas du tableau.',
+      visuel: { type: 'listeinteractive', mode: 'formulaire', colonnes: LISTE_ENTETES, lignes: LISTE_LIGNES, nouvelleForm: ['Nina', 'Paris', '7 300 €'], resultat: 'La ligne « Nina » saisie au formulaire s\'est ajoutée toute seule en bas du tableau. Pratique pour de longues listes, sans descendre dans la grille !' },
     },
     {
       humeur: 'pensif',
@@ -3593,8 +3584,8 @@ const SOUSTOTAUX = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Dans **Données > groupe Plan**, **clique le bouton Sous-total.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Sous-total', actif: 'Données', groupeNom: 'Plan', groupes: [{ icone: '⊞', label: 'Grouper' }, { icone: '⊟', label: 'Dissocier' }, { icone: 'Σ', label: 'Sous-total' }], cible: 'Sous-total', explication: 'Tu choisis alors la colonne de regroupement (Ville), la fonction (Somme) et la colonne à totaliser (CA). Excel insère un total à chaque changement de ville.' },
+      dit: 'À toi. La liste est triée par ville. **Ouvre Sous-total, garde Ville · Somme · CA, puis OK** : regarde les totaux apparaître.',
+      visuel: { type: 'listeinteractive', mode: 'soustotal', colonnes: LISTE_ENTETES, lignes: [['Léa', 'Lyon', '6 400 €'], ['Marie', 'Lyon', '8 200 €'], ['Tom', 'Marseille', '9 100 €'], ['Karim', 'Paris', '12 500 €']], stCol: 1, stTotalCol: 2, resultat: 'Excel a inséré « Total Lyon » (14 600 €), « Total Marseille », « Total Paris » et le Total général : les regroupements se calculent tout seuls !' },
     },
     {
       humeur: 'accueil',
