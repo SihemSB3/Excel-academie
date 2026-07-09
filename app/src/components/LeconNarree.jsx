@@ -5063,6 +5063,7 @@ function SommeSiEnsCroise({ v, onResolu }) {
   const [cyc, setCyc] = useState(0)
   const [rempli, setRempli] = useState(false)
   const [drag, setDrag] = useState(false)
+  const [dragPos, setDragPos] = useState(null)
   useEffect(() => { if (rempli) onResolu && onResolu() }, [rempli])
 
   const cur = SSE_STEPS[s]
@@ -5088,11 +5089,11 @@ function SommeSiEnsCroise({ v, onResolu }) {
   }
   const onHandleDown = (e) => {
     if (cur.k !== 'drag' || rempli) return
-    e.preventDefault(); setDrag(true)
+    e.preventDefault(); setDrag(true); setDragPos({ x: e.clientX, y: e.clientY })
     const sx = e.clientX, sy = e.clientY
     const clean = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
-    const move = (ev) => { if ((ev.clientX - sx) + (ev.clientY - sy) > 70) { clean(); setDrag(false); setRempli(true) } }
-    const up = () => { clean(); setDrag(false) }
+    const move = (ev) => { setDragPos({ x: ev.clientX, y: ev.clientY }); if ((ev.clientX - sx) + (ev.clientY - sy) > 65) { clean(); setDrag(false); setDragPos(null); setRempli(true) } }
+    const up = () => { clean(); setDrag(false); setDragPos(null) }
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
   }
 
@@ -5104,7 +5105,7 @@ function SommeSiEnsCroise({ v, onResolu }) {
     if (cur.k === 'clicF2') return 'Clique la cellule **F2** (colonne F, ligne 2 = Alice × Est) : la formule s\'écrit là.'
     if (cur.k === 'sel') return `Sélectionne ${cur.quoi} : clique **une** de ses cellules (toute la colonne se sélectionne).`
     if (cur.k === 'cell') return `Clique ${cur.quoi}, au lieu de taper le texte du critère.`
-    if (cur.k === 'drag') return 'Attrape la **poignée de recopie** (le petit carré en bas à droite de F2) et **fais-la glisser** sur tout le tableau croisé.'
+    if (cur.k === 'drag') return 'Place-toi sur le **coin bas-droit de F2** : le curseur devient une **croix noire (+)**, la poignée de recopie. Attrape-la et **fais-la glisser** vers le bas et la droite sur tout le tableau.'
     // f4
     const atteint = sseCycle(cur.base)[cyc] === cur.cible
     if (cur.plage) return `La plage est en **relatif** (${cur.base}) : recopiée, elle glisserait et fausserait le total. Appuie sur **F4** pour la **figer** → ${cur.cible}.`
@@ -5116,6 +5117,13 @@ function SommeSiEnsCroise({ v, onResolu }) {
 
   return (
     <div className="mt-3">
+      {/* Curseur « croix noire » d'Excel qui suit le glissement de la poignée de recopie */}
+      {drag && dragPos && (
+        <svg width="22" height="22" style={{ position: 'fixed', left: dragPos.x - 11, top: dragPos.y - 11, pointerEvents: 'none', zIndex: 60 }}>
+          <path d="M11 1V21M1 11H21" stroke="white" strokeWidth="5" />
+          <path d="M11 1V21M1 11H21" stroke="black" strokeWidth="3" />
+        </svg>
+      )}
       <div className={`rounded-xl border px-3 py-2 text-sm ${rempli ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
         {rempli ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
       </div>
@@ -5179,16 +5187,17 @@ function SommeSiEnsCroise({ v, onResolu }) {
                     const estF2 = ri === 0 && ci === 0
                     const cibleF2 = cur?.k === 'clicF2' && estF2
                     const valF2 = estF2 && (complet || rempli)
-                    return <button key={reg} onClick={() => { if (cibleF2) clicF2() }} onPointerDown={estF2 && cur?.k === 'drag' ? onHandleDown : undefined} disabled={!cibleF2} className={`relative border-b border-navy/5 px-2 py-1 text-right font-mono ${cibleF2 ? 'animate-pulse bg-mint/15 ring-1 ring-inset ring-mint' : valF2 ? 'bg-mint/25 font-semibold text-navy' : rempli ? 'bg-mint/[0.07] text-navy/80' : drag && !rempli ? 'bg-mint/[0.04] ring-1 ring-inset ring-mint/40' : 'bg-white text-navy/25'}`}>
+                    const dragF2 = estF2 && cur?.k === 'drag' && !rempli
+                    return <button key={reg} onClick={() => { if (cibleF2) clicF2() }} onPointerDown={dragF2 ? onHandleDown : undefined} disabled={!cibleF2} style={dragF2 ? { cursor: 'crosshair' } : undefined} className={`relative border-b border-navy/5 px-2 py-1 text-right font-mono ${cibleF2 ? 'animate-pulse bg-mint/15 ring-1 ring-inset ring-mint' : valF2 ? `bg-mint/25 font-semibold text-navy ${dragF2 ? 'ring-2 ring-inset ring-navy' : ''}` : rempli ? 'bg-mint/[0.07] text-navy/80' : drag && !rempli ? 'bg-mint/[0.04] ring-1 ring-inset ring-mint/40' : 'bg-white text-navy/25'}`}>
                       {rempli ? eur(somme(vend, reg)) : valF2 ? eur(150000) : estF2 ? '?' : ''}
-                      {estF2 && cur?.k === 'drag' && !rempli && <span onPointerDown={onHandleDown} className="absolute -bottom-1 -right-1 h-2.5 w-2.5 animate-pulse cursor-grab touch-none rounded-sm border border-white bg-mint" />}
+                      {dragF2 && <span onPointerDown={onHandleDown} style={{ cursor: 'crosshair' }} className="absolute -bottom-[3px] -right-[3px] h-2 w-2 animate-pulse touch-none border border-white bg-navy" />}
                     </button>
                   })}
                 </Fragment>
               ))}
             </div>
           </div>
-          {cur?.k === 'drag' && !rempli && <p className="mt-1 text-[9px] leading-snug text-navy/40">↳ Presse le carré vert en bas à droite de F2 et glisse vers le bas-droite, comme la vraie poignée d’Excel.</p>}
+          {cur?.k === 'drag' && !rempli && <p className="mt-1 text-[9px] leading-snug text-navy/40">↳ Le curseur prend la forme d’une <b className="text-navy/70">croix noire +</b> sur le coin bas-droit de F2 : c’est la poignée de recopie d’Excel. Presse et glisse vers le bas et la droite.</p>}
         </div>
       </div>
     </div>
