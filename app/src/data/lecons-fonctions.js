@@ -5037,18 +5037,18 @@ const SOMMESIENS = {
     },
     {
       humeur: 'pensif',
-      dit: 'Pour qu\'**une seule formule** remplisse tout un tableau croisé (vendeurs en lignes, régions en colonnes) : les **références semi-relatives**.',
-      visuel: {
-        type: 'methode',
-        titre: 'Les références semi-relatives',
-        blocs: [
-          { etapes: ['Pour le vendeur, écris **$E2** : le **$E** fige la colonne (toujours les noms), la **ligne 2 libre** suit la recopie vers le bas ($E3, $E4…).'] },
-          { capture: { type: 'reffiger', items: [{ code: '$E2', role: 'Colonne figée', detail: 'la ligne suit vers le bas' }] } },
-          { etapes: ['Pour la région, écris **F$1** : le **$1** fige la ligne (toujours les en-têtes), la **colonne F libre** suit la recopie vers la droite (G$1, H$1…).'], depart: 2 },
-          { capture: { type: 'reffiger', items: [{ code: 'F$1', role: 'Ligne figée', detail: 'la colonne suit vers la droite' }] } },
-          { note: 'Placée en F2, la formule pointe sur $E2 (Alice) et F$1 (Est). Tirée vers le bas → $E3 (Bob). Tirée vers la droite → G$1 (Ouest). Une seule saisie, tout le tableau se remplit !', label: 'La magie du verrouillage' },
-        ],
-      },
+      dit: 'Le vrai intérêt : qu\'**une seule formule** remplisse tout un **tableau croisé de synthèse** (les vendeurs en lignes, les régions en en-têtes). Le secret : les **références semi-relatives** (un seul $).',
+      visuel: { type: 'encart', label: 'Le tableau à remplir', texte: 'À côté de ta source, prépare un tableau vide : les **vendeurs en lignes** (colonne E : E2 = Alice, E3 = Bob…), les **régions en en-têtes** (ligne 1 : F1 = Est, G1 = Ouest…). Objectif : écrire la formule UNE fois en F2, puis la tirer partout. Pour ça, il faut bloquer intelligemment chaque critère.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le critère **vendeur** pointe la cellule **E2** (Alice). À toi : dans la formule, clique E2 et appuie sur **F4** jusqu\'à figer **la colonne** → **$E2**.',
+      visuel: { type: 'refbuilder', base: 'E2', cible: '$E2', avant: '=SOMME.SI.ENS($C$2:$C$6;$A$2:$A$6;', but: 'fige la colonne des vendeurs, la ligne reste libre', resultat: 'Le $ devant E fige la COLONNE des vendeurs, la ligne 2 reste libre. Tirée vers le BAS, la formule passe à $E3, $E4… donc Bob, Claire : chaque ligne prend automatiquement son vendeur.' },
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Le critère **région** pointe l\'en-tête **F1** (Est). À toi : clique F1 et appuie sur **F4** jusqu\'à figer **la ligne** → **F$1**.',
+      visuel: { type: 'refbuilder', base: 'F1', cible: 'F$1', avant: '=SOMME.SI.ENS($C$2:$C$6;…;$E2;$B$2:$B$6;', but: 'fige la ligne des régions, la colonne reste libre', resultat: 'Le $ devant le 1 fige la LIGNE des en-têtes de régions, la colonne F reste libre. Tirée vers la DROITE, la formule passe à G$1, H$1… donc Ouest, Nord. Bilan : $E2 + F$1, une SEULE formule remplit tout le tableau croisé !' },
     },
     {
       humeur: 'pensif',

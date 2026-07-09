@@ -4987,7 +4987,7 @@ function MfcBuilder({ v, onResolu }) {
 // F4 INTERACTIF : le user appuie sur F4 et voit la référence défiler G10 → $G$10 → G$10 → $G10
 // → G10. Objectif : atteindre la cible (figer entièrement = $G$10).
 function RefBuilder({ v, onResolu }) {
-  const { base = 'G10', cible = '$G$10', avant = '=C2*', resultat = '' } = v
+  const { base = 'G10', cible = '$G$10', avant = '=C2*', but = 'fige la colonne ET la ligne', resultat = '' } = v
   const m = String(base).match(/^([A-Z]+)(\d+)$/)
   const col = m ? m[1] : 'G'
   const lig = m ? m[2] : '10'
@@ -5000,7 +5000,7 @@ function RefBuilder({ v, onResolu }) {
   return (
     <div className="mt-3">
       <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
-        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 Appuie sur <b>F4</b> jusqu'à obtenir <b>{cible}</b> (fige la colonne ET la ligne).</span>}
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 Appuie sur <b>F4</b> jusqu'à obtenir <b>{cible}</b> ({but}).</span>}
       </div>
       <div className="mx-auto mt-3 flex max-w-md flex-col items-center gap-3">
         <div className="w-full rounded-md border border-navy/15 bg-white px-3 py-2 font-mono text-sm shadow">
