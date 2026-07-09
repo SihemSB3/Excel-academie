@@ -4740,8 +4740,8 @@ const MFCONDITIONNELLE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Dans **Accueil > groupe Styles**, **clique le bouton Mise en forme conditionnelle.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Mise en forme conditionnelle', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme conditionnelle' }, { icone: '▧', label: 'Mettre sous forme de tableau' }, { icone: '🎨', label: 'Styles de cellules' }], cible: 'Mise en forme conditionnelle', explication: 'Ce bouton ouvre les 7 familles de règles : surbrillance, valeurs extrêmes, nuances, barres, icônes, formule, doublons.' },
+      dit: 'À toi. Applique une **règle de surbrillance** : fais ressortir en rouge les ventes **inférieures à 7 000 €**. Ouvre le menu, choisis la famille, puis le type.',
+      visuel: { type: 'mfcbuilder', mode: 'surbrillance', seuil: 7000, resultat: 'Les ventes sous 7 000 € (Léa, Nina) ressortent en rouge ! D\'un coup d\'œil, tu repères les plus faibles.' },
     },
     {
       humeur: 'pensif',
@@ -4787,6 +4787,11 @@ const MFCONDITIONNELLE = {
           { capture: { type: 'mfctableau', style: 'barres', legende: 'APRÈS : plus la vente est grande, plus la barre est longue. Un mini-graphique directement dans le tableau !' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Ajoute des **barres de données** : un mini-graphique directement dans les cellules.',
+      visuel: { type: 'mfcbuilder', mode: 'barres', resultat: 'Chaque cellule a sa barre : plus la vente est grande, plus la barre est longue. Tom (15 800 €) déborde, Léa (4 300 €) reste courte.' },
     },
     {
       humeur: 'pensif',
