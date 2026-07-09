@@ -6522,6 +6522,7 @@ function GraphiqueInteractif({ v, onResolu }) {
       case 'supprimer': return !selectionne ? 'Clique le graphe pour le **sélectionner** (les poignées apparaissent).' : menuContext ? 'Clique **Supprimer** dans le menu.' : '**Clic droit** sur le graphe, puis **Supprimer**.'
       case 'deplacerfeuille': return dialog ? 'Choisis **Nouvelle feuille**, puis **OK**.' : 'Onglet **Création de graphique** : clique **Déplacer le graphique**.'
       case 'combine': return dialog ? 'Coche **Tracer sur l\'axe secondaire** pour « Nb ventes », puis **OK**.' : 'Onglet **Insertion** : clique **Graphique combiné**.'
+      case 'sparkline': return dialog ? 'Vérifie la **plage** et l\'**emplacement**, puis **OK**.' : 'Onglet **Insertion** > **Sparklines** > **Courbe**.'
       default: return ''
     }
   }
@@ -6532,6 +6533,8 @@ function GraphiqueInteractif({ v, onResolu }) {
     ? { cats: src.cats.filter((c) => !cachees.includes(c)), series: src.series.map((s) => ({ ...s, vals: s.vals.filter((_, i) => !cachees.includes(src.cats[i])) })) }
     : data
   const petitGraphe = (extra) => <GrapheSVG data={dataAff} type={type} titre={tCourant} options={opts} selection={sel} theme={theme} echelle={echelle} axeMin={mode === 'axe' ? axeMin : undefined} secondaire={mode === 'combine' && fait ? 1 : undefined} {...extra} />
+  const spk = mode === 'sparkline' ? (donnees || { entetes: ['Produit', 'Jan', 'Fév', 'Mar', 'Avr'], lignes: [['Ebook Excel', 8, 12, 10, 16], ['Ebook Shaolin', 20, 16, 17, 12]] }) : null
+  const miniSpark = (vals) => { const mn = Math.min(...vals), mx = Math.max(...vals), w = 46, h = 16; const pts = vals.map((val, i) => `${(i / (vals.length - 1)) * w},${h - ((val - mn) / ((mx - mn) || 1)) * (h - 3) - 1.5}`).join(' '); return <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h}><polyline points={pts} fill="none" stroke="#41c1ba" strokeWidth="1.5" />{vals.map((val, i) => <circle key={i} cx={(i / (vals.length - 1)) * w} cy={h - ((val - mn) / ((mx - mn) || 1)) * (h - 3) - 1.5} r="1.2" fill="#41c1ba" />)}</svg> }
 
   return (
     <div className="mt-3">
@@ -6555,6 +6558,18 @@ function GraphiqueInteractif({ v, onResolu }) {
               <span className="text-base">{g.i}</span>{g.l}
             </button>
           ))}
+        </div>
+      ) : mode === 'sparkline' ? (
+        <div className="mx-auto mt-3 max-w-md overflow-x-auto rounded-lg border border-navy/15 text-[10px] shadow">
+          <div className="grid w-full" style={{ gridTemplateColumns: `0.9fr repeat(${spk.entetes.length - 1}, 0.46fr) 1.15fr` }}>
+            {[...spk.entetes, 'Tendance'].map((h, i) => <div key={i} className={`border-b border-navy/10 bg-navy/10 px-1.5 py-1 font-bold text-navy/70 ${i > 0 && i < spk.entetes.length ? 'text-right' : ''}`}>{h}</div>)}
+            {spk.lignes.map((row, ri) => (
+              <div key={ri} className="contents">
+                {row.map((cell, ci) => <div key={ci} className={`border-b border-navy/5 px-1.5 py-1 ${ci === 0 ? 'text-navy/85' : 'text-right font-mono text-navy/70'}`}>{cell}</div>)}
+                <div className={`grid place-items-center border-b border-l border-navy/5 px-1 py-1 ${!fait ? 'animate-pulse bg-mint/[0.08]' : ''}`}>{fait ? miniSpark(row.slice(1)) : <span className="text-navy/25">—</span>}</div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : supprime ? (
         <div className="mx-auto mt-3 flex h-40 max-w-md items-center justify-center rounded-lg border-2 border-dashed border-navy/15 bg-white text-sm text-navy/40">Le graphique a été supprimé.</div>
@@ -6642,6 +6657,28 @@ function GraphiqueInteractif({ v, onResolu }) {
             <div className="flex items-center justify-between gap-2"><span className="text-navy/70">Nb ventes</span><span className="rounded border border-navy/20 px-2 py-0.5 text-navy/60">Courbe ▾</span></div>
             <button onClick={() => setAxeSec(!axeSec)} className="flex w-full items-center gap-2 text-left text-navy/80"><span className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm border text-[9px] text-white ${axeSec ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{axeSec && '✓'}</span>Tracer « Nb ventes » sur l'axe secondaire</button>
             <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => { if (axeSec) { setDialog(false); setFait(true) } }} disabled={!axeSec} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${axeSec ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+
+      {/* Sparkline : vrai ruban Insertion + boîte plage/emplacement */}
+      {mode === 'sparkline' && !fait && !dialog && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-md border border-navy/15 bg-white text-[10px] shadow">
+          <div className="flex gap-2.5 border-b border-navy/10 bg-[#f3f1ea] px-2 py-1">{['Fichier', 'Accueil', 'Insertion', 'Données'].map((o) => <span key={o} className={o === 'Insertion' ? 'rounded bg-navy/10 px-1 font-bold text-navy' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-stretch gap-2 p-2">
+            <button onClick={() => setDialog(true)} className="flex w-20 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center ring-1 ring-mint"><span className="text-base">〰</span><span className="leading-tight text-navy/75">Courbe</span></button>
+            <div className="flex w-20 flex-col items-center gap-1 rounded p-1 text-center opacity-50"><span className="text-base">▁▃▅</span><span className="leading-tight text-navy/60">Histogramme</span></div>
+            <span className="self-end pb-0.5 text-[8px] uppercase tracking-wide text-navy/35">Sparklines</span>
+          </div>
+        </div>
+      )}
+      {mode === 'sparkline' && dialog && !fait && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Créer des graphiques sparkline</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="w-28 shrink-0 text-right text-navy/60">Plage de données :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-1 font-mono text-navy/70">B2:E3</span></div>
+            <div className="flex items-center gap-2"><span className="w-28 shrink-0 text-right text-navy/60">Emplacement :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-1 font-mono text-navy/70">F2:F3</span></div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => { setDialog(false); setFait(true) }} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-5 py-0.5 font-bold text-navy">OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
           </div>
         </div>
       )}

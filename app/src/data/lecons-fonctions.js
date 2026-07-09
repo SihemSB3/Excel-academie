@@ -4282,6 +4282,11 @@ const MIXTESPARKLINE = {
     },
     {
       humeur: 'accueil',
+      dit: '**À toi.** Onglet Insertion → **Sparklines > Courbe**, indique la plage et l\'emplacement, puis OK : un mini-graphe apparaît dans chaque cellule « Tendance ».',
+      visuel: { type: 'graphiqueinteractif', mode: 'sparkline', resultat: 'Des mini-graphes dans une seule cellule ! Chaque ligne montre sa tendance d\'un coup d\'œil, sans encombrer la feuille.' },
+    },
+    {
+      humeur: 'accueil',
       dit: 'À toi. Comment crée-t-on rapidement un sparkline ?',
       visuel: { type: 'question', options: ['Menu Affichage > Sparklines', 'Onglet Insertion > Sparklines, puis choisir le type et la plage', 'Clic droit sur une cellule vide > Insérer sparkline', 'Onglet Données > Sparklines'], bonne: 1, explication: 'Onglet Insertion > Sparklines > Courbe/Histogramme/Conclusion, puis on indique la plage et l\'emplacement.' },
     },
