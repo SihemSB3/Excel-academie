@@ -5437,31 +5437,15 @@ const RAPPELSRECHERCHE = {
     },
     {
       humeur: 'content',
-      dit: '**La solution :** figer G10 avec des dollars → **=G2/$G$10**. Les $ indiquent que ni la colonne G ni la ligne 10 ne doivent changer.',
-      visuel: {
-        type: 'methode',
-        titre: 'Figer avec F4',
-        blocs: [
-          { etapes: ['Dans la formule, clique sur la référence **G10**', 'Appuie sur **F4** : Excel transforme G10 en **$G$10** (Mac : **⌘ + T**, ou **Fn + F4** sur certains claviers)'] },
-          { capture: { type: 'touche', touches: ['F4'], note: 'Sur Mac : ⌘ + T (ou Fn + F4). La cellule ne bougera plus, où que tu copies la formule.' } },
-          { capture: { type: 'tableur', cols: ['G', 'H'], rows: [2, 3, 4], cells: { G2: { t: '12 500', num: true }, H2: { t: '=G2/$G$10' }, G3: { t: '9 800', num: true }, H3: { t: '=G3/$G$10', vert: true }, G4: { t: '7 200', num: true }, H4: { t: '=G4/$G$10', vert: true } }, legende: 'APRÈS : G2 s\'adapte à chaque ligne, $G$10 reste figé. Exactement ce qu\'on veut.' } },
-        ],
-      },
+      dit: '**La solution :** figer G10 avec des dollars → **=G2/$G$10**. À toi : clique sur G10 dans la formule et appuie sur **F4** pour le verrouiller.',
+      visuel: { type: 'refbuilder', base: 'G10', cible: '$G$10', avant: '=G2/', resultat: 'G10 est devenu $G$10 : où que tu recopies =G2/$G$10, le diviseur reste figé sur le total. Dans tes RECHERCHEV, tu figeras pareil la plage du tableau de référence ($A$2:$B$5).' },
       plus: ['$B$1 : les $ indiquent que ni la colonne B ni la ligne 1 ne doivent changer.', 'Appuie sur la touche F4 : Excel transforme B1 en $B$1. Si F4 ne fonctionne pas, essaye FN + F4 (sur certains claviers portables).'],
     },
     { humeur: 'pensif', dit: 'Ces références seront **cruciales** au moment d\'étirer tes formules de recherche : la plage du tableau de référence devra toujours être **verrouillée en absolu** ($A$2:$B$5). Garde ce réflexe, on s\'en sert tout le chapitre.', visuel: { type: 'reffiger' } },
     {
       humeur: 'pensif',
-      dit: 'Deuxième rappel : **les noms**. Plutôt que d\'écrire =A1+B1, tu peux écrire **=Prix+Quantité**. Trois méthodes pour nommer une cellule ou une plage :',
-      visuel: {
-        type: 'methode',
-        titre: 'Méthode 1 : la zone Nom',
-        blocs: [
-          { etapes: ['Sélectionne la cellule ou la plage à nommer', 'Clique dans la **zone Nom** (à gauche de la barre de formule)', 'Tape le nom (respecte la syntaxe, on la voit juste après)', 'Appuie sur **Entrée**'] },
-          { capture: { type: 'zonenom', nom: 'PrixHT', saisie: true, formule: '24,90', legende: 'On tape « PrixHT » dans la zone Nom, puis Entrée : la cellule s\'appelle désormais PrixHT.' } },
-          { note: 'Les pièges classiques : oublier d\'appuyer sur **Entrée** après avoir tapé le nom, mettre un **espace** dans le nom, ou reprendre un mot déjà utilisé par Excel (comme SOMME).', label: 'Erreurs à éviter' },
-        ],
-      },
+      dit: 'Deuxième rappel : **les noms**. Plutôt que d\'écrire =A1+B1, tu peux écrire **=Prix+Quantité**. Trois méthodes pour nommer une cellule. La 1re, la plus rapide : la **zone Nom**. À toi de nommer la cellule **PrixHT**.',
+      visuel: { type: 'zonenombuilder', mode: 'nommer', nom: 'PrixHT' },
       plus: ['Utiliser un nom dans une formule rend le fichier plus lisible. Plutôt que d\'écrire =A1+B1, tu peux écrire =Prix+Quantité. Cela facilite la compréhension, surtout si d\'autres personnes utilisent ton fichier.', 'Erreurs à éviter : oublier d\'appuyer sur [Entrée] après avoir tapé un nom. Utiliser un espace dans le nom (Prix unitaire → erreur). Nommer une cellule avec un mot déjà utilisé dans Excel (comme SOMME).'],
     },
     {
