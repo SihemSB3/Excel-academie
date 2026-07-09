@@ -4321,19 +4321,17 @@ const RAPPEL3D = {
     { humeur: 'accueil', dit: 'Avant de consolider, un **rappel**. La **référence 3D** additionne (ou moyenne, compte…) la **même cellule** sur **plusieurs feuilles côte à côte**. C\'est la base de la consolidation.', visuel: { type: 'encart', label: 'Pourquoi c\'est utile', liste: ['**Consolider** des chiffres répartis sur plusieurs onglets (ventes mensuelles, dépenses…).', '**Une seule formule** au lieu de recopier feuille par feuille.', '**Mise à jour auto** : si une cellule source change, le total 3D suit.'] } },
     {
       humeur: 'pensif',
-      dit: 'On la construit **pas à pas**, en cliquant les onglets.',
+      dit: 'On la construit **pas à pas**, en cliquant directement les onglets. À toi de jouer !',
       visuel: {
-        type: 'methode',
-        titre: 'Construire une référence 3D',
-        blocs: [
-          { etapes: ['Sur la feuille **Synthèse**, dans la cellule cible, tape **=SOMME(**'] },
-          { capture: { type: 'tableur', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('=SOMME('), formule: '=SOMME(', actif: 'B2', legende: 'Sur « Synthèse », on démarre la formule =SOMME(' } },
-          { etapes: ['Clique l\'onglet de la **1re feuille** (AIN), maintiens **Shift**, clique l\'onglet de la **dernière** (Cantal).'], depart: 2 },
-          { capture: { type: 'touche', touches: ['⇧ Maj'], note: 'Shift = plage CONTINUE : AIN, Cantal et toutes les feuilles entre les deux sont incluses.' } },
-          { etapes: ['Clique la **cellule** (C10), ferme la parenthèse et **Entrée**.'], depart: 3 },
-          { capture: { type: 'tableur', feuilles: feuillesDept, feuilleActive: 'AIN', cols: ['A', 'B', 'C'], rows: rowsDept, cells: cellsDept('3 000'), formule: '=SOMME(AIN:Cantal!C10', actif: 'C10', legende: 'On clique C10 : Excel écrit tout seul la plage 3D AIN:Cantal.' } },
-          { capture: { type: 'tableur', feuilles: feuillesDept, feuilleActive: 'Synthèse', cols: ['A', 'B'], rows: [1, 2], cells: cellsSynth('12 500', true), formule: '=SOMME(AIN:Cantal!C10)', actif: 'B2', legende: 'Résultat sur « Synthèse » : =SOMME(AIN:Cantal!C10) additionne les 4 feuilles = 12 500.' } },
+        type: 'construitformule', prefixe: '=', resultat: 'B2', resultatFeuille: 'Synthèse', resultatValeur: '12 500',
+        grilles: grilles3D,
+        sequence: [
+          { type: 'suggestion', saisie: '=SOMME', consigne: 'Sur « Synthèse », en B2, tape =SOMME et choisis la fonction.', items: [{ nom: 'SOMME', desc: 'additionne des cellules' }, { nom: 'SOMME.SI' }, { nom: 'SOMMEPROD' }], cible: 'SOMME', ajoute: 'SOMME(' },
+          { type: 'ongletplage', debut: 'AIN', fin: 'Cantal', ajoute: 'AIN:Cantal!', consigne: 'Clique l\'onglet « AIN », puis maintiens Shift et clique « Cantal » : tu sélectionnes toutes les feuilles entre les deux.' },
+          { type: 'clic', feuille: 'AIN', cible: 'C10', ajoute: 'C10', consigne: 'Clique la cellule C10 : un seul clic suffit pour les 4 feuilles groupées.' },
+          { type: 'saisir', ajoute: ')', label: ')', consigne: 'Ferme la parenthèse, puis Entrée.' },
         ],
+        explication: 'La référence 3D =SOMME(AIN:Cantal!C10) additionne AIN, Cantal ET toutes les feuilles entre les deux = 12 500. Le « : » couvre la plage de feuilles côte à côte.',
       },
     },
     {
@@ -4416,6 +4414,21 @@ const CONSOPOSITION = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi de consolider. Les **3 références** (Janvier, Février, Mars) sont déjà ajoutées : choisis **Somme**, coche **Lier aux données source**, puis valide.',
+      visuel: {
+        type: 'boitedialogue',
+        titre: 'Consolider',
+        intro: 'Références : Janvier!$B$2:$B$4 · Février!$B$2:$B$4 · Mars!$B$2:$B$4',
+        champs: [
+          { type: 'liste', label: 'Fonction', options: ['Somme', 'Moyenne', 'Nombre', 'Max', 'Min'], requis: true },
+          { type: 'case', label: 'Lier aux données source', requis: true },
+        ],
+        boutonOK: 'OK',
+        resultat: 'Synthèse consolidée ! Ebook Excel = 12 400 + 13 800 + 12 000 = 38 200 €. Comme tu as coché « Lier », elle se recalculera toute seule si un mois change.',
+      },
+    },
+    {
       humeur: 'pensif',
       dit: 'Bonne nouvelle : tu peux aussi consolider **sans préparer de tableau vide** à l\'avance.',
       visuel: {
@@ -4489,6 +4502,23 @@ const CONSOCATEGORIE = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Ici les feuilles n\'ont ni le même ordre ni les mêmes produits : coche **Ligne du haut** et **Colonne de gauche** (les catégories), la liaison, puis valide.',
+      visuel: {
+        type: 'boitedialogue',
+        titre: 'Consolider',
+        intro: 'Références avec titres : Janvier!$A$1:$B$4 · Février · Mars',
+        champs: [
+          { type: 'liste', label: 'Fonction', options: ['Somme', 'Moyenne', 'Nombre', 'Max'], requis: true },
+          { type: 'case', label: 'Ligne du haut', requis: true },
+          { type: 'case', label: 'Colonne de gauche', requis: true },
+          { type: 'case', label: 'Lier aux données source', requis: true },
+        ],
+        boutonOK: 'OK',
+        resultat: 'Regroupé par libellé ! « Coaching » (présent qu\'en Mars) apparaît quand même, et « Formations » (absent de Mars) est totalisé sur ses 2 mois. C\'est la force du regroupement par catégorie.',
+      },
+    },
+    {
       humeur: 'pensif',
       dit: 'La différence clé avec la consolidation par position. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'La consolidation par catégorie regroupe les données d\'après leurs LIBELLÉS (les titres), même si l\'ordre des lignes diffère d\'une feuille à l\'autre.', bonne: true, explication: 'Vrai : elle s\'appuie sur les noms (Ligne du haut / Colonne de gauche). Peu importe l\'ordre ou les produits manquants : Excel regroupe par étiquette. La version par position, elle, additionne case par case.' },
@@ -4543,6 +4573,18 @@ const TCDTABLES = {
           { capture: { type: 'champs', titre: 'Propriétés', champs: [{ l: 'Nom du tableau', v: 'T_ventes', actif: true }] } },
           { note: 'Fais pareil pour **chaque feuille** du classeur : la feuille Zones Vente devient **T_zones**, la feuille Vendeurs devient **T_vendeurs**. À la fin, tes **3 tables nommées** sont prêtes à être reliées.', label: 'Important' },
         ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Transforme la plage de la feuille **Ventes** en vrai **Tableau** (tu le nommeras T_ventes juste après).',
+      visuel: {
+        type: 'listeinteractive',
+        mode: 'creertableau',
+        colonnes: ['Zones Vente', 'Montant'],
+        lignes: [['Ohio', '8 200 €'], ['Texas', '12 500 €'], ['Ohio', '6 400 €']],
+        nouvelle: ['Texas', '5 000 €'],
+        resultat: 'La plage « Ventes » est devenue un vrai Tableau (bandes de couleur, filtres, et il s\'étend tout seul). Reste à le nommer T_ventes via Création de tableau > Nom du tableau.',
       },
     },
     {
@@ -4612,6 +4654,22 @@ const TCDRELATIONS = {
           { capture: { type: 'gererrelations', relations: [], focusDetection: true } },
           { capture: { type: 'champs', titre: 'Détection automatique des relations', champs: [{ l: 'Détection terminée : 2 relations ont été créées', check: true }] } },
         ],
+      },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. Crée la **relation** entre les ventes et les zones : c\'est le pont qui relie tes tables.',
+      visuel: {
+        type: 'boitedialogue',
+        titre: 'Créer une relation',
+        champs: [
+          { type: 'liste', label: 'Table', options: ['T_ventes', 'T_zones', 'T_vendeurs'], requis: true },
+          { type: 'liste', label: 'Colonne', options: ['Zones Vente', 'Montant'], requis: true },
+          { type: 'liste', label: 'Table associée', options: ['T_zones', 'T_vendeurs'], requis: true },
+          { type: 'liste', label: 'Colonne associée', options: ['Zones Vente', 'Bureau'], requis: true },
+        ],
+        boutonOK: 'OK',
+        resultat: 'Relation créée ! Le pont T_ventes(Zones Vente) → T_zones(Zones Vente) est posé. Grâce à la clé partagée « Zones Vente », Excel peut maintenant croiser les ventes avec les bureaux et les vendeurs.',
       },
     },
     {
