@@ -5923,12 +5923,22 @@ const VALIDATIONDONNEES = {
     },
     {
       humeur: 'pensif',
-      dit: '**Méthode : créer une liste déroulante.** Dans la boîte, choisis **Autoriser : Liste**, puis indique la **Source** (la plage des valeurs autorisées).',
-      visuel: { type: 'champs', titre: 'Validation des données', champs: [{ l: 'Autoriser', v: 'Liste', actif: true }, { l: 'Ignorer si vide', check: true }, { l: 'Liste déroulante dans la cellule', check: true }, { l: 'Source', v: '=$C$3:$C$8', actif: true }] },    },
+      dit: '**Méthode : créer une liste déroulante.** À toi de régler la boîte : **Autoriser = Liste**, puis clique le champ **Source** pour pointer la plage des valeurs autorisées, et valide.',
+      visuel: {
+        type: 'boitedialogue',
+        titre: 'Validation des données',
+        champs: [
+          { type: 'liste', label: 'Autoriser', options: ['Toute valeur', 'Nombre entier', 'Liste', 'Date', 'Heure'], requis: true },
+          { type: 'champ', label: 'Source', valeur: '=$C$3:$C$8', requis: true },
+        ],
+        boutonOK: 'OK',
+        resultat: 'Validation posée ! La cellule n\'accepte désormais que les valeurs de la source, et une flèche ▾ apparaît pour choisir.',
+      },
+    },
     {
       humeur: 'content',
-      dit: 'Résultat : un clic sur la petite flèche **▾** de la cellule déroule la liste. L\'élève **choisit**, il ne tape plus rien à la main.',
-      visuel: { type: 'menu', items: [{ label: 'Paris' }, { label: 'Berlin' }, { label: 'Madrid' }, { label: 'Rome' }, { label: 'Lisbonne' }, { label: 'Tunis' }] },
+      dit: 'Résultat : un clic sur la petite flèche **▾** déroule la liste. À toi, choisis une ville pour la nouvelle ligne, sans rien taper à la main.',
+      visuel: { type: 'listeinteractive', mode: 'listechoix', colonnes: ['Pays', 'Ville'], lignes: [['France', 'Paris'], ['Allemagne', 'Berlin'], ['Espagne', 'Madrid'], ['Italie', 'Rome'], ['Portugal', 'Lisbonne']], colCible: 1, resultat: 'Tu as choisi une valeur dans la liste, sans la taper : la validation n\'autorise QUE ces villes. Zéro faute de frappe, données homogènes.' },
       plus: ['Une fois la validation posée, chaque cellule concernée affiche une flèche déroulante : l\'utilisateur sélectionne une valeur dans la liste au lieu de la saisir, ce qui évite les fautes de frappe et garantit des données homogènes.'],
     },
     {
@@ -5980,21 +5990,9 @@ const FILTRESELABORES = {
     { humeur: 'accueil', dit: 'Les filtres automatiques (chapitre Exploiter une liste) sont parfaits pour une colonne. Mais pour croiser **plusieurs critères** (ET / OU sur Ville, CA, Domaine…) ou pour **extraire** les résultats ailleurs, on passe au **filtre élaboré** (ou avancé).', visuel: { type: 'tableaudonnees', entetes: ['Ville', 'CA', 'Domaine'], lignes: [['Paris', '2 400 €', 'Auto'], ['Lyon', '1 200 €', 'Photo'], ['Paris', '1 800 €', 'Auto'], ['Lyon', '3 100 €', 'Photo']], legende: 'La liste source. On va en extraire seulement certaines lignes, selon des critères combinés.' }, plus: ['Le filtre avancé (ou élaboré) permet de filtrer une liste selon plusieurs critères combinés (ET / OU) et, si tu le souhaites, de copier les lignes filtrées vers un autre emplacement sans toucher à la liste d\'origine.'] },
     {
       humeur: 'pensif',
-      dit: '**Rappel express : l\'outil Convertir.** Il découpe une colonne en plusieurs (ex. « paul dupont » → Prénom | Nom), en cochant le bon séparateur. Utile pour préparer une liste avant de la filtrer.',
-      visuel: {
-        type: 'methode',
-        titre: 'Rappel express : l\'outil Convertir',
-        blocs: [
-          { etapes: ['Sélectionne la **colonne** à découper (ex. « Paul Dupont »).'] },
-          { capture: { type: 'tableur', cols: ['A'], rows: [1, 2, 3], cells: { A1: { t: 'Nom complet', entete: true }, A2: { t: 'Paul Dupont' }, A3: { t: 'Marie Curie' } }, actif: 'A2', legende: 'La colonne à découper est sélectionnée.' } },
-          { etapes: ['Va dans **Données > Convertir** (groupe Outils de données).'], depart: 2 },
-          { capture: { type: 'ruban', actif: 'Données', onglets: ['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données'], groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir', actif: true }, { icone: '✔', label: 'Validation' }, { icone: '🗑', label: 'Doublons' }] } },
-          { etapes: ['Choisis **Délimité**, clique Suivant, puis coche le **séparateur** (ici Espace).'], depart: 3 },
-          { capture: { type: 'champs', titre: 'Assistant Conversion (étape 2 sur 3) · Séparateurs', champs: [{ l: 'Tabulation', check: false }, { l: 'Point-virgule', check: false }, { l: 'Virgule', check: false }, { l: 'Espace', check: true }] } },
-          { etapes: ['Un **aperçu** montre le découpage : clique **Terminer**.'], depart: 4 },
-          { capture: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3], cells: { A1: { t: 'Prénom', entete: true }, B1: { t: 'Nom', entete: true }, A2: { t: 'Paul', vert: true }, B2: { t: 'Dupont', vert: true }, A3: { t: 'Marie', vert: true }, B3: { t: 'Curie', vert: true } }, legende: 'APRÈS : la colonne est découpée en deux, Prénom et Nom.' } },
-        ],
-      },    },
+      dit: '**Rappel express : l\'outil Convertir.** Il découpe une colonne en plusieurs (ex. « Paul Dupont » → Prénom | Nom), en cochant le bon séparateur. Utile pour préparer une liste avant de la filtrer. Suis l\'assistant, à toi de jouer.',
+      visuel: { type: 'convertirwizard' },
+    },
     {
       humeur: 'pensif',
       dit: 'Le cœur du filtre avancé : la **zone de critères**. C\'est un petit tableau, à côté, qui reprend **exactement les mêmes en-têtes** que ta liste, avec tes conditions en dessous.',
@@ -6013,8 +6011,21 @@ const FILTRESELABORES = {
     },
     {
       humeur: 'pensif',
-      dit: 'Dans la boîte **Filtre avancé**, tu choisis l\'action, tu vérifies la **Plage**, tu indiques ta **Zone de critères**, et tu peux extraire ailleurs.',
-      visuel: { type: 'champs', titre: 'Filtre avancé', champs: [{ l: 'Copier vers un autre emplacement', check: true }, { l: 'Plage', v: '$A$1:$D$13', actif: true }, { l: 'Zone de critères', v: '$H$1:$J$3', actif: true }, { l: 'Copier dans', v: '$H$7', actif: true }, { l: 'Extraction sans doublon', check: true }] },    },
+      dit: 'À toi de remplir la boîte **Filtre avancé** : coche l\'action, renseigne la **Plage**, la **Zone de critères** et la destination, puis valide.',
+      visuel: {
+        type: 'boitedialogue',
+        titre: 'Filtre avancé',
+        champs: [
+          { type: 'case', label: 'Copier vers un autre emplacement', requis: true },
+          { type: 'champ', label: 'Plage', valeur: '$A$1:$D$13', requis: true },
+          { type: 'champ', label: 'Zone de critères', valeur: '$H$1:$J$3', requis: true },
+          { type: 'champ', label: 'Copier dans', valeur: '$H$7', requis: true },
+          { type: 'case', label: 'Extraction sans doublon' },
+        ],
+        boutonOK: 'OK',
+        resultat: 'Filtre lancé ! Seules les lignes qui respectent la zone de critères sont extraites en $H$7, sans toucher à la liste d\'origine. Tu croises autant de critères que tu veux.',
+      },
+    },
     {
       humeur: 'pensif',
       dit: 'Tu as **trois destinations** possibles, selon ce que tu veux préserver :',
@@ -6049,8 +6060,21 @@ const DOUBLONSSOUSTOTAUX = {
     },
     {
       humeur: 'pensif',
-      dit: 'Dans la boîte, **coche « Mes données ont des en-têtes »** (pour ne pas traiter le titre comme un doublon), puis **choisis les colonnes** à comparer.',
-      visuel: { type: 'champs', titre: 'Supprimer les doublons', champs: [{ l: 'Mes données ont des en-têtes', check: true }, { l: 'Nom', check: true }, { l: 'Ville', check: true }, { l: 'CA', check: false }] },    },
+      dit: 'À toi de régler la boîte : **coche « Mes données ont des en-têtes »**, puis les **colonnes à comparer** (Nom et Ville), et valide.',
+      visuel: {
+        type: 'boitedialogue',
+        titre: 'Supprimer les doublons',
+        intro: 'Colonnes à comparer :',
+        champs: [
+          { type: 'case', label: 'Mes données ont des en-têtes', requis: true },
+          { type: 'case', label: 'Colonne : Nom', requis: true },
+          { type: 'case', label: 'Colonne : Ville', requis: true },
+          { type: 'case', label: 'Colonne : CA' },
+        ],
+        boutonOK: 'OK',
+        resultat: 'Doublons supprimés ! La ligne « Marie · Lyon » en double a été retirée, une seule occurrence gardée. Comme tu n\'as coché que Nom et Ville, Excel ignore le CA pour repérer les doublons.',
+      },
+    },
     {
       humeur: 'pensif',
       dit: 'Une subtilité importante. Tu ne coches que **« Nom »** et **« Ville »**. Deux lignes ont le même Nom et la même Ville, mais un **CA différent**. **Vrai ou faux ?**',
