@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Fragment } from 'react'
 import { Bouton } from './ui'
 import { ShifuDit } from './Shifu'
 import { coloreFormule } from '../lib/excel'
@@ -4128,6 +4128,149 @@ function CreerTableauInteractif({ v, onResolu }) {
   )
 }
 
+// INSÉRER UN TCD (modèle de données) INTERACTIF : clique la cellule A3 > Insertion > Tableau
+// croisé dynamique > coche « Feuille de calcul existante » + « Ajouter au modèle de données » > OK.
+function InsererTcdInteractif({ v, onResolu }) {
+  const { resultat = '' } = v
+  const [etape, setEtape] = useState('cellule')  // cellule | ruban | dialog
+  const [existe, setExiste] = useState(false)
+  const [modele, setModele] = useState(false)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const pretOK = existe && modele
+  const consigne = () => {
+    if (fait) return ''
+    if (etape === 'cellule') return 'Sur la feuille **TCD**, clique la cellule **A3** (où poser le rapport).'
+    if (etape === 'ruban') return 'Onglet **Insertion** : clique sur **Tableau croisé dynamique**.'
+    return !existe ? 'Coche **Feuille de calcul existante**.' : !modele ? 'Coche **Ajouter ces données au modèle de données** (indispensable pour relier les tables).' : 'Clique sur **OK**.'
+  }
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+      {!fait && etape === 'cellule' && (
+        <div className="mx-auto mt-3 w-48 overflow-hidden rounded-md border border-navy/15 text-[11px] shadow">
+          <div className="grid grid-cols-[1.4rem_1fr_1fr]">
+            <span className="border-b border-r border-navy/10 bg-navy/5" />
+            {['A', 'B'].map((c) => <span key={c} className="border-b border-navy/10 bg-navy/5 py-0.5 text-center font-semibold text-navy/50">{c}</span>)}
+            {[1, 2, 3].map((r) => (
+              <Fragment key={r}>
+                <span className="border-b border-r border-navy/10 bg-navy/5 py-1 text-center font-semibold text-navy/50">{r}</span>
+                {['A', 'B'].map((c) => {
+                  const cible = c === 'A' && r === 3
+                  return <button key={c} onClick={() => cible && setEtape('ruban')} disabled={!cible} className={`h-6 border-b border-r border-navy/10 ${cible ? 'animate-pulse bg-mint/15 ring-1 ring-inset ring-mint' : 'bg-white'}`} />
+                })}
+              </Fragment>
+            ))}
+          </div>
+          <div className="flex gap-1 border-t border-navy/15 bg-[#f3f1ea] px-1 py-0.5 text-[9px]">{['Ventes', 'Zones', 'Vendeurs', 'TCD'].map((o) => <span key={o} className={o === 'TCD' ? 'rounded bg-white px-1 font-bold text-navy' : 'text-navy/45'}>{o}</span>)}</div>
+        </div>
+      )}
+      {!fait && etape === 'ruban' && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-md border border-navy/15 bg-white text-[11px] shadow">
+          <div className="flex gap-2.5 border-b border-navy/10 bg-[#f3f1ea] px-2 py-1">{['Fichier', 'Accueil', 'Insertion'].map((o) => <span key={o} className={o === 'Insertion' ? 'rounded bg-navy/10 px-1 font-bold text-navy' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-stretch gap-2 p-2">
+            <button onClick={() => setEtape('dialog')} className="flex w-20 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center ring-1 ring-mint"><span className="text-base">📊</span><span className="leading-tight text-navy/75">Tableau croisé dynamique</span></button>
+            <div className="flex w-16 flex-col items-center gap-1 rounded p-1 text-center opacity-50"><span className="text-base">📋</span><span className="leading-tight text-navy/60">Tableau</span></div>
+            <span className="self-end pb-0.5 text-[8px] uppercase tracking-wide text-navy/35">Tableaux</span>
+          </div>
+        </div>
+      )}
+      {!fait && etape === 'dialog' && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Tableau croisé dynamique</div>
+          <div className="space-y-2 bg-white p-3 text-navy">
+            <div className="flex items-center gap-2"><span className="text-navy/55">Table/plage :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-1 font-mono text-navy/75">T_ventes</span></div>
+            <button onClick={() => setExiste(!existe)} className="flex w-full items-center gap-2 text-left"><span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${existe ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{existe && '✓'}</span>Feuille de calcul existante <span className="font-mono text-[10px] text-navy/40">(TCD!$A$3)</span></button>
+            <button onClick={() => setModele(!modele)} className="flex w-full items-center gap-2 text-left"><span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${modele ? 'border-mint bg-mint' : existe ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/40'}`}>{modele && '✓'}</span>Ajouter ces données au modèle de données</button>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => pretOK && setFait(true)} disabled={!pretOK} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${pretOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// RELATIONS TCD INTERACTIVES : Analyse du TCD > Relations > Nouveau > le user construit la
+// relation (Table / Colonne / Table associée / Colonne associée) > OK, puis Détection automatique.
+function RelationInteractif({ v, onResolu }) {
+  const { resultat = '' } = v
+  const [etape, setEtape] = useState('ruban')   // ruban | gerer | dialog
+  const [rels, setRels] = useState([])
+  const [sel, setSel] = useState({})            // choix en cours dans le dialog
+  const [menu, setMenu] = useState(null)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const champs = [
+    { k: 'table', label: 'Table', options: ['T_ventes', 'T_zones', 'T_vendeurs'], cible: 'T_ventes' },
+    { k: 'colonne', label: 'Colonne (externe)', options: ['Zones Vente', 'Montant'], cible: 'Zones Vente' },
+    { k: 'tableAssociee', label: 'Table associée', options: ['T_zones', 'T_vendeurs'], cible: 'T_zones' },
+    { k: 'colonneAssociee', label: 'Colonne associée', options: ['Zones Vente', 'Bureau'], cible: 'Zones Vente' },
+  ]
+  const dialogOk = champs.every((c) => sel[c.k] === c.cible)
+  const consigne = () => {
+    if (fait) return ''
+    if (etape === 'ruban') return 'Sélectionne le TCD, puis onglet **Analyse du TCD** : clique sur **Relations**.'
+    if (etape === 'gerer') return rels.length === 0 ? 'Clique sur **Nouveau** pour créer une relation.' : 'Une relation est posée. Clique sur **Détection automatique** pour laisser Excel créer les liens restants.'
+    const prochain = champs.find((c) => sel[c.k] !== c.cible)
+    return prochain ? `Choisis la **${prochain.label}** : **${prochain.cible}**.` : 'Parfait : clique sur **OK** pour valider la relation.'
+  }
+  const valider = () => { setRels(['T_ventes (Zones Vente)  →  T_zones (Zones Vente)']); setSel({}); setEtape('gerer') }
+  const detection = () => { setRels((r) => [...r, 'T_vendeurs (Zones Vente)  →  T_zones (Zones Vente)']); setFait(true) }
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+      {!fait && etape === 'ruban' && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-md border border-navy/15 bg-white text-[11px] shadow">
+          <div className="flex gap-2 border-b border-navy/10 bg-[#f3f1ea] px-2 py-1">{['Fichier', 'Accueil', 'Analyse du TCD', 'Création'].map((o) => <span key={o} className={o === 'Analyse du TCD' ? 'rounded bg-navy/10 px-1 font-bold text-navy' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-stretch gap-2 p-2">
+            <button onClick={() => setEtape('gerer')} className="flex w-16 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center ring-1 ring-mint"><span className="text-base">🔗</span><span className="leading-tight text-navy/75">Relations</span></button>
+            <div className="flex w-16 flex-col items-center gap-1 rounded p-1 text-center opacity-50"><span className="text-base">ƒ</span><span className="leading-tight text-navy/60">Champs, éléments</span></div>
+            <span className="self-end pb-0.5 text-[8px] uppercase tracking-wide text-navy/35">Calculs</span>
+          </div>
+        </div>
+      )}
+      {!fait && etape === 'gerer' && (
+        <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Gérer les relations</div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="min-h-[3rem] rounded-sm border border-navy/20 p-1">
+              {rels.length === 0 ? <p className="px-1 py-2 italic text-navy/30">Aucune relation. Clique « Nouveau ».</p> : rels.map((r, i) => <div key={i} className="rounded-sm px-1 py-1 font-mono text-[10px] text-navy/80 odd:bg-navy/[0.03]">{r}</div>)}
+            </div>
+            <div className="flex gap-1.5">
+              <button onClick={() => rels.length === 0 && setEtape('dialog')} disabled={rels.length > 0} className={`rounded-sm border px-3 py-0.5 ${rels.length === 0 ? 'animate-pulse border-mint bg-mint/15 font-bold text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>Nouveau…</button>
+              <button onClick={() => rels.length > 0 && detection()} disabled={rels.length === 0} className={`rounded-sm border px-3 py-0.5 ${rels.length > 0 ? 'animate-pulse border-mint bg-mint/15 font-bold text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>Détection automatique</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {!fait && etape === 'dialog' && (
+        <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Créer une relation</div>
+          <div className="space-y-2 bg-white p-3">
+            {champs.map((c) => (
+              <div key={c.k} className="relative flex items-center gap-2">
+                <span className="w-28 shrink-0 text-right text-navy/60">{c.label} :</span>
+                <button onClick={() => setMenu(menu === c.k ? null : c.k)} className={`flex min-w-0 flex-1 items-center justify-between rounded-sm border px-2 py-1 ${sel[c.k] ? 'border-navy/30 font-semibold text-navy' : 'animate-pulse border-mint text-navy/45 ring-1 ring-mint'}`}><span className="truncate">{sel[c.k] || 'choisir…'}</span><span className="text-navy/40">▾</span></button>
+                {menu === c.k && (
+                  <div className="absolute right-0 top-full z-20 mt-0.5 w-40 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
+                    {c.options.map((o) => <button key={o} onClick={() => { setSel((s) => ({ ...s, [c.k]: o })); setMenu(null) }} className={`block w-full px-2 py-1 text-left ${o === c.cible ? 'font-semibold text-navy hover:bg-mint/15' : 'text-navy/45 hover:bg-navy/5'}`}>{o}</button>)}
+                  </div>
+                )}
+              </div>
+            ))}
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => dialogOk && valider()} disabled={!dialogOk} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${dialogOk ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Le volet « Champs de tableau croisé dynamique » : liste des tables/champs + 4 zones.
 function ChampsTCD({ v }) {
   const { tables = [], lignes = [], valeurs = [], colonnes = [], filtres = [] } = v
@@ -7707,7 +7850,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -7813,6 +7956,10 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <PlanConsoInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'creertableauinteractif' ? (
             <CreerTableauInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'inserertcdinteractif' ? (
+            <InsererTcdInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'relationinteractif' ? (
+            <RelationInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -7886,7 +8033,11 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                             ? 'Masque le détail'
                                                                             : s.visuel?.type === 'creertableauinteractif'
                                                                               ? 'Crée le tableau'
-                                                                              : 'Réponds pour continuer'
+                                                                              : s.visuel?.type === 'inserertcdinteractif'
+                                                                                ? 'Insère le TCD'
+                                                                                : s.visuel?.type === 'relationinteractif'
+                                                                                  ? 'Crée les relations'
+                                                                                  : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
