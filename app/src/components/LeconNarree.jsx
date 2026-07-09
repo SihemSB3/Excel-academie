@@ -5013,6 +5013,112 @@ function RefBuilder({ v, onResolu }) {
   )
 }
 
+// SOMME.SI.ENS CROISÉE : l'exercice à 2 tableaux. Source (Vendeur/Région/CA) + tableau croisé
+// VIDE (vendeurs en lignes, régions en en-têtes). Le user construit la formule en F2 en CLIQUANT
+// les cellules (pas en tapant « Alice ») avec des références semi-relatives ($E2, F$1), puis TIRE
+// la poignée : une seule formule remplit tout le tableau croisé.
+const SSE_SOURCE = [
+  ['Alice', 'Est', 150000], ['Alice', 'Ouest', 80000],
+  ['Bob', 'Est', 60000], ['Bob', 'Ouest', 90000],
+  ['Claire', 'Est', 120000], ['Claire', 'Ouest', 50000],
+]
+const SSE_VENDEURS = ['Alice', 'Bob', 'Claire']
+const SSE_REGIONS = ['Est', 'Ouest']
+function SommeSiEnsCroise({ v, onResolu }) {
+  const { resultat = '' } = v
+  const eur = (n) => n.toLocaleString('fr-FR') + ' €'
+  const somme = (vend, reg) => SSE_SOURCE.filter((r) => r[0] === vend && r[1] === reg).reduce((s, r) => s + r[2], 0)
+  const appends = ['$C$2:$C$6;', '$A$2:$A$6;', '$E2;', '$B$2:$B$6;', 'F$1)']  // clics 1→5 (le clic 0 = F2 ouvre la formule)
+  const [i, setI] = useState(0)      // clics faits (0..6)
+  const [rempli, setRempli] = useState(false)
+  useEffect(() => { if (rempli) onResolu && onResolu() }, [rempli])
+  const formule = i === 0 ? '' : '=SOMME.SI.ENS(' + appends.slice(0, i - 1).join('')
+  const complet = i >= 6
+
+  const consigne = () => {
+    if (rempli) return ''
+    switch (i) {
+      case 0: return 'Clique la cellule **F2** du tableau croisé (ligne Alice, colonne Est) : c\'est là qu\'on écrit la formule.'
+      case 1: return 'Plage à **totaliser** : clique la colonne **CA** de la source. On la fige ($C$2:$C$6), elle ne doit jamais bouger.'
+      case 2: return 'Colonne qui **teste le vendeur** : clique la colonne **Vendeur** de la source (figée aussi).'
+      case 3: return 'Le **critère vendeur** : au lieu de taper « Alice », **clique la cellule E2** du tableau croisé. Elle devient **$E2** (colonne figée).'
+      case 4: return 'Colonne qui **teste la région** : clique la colonne **Région** de la source (figée).'
+      case 5: return 'Le **critère région** : **clique l\'en-tête F1** (Est). Il devient **F$1** (ligne figée).'
+      default: return 'F2 = 150 000 € ! Maintenant **tire la poignée de recopie** (le petit carré en bas à droite) pour remplir tout le tableau.'
+    }
+  }
+  const clicSource = (col) => { if (rempli) return; if ((i === 1 && col === 2) || (i === 2 && col === 0) || (i === 4 && col === 1)) setI(i + 1) }
+  const colActive = i === 1 ? 2 : i === 2 ? 0 : i === 4 ? 1 : -1
+
+  const Cell = ({ children, cls = '', ...p }) => <div className={`border-b border-navy/10 px-2 py-1 ${cls}`} {...p}>{children}</div>
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${rempli ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {rempli ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      {/* barre de formule */}
+      <div className="mx-auto mt-3 max-w-md rounded-md border border-navy/15 bg-white px-3 py-1.5 font-mono text-[11px] shadow">
+        <span className="text-navy/40">fx </span>{formule ? <span className="text-navy/85">{formule}{!complet && <span className="animate-pulse">|</span>}</span> : <span className="text-navy/30">clique F2 pour commencer…</span>}
+      </div>
+
+      <div className="mx-auto mt-3 flex max-w-md flex-col gap-3">
+        {/* TABLE SOURCE */}
+        <div>
+          <p className="mb-1 text-[10px] font-semibold text-navy/45">Table source</p>
+          <div className="overflow-hidden rounded-md border border-navy/15 text-[10px] shadow">
+            <div className="grid grid-cols-3">
+              {['Vendeur', 'Région', 'CA'].map((h, c) => <div key={h} className={`border-b px-2 py-1 font-bold ${colActive === c ? 'animate-pulse border-mint bg-mint/20 text-navy ring-1 ring-inset ring-mint' : 'border-navy/15 bg-navy/5 text-navy/70'}`}>{h}</div>)}
+              {SSE_SOURCE.map((r, ri) => r.map((cell, ci) => (
+                <button key={ri + '-' + ci} onClick={() => clicSource(ci)} disabled={colActive !== ci} className={`border-b border-navy/5 px-2 py-1 text-left ${colActive === ci ? 'cursor-pointer bg-mint/[0.08] hover:bg-mint/20' : 'bg-white'} ${ci === 2 ? 'text-right font-mono text-navy/70' : 'text-navy/85'}`}>{ci === 2 ? eur(cell) : cell}</button>
+              )))}
+            </div>
+          </div>
+        </div>
+
+        {/* TABLE CROISÉE */}
+        <div>
+          <p className="mb-1 text-[10px] font-semibold text-navy/45">Tableau croisé à remplir (une seule formule !)</p>
+          <div className="overflow-hidden rounded-md border border-navy/15 text-[10px] shadow">
+            <div className="grid grid-cols-3">
+              <div className="border-b border-r border-navy/10 bg-navy/5 px-2 py-1" />
+              {SSE_REGIONS.map((reg, ci) => {
+                const estF1 = ci === 0
+                const cibleF1 = i === 5 && estF1
+                return <button key={reg} onClick={() => { if (cibleF1) setI(6) }} disabled={!cibleF1} className={`border-b border-navy/10 px-2 py-1 text-center font-bold ${cibleF1 ? 'animate-pulse bg-mint/20 text-navy ring-1 ring-inset ring-mint' : i >= 6 && estF1 ? 'bg-mint/10 text-navy' : 'bg-navy/5 text-navy/70'}`}>{reg}{i >= 6 && estF1 && <span className="ml-0.5 text-[8px] text-mint">F$1</span>}</button>
+              })}
+              {SSE_VENDEURS.map((vend, ri) => (
+                <Fragment key={vend}>
+                  {(() => {
+                    const estE2 = ri === 0
+                    const cibleE2 = i === 3 && estE2
+                    return <button onClick={() => { if (cibleE2) setI(4) }} disabled={!cibleE2} className={`border-b border-r border-navy/10 px-2 py-1 text-left font-semibold ${cibleE2 ? 'animate-pulse bg-mint/20 text-navy ring-1 ring-inset ring-mint' : i >= 4 && estE2 ? 'bg-mint/10 text-navy' : 'bg-navy/5 text-navy/70'}`}>{vend}{i >= 4 && estE2 && <span className="ml-0.5 text-[8px] text-mint">$E{ri + 2}</span>}</button>
+                  })()}
+                  {SSE_REGIONS.map((reg, ci) => {
+                    const estF2 = ri === 0 && ci === 0
+                    const cibleF2 = i === 0 && estF2
+                    const affiche = rempli || (estF2 && complet)
+                    return <button key={reg} onClick={() => { if (cibleF2) setI(1) }} disabled={!cibleF2} className={`relative border-b border-navy/5 px-2 py-1 text-right font-mono ${cibleF2 ? 'animate-pulse bg-mint/15 ring-1 ring-inset ring-mint' : estF2 && complet ? 'bg-mint/20 font-semibold text-navy' : rempli ? 'bg-mint/[0.06] text-navy/80' : 'bg-white text-navy/25'}`}>
+                      {affiche ? eur(somme(vend, reg)) : (estF2 ? '?' : '')}
+                      {estF2 && complet && !rempli && <span className="absolute -bottom-0.5 -right-0.5 h-2 w-2 cursor-grab rounded-sm bg-mint ring-1 ring-white" />}
+                    </button>
+                  })}
+                </Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* poignée de recopie */}
+        {complet && !rempli && (
+          <button onClick={() => setRempli(true)} className="mx-auto animate-pulse rounded-lg border-2 border-mint bg-mint/15 px-5 py-2 text-sm font-bold text-navy shadow-sm">⤢ Tirer la poignée pour remplir le tableau</button>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // Le menu déroulant « Mise en forme conditionnelle » (Accueil > Styles), une entrée surlignée.
 function MFCMenu({ v }) {
   const actif = v?.actif ?? 0
@@ -7872,7 +7978,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -7982,6 +8088,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <InsererTcdInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'relationinteractif' ? (
             <RelationInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'sommesienscroise' ? (
+            <SommeSiEnsCroise v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8059,7 +8167,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                 ? 'Insère le TCD'
                                                                                 : s.visuel?.type === 'relationinteractif'
                                                                                   ? 'Crée les relations'
-                                                                                  : 'Réponds pour continuer'
+                                                                                  : s.visuel?.type === 'sommesienscroise'
+                                                                                    ? 'Remplis le tableau croisé'
+                                                                                    : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
