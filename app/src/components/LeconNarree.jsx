@@ -3921,6 +3921,134 @@ function ConsoliderDialog({ v }) {
   )
 }
 
+// CONSOLIDER INTERACTIF : la vraie boîte Consolider, pilotée par le user étape par étape.
+// Clique Consolider (ruban) > choisis la Fonction > clique chaque plage source puis Ajouter >
+// coche les cases requises > OK > le tableau consolidé apparaît. Pas de page séparée.
+const CONSO_CASE_LABEL = { ligneHaut: 'Ligne du haut', colGauche: 'Colonne de gauche', lier: 'Lier aux données source' }
+function ConsoliderInteractif({ v, onResolu }) {
+  const { titres = false, cases = ['lier'], sources = [], entetes = [], lignes = [], resultat = '' } = v
+  const [ouvert, setOuvert] = useState(false)
+  const [menuFn, setMenuFn] = useState(false)
+  const [fonction, setFonction] = useState(null)
+  const [ajoutees, setAjoutees] = useState([])       // indices des sources ajoutées, dans l'ordre
+  const [refCourante, setRefCourante] = useState(null) // index de la source sélectionnée, pas encore ajoutée
+  const [coches, setCoches] = useState({})
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+
+  const prochaine = ajoutees.length                  // index de la prochaine source à sélectionner
+  const toutesAjoutees = ajoutees.length === sources.length
+  const casesOk = cases.every((c) => coches[c])
+  const pretOK = fonction && toutesAjoutees && casesOk
+  const refCell = (s) => `${s.nom}!${titres ? '$A$1:$B$4' : '$B$2:$B$4'}`
+
+  const consigne = () => {
+    if (fait) return ''
+    if (!ouvert) return 'Onglet **Données** : clique sur **Consolider**.'
+    if (!fonction) return menuFn ? 'Choisis **Somme**.' : 'Ouvre la liste **Fonction** et choisis **Somme**.'
+    if (!toutesAjoutees) return refCourante == null
+      ? `Clique la plage de la feuille **${sources[prochaine].nom}**${titres ? ' (avec ses titres)' : ''} pour la mettre en Référence.`
+      : 'Clique sur **Ajouter** pour l\'ajouter à la liste.'
+    if (!casesOk) return `Coche ${cases.map((c) => `**${CONSO_CASE_LABEL[c]}**`).join(' et ')}.`
+    return 'Clique sur **OK** pour lancer la consolidation.'
+  }
+
+  const clicSource = (i) => { if (fait || i !== prochaine || refCourante != null) return; setRefCourante(i) }
+  const ajouter = () => { if (refCourante == null) return; setAjoutees((a) => [...a, refCourante]); setRefCourante(null) }
+  const toggleCase = (c) => { if (fait) return; setCoches((s) => ({ ...s, [c]: !s[c] })) }
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      {fait ? (
+        <div className="mx-auto mt-3 flex max-w-xs flex-col items-center">
+          <div className="mb-1 flex items-center gap-1 self-start text-[10px] text-navy/50"><span className="rounded-sm bg-mint/20 px-1.5 py-0.5 font-semibold text-navy/70">Synthèse</span> feuille consolidée</div>
+          <table className="w-full overflow-hidden rounded-md border border-navy/15 text-[11px] shadow">
+            <thead><tr>{entetes.map((h) => <th key={h} className="border-b-2 border-mint bg-mint/25 px-3 py-1 font-bold text-navy">{h}</th>)}</tr></thead>
+            <tbody>{lignes.map((r, i) => <tr key={i} className={i % 2 ? 'bg-navy/[0.03]' : 'bg-white'}>{r.map((c, j) => <td key={j} className={`border-b border-navy/10 px-3 py-1 ${j === 0 ? 'text-navy/85' : 'text-right font-mono font-semibold text-navy'}`}>{c}</td>)}</tr>)}</tbody>
+          </table>
+        </div>
+      ) : !ouvert ? (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-md border border-navy/15 bg-white text-[11px] shadow">
+          <div className="flex gap-2.5 border-b border-navy/10 bg-[#f3f1ea] px-2 py-1">{['Fichier', 'Accueil', 'Insertion', 'Données'].map((o) => <span key={o} className={o === 'Données' ? 'rounded bg-navy/10 px-1 font-bold text-navy' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-stretch gap-2 p-2">
+            <div className="flex w-16 flex-col items-center gap-1 rounded p-1 text-center opacity-50"><span className="text-base">🧬</span><span className="leading-tight text-navy/60">Convertir</span></div>
+            <button onClick={() => setOuvert(true)} className="flex w-16 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center ring-1 ring-mint"><span className="text-base">⧉</span><span className="leading-tight text-navy/75">Consolider</span></button>
+            <div className="flex w-16 flex-col items-center gap-1 rounded p-1 text-center opacity-50"><span className="text-base">🔗</span><span className="leading-tight text-navy/60">Liaisons</span></div>
+            <span className="self-end pb-0.5 text-[8px] uppercase tracking-wide text-navy/35">Outils de données</span>
+          </div>
+        </div>
+      ) : (
+        <div className="mx-auto mt-3 max-w-sm">
+          {/* Feuilles sources à sélectionner */}
+          {!toutesAjoutees && (
+            <div className="mb-2 flex gap-1.5">
+              {sources.map((s, i) => {
+                const ajout = ajoutees.includes(i)
+                const active = i === prochaine && refCourante == null
+                const sel = refCourante === i
+                return (
+                  <button key={i} onClick={() => clicSource(i)} disabled={ajout || i !== prochaine} className={`flex-1 rounded-md border px-1.5 py-1 text-center text-[10px] ${ajout ? 'border-mint/40 bg-mint/10 text-navy/40 line-through' : sel ? 'border-mint bg-mint/20 font-semibold text-navy' : active ? 'animate-pulse border-mint text-navy ring-1 ring-mint' : 'border-navy/15 text-navy/40'}`}>
+                    <span className="block">📄 {s.nom}</span><span className="font-mono text-[9px] text-navy/50">{titres ? 'A1:B4' : 'B2:B4'}</span>
+                  </button>
+                )
+              })}
+            </div>
+          )}
+          {/* La boîte Consolider */}
+          <div className="overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+            <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Consolider</span><span className="text-navy/40">✕</span></div>
+            <div className="space-y-2 bg-white p-3 text-navy">
+              <div className="relative">
+                <p className="mb-1 text-navy/55">Fonction :</p>
+                <button onClick={() => !fonction && setMenuFn(!menuFn)} className={`flex w-full items-center justify-between rounded-sm border px-2 py-1 ${fonction ? 'border-navy/30 font-semibold text-navy' : 'animate-pulse border-mint text-navy/50 ring-1 ring-mint'}`}><span>{fonction || 'choisir…'}</span><span className="text-navy/40">▾</span></button>
+                {menuFn && !fonction && (
+                  <div className="absolute left-0 top-full z-20 mt-0.5 w-40 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
+                    {['Somme', 'Nb', 'Moyenne', 'Max', 'Min'].map((f) => <button key={f} onClick={() => { if (f === 'Somme') { setFonction(f); setMenuFn(false) } }} className={`block w-full px-2 py-1 text-left ${f === 'Somme' ? 'animate-pulse bg-mint/15 font-semibold text-navy' : 'text-navy/45'}`}>{f}</button>)}
+                  </div>
+                )}
+              </div>
+              <div>
+                <p className="mb-1 text-navy/55">Référence :</p>
+                <div className="flex gap-1">
+                  <span className={`flex-1 truncate rounded-sm border px-2 py-1 font-mono ${refCourante != null ? 'border-mint text-navy ring-1 ring-mint' : 'border-navy/25 text-navy/30'}`}>{refCourante != null ? refCell(sources[refCourante]) : ' '}</span>
+                  <button onClick={ajouter} disabled={refCourante == null} className={`shrink-0 rounded-sm border-2 px-3 py-0.5 ${refCourante != null ? 'animate-pulse border-mint bg-mint/15 font-bold text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>Ajouter</button>
+                </div>
+              </div>
+              <div>
+                <p className="mb-1 text-navy/55">Toutes les références :</p>
+                <div className="h-14 overflow-auto rounded-sm border border-navy/25 bg-white">
+                  {ajoutees.length === 0 ? <div className="px-2 py-1 italic text-navy/30">(vide)</div> : ajoutees.map((idx) => <div key={idx} className="px-2 py-0.5 font-mono text-[10px] text-navy/80">{refCell(sources[idx])}</div>)}
+                </div>
+              </div>
+              <div className="space-y-1 border-t border-navy/10 pt-1.5">
+                <p className="text-navy/55">Étiquettes dans :</p>
+                {['ligneHaut', 'colGauche', 'lier'].map((c) => {
+                  const requis = cases.includes(c)
+                  const on = !!coches[c]
+                  return (
+                    <button key={c} onClick={() => requis && toggleCase(c)} disabled={!requis} className={`flex w-full items-center gap-2 text-left ${!requis ? 'opacity-40' : ''}`}>
+                      <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${on ? 'border-mint bg-mint' : requis && !casesOk ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/40'}`}>{on && '✓'}</span>
+                      <span className={on ? 'font-semibold text-navy' : 'text-navy/75'}>{CONSO_CASE_LABEL[c]}</span>
+                    </button>
+                  )
+                })}
+              </div>
+              <div className="flex justify-end gap-2 pt-0.5">
+                <button onClick={() => pretOK && setFait(true)} disabled={!pretOK} className={`rounded-sm border-2 px-4 py-0.5 font-bold ${pretOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button>
+                <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Fermer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Le volet « Champs de tableau croisé dynamique » : liste des tables/champs + 4 zones.
 function ChampsTCD({ v }) {
   const { tables = [], lignes = [], valeurs = [], colonnes = [], filtres = [] } = v
@@ -4333,6 +4461,55 @@ function PlanConso() {
       <p className="max-w-sm text-center text-[11px] leading-snug text-navy/60">
         <span className="text-navy/40">↳ </span>« <strong className="font-bold text-navy">−</strong> » = groupe développé (le détail des 3 mois d'Ebook Excel est visible) ; « <strong className="font-bold text-navy">+</strong> » = groupe fermé (seul le total s'affiche). Les boutons <strong className="font-bold text-navy">1 / 2</strong> (en haut à gauche) changent le niveau pour tout le tableau.
       </p>
+    </div>
+  )
+}
+
+// PLAN INTERACTIF : le user clique le bouton « − » pour MASQUER le détail d'un groupe (les 3
+// mois d'Ebook Excel se replient et il ne reste que le total). Puis « + » pour le redévelopper.
+function PlanConsoInteractif({ v, onResolu }) {
+  const { resultat = '' } = v
+  const detail = [
+    { txt: 'Janvier', val: '12 400 €' },
+    { txt: 'Février', val: '13 800 €' },
+    { txt: 'Mars', val: '12 000 €' },
+  ]
+  const [plie, setPlie] = useState(false)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const plier = () => { setPlie(true); setFait(true) }
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 Clique sur le bouton <b>−</b> (à gauche d'« Ebook Excel ») pour masquer le détail des 3 mois.</span>}
+      </div>
+      <div className="mx-auto mt-3 w-72 overflow-hidden rounded-md border border-navy/15 text-[11px] shadow">
+        <div className="flex items-center gap-1 border-b border-navy/15 bg-navy/5 px-2 py-1">
+          {[1, 2].map((n) => <span key={n} className="grid h-4 w-4 place-items-center rounded-sm border border-navy/35 bg-white text-[9px] font-bold text-navy/70">{n}</span>)}
+          <span className="ml-1 text-[9px] text-navy/40">← niveaux de plan</span>
+        </div>
+        {!plie && detail.map((r, i) => (
+          <div key={i} className="flex items-stretch border-b border-navy/10 text-navy/70">
+            <span className="w-6 shrink-0 border-r border-navy/10" />
+            <span className="flex-1 py-1 pl-5 italic">{r.txt}</span>
+            <span className="px-3 py-1 text-right">{r.val}</span>
+          </div>
+        ))}
+        <div className="flex items-stretch border-b border-navy/10 bg-mint/10 font-bold text-navy">
+          <span className="grid w-6 shrink-0 place-items-center border-r border-navy/10">
+            <button onClick={() => (plie ? (setPlie(false)) : plier())} className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[10px] font-bold ${!plie ? 'animate-pulse border-mint bg-mint/20 text-navy ring-1 ring-mint' : 'border-navy/40 bg-white text-navy'}`}>{plie ? '+' : '−'}</button>
+          </span>
+          <span className="flex-1 px-2 py-1">Ebook Excel</span>
+          <span className="px-3 py-1 text-right">38 200 €</span>
+        </div>
+        {[['Ebook Shaolin', '28 500 €'], ['Formations', '21 900 €']].map(([t, val]) => (
+          <div key={t} className="flex items-stretch border-b border-navy/10 bg-mint/10 font-bold text-navy">
+            <span className="grid w-6 shrink-0 place-items-center border-r border-navy/10"><span className="grid h-3.5 w-3.5 place-items-center rounded-sm border border-navy/40 bg-white text-[10px] font-bold text-navy">+</span></span>
+            <span className="flex-1 px-2 py-1">{t}</span>
+            <span className="px-3 py-1 text-right">{val}</span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -7451,7 +7628,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -7551,6 +7728,10 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <MfcBuilder v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'refbuilder' ? (
             <RefBuilder v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'consoliderinteractif' ? (
+            <ConsoliderInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'planconsointeractif' ? (
+            <PlanConsoInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -7618,7 +7799,11 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                       ? 'Applique la règle'
                                                                       : s.visuel?.type === 'refbuilder'
                                                                         ? 'Appuie sur F4'
-                                                                        : 'Réponds pour continuer'
+                                                                        : s.visuel?.type === 'consoliderinteractif'
+                                                                          ? 'Remplis la boîte Consolider'
+                                                                          : s.visuel?.type === 'planconsointeractif'
+                                                                            ? 'Masque le détail'
+                                                                            : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
