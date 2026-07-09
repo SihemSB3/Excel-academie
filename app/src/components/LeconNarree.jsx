@@ -6190,6 +6190,7 @@ function ListeInteractive({ v, onResolu }) {
   const [funnel, setFunnel] = useState(false)
   const [ghost, setGhost] = useState(false)        // saisieauto : suggestion grise affichée
   const [menuCible, setMenuCible] = useState(false) // listechoix : liste déroulante ouverte
+  const [valChoisie, setValChoisie] = useState(null) // listechoix : valeur choisie affichée dans la cellule
   const [form, setForm] = useState(null)           // formulaire : valeurs (null tant que « Nouveau »)
   const [dialog, setDialog] = useState(false)      // soustotal / reptitres : boîte ouverte
   const [champRep, setChampRep] = useState(false)  // reptitres : champ « lignes à répéter » rempli
@@ -6252,8 +6253,7 @@ function ListeInteractive({ v, onResolu }) {
                 <div key={'t' + ci} className="relative border-b border-navy/5 bg-white px-1 py-1">
                   {mode === 'listechoix' ? (
                     <>
-                      <button onClick={() => setMenuCible(!menuCible)} className="flex w-full animate-pulse items-center justify-between rounded-sm border border-mint px-1.5 py-0.5 text-navy/40 ring-1 ring-mint"><span>choisir…</span><span className="ml-1">▾</span></button>
-                      {menuCible && <div className="absolute left-0 top-full z-20 mt-0.5 w-28 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">{distinctesCible.map((val) => <button key={val} onClick={() => { setFait(true) }} className="block w-full px-2 py-1 text-left hover:bg-mint/15">{val}</button>)}</div>}
+                      <button onClick={() => setMenuCible(!menuCible)} className={`flex w-full items-center justify-between rounded-sm border px-1.5 py-0.5 ${valChoisie ? 'border-navy/25 font-semibold text-navy' : 'animate-pulse border-mint text-navy/40 ring-1 ring-mint'}`}><span>{valChoisie || 'choisir…'}</span><span className="ml-1 text-navy/40">▾</span></button>
                     </>
                   ) : (
                     <span className="font-mono text-navy/80">{ghost ? <>{amorce}<span className="text-navy/30">{complet.slice(amorce.length)}</span></> : <span className="animate-pulse text-navy/30">saisie…</span>}</span>
@@ -6269,6 +6269,12 @@ function ListeInteractive({ v, onResolu }) {
         </div>
       )}
 
+      {mode === 'listechoix' && menuCible && !fait && (
+        <div className="mx-auto mt-2 w-44 overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+          <p className="border-b border-navy/10 bg-navy/5 px-2 py-1 text-[10px] font-semibold text-navy/50">Valeurs de « {colonnes[colCible]} »</p>
+          {distinctesCible.map((val) => <button key={val} onClick={() => { setValChoisie(val); setMenuCible(false); setFait(true) }} className="block w-full px-2 py-1.5 text-left font-mono text-navy/80 hover:bg-mint/15">{val}</button>)}
+        </div>
+      )}
       {mode === 'creertableau' && etape === 0 && (
         <div className="mt-3 flex justify-center"><button onClick={() => setEtape(1)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">▧ Mettre sous forme de tableau</button></div>
       )}
