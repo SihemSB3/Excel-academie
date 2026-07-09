@@ -4049,6 +4049,85 @@ function ConsoliderInteractif({ v, onResolu }) {
   )
 }
 
+// CRÉER UN TABLEAU INTERACTIF : Accueil > Mettre sous forme de tableau > coche « en-têtes » > OK,
+// puis onglet Création de tableau > double-clic sur le Nom du tableau > tape le nom > Entrée.
+function CreerTableauInteractif({ v, onResolu }) {
+  const { colonnes = [], lignes = [], nom = 'T_ventes', resultat = '' } = v
+  const [etape, setEtape] = useState('ruban')      // ruban | dialog | table | edit
+  const [coche, setCoche] = useState(false)
+  const [saisi, setSaisi] = useState(false)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const estTable = etape === 'table' || etape === 'edit' || fait
+
+  const consigne = () => {
+    if (fait) return ''
+    if (etape === 'ruban') return 'Onglet **Accueil** : clique sur **Mettre sous forme de tableau**.'
+    if (etape === 'dialog') return coche ? 'Clique sur **OK**.' : 'Coche **Ma table comporte des en-têtes**, puis OK.'
+    if (etape === 'table') return 'Onglet **Création de tableau** : **double-clique** le champ **Nom du tableau** pour le renommer.'
+    return saisi ? 'Clique sur **Entrée** pour valider.' : `Tape le nom **${nom}**.`
+  }
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      {/* Le tableau (brut, puis stylé « vrai tableau » avec bandes + filtres) */}
+      <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-md border border-navy/15 text-[11px] shadow">
+        <div className="grid" style={{ gridTemplateColumns: `repeat(${colonnes.length}, 1fr)` }}>
+          {colonnes.map((c, i) => (
+            <div key={i} className={`flex items-center justify-between border-b px-2 py-1 font-bold ${estTable ? 'border-mint/50 bg-mint/25 text-navy' : 'border-navy/15 bg-navy/5 text-navy/70'}`}>{c}{estTable && <span className="text-navy/40">▾</span>}</div>
+          ))}
+          {lignes.map((r, ri) => r.map((cell, ci) => (
+            <div key={ri + '-' + ci} className={`border-b border-navy/5 px-2 py-1 ${estTable && ri % 2 ? 'bg-mint/[0.06]' : 'bg-white'} ${ci === 0 ? 'text-navy/85' : 'text-right font-mono text-navy/70'}`}>{cell}</div>
+          )))}
+        </div>
+      </div>
+
+      {!fait && etape === 'ruban' && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-md border border-navy/15 bg-white text-[11px] shadow">
+          <div className="flex gap-2.5 border-b border-navy/10 bg-[#f3f1ea] px-2 py-1">{['Fichier', 'Accueil', 'Insertion'].map((o) => <span key={o} className={o === 'Accueil' ? 'rounded bg-navy/10 px-1 font-bold text-navy' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-stretch gap-2 p-2">
+            <div className="flex w-20 flex-col items-center gap-1 rounded p-1 text-center opacity-50"><span className="text-base">▦</span><span className="leading-tight text-navy/60">Mise en forme conditionnelle</span></div>
+            <button onClick={() => setEtape('dialog')} className="flex w-20 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center ring-1 ring-mint"><span className="text-base">▧</span><span className="leading-tight text-navy/75">Mettre sous forme de tableau</span></button>
+          </div>
+        </div>
+      )}
+      {!fait && etape === 'dialog' && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Créer un tableau</div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="text-navy/60">Où sont les données ?</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-1 font-mono text-navy/70">=$A$1:$B$4</span></div>
+            <button onClick={() => setCoche(!coche)} className="flex w-full items-center gap-2 text-left text-navy/80">
+              <span className={`grid h-4 w-4 place-items-center rounded-sm border text-[9px] text-white ${coche ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{coche && '✓'}</span>Ma table comporte des en-têtes
+            </button>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => coche && setEtape('table')} disabled={!coche} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${coche ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+      {!fait && (etape === 'table' || etape === 'edit') && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-md border border-navy/15 bg-white text-[11px] shadow">
+          <div className="flex gap-2.5 border-b border-navy/10 bg-[#f3f1ea] px-2 py-1">{['Fichier', 'Accueil', 'Création de tableau'].map((o) => <span key={o} className={o === 'Création de tableau' ? 'rounded bg-navy/10 px-1 font-bold text-navy' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-center gap-2 p-2">
+            <span className="text-[10px] font-semibold text-navy/50">🏷 Nom du tableau :</span>
+            {etape === 'table' ? (
+              <button onDoubleClick={() => setEtape('edit')} onClick={() => setEtape('edit')} className="animate-pulse rounded-sm border border-mint px-2 py-1 font-mono text-navy/70 ring-1 ring-mint">Tableau1</button>
+            ) : (
+              <span className="flex items-center gap-1">
+                <span className="rounded-sm border-2 border-mint bg-white px-2 py-1 font-mono text-navy">{saisi ? nom : <span className="text-navy/30">|</span>}</span>
+                {!saisi ? <button onClick={() => setSaisi(true)} className="animate-pulse rounded bg-navy/5 px-2 py-1 text-[10px] font-semibold text-navy ring-1 ring-mint">⌨ Tape « {nom} »</button>
+                  : <button onClick={() => setFait(true)} className="animate-pulse rounded bg-navy/5 px-2 py-1 text-[10px] font-semibold text-navy ring-1 ring-mint">⏎ Entrée</button>}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Le volet « Champs de tableau croisé dynamique » : liste des tables/champs + 4 zones.
 function ChampsTCD({ v }) {
   const { tables = [], lignes = [], valeurs = [], colonnes = [], filtres = [] } = v
@@ -7628,7 +7707,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -7732,6 +7811,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ConsoliderInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'planconsointeractif' ? (
             <PlanConsoInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'creertableauinteractif' ? (
+            <CreerTableauInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -7803,7 +7884,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                           ? 'Remplis la boîte Consolider'
                                                                           : s.visuel?.type === 'planconsointeractif'
                                                                             ? 'Masque le détail'
-                                                                            : 'Réponds pour continuer'
+                                                                            : s.visuel?.type === 'creertableauinteractif'
+                                                                              ? 'Crée le tableau'
+                                                                              : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
