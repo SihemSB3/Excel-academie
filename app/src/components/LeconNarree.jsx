@@ -6481,7 +6481,7 @@ function GraphiqueInteractif({ v, onResolu }) {
   const [sousMenu, setSousMenu] = useState(false) // liste « Sélection active » ouverte
   const [dialog, setDialog] = useState(false)
   const [insere, setInsere] = useState(mode !== 'inserer')
-  const [selectionne, setSelectionne] = useState(mode !== 'ongletscontextuels') // graphe sélectionné (onglets contextuels)
+  const [selectionne, setSelectionne] = useState(mode !== 'supprimer') // graphe sélectionné (départ : oui, sauf pour la suppression)
   const [supprime, setSupprime] = useState(false)
   const [cachees, setCachees] = useState([]) // catégories masquées (mode filtre)
   const [feuille, setFeuille] = useState(false)
@@ -6544,7 +6544,7 @@ function GraphiqueInteractif({ v, onResolu }) {
       ) : (
         <button
           onClick={() => {
-            if (mode === 'ongletscontextuels' && !selectionne) setSelectionne(true)
+            if (mode === 'ongletscontextuels' && !selectionne) { setSelectionne(true); setFait(true) }
             if (mode === 'supprimer' && !selectionne) setSelectionne(true)
           }}
           className={`mx-auto mt-3 block w-full max-w-md rounded-lg border-2 bg-white p-1 ${selectionne && (mode === 'ongletscontextuels' || mode === 'supprimer' || mode === 'imprimer') ? 'border-mint ring-1 ring-mint' : 'border-transparent'}`}
@@ -6554,8 +6554,8 @@ function GraphiqueInteractif({ v, onResolu }) {
       )}
 
       {/* Clic « en dehors » (ongletscontextuels) */}
-      {mode === 'ongletscontextuels' && !fait && (
-        <button onClick={() => { if (selectionne) { setSelectionne(false) } else { setSelectionne(true); setFait(true) } }} className="mx-auto mt-2 block rounded-md border border-dashed border-navy/25 px-4 py-2 text-xs text-navy/50 hover:bg-navy/5">{selectionne ? 'Clique ici (en dehors du graphe)' : 'Reclique le graphe ci-dessus'}</button>
+      {mode === 'ongletscontextuels' && !fait && selectionne && (
+        <button onClick={() => setSelectionne(false)} className="mx-auto mt-2 block rounded-md border border-dashed border-navy/25 px-4 py-2 text-xs text-navy/50 hover:bg-navy/5">⤴ Clique ici (en dehors du graphe)</button>
       )}
 
       {/* Galerie de types (inserer étape 2 / type / intervertir n'en a pas) */}

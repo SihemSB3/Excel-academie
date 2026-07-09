@@ -3784,6 +3784,11 @@ const DEPLACERGRAPHIQUE = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. **Attrape la poignée d\'angle** (en bas à droite) et agrandis le graphique.',
+      visuel: { type: 'graphiqueinteractif', mode: 'redimensionner', donnees: GRAPH_MOIS, titre: 'Ventes par mois', resultat: 'Le graphique a grandi : par une poignée d\'angle, largeur et hauteur changent ensemble. Avec Shift, les proportions restent.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Sur les poignées. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'Les poignées d\'angle redimensionnent largeur ET hauteur ensemble ; les poignées latérales, une seule dimension.', bonne: true, explication: 'Vrai : un coin change les deux dimensions à la fois (et, avec Shift, garde les proportions). Une poignée du milieu d\'un côté ne change qu\'une dimension.' },
@@ -3805,8 +3810,8 @@ const MODIFIERGRAPHIQUE = {
   narration: [
     {
       humeur: 'accueil',
-      dit: 'Dès que tu **sélectionnes** un graphique, deux onglets spéciaux apparaissent dans le ruban : **Création de graphique** et **Format**. Ils disparaissent quand tu cliques ailleurs.',
-      visuel: { type: 'ongletscontextuels' },
+      dit: 'Dès que tu **sélectionnes** un graphique, deux onglets spéciaux apparaissent : **Création de graphique** et **Format**. **À toi : clique en dehors** du graphe et regarde-les disparaître.',
+      visuel: { type: 'graphiqueinteractif', mode: 'ongletscontextuels', donnees: GRAPH_MOIS, titre: 'Ventes par mois', resultat: 'Tu l\'as vu : les onglets contextuels n\'apparaissent QUE quand le graphe est sélectionné. Clique ailleurs, ils disparaissent ; reclique-le, ils reviennent.' },
     },
     {
       humeur: 'pensif',
@@ -3840,8 +3845,8 @@ const MODIFIERGRAPHIQUE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Tu as ouvert la liste « Sélection active » et tu veux mettre en forme les barres. **Clique l\'élément à sélectionner.**',
-      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Série « Ventes » » (les barres)', items: [{ label: 'Zone de graphique' }, { label: 'Zone de traçage' }, { label: 'Série « Ventes »' }, { label: 'Axe vertical (Valeurs)' }, { label: 'Titre du graphique' }, { label: 'Légende' }], cible: 2, explication: 'La série « Ventes », ce sont les barres. Une fois sélectionnée, « Mise en forme de la sélection » ouvre le volet pour changer leur couleur.' },
+      dit: 'À toi. Ouvre la **Sélection active**, choisis **Série « Ventes »** (les barres), puis **repeins-la en orange** : le graphe se met à jour en direct.',
+      visuel: { type: 'graphiqueinteractif', mode: 'selectionformat', donnees: GRAPH_MOIS, titre: 'Ventes par mois', couleurCible: '#e8853a', resultat: 'Les barres sont passées en orange : tu as sélectionné un élément précis et changé son remplissage, comme un pro.' },
     },
     {
       humeur: 'pensif',
@@ -3859,6 +3864,11 @@ const MODIFIERGRAPHIQUE = {
           { note: 'Pour changer seulement les **couleurs** : Création > **Modifier les couleurs** (palette Colorée ou Monochrome). Pour un réglage fin d\'un élément (remplissage, bordure, effets), utilise le volet **Mettre en forme…** (voir la leçon « Les axes »).', label: 'Astuce' },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. **Clique le Style 3** et regarde ton graphe changer complètement d\'habillage (fond sombre, texte clair).',
+      visuel: { type: 'graphiqueinteractif', mode: 'style', donnees: GRAPH_MOIS, titre: 'Ventes par mois', styleCible: 3, resultat: 'Un clic, un tout autre look : les styles prédéfinis rhabillent le graphe d\'un coup, sans rien régler à la main.' },
     },
     {
       humeur: 'pensif',
@@ -3898,6 +3908,11 @@ const MODIFIERGRAPHIQUE = {
       visuel: { type: 'encart', label: 'Éléments de graphique', liste: ['**Titre** : le nom affiché au-dessus du graphique.', '**Étiquettes de données** : la valeur exacte posée sur chaque barre ou point.', '**Table de données** : un mini-tableau des valeurs sous le graphique.', '**Quadrillage** : les lignes de fond alignées sur les graduations.', '**Légende** : la zone qui associe chaque couleur à sa série.', '**Courbe de tendance** : une ligne qui montre la tendance d\'une série.'] },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Ouvre le **＋** et **coche « Étiquettes de données »** : la valeur exacte s\'affiche sur chaque barre.',
+      visuel: { type: 'graphiqueinteractif', mode: 'elements', donnees: GRAPH_MOIS, titre: 'Ventes par mois', elementBascule: 'etiquettes', resultat: 'Les étiquettes sont apparues sur les barres. Coche/décoche, l\'élément apparaît ou disparaît : tu composes ton graphe.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Le rôle du bouton ＋. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'Le bouton ＋ à côté du graphique sert à ajouter (ou retirer) des éléments : titre, légende, étiquettes de données, quadrillage…', bonne: true, explication: 'Vrai : le ＋ liste tous les éléments du graphique. Tu coches ce que tu veux afficher (étiquettes, table de données, courbe de tendance…) et décoches le reste.' },
@@ -3933,6 +3948,11 @@ const MODIFIERGRAPHIQUE = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. Ouvre le **▽ filtre**, **décoche « Avr »** : sa barre disparaît du graphe (le tableau, lui, ne bouge pas).',
+      visuel: { type: 'graphiqueinteractif', mode: 'filtre', donnees: GRAPH_MOIS, titre: 'Ventes par mois', filtreCat: 'Avr', resultat: 'La barre « Avr » a disparu du graphe, mais ton tableau est intact : le filtre masque, il ne supprime pas.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Ce que fait vraiment le filtre. **Vrai ou faux ?**',
       visuel: { type: 'vraifaux', affirmation: 'Décocher « Avr » dans le filtre du graphique supprime la ligne « Avr » de ton tableau de données.', bonne: false, explication: 'Non : le filtre du graphique MASQUE seulement « Avr » de l\'affichage. Tes données sources restent intactes ; recoche-le et la barre revient.' },
@@ -3949,6 +3969,11 @@ const MODIFIERGRAPHIQUE = {
           { capture: { type: 'titregraphique' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. **Double-clique le titre** du graphe et renomme-le : il change tout de suite.',
+      visuel: { type: 'graphiqueinteractif', mode: 'titre', donnees: GRAPH_MOIS, titre: 'Ventes par mois', resultat: 'Titre changé en un double-clic : « Chiffre d\'affaires 2025 ». Ton graphe porte le message que tu veux.' },
     },
     {
       humeur: 'accueil',
@@ -4003,8 +4028,8 @@ const AXESGRAPHIQUE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Dans la liste « Sélection active », **clique l\'élément qui correspond à l\'échelle des valeurs.**',
-      visuel: { type: 'cliquecible', support: 'menu', consigne: 'Clique « Axe vertical (Valeurs) »', items: [{ label: 'Zone de graphique' }, { label: 'Zone de traçage' }, { label: 'Axe horizontal (Catégories)' }, { label: 'Axe vertical (Valeurs)' }, { label: 'Titre du graphique' }, { label: 'Légende' }], cible: 3, explication: 'L\'axe vertical porte les valeurs (les euros). Le sélectionner ainsi évite de le rater à la souris, car c\'est un élément très fin.' },
+      dit: 'À toi. Sélectionne l\'**Axe vertical (Valeurs)**, puis **monte son Minimum à 10** : regarde les écarts entre les barres se creuser.',
+      visuel: { type: 'graphiqueinteractif', mode: 'axe', donnees: GRAPH_MOIS, titre: 'Ventes par mois', axeMinCible: 10, resultat: 'En démarrant l\'axe à 10 au lieu de 0, les mêmes écarts occupent plus de hauteur : ils sautent aux yeux. À manier honnêtement !' },
     },
     {
       humeur: 'pensif',
@@ -4059,8 +4084,8 @@ const SERIESGRAPHIQUE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Dans **Création de graphique > groupe Données**, **clique le bouton qui échange lignes et colonnes.**',
-      visuel: { type: 'cliquecible', support: 'ruban', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de graphique', 'Format'], consigne: 'Clique « Intervertir les lignes/colonnes »', actif: 'Création de graphique', groupeNom: 'Données', groupes: [{ icone: '🔁', label: 'Intervertir lignes/colonnes' }, { icone: '⊞', label: 'Sélectionner données' }], cible: 'Intervertir lignes/colonnes', explication: 'D\'un clic, ce qui était en série (les produits) devient les catégories, et inversement. Un autre point de vue sur les mêmes chiffres.' },
+      dit: 'À toi. **Clique « Intervertir les lignes/colonnes »** et regarde : les produits (séries) et les trimestres (catégories) s\'échangent sur le graphe.',
+      visuel: { type: 'graphiqueinteractif', mode: 'intervertir', donnees: GRAPH_PRODUITS, titre: 'Ventes des ebooks', resultat: 'D\'un clic, le point de vue a changé : ce qui était en séries est passé en catégories, et inversement. Mêmes chiffres, autre lecture.' },
     },
     {
       humeur: 'pensif',
@@ -4127,6 +4152,11 @@ const DEPLACERIMPRIMER = {
       },
     },
     {
+      humeur: 'accueil',
+      dit: 'À toi. **Déplace le graphique sur sa propre feuille** : clique « Déplacer le graphique », choisis « Nouvelle feuille », puis OK.',
+      visuel: { type: 'graphiqueinteractif', mode: 'deplacerfeuille', donnees: GRAPH_MOIS, titre: 'Ventes par mois', resultat: 'Le graphique a sa feuille dédiée « Graphique1 » : parfait pour le présenter en grand, sans cellules autour.' },
+    },
+    {
       humeur: 'pensif',
       dit: 'Pour **imprimer** un graphique seul.',
       visuel: {
@@ -4162,6 +4192,11 @@ const DEPLACERIMPRIMER = {
           { capture: { type: 'clicdroitonglet' } },
         ],
       },
+    },
+    {
+      humeur: 'accueil',
+      dit: 'À toi. **Sélectionne le graphique** (clique son bord) puis **Suppr** pour l\'effacer.',
+      visuel: { type: 'graphiqueinteractif', mode: 'supprimer', donnees: GRAPH_MOIS, titre: 'Ventes par mois', resultat: 'Le graphique a disparu. Sélectionne bien tout le graphe (son bord) avant Suppr : sur un élément interne, Suppr n\'enlèverait que cet élément.' },
     },
     {
       humeur: 'accueil',
