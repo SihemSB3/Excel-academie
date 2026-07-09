@@ -3703,8 +3703,8 @@ const CREERGRAPHIQUE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Dans l\'onglet **Insertion > groupe Graphiques**, **clique le bouton Histogramme** (des barres verticales).',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Histogramme', actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Histogramme' }, { icone: '📈', label: 'Courbe' }, { icone: '🥧', label: 'Secteurs' }, { icone: '⭐', label: 'Graphique recommandé' }], cible: 'Histogramme', explication: 'L\'histogramme (barres verticales) est parfait pour comparer des valeurs. Un clic ouvre ses sous-types (groupé, empilé…).' },
+      dit: '**À toi.** Choisis un **type** dans la galerie pour créer ton graphique, puis change-le en **Courbe** pour voir Excel le transformer sous tes yeux.',
+      visuel: { type: 'graphiqueinteractif', mode: 'inserer', donnees: GRAPH_MOIS, titre: 'Ventes par mois', typeCible: 'courbe', resultat: 'Ton histogramme est né, puis transformé en courbe : mêmes données, autre histoire. Le graphique est bien vivant !' },
     },
     {
       humeur: 'accueil',

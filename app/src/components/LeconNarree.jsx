@@ -6374,6 +6374,298 @@ function ListeInteractive({ v, onResolu }) {
   )
 }
 
+const GRAPHE_DEF = { cats: ['Jan', 'Fév', 'Mar', 'Avr'], series: [{ nom: 'Ventes', vals: [12, 19, 15, 24] }] }
+// Graphe SVG VIVANT : rendu réel (barres groupées, courbes, aires, barres horizontales,
+// secteurs) qui reflète l'état (type, éléments affichés, couleurs, échelle, sélection,
+// thème, taille). C'est le cœur du chapitre « graphiques » : le user agit, le graphe change.
+function GrapheSVG({ data, type = 'histogramme', titre = '', options = {}, selection = null, theme = 'clair', echelle = 1, axeMin, axeMax, secondaire }) {
+  const cats = data.cats || []
+  const series = (data.series || []).filter((s) => !s.masque)
+  const COUL = ['#41c1ba', '#0a335d', '#e8853a', '#8b5cf6']
+  const coul = (s, i) => s.couleur || COUL[i % COUL.length]
+  const sombre = theme === 'sombre'
+  const fg = sombre ? '#e8eef6' : '#5b6b7f'
+  const bg = sombre ? '#16243f' : '#ffffff'
+  const grille = sombre ? 'rgba(255,255,255,.12)' : 'rgba(10,51,93,.10)'
+  const W = 340, H = 210, ML = 34, MR = 12, MT = 30, MB = 26
+  const pW = W - ML - MR, pH = H - MT - MB
+  const toutes = series.flatMap((s) => s.vals)
+  const vmax = axeMax != null ? axeMax : Math.ceil((Math.max(1, ...toutes) * 1.15) / 5) * 5
+  const vmin = axeMin != null ? axeMin : 0
+  const y = (v) => MT + pH - ((v - vmin) / (vmax - vmin || 1)) * pH
+  const ticks = [0, 1, 2, 3, 4].map((i) => vmin + ((vmax - vmin) * i) / 4)
+  const gW = pW / (cats.length || 1)
+  const selSerie = (i) => selection === `serie:${i}`
+  const secId = secondaire // index de la série tracée en courbe sur l'axe secondaire (mixte)
+  const s2max = secId != null ? Math.ceil((Math.max(1, ...(series[secId]?.vals || [1])) * 1.15) / 10) * 10 : 0
+  const y2 = (v) => MT + pH - (v / (s2max || 1)) * pH
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: `${Math.round(100 * echelle)}%`, maxWidth: '100%', transition: 'width .25s' }} className="mx-auto block">
+      <rect x="0" y="0" width={W} height={H} rx="6" fill={bg} stroke={selection === 'zone' ? '#41c1ba' : sombre ? '#0a2544' : '#e7e2d6'} strokeWidth={selection === 'zone' ? 2 : 1} />
+      {options.titre !== false && <text x={W / 2} y="18" textAnchor="middle" fontSize="12" fontWeight="700" fill={selection === 'titre' ? '#e8853a' : sombre ? '#fff' : '#0a335d'} style={selection === 'titre' ? { outline: '1px dashed #e8853a' } : undefined}>{titre}</text>}
+      {selection === 'titre' && <rect x={W / 2 - 60} y="6" width="120" height="16" fill="none" stroke="#e8853a" strokeDasharray="3 2" />}
+      {/* quadrillage + axe Y */}
+      {options.quadrillage !== false && ticks.map((t, i) => <line key={i} x1={ML} x2={W - MR} y1={y(t)} y2={y(t)} stroke={grille} strokeWidth="1" />)}
+      {ticks.map((t, i) => <text key={i} x={ML - 5} y={y(t) + 3} textAnchor="end" fontSize="8" fill={fg}>{Math.round(t)}</text>)}
+      <line x1={ML} x2={ML} y1={MT} y2={MT + pH} stroke={selection === 'axeY' ? '#41c1ba' : fg} strokeWidth={selection === 'axeY' ? 2.5 : 1} />
+      <line x1={ML} x2={W - MR} y1={MT + pH} y2={MT + pH} stroke={fg} strokeWidth="1" />
+      {/* tracé selon le type */}
+      {(type === 'histogramme' || type === 'barres') && cats.map((c, ci) => {
+        const n = series.length, bw = (gW * 0.7) / n
+        return series.map((s, si) => {
+          const bx = ML + ci * gW + gW * 0.15 + si * bw
+          const bh = MT + pH - y(s.vals[ci])
+          return <rect key={ci + '-' + si} x={bx} y={y(s.vals[ci])} width={bw - 1} height={Math.max(0, bh)} rx="1.5" fill={coul(s, si)} opacity={selection && !selSerie(si) && selection.startsWith('serie') ? 0.35 : 1} stroke={selSerie(si) ? '#0a335d' : 'none'} strokeWidth={selSerie(si) ? 1.5 : 0} />
+        })
+      })}
+      {(type === 'courbe' || type === 'aires') && series.map((s, si) => {
+        const pts = cats.map((c, ci) => `${ML + ci * gW + gW / 2},${y(s.vals[ci])}`).join(' ')
+        return (
+          <g key={si} opacity={selection && !selSerie(si) && selection.startsWith('serie') ? 0.35 : 1}>
+            {type === 'aires' && <polygon points={`${ML + gW / 2},${MT + pH} ${pts} ${ML + (cats.length - 1) * gW + gW / 2},${MT + pH}`} fill={coul(s, si)} opacity="0.25" />}
+            <polyline points={pts} fill="none" stroke={coul(s, si)} strokeWidth={selSerie(si) ? 3.5 : 2.2} />
+            {cats.map((c, ci) => <circle key={ci} cx={ML + ci * gW + gW / 2} cy={y(s.vals[ci])} r={selSerie(si) ? 3.5 : 2.5} fill={coul(s, si)} />)}
+          </g>
+        )
+      })}
+      {type === 'secteurs' && (() => {
+        const vals = series[0]?.vals || [], tot = vals.reduce((a, b) => a + b, 0) || 1
+        let ang = -Math.PI / 2; const cx = ML + pW / 2, cy = MT + pH / 2, r = Math.min(pW, pH) / 2 - 4
+        return vals.map((v, i) => { const a0 = ang, a1 = ang + (v / tot) * 2 * Math.PI; ang = a1; const large = a1 - a0 > Math.PI ? 1 : 0; const d = `M${cx},${cy} L${cx + r * Math.cos(a0)},${cy + r * Math.sin(a0)} A${r},${r} 0 ${large} 1 ${cx + r * Math.cos(a1)},${cy + r * Math.sin(a1)} Z`; return <path key={i} d={d} fill={COUL[i % COUL.length]} /> })
+      })()}
+      {/* série secondaire en courbe (graphe mixte) */}
+      {secId != null && series[secId] && (
+        <>
+          <polyline points={cats.map((c, ci) => `${ML + ci * gW + gW / 2},${y2(series[secId].vals[ci])}`).join(' ')} fill="none" stroke={coul(series[secId], secId)} strokeWidth="2.5" />
+          {cats.map((c, ci) => <circle key={ci} cx={ML + ci * gW + gW / 2} cy={y2(series[secId].vals[ci])} r="2.5" fill={coul(series[secId], secId)} />)}
+          <line x1={W - MR} x2={W - MR} y1={MT} y2={MT + pH} stroke={coul(series[secId], secId)} strokeWidth="1.5" />
+        </>
+      )}
+      {/* étiquettes X */}
+      {type !== 'secteurs' && cats.map((c, ci) => <text key={ci} x={ML + ci * gW + gW / 2} y={MT + pH + 12} textAnchor="middle" fontSize="8" fill={fg}>{c}</text>)}
+      {/* étiquettes de données */}
+      {options.etiquettes && (type === 'histogramme') && cats.map((c, ci) => series.map((s, si) => {
+        const n = series.length, bw = (gW * 0.7) / n, bx = ML + ci * gW + gW * 0.15 + si * bw + bw / 2
+        return <text key={ci + '-' + si} x={bx} y={y(s.vals[ci]) - 2} textAnchor="middle" fontSize="7" fontWeight="700" fill={sombre ? '#fff' : '#0a335d'}>{s.vals[ci]}</text>
+      }))}
+      {/* légende */}
+      {options.legende && series.length > 0 && (
+        <g>{series.map((s, si) => (
+          <g key={si} transform={`translate(${ML + si * 84}, ${H - 6})`}>
+            <rect x="0" y="-7" width="9" height="9" rx="1.5" fill={coul(s, si)} />
+            <text x="13" y="0" fontSize="8" fill={fg}>{s.nom}</text>
+          </g>
+        ))}</g>
+      )}
+    </svg>
+  )
+}
+
+// Wrapper interactif du graphe : chaque mode = une manipulation où le user AGIT et voit
+// le graphe changer. Voir le tableau `bloque` + dispatch. Un seul composant, config via v.mode.
+function GraphiqueInteractif({ v, onResolu }) {
+  const {
+    mode = 'inserer', donnees, titre = 'Ventes par mois', typeInitial = 'histogramme', typeCible = 'courbe',
+    element = 'serie:0', couleurCible = '#e8853a', styleCible = 2, elementBascule = 'etiquettes',
+    filtreCat, axeMinCible = 10, resultat = '',
+  } = v
+  const [type, setType] = useState(typeInitial)
+  const [data, setData] = useState(donnees || GRAPHE_DEF)
+  const [sel, setSel] = useState(null)
+  const [opts, setOpts] = useState({ titre: true, legende: (donnees?.series?.length || 1) > 1, etiquettes: false, quadrillage: true })
+  const [theme, setTheme] = useState('clair')
+  const [echelle, setEchelle] = useState(1)
+  const [axeMin, setAxeMin] = useState(0)
+  const [tCourant, setTitre] = useState(titre)
+  const [sousMenu, setSousMenu] = useState(false) // liste « Sélection active » ouverte
+  const [dialog, setDialog] = useState(false)
+  const [insere, setInsere] = useState(mode !== 'inserer')
+  const [selectionne, setSelectionne] = useState(mode !== 'ongletscontextuels') // graphe sélectionné (onglets contextuels)
+  const [supprime, setSupprime] = useState(false)
+  const [cachees, setCachees] = useState([]) // catégories masquées (mode filtre)
+  const [feuille, setFeuille] = useState(false)
+  const [saisieTitre, setSaisieTitre] = useState(false)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+
+  const GALERIE = [{ t: 'histogramme', i: '📊', l: 'Histogramme' }, { t: 'courbe', i: '📈', l: 'Courbe' }, { t: 'aires', i: '⛰', l: 'Aires' }, { t: 'secteurs', i: '🥧', l: 'Secteurs' }, { t: 'barres', i: '📶', l: 'Barres' }]
+  const consigne = () => {
+    switch (mode) {
+      case 'inserer': return !insere ? 'Clique un **type de graphique** dans la galerie pour l\'insérer.' : `Change de type : clique **${GALERIE.find((g) => g.t === typeCible)?.l}** pour voir le graphe se transformer.`
+      case 'type': return `Clique **${GALERIE.find((g) => g.t === typeCible)?.l}** : le graphe passe d\'histogramme à ${GALERIE.find((g) => g.t === typeCible)?.l.toLowerCase()}.`
+      case 'redimensionner': return 'Attrape la **poignée d\'angle** (en bas à droite) et agrandis le graphe.'
+      case 'ongletscontextuels': return selectionne ? 'Les onglets **Création** et **Format** sont là. **Clique en dehors** du graphe pour les faire disparaître.' : 'Vois : les onglets contextuels ont disparu. **Reclique le graphe** pour les faire revenir.'
+      case 'selectionformat': return sousMenu ? 'Choisis **Série « Ventes »** dans la liste.' : sel === element ? 'Choisis une **couleur** pour repeindre la série.' : 'Ouvre la **Sélection active** (▾) pour choisir un élément à mettre en forme.'
+      case 'style': return `Clique le **Style ${styleCible}** : le graphe change complètement d\'habillage.`
+      case 'elements': return `Ouvre le **＋**, puis coche **${elementBascule === 'etiquettes' ? 'Étiquettes de données' : elementBascule}** pour l\'ajouter au graphe.`
+      case 'filtre': return `Ouvre le **▽ filtre**, décoche **${filtreCat}**, puis Applique : sa barre disparaît.`
+      case 'titre': return saisieTitre ? 'Tape le nouveau titre, puis valide.' : '**Double-clique le titre** du graphe pour le modifier.'
+      case 'axe': return sel === 'axeY' ? `Monte le **Minimum** de l\'axe à ${axeMinCible} : les écarts se creusent.` : 'Ouvre la Sélection active et choisis **Axe vertical (Valeurs)**.'
+      case 'intervertir': return 'Clique **Intervertir les lignes/colonnes** : les séries et les catégories s\'échangent.'
+      case 'supprimer': return 'Sélectionne le graphe (clique son bord) puis **Suppr** pour l\'effacer.'
+      case 'deplacerfeuille': return dialog ? 'Choisis **Nouvelle feuille**, nomme-la, puis **OK**.' : 'Clique **Déplacer le graphique**.'
+      default: return ''
+    }
+  }
+
+  const ongletsVisibles = selectionne && !supprime
+  const src = donnees || GRAPHE_DEF
+  const dataAff = mode === 'filtre'
+    ? { cats: src.cats.filter((c) => !cachees.includes(c)), series: src.series.map((s) => ({ ...s, vals: s.vals.filter((_, i) => !cachees.includes(src.cats[i])) })) }
+    : data
+  const petitGraphe = (extra) => <GrapheSVG data={dataAff} type={type} titre={tCourant} options={opts} selection={sel} theme={theme} echelle={echelle} axeMin={mode === 'axe' ? axeMin : undefined} {...extra} />
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      {/* Ruban avec onglets contextuels (mode ongletscontextuels) */}
+      {mode === 'ongletscontextuels' && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-t-md border border-navy/15 bg-[#f3f1ea] px-2 py-1 text-[10px]">
+          {['Fichier', 'Accueil', 'Insertion', 'Données'].map((o) => <span key={o} className="mr-2 text-navy/50">{o}</span>)}
+          {ongletsVisibles && <><span className="mr-2 rounded bg-[#1a7a44]/15 px-1 font-bold text-[#1a7a44]">Création de graphique</span><span className="rounded bg-[#7a1a5a]/15 px-1 font-bold text-[#7a1a5a]">Format</span></>}
+        </div>
+      )}
+
+      {/* Le graphe (ou la galerie d'insertion, ou la zone vide après suppression) */}
+      {mode === 'inserer' && !insere ? (
+        <div className="mx-auto mt-3 grid max-w-md grid-cols-5 gap-1">
+          {GALERIE.map((g) => (
+            <button key={g.t} onClick={() => { setType(g.t === 'histogramme' ? 'histogramme' : g.t); setInsere(true) }} className="flex flex-col items-center gap-1 rounded-md border border-navy/15 bg-white py-2 text-[9px] text-navy/70 hover:border-mint hover:bg-mint/10">
+              <span className="text-base">{g.i}</span>{g.l}
+            </button>
+          ))}
+        </div>
+      ) : supprime ? (
+        <div className="mx-auto mt-3 flex h-40 max-w-md items-center justify-center rounded-lg border-2 border-dashed border-navy/15 bg-white text-sm text-navy/40">Le graphique a été supprimé.</div>
+      ) : (
+        <button
+          onClick={() => {
+            if (mode === 'ongletscontextuels' && !selectionne) setSelectionne(true)
+            if (mode === 'supprimer' && !selectionne) setSelectionne(true)
+          }}
+          className={`mx-auto mt-3 block w-full max-w-md rounded-lg border-2 bg-white p-1 ${selectionne && (mode === 'ongletscontextuels' || mode === 'supprimer' || mode === 'imprimer') ? 'border-mint ring-1 ring-mint' : 'border-transparent'}`}
+        >
+          {petitGraphe()}
+        </button>
+      )}
+
+      {/* Clic « en dehors » (ongletscontextuels) */}
+      {mode === 'ongletscontextuels' && !fait && (
+        <button onClick={() => { if (selectionne) { setSelectionne(false) } else { setSelectionne(true); setFait(true) } }} className="mx-auto mt-2 block rounded-md border border-dashed border-navy/25 px-4 py-2 text-xs text-navy/50 hover:bg-navy/5">{selectionne ? 'Clique ici (en dehors du graphe)' : 'Reclique le graphe ci-dessus'}</button>
+      )}
+
+      {/* Galerie de types (inserer étape 2 / type / intervertir n'en a pas) */}
+      {((mode === 'inserer' && insere) || mode === 'type') && !fait && (
+        <div className="mx-auto mt-3 flex max-w-md flex-wrap justify-center gap-1">
+          {GALERIE.map((g) => (
+            <button key={g.t} onClick={() => { if (g.t === typeCible) { setType(typeCible); setFait(true) } else setType(g.t) }} className={`flex items-center gap-1 rounded-md border px-2 py-1 text-[10px] ${type === g.t ? 'border-mint bg-mint/15 font-bold text-navy' : 'border-navy/15 text-navy/60'} ${g.t === typeCible ? 'animate-pulse ring-1 ring-mint' : ''}`}>
+              <span>{g.i}</span>{g.l}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Redimensionner : bouton poignée */}
+      {mode === 'redimensionner' && !fait && (
+        <div className="mt-3 flex justify-center"><button onClick={() => { setEchelle(1.3); setFait(true) }} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">⤡ Tire la poignée d'angle pour agrandir</button></div>
+      )}
+
+      {/* Sélection active + couleur (selectionformat / axe) */}
+      {(mode === 'selectionformat' || mode === 'axe') && !fait && (
+        <div className="mx-auto mt-3 max-w-md">
+          <button onClick={() => setSousMenu(!sousMenu)} className="flex w-56 items-center justify-between rounded-md border border-navy/25 bg-white px-2 py-1 text-[11px] text-navy/80">
+            <span>{sel === element ? 'Série « Ventes »' : sel === 'axeY' ? 'Axe vertical (Valeurs)' : 'Sélection active…'}</span><span className="text-navy/40">▾</span>
+          </button>
+          {sousMenu && (
+            <div className="mt-1 w-56 overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+              {['Zone de graphique', 'Série « Ventes »', 'Axe vertical (Valeurs)', 'Titre du graphique', 'Légende'].map((it) => {
+                const cible = (mode === 'selectionformat' && it === 'Série « Ventes »') || (mode === 'axe' && it === 'Axe vertical (Valeurs)')
+                return <button key={it} onClick={() => { if (cible) { setSel(mode === 'axe' ? 'axeY' : element); setSousMenu(false) } }} className={`block w-full px-2 py-1 text-left ${cible ? 'animate-pulse bg-mint/15 font-semibold text-navy' : 'text-navy/45'}`}>{it}</button>
+              })}
+            </div>
+          )}
+          {mode === 'selectionformat' && sel === element && (
+            <div className="mt-2 flex items-center gap-2"><span className="text-[11px] text-navy/60">Remplissage :</span>{['#e8853a', '#41c1ba', '#0a335d', '#8b5cf6'].map((c) => <button key={c} onClick={() => { setData((d) => ({ ...d, series: d.series.map((s, i) => (i === 0 ? { ...s, couleur: c } : s)) })); if (c === couleurCible) setFait(true) }} style={{ background: c }} className={`h-6 w-6 rounded ${c === couleurCible ? 'animate-pulse ring-2 ring-offset-1 ring-navy' : 'ring-1 ring-black/10'}`} />)}</div>
+          )}
+          {mode === 'axe' && sel === 'axeY' && (
+            <div className="mt-2 flex items-center gap-2 text-[11px] text-navy/70"><span>Minimum :</span><button onClick={() => { setAxeMin(0) }} className={`rounded border px-2 py-0.5 ${axeMin === 0 ? 'border-mint font-bold' : 'border-navy/20'}`}>0</button><button onClick={() => { setAxeMin(axeMinCible); setFait(true) }} className="animate-pulse rounded border-2 border-mint bg-mint/15 px-2 py-0.5 font-bold text-navy">{axeMinCible}</button></div>
+          )}
+        </div>
+      )}
+
+      {/* Styles */}
+      {mode === 'style' && !fait && (
+        <div className="mx-auto mt-3 flex max-w-md justify-center gap-2">
+          {[1, 2, 3].map((n) => (
+            <button key={n} onClick={() => { if (n === styleCible) { setTheme(n === 3 ? 'sombre' : 'clair'); setData((d) => ({ ...d, series: d.series.map((s, i) => ({ ...s, couleur: n === 2 ? '#2f5fd0' : undefined })) })); setFait(true) } else { setTheme(n === 3 ? 'sombre' : 'clair') } }} className={`rounded-md border px-3 py-2 text-[10px] ${n === styleCible ? 'animate-pulse border-mint bg-mint/15 font-bold text-navy ring-1 ring-mint' : 'border-navy/15 text-navy/60'}`}>Style {n}</button>
+          ))}
+        </div>
+      )}
+
+      {/* Éléments (+) */}
+      {mode === 'elements' && !fait && (
+        <div className="mx-auto mt-3 w-52 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-[11px] shadow-xl">
+          <p className="border-b border-navy/10 px-3 py-1 font-semibold text-navy/60">＋ Éléments de graphique</p>
+          {[['titre', 'Titre du graphique'], ['etiquettes', 'Étiquettes de données'], ['quadrillage', 'Quadrillage'], ['legende', 'Légende']].map(([k, l]) => (
+            <button key={k} onClick={() => { setOpts((o) => ({ ...o, [k]: !o[k] })); if (k === elementBascule) setFait(true) }} className="flex w-full items-center gap-2 px-3 py-1 text-left text-navy/80">
+              <span className={`grid h-4 w-4 place-items-center rounded-sm border text-[9px] text-white ${opts[k] ? 'border-mint bg-mint' : k === elementBascule ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/30'}`}>{opts[k] && '✓'}</span>{l}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Filtre */}
+      {mode === 'filtre' && !fait && (
+        <div className="mx-auto mt-3 w-48 overflow-hidden rounded-md border border-navy/20 bg-white p-2 text-[11px] shadow-xl">
+          <p className="mb-1 font-semibold text-navy/60">▽ Filtre — Catégories</p>
+          {src.cats.map((c) => {
+            const coche = !cachees.includes(c)
+            return <button key={c} onClick={() => setCachees((h) => (h.includes(c) ? h.filter((x) => x !== c) : [...h, c]))} className="flex w-full items-center gap-2 px-1 py-1 text-left text-navy/80"><span className={`grid h-4 w-4 place-items-center rounded-sm border text-[9px] text-white ${coche ? 'border-mint bg-mint' : c === filtreCat ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/30'}`}>{coche && '✓'}</span>{c}</button>
+          })}
+          <div className="mt-1 flex justify-end border-t border-navy/10 pt-1"><button onClick={() => { if (cachees.includes(filtreCat)) setFait(true) }} className="rounded-sm border-2 border-mint bg-mint/15 px-3 py-0.5 font-bold text-navy">Appliquer</button></div>
+        </div>
+      )}
+
+      {/* Titre : double-clic */}
+      {mode === 'titre' && !fait && (
+        <div className="mt-3 flex justify-center">
+          {!saisieTitre
+            ? <button onClick={() => setSaisieTitre(true)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">✎ Double-clique le titre</button>
+            : <button onClick={() => { setTitre('Chiffre d\'affaires 2025'); setFait(true) }} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">⏎ Valider « Chiffre d'affaires 2025 »</button>}
+        </div>
+      )}
+
+      {/* Intervertir */}
+      {mode === 'intervertir' && !fait && (
+        <div className="mt-3 flex justify-center"><button onClick={() => { setData((d) => { const nc = d.series.map((s) => s.nom); const ns = d.cats.map((c, ci) => ({ nom: c, vals: d.series.map((s) => s.vals[ci]) })); return { cats: nc, series: ns } }); setFait(true) }} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">🔁 Intervertir les lignes/colonnes</button></div>
+      )}
+
+      {/* Supprimer */}
+      {mode === 'supprimer' && !fait && selectionne && (
+        <div className="mt-3 flex justify-center"><button onClick={() => { setSupprime(true); setFait(true) }} className="animate-pulse rounded-md border-2 border-red-400 bg-red-400/10 px-4 py-2 text-sm font-bold text-navy">⌫ Suppr</button></div>
+      )}
+
+      {/* Déplacer vers une feuille */}
+      {mode === 'deplacerfeuille' && !fait && (
+        !dialog
+          ? <div className="mt-3 flex justify-center"><button onClick={() => setDialog(true)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">↗ Déplacer le graphique</button></div>
+          : <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+            <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Déplacer le graphique</span><span className="text-navy/40">✕</span></div>
+            <div className="space-y-2 bg-white p-3">
+              <button onClick={() => { setFeuille(true) }} className={`flex w-full items-center gap-2 text-left ${feuille ? 'text-navy' : 'animate-pulse text-navy/60'}`}><span className={`grid h-4 w-4 place-items-center rounded-full border text-[9px] ${feuille ? 'border-mint bg-mint text-white' : 'border-mint ring-1 ring-mint'}`}>{feuille && '●'}</span>Nouvelle feuille : <span className="font-mono">Graphique1</span></button>
+              <div className="flex items-center gap-2 text-navy/45"><span className="h-4 w-4 rounded-full border border-navy/30" />Objet dans : Feuil1 ▾</div>
+              <div className="flex justify-end border-t border-navy/10 pt-2"><button onClick={() => { if (feuille) setFait(true) }} disabled={!feuille} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${feuille ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/15 bg-navy/5 text-navy/35'}`}>OK</button></div>
+            </div>
+          </div>
+      )}
+    </div>
+  )
+}
+
 // Boîte de dialogue Excel générique et interactive : l'élève remplit les contrôles
 // REQUIS (cases à cocher, champs, listes déroulantes), puis clique OK → résultat.
 // champs: [{ type:'case'|'champ'|'liste', label, valeur, options, coche, requis }]
@@ -6967,7 +7259,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -7061,6 +7353,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <BoiteDialogue v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'listeinteractive' ? (
             <ListeInteractive v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'graphiqueinteractif' ? (
+            <GraphiqueInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -7122,7 +7416,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                 ? 'Remplis la boîte'
                                                                 : s.visuel?.type === 'listeinteractive'
                                                                   ? 'Agis sur la liste'
-                                                                  : 'Réponds pour continuer'
+                                                                  : s.visuel?.type === 'graphiqueinteractif'
+                                                                    ? 'Agis sur le graphique'
+                                                                    : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
