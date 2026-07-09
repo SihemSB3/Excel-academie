@@ -4234,8 +4234,8 @@ const MIXTESPARKLINE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Pour superposer deux types de graphiques, dans l\'onglet **Insertion**, **clique le bouton Graphique combiné.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Graphique combiné', actif: 'Insertion', groupeNom: 'Graphiques', groupes: [{ icone: '📊', label: 'Histogramme' }, { icone: '📈', label: 'Courbe' }, { icone: '🔀', label: 'Graphique combiné' }], cible: 'Graphique combiné', explication: 'Le graphique combiné mélange les types (barres + courbe) et permet l\'axe secondaire, pour deux grandeurs d\'échelles très différentes.' },
+      dit: '**À toi.** Onglet Insertion → **Graphique combiné**, puis mets « Nb ventes » sur l\'**axe secondaire** : regarde les barres et la courbe cohabiter proprement.',
+      visuel: { type: 'graphiqueinteractif', mode: 'combine', donnees: GRAPH_MIXTE, titre: 'CA et volume', resultat: 'Graphique mixte ! Les barres (CA en k€) lisent l\'axe gauche, la courbe (Nb ventes) l\'axe secondaire à droite : plus d\'écrasement, deux échelles côte à côte.' },
     },
     {
       humeur: 'pensif',
