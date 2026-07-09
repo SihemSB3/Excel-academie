@@ -6171,6 +6171,94 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
 
 // « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
 // (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
+// Liste de données VIVANTE : le user agit (met sous forme de tableau, trie, filtre…)
+// et VOIT le résultat changer (le tableau se transforme, se réordonne, se filtre, s'étend).
+// mode: 'creertableau' | 'trier' | 'filtrer'
+function ListeInteractive({ v, onResolu }) {
+  const { mode = 'creertableau', colonnes = [], lignes = [], triCol = 0, triLabel = 'Trier du plus grand au plus petit', filtreCol = 0, garder = [], nouvelle = [], resultat = '' } = v
+  const num = (s) => { const n = parseInt(String(s).replace(/[^\d-]/g, ''), 10); return isNaN(n) ? null : n }
+  const [rows, setRows] = useState(lignes)
+  const [estTable, setEstTable] = useState(mode !== 'creertableau')
+  const [etape, setEtape] = useState(0) // creertableau : 0 liste brute, 1 boîte, 2 tableau, 3 étendu
+  const [menuCol, setMenuCol] = useState(null)
+  const [coches, setCoches] = useState(() => { const o = {}; [...new Set(lignes.map((l) => l[filtreCol]))].forEach((val) => (o[val] = true)); return o })
+  const [funnel, setFunnel] = useState(false)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const distinctes = [...new Set(lignes.map((l) => l[filtreCol]))]
+
+  const consigne = () => {
+    if (mode === 'creertableau') return etape === 0 ? 'Clique **Mettre sous forme de tableau** pour transformer ta liste.' : etape === 1 ? 'Vérifie que **« Mon tableau comporte des en-têtes »** est coché, puis **OK**.' : 'Ta liste est un tableau ! **Clique la ligne vide** en dessous pour l\'étendre.'
+    if (mode === 'trier') return menuCol === triCol ? `Clique **${triLabel}**.` : `Clique la **flèche ▾** de la colonne « ${colonnes[triCol]} ».`
+    if (mode === 'filtrer') return menuCol === filtreCol ? `Décoche tout sauf **${garder.join(', ')}**, puis **OK**.` : `Clique la **flèche ▾** de la colonne « ${colonnes[filtreCol]} ».`
+    return ''
+  }
+  const trier = () => { setRows((r) => [...r].sort((a, b) => { const x = num(a[triCol]), y = num(b[triCol]); return x != null ? y - x : String(b[triCol]).localeCompare(String(a[triCol])) })); setMenuCol(null); setFait(true) }
+  const appliquerFiltre = () => { setRows(lignes.filter((l) => coches[l[filtreCol]])); setMenuCol(null); setFunnel(true); setFait(true) }
+  const clicFleche = (ci) => { if (fait) return; if ((mode === 'trier' && ci === triCol) || (mode === 'filtrer' && ci === filtreCol)) setMenuCol(menuCol === ci ? null : ci) }
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-lg border border-navy/15 text-[11px] shadow">
+        <div className="grid" style={{ gridTemplateColumns: `repeat(${colonnes.length}, 1fr)` }}>
+          {colonnes.map((c, ci) => {
+            const cliquable = (mode === 'trier' && ci === triCol) || (mode === 'filtrer' && ci === filtreCol)
+            return (
+              <div key={ci} className={`flex items-center justify-between gap-1 border-b border-navy/10 px-2 py-1.5 font-bold ${estTable ? 'bg-mint text-white' : 'bg-navy/10 text-navy/70'}`}>
+                <span>{c}</span>
+                {estTable && <button onClick={() => clicFleche(ci)} className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm bg-white/25 text-[9px] ${cliquable && !fait ? 'animate-pulse ring-1 ring-white' : ''}`}>{funnel && ci === filtreCol ? '▽' : '▾'}</button>}
+              </div>
+            )
+          })}
+          {rows.map((l, ri) => l.map((cell, ci) => (
+            <div key={ri + '-' + ci} className={`border-b border-navy/5 px-2 py-1 ${estTable && ri % 2 ? 'bg-mint/[0.08]' : 'bg-white'} ${ci === colonnes.length - 1 ? 'text-right font-mono text-navy/85' : 'text-navy/85'}`}>{cell}</div>
+          )))}
+          {mode === 'creertableau' && estTable && etape >= 2 && (
+            <button onClick={() => { if (etape === 2) { setRows((r) => [...r, nouvelle]); setEtape(3); setFait(true) } }} style={{ gridColumn: `1 / ${colonnes.length + 1}` }}
+              className={`px-2 py-1.5 text-left text-navy/40 ${etape === 2 ? 'animate-pulse bg-mint/10 ring-1 ring-inset ring-mint' : ''}`}>＋ clique pour saisir une nouvelle ligne…</button>
+          )}
+        </div>
+      </div>
+
+      {mode === 'creertableau' && etape === 0 && (
+        <div className="mt-3 flex justify-center"><button onClick={() => setEtape(1)} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">▧ Mettre sous forme de tableau</button></div>
+      )}
+      {mode === 'creertableau' && etape === 1 && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Créer un tableau</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="text-navy/60">Où sont les données ?</span><span className="rounded-sm border border-navy/25 px-2 py-1 font-mono text-navy/70">=$A$1:$C$5</span></div>
+            <div className="flex items-center gap-2 text-navy/80"><span className="grid h-4 w-4 shrink-0 place-items-center rounded-sm border border-mint bg-mint text-[9px] text-white">✓</span>Mon tableau comporte des en-têtes</div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => { setEstTable(true); setEtape(2) }} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-5 py-0.5 font-bold text-navy">OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+
+      {menuCol !== null && mode === 'trier' && (
+        <div className="mx-auto mt-2 w-60 overflow-hidden rounded-md border border-navy/20 bg-white py-1 text-[11px] shadow-xl">
+          {[triLabel, 'Trier du plus petit au plus grand'].map((opt, i) => (
+            <button key={i} onClick={() => i === 0 && trier()} className={`block w-full px-3 py-1.5 text-left ${i === 0 ? 'animate-pulse bg-mint/15 font-semibold text-navy ring-1 ring-inset ring-mint' : 'text-navy/45'}`}>{opt}</button>
+          ))}
+        </div>
+      )}
+      {menuCol !== null && mode === 'filtrer' && (
+        <div className="mx-auto mt-2 w-48 overflow-hidden rounded-md border border-navy/20 bg-white p-2 text-[11px] shadow-xl">
+          {distinctes.map((val) => (
+            <button key={val} onClick={() => setCoches((c) => ({ ...c, [val]: !c[val] }))} className="flex w-full items-center gap-2 px-1 py-1 text-left text-navy/80">
+              <span className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm border text-[9px] text-white ${coches[val] ? 'border-mint bg-mint' : 'border-navy/30'}`}>{coches[val] && '✓'}</span>{val}
+            </button>
+          ))}
+          <div className="mt-1 flex justify-end border-t border-navy/10 pt-1"><button onClick={appliquerFiltre} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-4 py-0.5 font-bold text-navy">OK</button></div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Boîte de dialogue Excel générique et interactive : l'élève remplit les contrôles
 // REQUIS (cases à cocher, champs, listes déroulantes), puis clique OK → résultat.
 // champs: [{ type:'case'|'champ'|'liste', label, valeur, options, coche, requis }]
@@ -6764,7 +6852,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -6856,6 +6944,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <OngletsInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'boitedialogue' ? (
             <BoiteDialogue v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'listeinteractive' ? (
+            <ListeInteractive v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -6915,7 +7005,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                               ? 'Agis sur l\'onglet'
                                                               : s.visuel?.type === 'boitedialogue'
                                                                 ? 'Remplis la boîte'
-                                                                : 'Réponds pour continuer'
+                                                                : s.visuel?.type === 'listeinteractive'
+                                                                  ? 'Agis sur la liste'
+                                                                  : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

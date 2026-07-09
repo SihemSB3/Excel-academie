@@ -3297,8 +3297,8 @@ const CREERTABLEAU = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Dans **Accueil > groupe Styles**, **clique le bouton qui transforme ta liste en tableau.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique « Mettre sous forme de tableau »', actif: 'Accueil', groupeNom: 'Styles', groupes: [{ icone: '▦', label: 'Mise en forme cond.' }, { icone: '▧', label: 'Mettre sous forme de tableau' }, { icone: '🎨', label: 'Styles de cellules' }], cible: 'Mettre sous forme de tableau', explication: 'Tu choisis un style, tu confirmes « Mon tableau comporte des en-têtes », et ta liste devient un vrai tableau avec filtres et couleurs alternées.' },
+      dit: '**À toi de transformer ta liste, puis de l\'agrandir.** Clique, confirme les en-têtes, et regarde-la devenir un vrai tableau.',
+      visuel: { type: 'listeinteractive', mode: 'creertableau', colonnes: LISTE_ENTETES, lignes: LISTE_LIGNES, nouvelle: ['Nina', 'Paris', '7 300 €'], resultat: 'Ta liste est un vrai tableau : couleurs alternées, flèches de filtre, et la nouvelle ligne « Nina » s\'y intègre toute seule !' },
     },
     {
       humeur: 'pensif',
@@ -3445,8 +3445,8 @@ const TRIERLISTE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Tu veux voir les plus gros CA en premier. Dans **Données > Trier et filtrer**, **clique le bouton qui trie du plus grand au plus petit.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique « Trier de Z à A » (décroissant)', actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: 'A↓', label: 'Trier de A à Z' }, { icone: 'Z↓', label: 'Trier de Z à A' }, { icone: '▽', label: 'Filtrer' }], cible: 'Trier de Z à A', explication: 'Z→A trie en DÉCROISSANT : sur des nombres, du plus grand au plus petit (les gros CA en tête). A→Z ferait l\'inverse.' },
+      dit: 'À toi. Tu veux voir les plus gros CA en premier : **trie la colonne CA du plus grand au plus petit.** Clique sa flèche ▾.',
+      visuel: { type: 'listeinteractive', mode: 'trier', colonnes: LISTE_ENTETES, lignes: LISTE_LIGNES, triCol: 2, triLabel: 'Trier du plus grand au plus petit', resultat: 'Trié ! Karim (12 500 €) passe en tête : les lignes se sont réordonnées d\'un coup, du plus grand CA au plus petit.' },
     },
     {
       humeur: 'accueil',
@@ -3504,8 +3504,8 @@ const FILTRERLISTE = {
     },
     {
       humeur: 'accueil',
-      dit: 'À toi. Sur une liste classique, dans **Données > Trier et filtrer**, **clique le bouton qui active les filtres.**',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Filtrer', actif: 'Données', groupeNom: 'Trier et filtrer', groupes: [{ icone: 'A↓', label: 'Trier de A à Z' }, { icone: 'Z↓', label: 'Trier de Z à A' }, { icone: '▽', label: 'Filtrer' }], cible: 'Filtrer', explication: 'Une petite flèche ▾ apparaît alors dans chaque en-tête : c\'est par elle qu\'on ouvre le menu de filtre de chaque colonne.' },
+      dit: 'À toi. **Filtre la colonne Ville pour ne garder que Lyon** : clique sa flèche ▾, décoche le reste, puis OK.',
+      visuel: { type: 'listeinteractive', mode: 'filtrer', colonnes: LISTE_ENTETES, lignes: LISTE_LIGNES, filtreCol: 1, garder: ['Lyon'], resultat: 'Filtré ! Seules les lignes de Lyon restent visibles ; les autres sont masquées (pas supprimées). L\'en-tête montre l\'entonnoir ▽.' },
     },
     {
       humeur: 'accueil',
