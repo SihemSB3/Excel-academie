@@ -5281,6 +5281,146 @@ function SupprimerDoublonsInteractif({ v, onResolu }) {
   )
 }
 
+// VALIDATION DE DONNÉES : l'exercice complet, avec la SOURCE VISIBLE sur la feuille (colonne D).
+// Le user ouvre la boîte, choisit Autoriser=Liste, puis SÉLECTIONNE la plage source D3:D8 au vrai
+// geste (glisser sur les cellules), Source=$D$3:$D$8, valide, et la cellule B2 reçoit une flèche ▾
+// qui déroule EXACTEMENT ces villes : il choisit sans rien taper.
+const VDA_VILLES = ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Lille', 'Nantes']
+function ValidationDonneesInteractif({ v, onResolu }) {
+  const { resultat = '' } = v
+  const [phase, setPhase] = useState('autoriser') // autoriser | source | ok | pose | deroule | fait
+  const [menuAuto, setMenuAuto] = useState(false)
+  const [anchor, setAnchor] = useState(null)      // index (0-5) du début de la sélection
+  const [hover, setHover] = useState(null)         // index survolé pendant le glisser
+  const [selDone, setSelDone] = useState(false)    // plage source D3:D8 sélectionnée
+  const [ouvert, setOuvert] = useState(false)       // liste déroulante de B2 ouverte
+  const [choix, setChoix] = useState(null)          // ville choisie
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+
+  const dragging = anchor !== null && !selDone
+  const lo = dragging && hover !== null ? Math.min(anchor, hover) : anchor
+  const hi = dragging && hover !== null ? Math.max(anchor, hover) : anchor
+  const dansSel = (i) => selDone || (dragging && i >= lo && i <= hi)
+  const source = selDone ? '=$D$3:$D$8' : (dragging && hover !== null ? `=$D$${3 + lo}:$D$${3 + hi}` : '')
+
+  const finir = (i) => {
+    if (anchor === null || selDone) return
+    const a = Math.min(anchor, i), b = Math.max(anchor, i)
+    if (a === 0 && b === 5) { setSelDone(true); setPhase('ok') }   // toute la plage D3:D8
+    else { setAnchor(null); setHover(null) }                        // partielle → on réarme
+  }
+
+  const consigne = () => {
+    if (phase === 'autoriser') return menuAuto ? 'Choisis **Liste** dans le menu.' : 'Dans **Autoriser**, déroule le menu et choisis **Liste**.'
+    if (phase === 'source') return 'La **Source** attend ta plage. Sur la feuille, **glisse de D3 à D8** : la colonne **D** contient les villes autorisées, c\'est ta liste de référence.'
+    if (phase === 'ok') return 'La Source pointe **=$D$3:$D$8** (les 6 villes). Clique **OK** pour poser la validation.'
+    if (phase === 'pose') return 'Validation posée ! La cellule **B2** affiche maintenant une flèche **▾**. Clique-la.'
+    if (phase === 'deroule') return 'La liste déroule **exactement les villes de la colonne D**. Choisis-en une, **sans la taper au clavier**.'
+    return ''
+  }
+
+  const cols = ['A', 'B', 'C', 'D']
+  const cc = 'h-6 border border-navy/15 px-1.5 text-[11px] align-middle'
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      {/* La feuille : B2 = cellule à cadrer, colonne D (D3:D8) = les villes autorisées (LA SOURCE, visible) */}
+      <div className="mx-auto mt-3 max-w-sm overflow-x-auto">
+        <table className="mx-auto border-collapse bg-white shadow-sm">
+          <thead>
+            <tr>
+              <th className="h-5 w-6 border border-navy/15 bg-navy/10"></th>
+              {cols.map((c) => <th key={c} className={`h-5 w-20 border border-navy/15 bg-navy/10 text-[10px] font-semibold ${c === 'D' ? 'bg-mint/25 text-navy' : 'text-navy/50'}`}>{c}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+              <tr key={n}>
+                <td className="h-6 w-6 border border-navy/15 bg-navy/10 text-center text-[10px] font-semibold text-navy/50">{n}</td>
+                <td className={cc}></td>
+                <td className={`${cc} ${n === 1 ? 'bg-mint/20 font-bold text-navy' : ''} ${n === 2 ? (phase === 'pose' || phase === 'deroule' || choix ? 'ring-2 ring-inset ring-navy' : '') : ''}`}>
+                  {n === 1 && 'Ville'}
+                  {n === 2 && (
+                    <span className="flex items-center justify-between gap-1">
+                      <span className={choix ? 'font-semibold text-navy' : 'text-navy/30'}>{choix || ''}</span>
+                      {(phase === 'pose' || phase === 'deroule') && (
+                        <button onClick={() => { if (phase === 'pose') { setOuvert(true); setPhase('deroule') } }} className={`grid h-4 w-4 shrink-0 place-items-center rounded-sm border border-navy/30 bg-navy/5 text-[8px] text-navy ${phase === 'pose' ? 'animate-pulse ring-1 ring-mint' : ''}`}>▾</button>
+                      )}
+                    </span>
+                  )}
+                </td>
+                <td className={cc}></td>
+                <td
+                  className={`${cc} ${n === 2 ? 'bg-mint/20 text-[10px] font-bold text-navy' : ''} ${n >= 3 && dansSel(n - 3) ? 'bg-[#cfe8ff] ring-1 ring-inset ring-[#2f6fb3]' : ''} ${n >= 3 && phase === 'source' ? 'cursor-crosshair select-none' : ''}`}
+                  onPointerDown={n >= 3 && phase === 'source' ? () => { setAnchor(n - 3); setHover(n - 3) } : undefined}
+                  onPointerEnter={n >= 3 && dragging ? () => setHover(n - 3) : undefined}
+                  onPointerUp={n >= 3 && dragging ? () => finir(n - 3) : undefined}
+                >
+                  {n === 2 && 'Villes autoris.'}
+                  {n >= 3 && VDA_VILLES[n - 3]}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="mt-1 text-center text-[10px] text-navy/50">Colonne <b className="text-navy/70">D</b> (D3:D8) = les villes autorisées, ta <b className="text-navy/70">source</b>.</p>
+      </div>
+
+      {/* La boîte de dialogue « Validation des données » (onglets réels d'Excel) */}
+      {(phase === 'autoriser' || phase === 'source' || phase === 'ok') && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Validation des données</div>
+          <div className="flex gap-3 border-b border-navy/10 bg-white px-3 pt-1.5 text-[10px]">
+            <span className="border-b-2 border-navy pb-1 font-semibold text-navy">Options</span>
+            <span className="pb-1 text-navy/35">Message de saisie</span>
+            <span className="pb-1 text-navy/35">Alerte d'erreur</span>
+          </div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="relative">
+              <p className="text-navy/55">Autoriser :</p>
+              <button onClick={() => phase === 'autoriser' && setMenuAuto((m) => !m)} className={`mt-0.5 flex w-full items-center justify-between rounded-sm border px-2 py-1 text-left ${phase === 'autoriser' ? 'animate-pulse border-mint text-navy/70 ring-1 ring-mint' : 'border-navy/25 text-navy'}`}>
+                <span>{phase === 'autoriser' ? 'Toute valeur' : 'Liste'}</span><span className="text-navy/40">▾</span>
+              </button>
+              {menuAuto && (
+                <div className="absolute z-10 mt-0.5 w-full overflow-hidden rounded-sm border border-navy/20 bg-white shadow-lg">
+                  {['Toute valeur', 'Nombre entier', 'Liste', 'Date', 'Heure'].map((o) => (
+                    <div key={o} onClick={() => { if (o === 'Liste') { setMenuAuto(false); setPhase('source') } }} className={o === 'Liste' ? 'cursor-pointer bg-mint/15 px-2 py-1 font-semibold text-navy ring-1 ring-inset ring-mint' : 'px-2 py-1 text-navy/45'}>{o}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div>
+              <p className="text-navy/55">Source :</p>
+              <div className={`mt-0.5 rounded-sm border px-2 py-1 font-mono ${phase === 'source' ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/25'}`}>
+                <span className={source ? 'text-navy' : 'text-navy/30'}>{source || '(sélectionne la plage sur la feuille)'}</span>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2">
+              <button onClick={() => phase === 'ok' && setPhase('pose')} disabled={phase !== 'ok'} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${phase === 'ok' ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button>
+              <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* La liste déroulante de B2, une fois la validation posée */}
+      {ouvert && (
+        <div className="mx-auto mt-2 w-32 overflow-hidden rounded-sm border border-navy/25 bg-white shadow-xl">
+          <p className="border-b border-navy/10 bg-navy/5 px-2 py-0.5 text-[9px] text-navy/50">Liste de B2</p>
+          {VDA_VILLES.map((ville) => (
+            <div key={ville} onClick={() => { setChoix(ville); setOuvert(false); setPhase('fait') }} className="cursor-pointer px-2 py-1 text-[11px] text-navy/80 hover:bg-mint/15">{ville}</div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Le menu déroulant « Mise en forme conditionnelle » (Accueil > Styles), une entrée surlignée.
 function MFCMenu({ v }) {
   const actif = v?.actif ?? 0
@@ -8140,7 +8280,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8254,6 +8394,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <SommeSiEnsCroise v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'supprimerdoublons' ? (
             <SupprimerDoublonsInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'validationdonnees' ? (
+            <ValidationDonneesInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8335,7 +8477,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                     ? 'Remplis le tableau croisé'
                                                                                     : s.visuel?.type === 'supprimerdoublons'
                                                                                       ? 'Supprime les doublons'
-                                                                                      : 'Réponds pour continuer'
+                                                                                      : s.visuel?.type === 'validationdonnees'
+                                                                                        ? 'Pose la validation'
+                                                                                        : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

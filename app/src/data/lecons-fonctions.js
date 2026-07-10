@@ -5676,23 +5676,9 @@ const VALIDATIONDONNEES = {
     },
     {
       humeur: 'pensif',
-      dit: '**Méthode : créer une liste déroulante.** À toi de régler la boîte : **Autoriser = Liste**, puis clique le champ **Source** pour pointer la plage des valeurs autorisées, et valide.',
-      visuel: {
-        type: 'boitedialogue',
-        titre: 'Validation des données',
-        champs: [
-          { type: 'liste', label: 'Autoriser', options: ['Toute valeur', 'Nombre entier', 'Liste', 'Date', 'Heure'], requis: true },
-          { type: 'champ', label: 'Source', valeur: '=$C$3:$C$8', requis: true },
-        ],
-        boutonOK: 'OK',
-        resultat: 'Validation posée ! La cellule n\'accepte désormais que les valeurs de la source, et une flèche ▾ apparaît pour choisir.',
-      },
-    },
-    {
-      humeur: 'content',
-      dit: 'Résultat : un clic sur la petite flèche **▾** déroule la liste. À toi, choisis une ville pour la nouvelle ligne, sans rien taper à la main.',
-      visuel: { type: 'listeinteractive', mode: 'listechoix', colonnes: ['Pays', 'Ville'], lignes: [['France', 'Paris'], ['Allemagne', 'Berlin'], ['Espagne', 'Madrid'], ['Italie', 'Rome'], ['Portugal', 'Lisbonne']], colCible: 1, resultat: 'Tu as choisi une valeur dans la liste, sans la taper : la validation n\'autorise QUE ces villes. Zéro faute de frappe, données homogènes.' },
-      plus: ['Une fois la validation posée, chaque cellule concernée affiche une flèche déroulante : l\'utilisateur sélectionne une valeur dans la liste au lieu de la saisir, ce qui évite les fautes de frappe et garantit des données homogènes.'],
+      dit: 'La boîte s\'ouvre. Règle-la toi-même : **Autoriser = Liste**, puis pointe la **Source** en sélectionnant sur la feuille la colonne des villes autorisées (**D3:D8**). Valide, et choisis une ville dans la flèche **▾** qui apparaît en B2.',
+      visuel: { type: 'validationdonnees', resultat: 'Tu as pointé la source (D3:D8), posé la validation, et choisi une ville dans la liste sans la taper. B2 n\'accepte plus QUE ces villes : zéro faute de frappe, données homogènes.' },
+      plus: ['La **Source** d\'une liste, c\'est simplement une plage de cellules qui contient les valeurs autorisées, ici la colonne D (D3:D8). Une fois la validation posée, la cellule affiche une flèche déroulante : on sélectionne une valeur au lieu de la saisir, ce qui évite les fautes de frappe et garantit des données homogènes.'],
     },
     {
       humeur: 'pensif',
