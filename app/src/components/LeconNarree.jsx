@@ -5092,7 +5092,7 @@ function SommeSiEnsCroise({ v, onResolu }) {
     e.preventDefault(); setDrag(true); setDragPos({ x: e.clientX, y: e.clientY })
     const sx = e.clientX, sy = e.clientY
     const clean = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
-    const move = (ev) => { setDragPos({ x: ev.clientX, y: ev.clientY }); if ((ev.clientX - sx) + (ev.clientY - sy) > 65) { clean(); setDrag(false); setDragPos(null); setRempli(true) } }
+    const move = (ev) => { setDragPos({ x: ev.clientX, y: ev.clientY }); if (ev.clientX - sx > 55) { clean(); setDrag(false); setDragPos(null); setRempli(true) } }  // tirer vers la DROITE
     const up = () => { clean(); setDrag(false); setDragPos(null) }
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
   }
@@ -5102,10 +5102,10 @@ function SommeSiEnsCroise({ v, onResolu }) {
 
   const consigne = () => {
     if (rempli || !cur) return ''
-    if (cur.k === 'clicF2') return 'Clique la cellule **F2** (colonne F, ligne 2 = Alice × Est) : la formule s\'écrit là.'
+    if (cur.k === 'clicF2') return 'On veut le **CA par vendeur ET par région** dans ce tableau. Plutôt que d\'écrire 6 formules (une par case), on en écrit **une seule** et on la recopie. Commence : clique la cellule **F2** (Alice × Est), la formule s\'y écrira.'
     if (cur.k === 'sel') return `Sélectionne ${cur.quoi} : clique **une** de ses cellules (toute la colonne se sélectionne).`
     if (cur.k === 'cell') return `Clique ${cur.quoi}, au lieu de taper le texte du critère.`
-    if (cur.k === 'drag') return 'Place-toi sur le **coin bas-droit de F2** : le curseur devient une **croix noire (+)**, la poignée de recopie. Attrape-la et **fais-la glisser** vers le bas et la droite sur tout le tableau.'
+    if (cur.k === 'drag') return 'Place-toi sur le **coin bas-droit de F2** : le curseur devient une **croix noire (+)**. Attrape-la et **tire vers la DROITE**, jusqu\'au bout du tableau : chaque case se calcule toute seule.'
     // f4
     const atteint = sseCycle(cur.base)[cyc] === cur.cible
     if (cur.plage) return `La plage est en **relatif** (${cur.base}) : recopiée, elle glisserait et fausserait le total. Appuie sur **F4** pour la **figer** → ${cur.cible}.`
@@ -5187,9 +5187,11 @@ function SommeSiEnsCroise({ v, onResolu }) {
                     const estF2 = ri === 0 && ci === 0
                     const cibleF2 = cur?.k === 'clicF2' && estF2
                     const valF2 = estF2 && (complet || rempli)
+                    const enConstr = estF2 && s > 0 && !valF2 && !rempli   // la formule s'écrit dans F2
                     const dragF2 = estF2 && cur?.k === 'drag' && !rempli
-                    return <button key={reg} onClick={() => { if (cibleF2) clicF2() }} onPointerDown={dragF2 ? onHandleDown : undefined} disabled={!cibleF2} style={dragF2 ? { cursor: 'crosshair' } : undefined} className={`relative border-b border-navy/5 px-2 py-1 text-right font-mono ${cibleF2 ? 'animate-pulse bg-mint/15 ring-1 ring-inset ring-mint' : valF2 ? `bg-mint/25 font-semibold text-navy ${dragF2 ? 'ring-2 ring-inset ring-navy' : ''}` : rempli ? 'bg-mint/[0.07] text-navy/80' : drag && !rempli ? 'bg-mint/[0.04] ring-1 ring-inset ring-mint/40' : 'bg-white text-navy/25'}`}>
-                      {rempli ? eur(somme(vend, reg)) : valF2 ? eur(150000) : estF2 ? '?' : ''}
+                    return <button key={reg} onClick={() => { if (cibleF2) clicF2() }} onPointerDown={dragF2 ? onHandleDown : undefined} disabled={!cibleF2} style={dragF2 ? { cursor: 'crosshair' } : undefined} className={`relative border-b border-navy/5 px-2 py-1 text-right font-mono ${cibleF2 ? 'animate-pulse bg-mint/15 ring-1 ring-inset ring-mint' : valF2 ? `bg-mint/25 font-semibold text-navy ${dragF2 ? 'ring-2 ring-inset ring-navy' : ''}` : enConstr ? 'bg-white ring-2 ring-inset ring-navy/60' : rempli ? 'bg-mint/[0.07] text-navy/80' : drag && !rempli ? 'bg-mint/[0.04] ring-1 ring-inset ring-mint/40' : 'bg-white text-navy/25'}`}>
+                      {rempli ? eur(somme(vend, reg)) : valF2 ? eur(150000) : (estF2 && s === 0) ? '?' : ''}
+                      {enConstr && <span className="pointer-events-none absolute left-1 top-1/2 z-10 -translate-y-1/2 whitespace-nowrap text-[8px] leading-none text-navy/85">{formule}<span className="animate-pulse">|</span></span>}
                       {dragF2 && <span onPointerDown={onHandleDown} style={{ cursor: 'crosshair' }} className="absolute -bottom-[3px] -right-[3px] h-2 w-2 animate-pulse touch-none border border-white bg-navy" />}
                     </button>
                   })}
@@ -5197,7 +5199,7 @@ function SommeSiEnsCroise({ v, onResolu }) {
               ))}
             </div>
           </div>
-          {cur?.k === 'drag' && !rempli && <p className="mt-1 text-[9px] leading-snug text-navy/40">↳ Le curseur prend la forme d’une <b className="text-navy/70">croix noire +</b> sur le coin bas-droit de F2 : c’est la poignée de recopie d’Excel. Presse et glisse vers le bas et la droite.</p>}
+          {cur?.k === 'drag' && !rempli && <p className="mt-1 text-[9px] leading-snug text-navy/40">↳ Le curseur devient une <b className="text-navy/70">croix noire +</b> sur le coin bas-droit de F2 (la poignée de recopie d’Excel). Presse et <b className="text-navy/70">tire vers la droite</b>.</p>}
         </div>
       </div>
     </div>

@@ -5037,7 +5037,7 @@ const SOMMESIENS = {
     },
     {
       humeur: 'pensif',
-      dit: 'Le vrai intérêt : qu\'**une seule formule** remplisse tout un **tableau croisé** (vendeurs en lignes, régions en colonnes). À toi. Écris la formule en **F2** en **cliquant les cellules** (jamais en tapant « Alice »), puis **tire la poignée** : tout le tableau se calcule.',
+      dit: 'On veut un **tableau de synthèse** : le **CA de chaque vendeur dans chaque région**. On pourrait écrire une SOMME.SI.ENS dans chaque case (6 fois), mais c\'est long et pénible. Le vrai intérêt : écrire **UNE seule formule** en **F2**, puis la **recopier** dans tout le tableau. Le secret pour qu\'elle s\'adapte bien à la recopie : les **références semi-relatives**. À toi de la construire en **cliquant les cellules** (jamais « Alice » au clavier), puis de la **tirer vers la droite**.',
       visuel: { type: 'sommesienscroise', resultat: 'Une SEULE formule a rempli tout le tableau croisé ! Le secret des semi-relatives : $E2 fige la colonne des vendeurs (la ligne suit vers le bas → Bob, Claire), F$1 fige la ligne des régions (la colonne suit vers la droite → Ouest). Les plages, elles, sont en absolu ($) pour ne jamais bouger.' },
     },
     {
