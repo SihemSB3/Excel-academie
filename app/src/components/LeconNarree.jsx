@@ -4748,6 +4748,65 @@ function TcdMasquerInteractif({ v, onResolu }) {
   )
 }
 
+// SEGMENT (slicer) : un vrai panneau de boutons flottant à côté du TCD, un bouton par valeur du
+// champ. Un clic sur un bouton FILTRE le TCD en direct (les autres lignes disparaissent), le
+// bouton s'allume. L'icône entonnoir barré efface le filtre. Montre CE QU'EST un segment.
+function SegmentInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', titreChamp = 'Localisation', valeurTitre = 'Somme de Montant', lignes = [], cible = 'Paris', totalTous = '', explication = '' } = v
+  const [sel, setSel] = useState(null)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const cliquer = (et) => { if (fait) return; setSel(et); if (et === cible) setFait(true) }
+  const effacer = () => { if (!fait) setSel(null) }
+  const visibles = sel ? lignes.filter((l) => l.et === sel) : lignes
+  const total = sel ? (lignes.find((l) => l.et === sel)?.val || totalTous) : totalTous
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(`Un **segment** est une boîte de boutons, un par valeur du champ. Clique **« ${cible} »** : le TCD se filtre en un clic.`)}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="flex items-start gap-3 p-3">
+          {/* Le TCD, qui se filtre */}
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr>
+                <td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{titreChamp}</td>
+                <td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td>
+              </tr>
+              {visibles.map((l, i) => (
+                <tr key={i} className={sel ? 'animate-fade-up' : ''}>
+                  <td className={`border border-navy/15 px-2 py-1 ${sel ? 'bg-mint/10 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td>
+                  <td className={`border border-navy/15 px-2 py-1 text-right ${sel ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td>
+                </tr>
+              ))}
+              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+            </tbody>
+          </table>
+
+          {/* Le SEGMENT : le panneau de boutons flottant */}
+          <div className="w-32 shrink-0 overflow-hidden rounded-md border border-navy/25 bg-[#fafafa] shadow-md">
+            <div className="flex items-center gap-1 border-b border-navy/15 bg-white px-2 py-1">
+              <span className="flex-1 text-[10px] font-bold text-navy/70">{titreChamp}</span>
+              <button onClick={effacer} title="Effacer le filtre" className={`text-[11px] ${sel ? 'text-navy/70 hover:text-navy' : 'text-navy/25'}`}>⧨</button>
+            </div>
+            <div className="space-y-1 p-1.5">
+              {lignes.map((l) => { const on = sel === l.et; const estCible = l.et === cible; return (
+                <button key={l.et} onClick={() => cliquer(l.et)} className={`block w-full rounded-sm border px-2 py-1 text-left text-[11px] transition ${on ? 'border-[#2f7a4d] bg-[#2f7a4d] font-semibold text-white' : `border-navy/20 bg-white text-navy/80 hover:bg-mint/10 ${!fait && estCible ? 'animate-pulse ring-1 ring-mint' : ''}`}`}>{l.et}</button>
+              ) })}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => (<span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>))}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -8603,7 +8662,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8725,6 +8784,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ListeDynamiqueInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'tcdmasquer' ? (
             <TcdMasquerInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'segment' ? (
+            <SegmentInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8814,7 +8875,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                             ? 'Rends la liste dynamique'
                                                                                             : s.visuel?.type === 'tcdmasquer'
                                                                                               ? 'Masque l\'élément'
-                                                                                              : 'Réponds pour continuer'
+                                                                                              : s.visuel?.type === 'segment'
+                                                                                                ? 'Filtre avec le segment'
+                                                                                                : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

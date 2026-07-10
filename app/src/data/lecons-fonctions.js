@@ -5937,14 +5937,21 @@ const ANALYSERTCD = {
     },
     {
       humeur: 'pensif',
-      dit: 'Pour filtrer un TCD de façon **visuelle et rapide**, oublie la zone Filtre : utilise les **segments** (des boutons cliquables). Ils vivent dans l\'onglet contextuel du TCD. Trouve où les insérer.',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Insérer un segment', onglets: ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], actif: 'Analyse du TCD', groupeNom: 'Filtrer', groupes: [{ icone: '🔲', label: 'Insérer un\nsegment' }, { icone: '📅', label: 'Insérer une\nchronologie' }, { icone: '🔗', label: 'Connexions\nde filtre' }], cible: 'Insérer un\nsegment', explication: 'Analyse du TCD > Filtrer > Insérer un segment : tu coches les champs voulus (Localisation, Type de bien…) et Excel crée des boîtes de boutons colorés.' },
+      dit: 'Pour filtrer un TCD de façon **visuelle et rapide**, oublie la zone Filtre : utilise un **segment** (une boîte de boutons). D\'abord, où l\'insérer ? Clique **Insérer un segment** (une petite fenêtre te fera cocher le champ voulu, ici Localisation).',
+      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Insérer un segment', onglets: ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], actif: 'Analyse du TCD', groupeNom: 'Filtrer', groupes: [{ icone: '🔲', label: 'Insérer un\nsegment' }, { icone: '📅', label: 'Insérer une\nchronologie' }, { icone: '🔗', label: 'Connexions\nde filtre' }], cible: 'Insérer un\nsegment', explication: 'Analyse du TCD > Filtrer > Insérer un segment : tu coches le champ voulu (Localisation) et Excel crée une boîte de boutons colorés.' },
     },
     {
-      humeur: 'pensif',
-      dit: 'Les **segments**, comment ça marche une fois insérés :',
-      visuel: { type: 'parties', items: [{ label: '**Un clic** sur un bouton (ex. « Paris ») filtre instantanément tout le TCD.' }, { label: '**Ctrl + clic** pour cumuler plusieurs sélections (Paris ET Lyon).' }, { label: 'L\'**icône entonnoir barré** en haut à droite du segment efface le filtre.' }, { label: '**Connexions de rapport** : un même segment peut piloter PLUSIEURS TCD à la fois.' }] },
-      plus: ['Les segments sont l\'outil le plus rapide et intuitif pour filtrer : un clic sur un bouton coloré et ton rapport se met à jour. Maintiens Ctrl pour cumuler plusieurs sélections. L\'icône Effacer le filtre (en haut à droite du segment) retrouve la vue complète. Pour synchroniser un segment à plusieurs TCD : sélectionne-le > Analyse du segment > Connexions de rapport > coche les TCD à lier. Pour les dates, on préfère le filtre chronologique (Insérer une chronologie), avec ses niveaux Années/Trimestres/Mois/Jours.'],
+      humeur: 'content',
+      dit: 'Et voilà ton **segment** : une boîte avec un bouton par ville. Clique **Paris** et regarde le TCD se filtrer instantanément sur Paris. (Le petit entonnoir en haut à droite efface le filtre.)',
+      visuel: { type: 'segment', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', titreChamp: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], cible: 'Paris', totalTous: '910 000 €', explication: 'Un clic sur « Paris » et tout le TCD se filtre sur Paris (420 000 €). Le segment, c\'est le filtre le plus rapide et le plus lisible : les boutons montrent d\'un coup d\'œil ce qui est sélectionné.' },
+      plus: [
+        'Le segment, une fois posé :',
+        '**Un clic** sur un bouton (ex. Paris) filtre instantanément tout le TCD.',
+        '**Ctrl + clic** cumule plusieurs sélections (Paris ET Lyon).',
+        'L\'**icône entonnoir barré** (en haut à droite du segment) efface le filtre.',
+        '**Connexions de rapport** : un même segment peut piloter plusieurs TCD à la fois.',
+        'Pour filtrer des **dates**, on préfère la **chronologie** (Insérer une chronologie), avec ses niveaux Années / Trimestres / Mois / Jours.',
+      ],
     },
     {
       humeur: 'accueil',
