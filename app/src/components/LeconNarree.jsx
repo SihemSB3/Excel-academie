@@ -5061,6 +5061,94 @@ function TcdGrouperNombreInteractif({ v, onResolu }) {
   )
 }
 
+// CHAMP CALCULÉ : où il se trouve (ruban Analyse du TCD > Calculs > Champs, éléments et jeux) ET
+// son effet, avec le TCD TOUJOURS VISIBLE. Le user clique le vrai bouton du ruban → le menu →
+// « Champ calculé… » → remplit la boîte → une nouvelle colonne apparaît dans le TCD.
+function ChampCalculeInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', lignes = [], nom = 'Prime 5%', formule = '= Montant * 0,05', explication = '' } = v
+  const [phase, setPhase] = useState('ruban')  // ruban | menu | dialog | fait
+  const [nomFait, setNomFait] = useState(false)
+  const [formFait, setFormFait] = useState(false)
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+
+  const consigne = () => {
+    if (phase === 'ruban') return 'Onglet **Analyse du TCD** > groupe **Calculs** : clique **Champs, éléments et jeux**.'
+    if (phase === 'menu') return 'Dans le menu, choisis **Champ calculé…**.'
+    if (phase === 'dialog') return !nomFait ? 'Clique le champ **Nom** et appelle-le **Prime 5%**.' : !formFait ? 'Clique le champ **Formule** : **= Montant × 0,05**.' : 'Clique **Ajouter**.'
+    return ''
+  }
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        {/* Le ruban Analyse du TCD (où se trouve le champ calculé) */}
+        <div className="border-b border-navy/10 bg-[#f3f3f3] px-2 pt-1">
+          <div className="flex gap-0.5 text-[10px]">{['Fichier', 'Analyse du TCD', 'Création'].map((o) => <span key={o} className={`rounded-t px-2 py-1 ${o === 'Analyse du TCD' ? 'bg-white font-bold text-[#0a7a3d]' : 'text-navy/55'}`}>{o}</span>)}</div>
+          <div className="relative flex items-start gap-2 bg-white px-2 py-1.5">
+            <div className="rounded-md border border-navy/15 bg-navy/[0.02] px-1.5 pb-1 pt-1">
+              <button onClick={() => phase === 'ruban' && setPhase('menu')} className={`flex w-20 flex-col items-center gap-1 rounded px-1 py-1 text-center text-[10px] ${phase === 'ruban' ? 'animate-pulse cursor-pointer bg-mint/15 ring-1 ring-mint' : ''}`}>
+                <span className="text-sm">🧮</span><span className="leading-tight text-navy/75">Champs, éléments et jeux ▾</span>
+              </button>
+              <div className="mt-1 border-t border-navy/10 pt-0.5 text-center text-[9px] font-semibold text-navy/60">Calculs</div>
+            </div>
+            {phase === 'menu' && (
+              <div className="absolute left-2 top-full z-20 w-40 overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+                {['Champ calculé…', 'Élément calculé…', 'Ordre de résolution…', 'Répertorier les formules'].map((it) => (
+                  <div key={it} onClick={/^Champ calculé/.test(it) ? () => setPhase('dialog') : undefined} className={`px-3 py-1.5 text-navy/80 ${/^Champ calculé/.test(it) ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold ring-1 ring-inset ring-mint' : ''}`}>{it}</div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        {/* Le TCD, toujours visible ; il gagne une colonne quand le champ est créé */}
+        <div className="p-3">
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr>
+                <td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Agent</td>
+                <td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">Somme de Montant</td>
+                {fait && <td className="border border-navy/15 bg-mint/25 px-2 py-1 text-right font-bold text-navy animate-fade-up">Somme de {nom}</td>}
+              </tr>
+              {lignes.map((l, i) => (
+                <tr key={i}>
+                  <td className="border border-navy/15 px-2 py-1 text-navy/85">{l.et}</td>
+                  <td className="border border-navy/15 px-2 py-1 text-right text-navy/85">{l.montant}</td>
+                  {fait && <td className="border border-navy/15 bg-mint/10 px-2 py-1 text-right font-semibold text-mint-dark animate-fade-up">{l.prime}</td>}
+                </tr>
+              ))}
+              <tr>
+                <td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td>
+                <td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{v.total}</td>
+                {fait && <td className="border border-navy/15 bg-mint/15 px-2 py-1 text-right font-bold text-navy/80 animate-fade-up">{v.totalPrime}</td>}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => (<span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>))}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+
+      {/* La boîte « Insérer un champ calculé » */}
+      {phase === 'dialog' && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Insérer un champ calculé</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="w-14 text-right text-navy/60">Nom :</span><button onClick={() => setNomFait(true)} className={`flex-1 rounded-sm border px-2 py-1 text-left font-mono ${nomFait ? 'border-navy/30 text-navy' : 'animate-pulse border-mint text-navy/35 ring-1 ring-mint'}`}>{nomFait ? nom : 'clique pour saisir…'}</button></div>
+            <div className="flex items-center gap-2"><span className="w-14 text-right text-navy/60">Formule :</span><button onClick={() => nomFait && setFormFait(true)} className={`flex-1 rounded-sm border px-2 py-1 text-left font-mono ${formFait ? 'border-navy/30 text-navy' : nomFait ? 'animate-pulse border-mint text-navy/35 ring-1 ring-mint' : 'border-navy/25 text-navy/30'}`}>{formFait ? formule : 'clique pour saisir…'}</button></div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => nomFait && formFait && setPhase('fait')} disabled={!(nomFait && formFait)} className={`rounded-sm border-2 px-4 py-0.5 font-bold ${nomFait && formFait ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>Ajouter</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Fermer</span></div>
+          </div>
+        </div>
+      )}
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -8916,7 +9004,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -9046,6 +9134,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <TcdGrouperTexteInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'tcdgroupernombre' ? (
             <TcdGrouperNombreInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'champcalcule' ? (
+            <ChampCalculeInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9143,7 +9233,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                     ? 'Regroupe les valeurs'
                                                                                                     : s.visuel?.type === 'tcdgroupernombre'
                                                                                                       ? 'Crée les tranches'
-                                                                                                      : 'Réponds pour continuer'
+                                                                                                      : s.visuel?.type === 'champcalcule'
+                                                                                                        ? 'Crée le champ calculé'
+                                                                                                        : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

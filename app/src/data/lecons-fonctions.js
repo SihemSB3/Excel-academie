@@ -6118,23 +6118,16 @@ const ALLERPLUSLOIN = {
     },
     {
       humeur: 'pensif',
-      dit: 'On le crée via **Analyse du TCD > Calculs > Champs, éléments et jeux > Champ calculé…**. À toi de remplir la boîte : le **Nom** du champ, puis ta **Formule**, et valide par **Ajouter**.',
-      visuel: {
-        type: 'boitedialogue',
-        titre: 'Insérer un champ calculé',
-        champs: [
-          { type: 'champ', label: 'Nom', valeur: 'Prime 5%', requis: true },
-          { type: 'champ', label: 'Formule', valeur: '= Montant * 0,05', requis: true },
-        ],
-        boutonOK: 'Ajouter',
-        resultat: 'Champ calculé créé ! Une colonne « Prime 5% » = Montant × 0,05 apparaît pour chaque agent, sans toucher à ta source. C\'est TA formule, directement dans le TCD.',
-      },
-      plus: ['Pour créer un champ calculé : clique dans le TCD pour révéler l\'onglet Analyse > Calculs > Champs, éléments et jeux > Champ calculé…. Dans Nom, écris « Prime 5% ». Dans Formule, saisis =Montant*0,05 (double-clique « Montant » dans la liste des champs pour l\'insérer sans faute de frappe). Clique Ajouter, puis OK : ton champ Prime 5% apparaît dans Valeurs et affiche la prime pour chaque ligne. Pour le supprimer : rouvre la boîte, sélectionne Prime 5%, Supprimer, OK.'],
+      dit: 'Voyons **où ça se trouve** ET **son effet**, en gardant le TCD sous les yeux. Onglet **Analyse du TCD > Calculs > Champs, éléments et jeux > Champ calculé…**, puis remplis le **Nom** et la **Formule**, et clique **Ajouter**.',
+      visuel: { type: 'champcalcule', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', lignes: [{ et: 'Alice', montant: '620 000 €', prime: '31 000 €' }, { et: 'Bob', montant: '410 000 €', prime: '20 500 €' }], total: '1 030 000 €', totalPrime: '51 500 €', nom: 'Prime 5%', formule: '= Montant * 0,05', explication: 'Ta colonne « Somme de Prime 5% » (= Montant × 0,05) apparaît à côté, calculée pour chaque agent, sans toucher à la source. Tu vois d\'un coup OÙ se crée le champ (ruban Calculs) ET son effet sur le TCD.' },
+      plus: [
+        'Le champ calculé se trouve dans l\'onglet **Analyse du TCD** (visible quand tu cliques dans le TCD) > groupe **Calculs** > **Champs, éléments et jeux** > **Champ calculé…**.',
+        'Dans **Nom**, écris « Prime 5% ».',
+        'Dans **Formule**, saisis **=Montant*0,05** (double-clique « Montant » dans la liste des champs pour l\'insérer sans faute).',
+        'Clique **Ajouter** : le champ apparaît en zone Valeurs et affiche la prime de chaque ligne.',
+        'Pour le supprimer : rouvre la boîte, sélectionne Prime 5%, **Supprimer**.',
+      ],
     },
-    {
-      humeur: 'content',
-      dit: 'Résultat : une nouvelle colonne **Prime 5%** apparaît dans ton TCD, calculée pour chaque agent. Sans toucher à ta source !',
-      visuel: { type: 'tableur', cols: ['A', 'B', 'C'], rows: [1, 2, 3, 4], cells: { A1: { t: 'Agent', entete: true }, B1: { t: 'Somme de Montant', entete: true }, C1: { t: 'Prime 5%', entete: true }, A2: { t: 'Alice' }, B2: { t: '620 000 €', num: true }, C2: { t: '31 000 €', num: true, vert: true }, A3: { t: 'Bob' }, B3: { t: '410 000 €', num: true }, C3: { t: '20 500 €', num: true, vert: true }, A4: { t: 'Total', entete: true }, B4: { t: '1 030 000 €', num: true }, C4: { t: '51 500 €', num: true } }, feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', legende: 'La colonne Prime 5% = Montant × 0,05, calculée automatiquement.' } },
     {
       humeur: 'accueil',
       dit: 'Astuce détective. Tu veux voir **toutes les lignes** qui composent le total d\'Alice. **Que fais-tu ?**',
