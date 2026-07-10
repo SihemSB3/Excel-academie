@@ -6079,9 +6079,19 @@ const ALLERPLUSLOIN = {
       plus: ['Par défaut, Excel résume avec la Somme, mais tu peux changer la fonction de synthèse : clic droit sur une valeur > Synthétiser les valeurs par > Moyenne, Nombre, Max, Min… Méthode 2 : dans le volet Champs, clique le champ en Valeurs > Paramètres des champs de valeur > choisis la fonction > OK.'],
     },
     {
+      humeur: 'pensif',
+      dit: 'Attention à ne pas confondre deux familles de calculs dans un TCD :',
+      visuel: { type: 'parties', items: [{ label: '**Les calculs prêts à l\'emploi** (Somme, Moyenne, Nombre, Max, Min, % du total, écart-type…) : Excel les propose d\'office, via **Synthétiser les valeurs par** et **Afficher les valeurs**. Rien à écrire.' }, { label: '**Le champ calculé** : quand tu as besoin d\'un calcul **sur mesure** qu\'Excel n\'offre pas (une prime, une marge, un ratio à toi), tu écris **TA propre formule** à partir des champs du TCD.' }] },
+      plus: [
+        'Les calculs prêts à l\'emploi ne s\'écrivent pas : tu les choisis dans un menu (Somme, Moyenne, %, écart-type…).',
+        'Le **champ calculé**, lui, est une formule que TU crées, avec un **nom** que tu lui donnes.',
+        'Il se base sur les champs existants du TCD (ex. Montant), jamais sur des cellules isolées.',
+      ],
+    },
+    {
       humeur: 'accueil',
-      dit: 'Un **champ calculé**, c\'est TA formule dans le TCD. Tu veux ajouter une prime de **5 % sur chaque montant**. Quelle formule ?',
-      visuel: { type: 'question', options: ['=Montant * 0,05', '=Montant + 5', '=5%', '=SOMME(Montant)'], bonne: 0, explication: '5 % d\'un montant = Montant × 0,05 (ou Montant × 5%). Un champ calculé s\'écrit à partir des champs existants du TCD, comme une formule classique.' },
+      dit: 'Passons au **champ calculé sur mesure**. Tu veux ajouter une prime de **5 % sur chaque montant** : c\'est un calcul à toi, Excel ne le propose pas tout fait. Quelle formule écrire ?',
+      visuel: { type: 'question', options: ['=Montant * 0,05', '=Montant + 5', '=5%', '=SOMME(Montant)'], bonne: 0, explication: '5 % d\'un montant = Montant × 0,05 (ou Montant × 5%). Un champ calculé s\'écrit à partir des champs existants du TCD (ici Montant), comme une formule classique, et tu lui donnes un nom.' },
     },
     {
       humeur: 'pensif',
