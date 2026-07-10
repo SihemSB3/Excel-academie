@@ -5682,21 +5682,9 @@ const VALIDATIONDONNEES = {
     },
     {
       humeur: 'pensif',
-      dit: 'Astuce de pro : une **liste déroulante dynamique** se met à jour toute seule quand tu ajoutes ou retires une valeur. Le secret : transformer ta plage source en **Table**.',
-      visuel: {
-        type: 'methode',
-        titre: 'Liste déroulante dynamique',
-        blocs: [
-          { etapes: ['Sélectionne ta plage source, puis transforme-la en **Table** : **Ctrl + L**.'] },
-          { capture: { type: 'touche', touches: ['Ctrl', 'L'], note: 'Sur Mac : ⌘ + L. Ta plage devient une Table qui s\'étend toute seule quand tu ajoutes une ligne.' } },
-          { etapes: ['Donne un **nom** à ta Table dans l\'onglet **Création de tableau**.'], depart: 2 },
-          { capture: { type: 'ruban', actif: 'Création de tableau', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de tableau'], groupeNom: 'Propriétés', groupes: [{ icone: '🏷', label: 'Nom :\nNB_Habitants', actif: true }] } },
-          { etapes: ['Dans la **Source** de ta validation, pointe la colonne de la Table.'], depart: 3 },
-          { capture: { type: 'champs', titre: 'Validation des données', champs: [{ l: 'Autoriser', v: 'Liste', actif: true }, { l: 'Source', v: '=NB_Habitants[Ville]', actif: true }] } },
-          { note: 'Chaque ajout ou suppression dans la Table se répercute **automatiquement** dans la liste déroulante.', label: 'Bénéfice' },
-        ],
-      },
-      plus: ['CRÉE DES LISTES DÉROULANTES DYNAMIQUES ! Oublie les mises à jour laborieuses : ta liste déroulante évolue automatiquement avec tes données, plus besoin de l\'ajuster manuellement dès que tu ajoutes ou retires une entrée ! Il te suffit de transformer ta plage en Table, comme nous l\'avons vu dans le chapitre Création de tableau. Chaque ajout, modification ou suppression dans ta Table se répercute instantanément dans ta liste déroulante, c\'est 100 % automatique !'],
+      dit: 'Astuce de pro : une **liste déroulante dynamique** se met à jour toute seule quand tu ajoutes une ville. Le secret : transformer ta plage source en **Table**. Fais-le, puis ajoute une ville et regarde la liste grandir toute seule.',
+      visuel: { type: 'listedynamique', resultat: 'La Table « Villes » s\'est étendue et ta liste déroulante inclut « Tunis » sans que tu touches à la validation. Une Table nommée = une liste qui grandit avec tes données, 100 % automatique.' },
+      plus: ['CRÉE DES LISTES DÉROULANTES DYNAMIQUES ! Le secret : transformer ta plage source en Table (Ctrl + L), lui donner un nom, puis pointer la Source de ta validation sur la colonne de la Table (=Villes[Ville]). Dès que tu ajoutes ou retires une ligne dans la Table, ta liste déroulante se met à jour toute seule, plus besoin d\'ajuster la validation à la main !'],
     },
     {
       humeur: 'pensif',

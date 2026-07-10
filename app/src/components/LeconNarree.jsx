@@ -5541,6 +5541,98 @@ function ValidationEffetInteractif({ v, onResolu }) {
   )
 }
 
+// LISTE DÉROULANTE DYNAMIQUE : rendre la source auto-extensible. Le user SÉLECTIONNE la plage
+// (glisser D3:D8), la transforme en Table (Ctrl+L), la nomme (Villes), pointe la Source de
+// validation sur la colonne de la Table (=Villes[Ville]), puis AJOUTE une ville : la liste
+// déroulante grandit toute seule. On voit chaque geste et le bénéfice concret.
+function ListeDynamiqueInteractif({ v, onResolu }) {
+  const { resultat = '' } = v
+  const [phase, setPhase] = useState('select')  // select | ctrll | nom | source | demo | fait
+  const [anchor, setAnchor] = useState(null)
+  const [hover, setHover] = useState(null)
+  const [selDone, setSelDone] = useState(false)
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+
+  const dragging = anchor !== null && !selDone
+  const lo = dragging && hover !== null ? Math.min(anchor, hover) : anchor
+  const hi = dragging && hover !== null ? Math.max(anchor, hover) : anchor
+  const dansSel = (i) => (phase === 'select' && (selDone || (dragging && i >= lo && i <= hi)))
+  const finir = (i) => { if (anchor === null || selDone) return; const a = Math.min(anchor, i), b = Math.max(anchor, i); if (a === 0 && b === 5) { setSelDone(true); setPhase('ctrll') } else { setAnchor(null); setHover(null) } }
+
+  const estTable = ['nom', 'source', 'demo', 'fait'].includes(phase)
+  const nom = ['source', 'demo', 'fait'].includes(phase) ? 'Villes' : 'Tableau1'
+  const ajout = phase === 'fait'
+  const villes = ajout ? [...VDA_VILLES, 'Tunis'] : VDA_VILLES
+
+  const consigne = () => {
+    if (phase === 'select') return 'Étape 1. **Sélectionne ta plage source** : glisse de **D3 à D8** (les villes actuelles).'
+    if (phase === 'ctrll') return 'Étape 2. Transforme-la en **Table** : appuie sur **Ctrl + L**.'
+    if (phase === 'nom') return 'Étape 3. **Double-clique le nom** de la Table et appelle-la **Villes**.'
+    if (phase === 'source') return 'Étape 4. Dans la **Source** de ta validation, pointe la colonne de la Table : **=Villes[Ville]**.'
+    if (phase === 'demo') return 'Le test ! **Ajoute une ville** à la Table (Tunis) et regarde la liste déroulante grandir toute seule.'
+    return ''
+  }
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      <div className="mx-auto mt-3 flex w-fit flex-col items-center gap-2">
+        {/* La colonne source, qui devient une Table nommée */}
+        <table className="border-collapse bg-white shadow-sm">
+          <thead><tr><th className="h-5 w-6 border border-navy/15 bg-navy/10"></th><th className={`h-5 w-24 border border-navy/15 text-[10px] font-semibold ${estTable ? 'bg-[#2f6fb3] text-white' : 'bg-navy/10 text-navy/50'}`}>D</th></tr></thead>
+          <tbody>
+            <tr>
+              <td className="h-6 w-6 border border-navy/15 bg-navy/10 text-center text-[10px] font-semibold text-navy/50">2</td>
+              <td className={`relative h-6 border px-1.5 text-[11px] font-bold ${estTable ? 'border-[#2f6fb3] bg-[#2f6fb3] text-white' : 'border-navy/15 bg-mint/20 text-navy'}`}>
+                Villes
+                {phase === 'nom' && <span className="absolute -right-1 top-1/2 h-3 w-3 -translate-y-1/2 translate-x-full animate-pulse rounded-full bg-mint" />}
+              </td>
+            </tr>
+            {villes.map((ville, i) => (
+              <tr key={ville}>
+                <td className="h-6 w-6 border border-navy/15 bg-navy/10 text-center text-[10px] font-semibold text-navy/50">{3 + i}</td>
+                <td
+                  className={`h-6 border px-1.5 text-[11px] ${estTable ? (i % 2 ? 'border-[#bcd6ec] bg-[#eaf2fa]' : 'border-[#bcd6ec] bg-white') : 'border-navy/15'} ${dansSel(i) ? 'bg-[#cfe8ff] ring-1 ring-inset ring-[#2f6fb3]' : ''} ${phase === 'select' && i < 6 ? 'cursor-crosshair select-none' : ''} ${i === 6 ? 'animate-fade-up font-semibold text-[#2f6fb3]' : 'text-navy/85'}`}
+                  onPointerDown={phase === 'select' && i < 6 ? () => { setAnchor(i); setHover(i) } : undefined}
+                  onPointerEnter={dragging && i < 6 ? () => setHover(i) : undefined}
+                  onPointerUp={dragging && i < 6 ? () => finir(i) : undefined}
+                >{ville}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="text-[10px] text-navy/45">{estTable ? <>Table <b className="text-navy/70">{nom}</b>{ajout ? ' · 7 lignes (elle s\'est étendue toute seule)' : ' · 6 lignes'}</> : 'Plage simple (non extensible)'}</p>
+
+        {/* Étape 2 : Ctrl+L */}
+        {phase === 'ctrll' && <button onClick={() => setPhase('nom')} className="animate-pulse rounded-lg border-2 border-navy bg-navy/5 px-5 py-2 text-sm font-bold text-navy">⌨ Ctrl + L</button>}
+        {/* Étape 3 : renommer */}
+        {phase === 'nom' && <button onClick={() => setPhase('source')} className="animate-pulse rounded-md border border-navy/25 bg-white px-3 py-1.5 text-[11px] text-navy shadow-sm">✎ Renommer en « Villes » (double-clic)</button>}
+        {/* Étape 4 : pointer la source */}
+        {(phase === 'source' || phase === 'demo' || phase === 'fait') && (
+          <div className={`w-full max-w-[15rem] rounded-md border px-2 py-1.5 text-[10px] ${phase === 'source' ? 'animate-pulse border-mint bg-mint/5 ring-1 ring-mint' : 'border-navy/15 bg-navy/[0.02]'}`}>
+            <p className="text-navy/50">Source de la validation :</p>
+            <p className="font-mono text-navy">{['demo', 'fait'].includes(phase) ? '=Villes[Ville]' : '=$D$3:$D$8'}</p>
+          </div>
+        )}
+        {phase === 'source' && <button onClick={() => setPhase('demo')} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-3 py-1.5 text-[11px] font-bold text-navy">Pointer la colonne =Villes[Ville]</button>}
+        {/* Étape 5 : ajouter une ville */}
+        {phase === 'demo' && <button onClick={() => setPhase('fait')} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-3 py-1.5 text-[11px] font-bold text-navy">➕ Ajouter « Tunis » à la Table</button>}
+        {/* La preuve : la liste déroulante inclut Tunis toute seule */}
+        {ajout && (
+          <div className="w-28 overflow-hidden rounded-sm border border-navy/25 bg-white shadow-lg">
+            <p className="border-b border-navy/10 bg-navy/5 px-2 py-0.5 text-[9px] text-navy/50">Liste de B2</p>
+            {villes.map((ville) => <div key={ville} className={`px-2 py-0.5 text-[10px] ${ville === 'Tunis' ? 'bg-mint/20 font-bold text-navy' : 'text-navy/75'}`}>{ville}{ville === 'Tunis' && ' ✨'}</div>)}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // Le menu déroulant « Mise en forme conditionnelle » (Accueil > Styles), une entrée surlignée.
 function MFCMenu({ v }) {
   const actif = v?.actif ?? 0
@@ -8400,7 +8492,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8518,6 +8610,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ValidationDonneesInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'validationeffet' ? (
             <ValidationEffetInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'listedynamique' ? (
+            <ListeDynamiqueInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8603,7 +8697,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                         ? 'Pose la validation'
                                                                                         : s.visuel?.type === 'validationeffet'
                                                                                           ? 'Teste l\'effet'
-                                                                                          : 'Réponds pour continuer'
+                                                                                          : s.visuel?.type === 'listedynamique'
+                                                                                            ? 'Rends la liste dynamique'
+                                                                                            : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
