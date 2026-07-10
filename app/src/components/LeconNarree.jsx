@@ -4807,6 +4807,85 @@ function SegmentInteractif({ v, onResolu }) {
   )
 }
 
+// ACTUALISER un TCD, en montrant TOUTE la chaîne : (1) on ajoute la vente de Nice dans la TABLE
+// SOURCE (feuille Ventes), (2) on bascule sur la feuille TCD (qui ne voit pas encore Nice), (3)
+// clic droit → Actualiser → Nice apparaît. Répond au « on ne voit pas où on ajoute Nice ».
+function TcdActualiserInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', source = [], nice = { loc: 'Nice', mt: '150 000 €' }, tcdAvant = {}, tcdApres = {}, explication = '' } = v
+  const [phase, setPhase] = useState('source')  // source | switch | tcd | fait
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const niceAjoute = phase !== 'source'
+  const surTcd = phase === 'tcd' || phase === 'fait'
+  const feuilleActive = surTcd ? 'TCD' : 'Ventes'
+  const tcd = fait ? tcdApres : tcdAvant
+  const items = [{ label: 'Copier' }, { label: 'Actualiser' }, { label: 'Trier' }, '-', { label: 'Paramètres de champ…' }]
+
+  const consigne = () => {
+    if (phase === 'source') return 'Étape 1. Sur la feuille **Ventes**, la table source. Ajoute la **vente de Nice** (clique la ligne « ➕ »).'
+    if (phase === 'switch') return 'Nice est dans la source ! Mais le TCD est sur une **autre feuille**. Clique l\'onglet **TCD** en bas.'
+    if (phase === 'tcd') return 'Le TCD ne voit **pas encore** Nice (il garde les données d\'origine). **Clic droit → Actualiser**.'
+    return ''
+  }
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="flex items-start gap-3 p-3">
+          {!surTcd ? (
+            /* Feuille Ventes : la table source, où on ajoute Nice */
+            <table className="border-collapse text-[10px]">
+              <tbody>
+                <tr>{['Localisation', 'Montant'].map((h) => <td key={h} className="border border-navy/15 bg-mint/25 px-2 py-1 font-bold text-navy">{h}</td>)}</tr>
+                {source.map((r, i) => (
+                  <tr key={i}><td className="border border-navy/15 px-2 py-1 text-navy/85">{r.loc}</td><td className="border border-navy/15 px-2 py-1 text-right text-navy/85">{r.mt}</td></tr>
+                ))}
+                {niceAjoute ? (
+                  <tr className="animate-fade-up"><td className="border border-navy/15 bg-mint/20 px-2 py-1 font-semibold text-navy">{nice.loc}</td><td className="border border-navy/15 bg-mint/20 px-2 py-1 text-right font-semibold text-navy">{nice.mt}</td></tr>
+                ) : (
+                  <tr><td colSpan={2} className="p-0"><button onClick={() => setPhase('switch')} className="flex w-full animate-pulse items-center gap-1 border border-mint bg-mint/10 px-2 py-1 text-left text-[10px] font-semibold text-navy ring-1 ring-inset ring-mint">➕ Ajouter : {nice.loc} · {nice.mt}</button></td></tr>
+                )}
+              </tbody>
+            </table>
+          ) : (
+            /* Feuille TCD : le rapport + le menu clic droit */
+            <>
+              <table className="border-collapse text-[10px]">
+                <tbody>
+                  <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{tcd.titre}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{tcd.valeurTitre}</td></tr>
+                  {(tcd.lignes || []).map((l, i) => (
+                    <tr key={i} className={fait && l.nouvelle ? 'animate-fade-up' : ''}><td className={`border border-navy/15 px-2 py-1 ${fait && l.nouvelle ? 'bg-mint/20 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${fait && l.nouvelle ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td></tr>
+                  ))}
+                  <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{tcd.total}</td></tr>
+                </tbody>
+              </table>
+              {phase === 'tcd' && (
+                <div className="w-40 shrink-0">
+                  <p className="mb-1 text-center text-[9px] font-bold uppercase tracking-wide text-navy/40">🖱 Clic droit sur le TCD</p>
+                  <div className="overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+                    {items.map((it, i) => it.label === '-' ? <div key={i} className="my-0.5 border-t border-navy/10" /> : (
+                      <div key={i} onClick={it.label === 'Actualiser' ? () => setPhase('fait') : undefined} className={`px-3 py-1.5 text-navy/80 ${it.label === 'Actualiser' ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold ring-1 ring-inset ring-mint' : ''}`}>{it.label}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {['Ventes', 'TCD'].map((f) => { const actif = f === feuilleActive; const cliquable = phase === 'switch' && f === 'TCD'; return (
+            <button key={f} onClick={cliquable ? () => setPhase('tcd') : undefined} className={`rounded-t px-2.5 py-0.5 ${actif ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'} ${cliquable ? 'animate-pulse ring-1 ring-mint' : ''}`}>{f}</button>
+          ) })}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -8662,7 +8741,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8786,6 +8865,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <TcdMasquerInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'segment' ? (
             <SegmentInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'tcdactualiser' ? (
+            <TcdActualiserInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8877,7 +8958,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                               ? 'Masque l\'élément'
                                                                                               : s.visuel?.type === 'segment'
                                                                                                 ? 'Filtre avec le segment'
-                                                                                                : 'Réponds pour continuer'
+                                                                                                : s.visuel?.type === 'tcdactualiser'
+                                                                                                  ? 'Actualise le TCD'
+                                                                                                  : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
