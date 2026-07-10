@@ -5808,24 +5808,10 @@ const DOUBLONSSOUSTOTAUX = {
     { humeur: 'accueil', dit: 'Avant d\'analyser une liste, on la **nettoie** (supprimer les doublons), puis on la **synthétise** (les sous-totaux). Deux réflexes de pro pour finir ce chapitre.', visuel: { type: 'tableaudonnees', entetes: ['Nom', 'Ville'], lignes: [['Marie', 'Lyon'], ['Karim', 'Paris'], ['Marie', 'Lyon'], ['Léa', 'Nice']], legende: 'La ligne « Marie · Lyon » apparaît deux fois : c\'est un doublon à supprimer.' } },
     {
       humeur: 'accueil',
-      dit: '**Où supprimer les doublons ?** Encore l\'onglet Données, groupe Outils de données. Cherche le bon bouton.',
-      visuel: { type: 'cliquecible', support: 'ruban', consigne: 'Clique le bouton Supprimer les doublons', onglets: ['Fichier', 'Accueil', 'Insertion', 'Formules', 'Données', 'Révision'], actif: 'Données', groupeNom: 'Outils de données', groupes: [{ icone: '🧬', label: 'Convertir' }, { icone: '🗑', label: 'Supprimer\nles doublons' }, { icone: '✔', label: 'Validation' }], cible: 'Supprimer\nles doublons', explication: 'Données > Outils de données > Supprimer les doublons. Excel repère et enlève d\'un coup les lignes répétées, en gardant une seule occurrence.' },
-    },
-    {
-      humeur: 'pensif',
-      dit: 'À toi de régler la boîte : **coche « Mes données ont des en-têtes »**, puis les **colonnes à comparer** (Nom et Ville), et valide.',
+      dit: '**À toi.** Onglet **Données > Supprimer les doublons**, coche les colonnes à comparer, valide, et **regarde la ligne en double disparaître** du tableau.',
       visuel: {
-        type: 'boitedialogue',
-        titre: 'Supprimer les doublons',
-        intro: 'Colonnes à comparer :',
-        champs: [
-          { type: 'case', label: 'Mes données ont des en-têtes', requis: true },
-          { type: 'case', label: 'Colonne : Nom', requis: true },
-          { type: 'case', label: 'Colonne : Ville', requis: true },
-          { type: 'case', label: 'Colonne : CA' },
-        ],
-        boutonOK: 'OK',
-        resultat: 'Doublons supprimés ! La ligne « Marie · Lyon » en double a été retirée, une seule occurrence gardée. Comme tu n\'as coché que Nom et Ville, Excel ignore le CA pour repérer les doublons.',
+        type: 'supprimerdoublons',
+        resultat: 'Doublon supprimé ! La 2ᵉ ligne « Marie · Lyon » a disparu, une seule occurrence gardée. Comme tu n\'as coché que Nom et Ville, Excel les a vues comme identiques (le CA différent, 8 200 vs 6 100, n\'a pas compté).',
       },
     },
     {

@@ -5206,6 +5206,81 @@ function SommeSiEnsCroise({ v, onResolu }) {
   )
 }
 
+// SUPPRIMER LES DOUBLONS : montre la table AVEC le doublon, ouvre la vraie boîte (cases à cocher),
+// et à l'OK la ligne en double DISPARAÎT (avant → après, on voit l'effet sur les données).
+const DBL_LIGNES = [
+  ['Marie', 'Lyon', '8 200 €'],
+  ['Karim', 'Paris', '12 500 €'],
+  ['Marie', 'Lyon', '6 100 €'],
+  ['Léa', 'Nice', '4 300 €'],
+]
+function SupprimerDoublonsInteractif({ v, onResolu }) {
+  const { resultat = '' } = v
+  const [etape, setEtape] = useState('ruban')   // ruban | dialog
+  const [coches, setCoches] = useState({ ent: false, Nom: false, Ville: false, CA: false })
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const pretOK = coches.ent && coches.Nom && coches.Ville
+  const estDoublon = (i) => DBL_LIGNES.findIndex((l) => l[0] === DBL_LIGNES[i][0] && l[1] === DBL_LIGNES[i][1]) !== i
+  const lignesAff = fait ? DBL_LIGNES.map((l, i) => ({ l, i })).filter(({ i }) => !estDoublon(i)) : DBL_LIGNES.map((l, i) => ({ l, i }))
+  const cases = [{ k: 'ent', label: 'Mes données ont des en-têtes' }, { k: 'Nom', label: 'Colonne : Nom' }, { k: 'Ville', label: 'Colonne : Ville' }, { k: 'CA', label: 'Colonne : CA' }]
+
+  const consigne = () => {
+    if (fait) return ''
+    if (etape === 'ruban') return 'La ligne « Marie · Lyon » apparaît **deux fois** (en rouge). Onglet **Données** : clique sur **Supprimer les doublons**.'
+    return pretOK ? 'Clique sur **OK**.' : 'Coche **Mes données ont des en-têtes**, puis **Nom** et **Ville** (les colonnes à comparer).'
+  }
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      {/* La table : avant (avec doublon en rouge) → après (doublon retiré) */}
+      <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-md border border-navy/15 text-[11px] shadow">
+        <table className="w-full border-collapse">
+          <thead><tr>{['Nom', 'Ville', 'CA'].map((h) => <th key={h} className="border-b-2 border-mint bg-mint/25 px-3 py-1 text-left font-bold text-navy">{h}</th>)}</tr></thead>
+          <tbody>
+            {lignesAff.map(({ l, i }) => {
+              const dbl = !fait && estDoublon(i)
+              return <tr key={i} className={`${dbl ? 'bg-red-500/20' : i % 2 ? 'bg-navy/[0.03]' : 'bg-white'} ${fait ? 'animate-fade-up' : ''}`}>
+                {l.map((c, ci) => <td key={ci} className={`border-b border-navy/10 px-3 py-1 ${dbl ? 'font-semibold text-red-700' : 'text-navy/85'} ${ci === 2 ? 'text-right font-mono' : ''}`}>{c}</td>)}
+              </tr>
+            })}
+          </tbody>
+        </table>
+        <p className="border-t border-navy/10 bg-navy/[0.03] px-3 py-1 text-[10px] text-navy/50">{fait ? '3 lignes (1 doublon retiré)' : '4 lignes'}</p>
+      </div>
+
+      {!fait && etape === 'ruban' && (
+        <div className="mx-auto mt-3 max-w-md overflow-hidden rounded-md border border-navy/15 bg-white text-[11px] shadow">
+          <div className="flex gap-2.5 border-b border-navy/10 bg-[#f3f1ea] px-2 py-1">{['Fichier', 'Accueil', 'Données'].map((o) => <span key={o} className={o === 'Données' ? 'rounded bg-navy/10 px-1 font-bold text-navy' : 'text-navy/50'}>{o}</span>)}</div>
+          <div className="flex items-stretch gap-2 p-2">
+            <div className="flex w-16 flex-col items-center gap-1 rounded p-1 text-center opacity-50"><span className="text-base">🧬</span><span className="leading-tight text-navy/60">Convertir</span></div>
+            <button onClick={() => setEtape('dialog')} className="flex w-16 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center ring-1 ring-mint"><span className="text-base">🗑</span><span className="leading-tight text-navy/75">Supprimer les doublons</span></button>
+            <span className="self-end pb-0.5 text-[8px] uppercase tracking-wide text-navy/35">Outils de données</span>
+          </div>
+        </div>
+      )}
+      {!fait && etape === 'dialog' && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Supprimer les doublons</div>
+          <div className="space-y-1.5 bg-white p-3">
+            <p className="text-navy/55">Colonnes à comparer :</p>
+            {cases.map((c) => { const on = !!coches[c.k]; return (
+              <button key={c.k} onClick={() => setCoches((s) => ({ ...s, [c.k]: !s[c.k] }))} className="flex w-full items-center gap-2 text-left text-navy/80">
+                <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${on ? 'border-mint bg-mint' : c.k !== 'CA' && !pretOK ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/40'}`}>{on && '✓'}</span>{c.label}
+              </button>
+            ) })}
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => pretOK && setFait(true)} disabled={!pretOK} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${pretOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Le menu déroulant « Mise en forme conditionnelle » (Accueil > Styles), une entrée surlignée.
 function MFCMenu({ v }) {
   const actif = v?.actif ?? 0
@@ -8065,7 +8140,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8177,6 +8252,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <RelationInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'sommesienscroise' ? (
             <SommeSiEnsCroise v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'supprimerdoublons' ? (
+            <SupprimerDoublonsInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8256,7 +8333,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                   ? 'Crée les relations'
                                                                                   : s.visuel?.type === 'sommesienscroise'
                                                                                     ? 'Remplis le tableau croisé'
-                                                                                    : 'Réponds pour continuer'
+                                                                                    : s.visuel?.type === 'supprimerdoublons'
+                                                                                      ? 'Supprime les doublons'
+                                                                                      : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
