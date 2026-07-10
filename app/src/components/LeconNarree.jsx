@@ -5542,9 +5542,10 @@ function ValidationEffetInteractif({ v, onResolu }) {
 }
 
 // LISTE DÉROULANTE DYNAMIQUE : rendre la source auto-extensible. Le user SÉLECTIONNE la plage
-// (glisser D3:D8), la transforme en Table (Ctrl+L), la nomme (Villes), pointe la Source de
-// validation sur la colonne de la Table (=Villes[Ville]), puis AJOUTE une ville : la liste
-// déroulante grandit toute seule. On voit chaque geste et le bénéfice concret.
+// (glisser D3:D8), la transforme en Table (Ctrl+L) nommée par défaut « Tableau1 », la renomme
+// « ListeVilles » (un nom distinct de la colonne « Ville »), pointe la Source de validation sur
+// la colonne via =ListeVilles[Ville] (expliqué), puis AJOUTE « Tunis » : la Table s'étend et la
+// liste déroulante l'inclut toute seule. Chaque étape dit CE QUE ça veut dire et POURQUOI.
 function ListeDynamiqueInteractif({ v, onResolu }) {
   const { resultat = '' } = v
   const [phase, setPhase] = useState('select')  // select | ctrll | nom | source | demo | fait
@@ -5561,16 +5562,17 @@ function ListeDynamiqueInteractif({ v, onResolu }) {
   const finir = (i) => { if (anchor === null || selDone) return; const a = Math.min(anchor, i), b = Math.max(anchor, i); if (a === 0 && b === 5) { setSelDone(true); setPhase('ctrll') } else { setAnchor(null); setHover(null) } }
 
   const estTable = ['nom', 'source', 'demo', 'fait'].includes(phase)
-  const nom = ['source', 'demo', 'fait'].includes(phase) ? 'Villes' : 'Tableau1'
+  const renomme = ['source', 'demo', 'fait'].includes(phase)
+  const nomTable = renomme ? 'ListeVilles' : 'Tableau1'
   const ajout = phase === 'fait'
   const villes = ajout ? [...VDA_VILLES, 'Tunis'] : VDA_VILLES
 
   const consigne = () => {
-    if (phase === 'select') return 'Étape 1. **Sélectionne ta plage source** : glisse de **D3 à D8** (les villes actuelles).'
-    if (phase === 'ctrll') return 'Étape 2. Transforme-la en **Table** : appuie sur **Ctrl + L**.'
-    if (phase === 'nom') return 'Étape 3. **Double-clique le nom** de la Table et appelle-la **Villes**.'
-    if (phase === 'source') return 'Étape 4. Dans la **Source** de ta validation, pointe la colonne de la Table : **=Villes[Ville]**.'
-    if (phase === 'demo') return 'Le test ! **Ajoute une ville** à la Table (Tunis) et regarde la liste déroulante grandir toute seule.'
+    if (phase === 'select') return 'Étape 1. En colonne **Ville** (D3:D8), les villes actuelles. **Glisse de D3 à D8** : c\'est cette plage qui alimente ta liste.'
+    if (phase === 'ctrll') return 'Étape 2. Transforme la plage en **Table** avec **Ctrl + L**. Une Table, contrairement à une simple plage, **s\'agrandit toute seule** quand on ajoute une ligne.'
+    if (phase === 'nom') return 'Étape 3. Excel a nommé ta Table « **Tableau1** ». Donne-lui un nom parlant : clique le champ **Nom de la table** et appelle-la **ListeVilles**.'
+    if (phase === 'source') return 'Étape 4. Dans la **Source** de ta validation, écris **=ListeVilles[Ville]**. Ça veut dire « toute la colonne **Ville** de la table **ListeVilles** ». La Table grandit, la référence grandit avec elle.'
+    if (phase === 'demo') return 'Étape 5, la preuve. **Ajoute « Tunis »** sous la Table. Comme la Source pointe la Table, la liste va l\'inclure **sans que tu retouches la validation**.'
     return ''
   }
 
@@ -5581,16 +5583,19 @@ function ListeDynamiqueInteractif({ v, onResolu }) {
       </div>
 
       <div className="mx-auto mt-3 flex w-fit flex-col items-center gap-2">
+        {/* Zone Nom : le NOM de la Table (distinct de la colonne). Tableau1 → ListeVilles */}
+        {estTable && (
+          <button onClick={() => phase === 'nom' && setPhase('source')} disabled={phase !== 'nom'} className={`flex items-center gap-1.5 self-start rounded-sm border px-2 py-0.5 text-[10px] ${phase === 'nom' ? 'animate-pulse cursor-pointer border-mint bg-mint/10 ring-1 ring-mint' : 'border-navy/20 bg-navy/[0.02]'}`}>
+            <span className="text-navy/45">Nom de la table :</span><span className="font-mono font-semibold text-navy">{nomTable}</span>{phase === 'nom' && <span className="text-navy/40">✎</span>}
+          </button>
+        )}
         {/* La colonne source, qui devient une Table nommée */}
         <table className="border-collapse bg-white shadow-sm">
           <thead><tr><th className="h-5 w-6 border border-navy/15 bg-navy/10"></th><th className={`h-5 w-24 border border-navy/15 text-[10px] font-semibold ${estTable ? 'bg-[#2f6fb3] text-white' : 'bg-navy/10 text-navy/50'}`}>D</th></tr></thead>
           <tbody>
             <tr>
               <td className="h-6 w-6 border border-navy/15 bg-navy/10 text-center text-[10px] font-semibold text-navy/50">2</td>
-              <td className={`relative h-6 border px-1.5 text-[11px] font-bold ${estTable ? 'border-[#2f6fb3] bg-[#2f6fb3] text-white' : 'border-navy/15 bg-mint/20 text-navy'}`}>
-                Villes
-                {phase === 'nom' && <span className="absolute -right-1 top-1/2 h-3 w-3 -translate-y-1/2 translate-x-full animate-pulse rounded-full bg-mint" />}
-              </td>
+              <td className={`relative h-6 border px-1.5 text-[11px] font-bold ${estTable ? 'border-[#2f6fb3] bg-[#2f6fb3] text-white' : 'border-navy/15 bg-mint/20 text-navy'}`}>Ville</td>
             </tr>
             {villes.map((ville, i) => (
               <tr key={ville}>
@@ -5605,20 +5610,19 @@ function ListeDynamiqueInteractif({ v, onResolu }) {
             ))}
           </tbody>
         </table>
-        <p className="text-[10px] text-navy/45">{estTable ? <>Table <b className="text-navy/70">{nom}</b>{ajout ? ' · 7 lignes (elle s\'est étendue toute seule)' : ' · 6 lignes'}</> : 'Plage simple (non extensible)'}</p>
+        <p className="text-[10px] text-navy/45">{estTable ? <>Table <b className="text-navy/70">{nomTable}</b>, colonne <b className="text-navy/70">Ville</b>{ajout ? ' · 7 lignes (étendue toute seule)' : ' · 6 lignes'}</> : 'Plage simple (elle ne s\'étend pas)'}</p>
 
         {/* Étape 2 : Ctrl+L */}
         {phase === 'ctrll' && <button onClick={() => setPhase('nom')} className="animate-pulse rounded-lg border-2 border-navy bg-navy/5 px-5 py-2 text-sm font-bold text-navy">⌨ Ctrl + L</button>}
-        {/* Étape 3 : renommer */}
-        {phase === 'nom' && <button onClick={() => setPhase('source')} className="animate-pulse rounded-md border border-navy/25 bg-white px-3 py-1.5 text-[11px] text-navy shadow-sm">✎ Renommer en « Villes » (double-clic)</button>}
-        {/* Étape 4 : pointer la source */}
+        {/* Étape 4 : la Source qui pointe la colonne de la Table */}
         {(phase === 'source' || phase === 'demo' || phase === 'fait') && (
-          <div className={`w-full max-w-[15rem] rounded-md border px-2 py-1.5 text-[10px] ${phase === 'source' ? 'animate-pulse border-mint bg-mint/5 ring-1 ring-mint' : 'border-navy/15 bg-navy/[0.02]'}`}>
+          <div className={`w-full max-w-[16rem] rounded-md border px-2 py-1.5 text-[10px] ${phase === 'source' ? 'animate-pulse border-mint bg-mint/5 ring-1 ring-mint' : 'border-navy/15 bg-navy/[0.02]'}`}>
             <p className="text-navy/50">Source de la validation :</p>
-            <p className="font-mono text-navy">{['demo', 'fait'].includes(phase) ? '=Villes[Ville]' : '=$D$3:$D$8'}</p>
+            <p className="font-mono text-navy">=ListeVilles[Ville]</p>
+            <p className="mt-0.5 text-navy/45"><b className="text-navy/65">ListeVilles</b> = le nom de la Table · <b className="text-navy/65">[Ville]</b> = la colonne pointée</p>
           </div>
         )}
-        {phase === 'source' && <button onClick={() => setPhase('demo')} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-3 py-1.5 text-[11px] font-bold text-navy">Pointer la colonne =Villes[Ville]</button>}
+        {phase === 'source' && <button onClick={() => setPhase('demo')} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-3 py-1.5 text-[11px] font-bold text-navy">Valider cette source</button>}
         {/* Étape 5 : ajouter une ville */}
         {phase === 'demo' && <button onClick={() => setPhase('fait')} className="animate-pulse rounded-md border-2 border-mint bg-mint/15 px-3 py-1.5 text-[11px] font-bold text-navy">➕ Ajouter « Tunis » à la Table</button>}
         {/* La preuve : la liste déroulante inclut Tunis toute seule */}
@@ -7931,34 +7935,41 @@ function BoiteDialogue({ v, onResolu }) {
           <div className="space-y-2 bg-white p-3">
             {intro && <p className="text-navy/55">{intro}</p>}
             {champs.map((c, i) => {
+              let control
               if (c.type === 'case') {
                 const on = vals[i] === true
-                return (
-                  <button key={i} onClick={() => activer(c, i)} className="flex w-full items-start gap-2 text-left text-navy/80">
+                control = (
+                  <button onClick={() => activer(c, i)} className="flex w-full items-start gap-2 text-left text-navy/80">
                     <span className={`mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-sm border text-[9px] text-white ${on ? 'border-mint bg-mint' : doitAgir(c, i) ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/30'}`}>{on && '✓'}</span>
                     <span>{c.label}</span>
                   </button>
                 )
-              }
-              if (c.type === 'champ') {
+              } else if (c.type === 'champ') {
                 const rempli = vals[i] != null && vals[i] !== ''
-                return (
-                  <div key={i} className="flex items-center gap-2">
+                control = (
+                  <div className="flex items-center gap-2">
                     <span className="w-24 shrink-0 text-right text-navy/60">{c.label} :</span>
                     <button onClick={() => activer(c, i)} className={`min-w-0 flex-1 rounded-sm border px-2 py-1 text-left font-mono ${rempli ? 'border-navy/30 text-navy' : doitAgir(c, i) ? 'animate-pulse border-mint text-navy/35 ring-1 ring-mint' : 'border-navy/25 text-navy/40'}`}>{rempli ? vals[i] : (c.requis ? 'clique pour remplir…' : (c.valeur ?? ''))}</button>
                   </div>
                 )
+              } else {
+                const val = vals[i]
+                control = (
+                  <div className="relative flex items-center gap-2">
+                    <span className="w-24 shrink-0 text-right text-navy/60">{c.label} :</span>
+                    <button onClick={() => activer(c, i)} className={`flex min-w-0 flex-1 items-center justify-between rounded-sm border px-2 py-1 text-left ${val ? 'border-navy/30 text-navy' : doitAgir(c, i) ? 'animate-pulse border-mint text-navy/50 ring-1 ring-mint' : 'border-navy/25 text-navy/50'}`}><span className="truncate">{val || 'choisir…'}</span><span className="ml-1 text-navy/40">▾</span></button>
+                    {ouverte === i && (
+                      <div className="absolute right-0 top-full z-20 mt-1 w-36 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
+                        {(c.options || []).map((opt) => <button key={opt} onClick={() => choisirListe(i, opt)} className="block w-full px-2 py-1.5 text-left hover:bg-mint/15">{opt}</button>)}
+                      </div>
+                    )}
+                  </div>
+                )
               }
-              const val = vals[i]
               return (
-                <div key={i} className="relative flex items-center gap-2">
-                  <span className="w-24 shrink-0 text-right text-navy/60">{c.label} :</span>
-                  <button onClick={() => activer(c, i)} className={`flex min-w-0 flex-1 items-center justify-between rounded-sm border px-2 py-1 text-left ${val ? 'border-navy/30 text-navy' : doitAgir(c, i) ? 'animate-pulse border-mint text-navy/50 ring-1 ring-mint' : 'border-navy/25 text-navy/50'}`}><span className="truncate">{val || 'choisir…'}</span><span className="ml-1 text-navy/40">▾</span></button>
-                  {ouverte === i && (
-                    <div className="absolute right-0 top-full z-20 mt-1 w-36 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
-                      {(c.options || []).map((opt) => <button key={opt} onClick={() => choisirListe(i, opt)} className="block w-full px-2 py-1.5 text-left hover:bg-mint/15">{opt}</button>)}
-                    </div>
-                  )}
+                <div key={i} className="space-y-1">
+                  {control}
+                  {c.aide && <p className="ml-1 border-l-2 border-mint/40 pl-2 text-[10px] leading-snug text-navy/55">{gras(c.aide)}</p>}
                 </div>
               )
             })}

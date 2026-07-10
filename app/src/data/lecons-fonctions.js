@@ -5683,7 +5683,7 @@ const VALIDATIONDONNEES = {
     {
       humeur: 'pensif',
       dit: 'Astuce de pro : une **liste déroulante dynamique** se met à jour toute seule quand tu ajoutes une ville. Le secret : transformer ta plage source en **Table**. Fais-le, puis ajoute une ville et regarde la liste grandir toute seule.',
-      visuel: { type: 'listedynamique', resultat: 'La Table « Villes » s\'est étendue et ta liste déroulante inclut « Tunis » sans que tu touches à la validation. Une Table nommée = une liste qui grandit avec tes données, 100 % automatique.' },
+      visuel: { type: 'listedynamique', resultat: 'La Table « ListeVilles » s\'est étendue et ta liste déroulante inclut « Tunis » sans que tu touches à la validation. Une Table nommée = une liste qui grandit avec tes données, 100 % automatique.' },
       plus: ['CRÉE DES LISTES DÉROULANTES DYNAMIQUES ! Le secret : transformer ta plage source en Table (Ctrl + L), lui donner un nom, puis pointer la Source de ta validation sur la colonne de la Table (=Villes[Ville]). Dès que tu ajoutes ou retires une ligne dans la Table, ta liste déroulante se met à jour toute seule, plus besoin d\'ajuster la validation à la main !'],
     },
     {
@@ -5742,19 +5742,19 @@ const FILTRESELABORES = {
     },
     {
       humeur: 'pensif',
-      dit: 'À toi de remplir la boîte **Filtre avancé** : coche l\'action, renseigne la **Plage**, la **Zone de critères** et la destination, puis valide.',
+      dit: 'À toi de remplir la boîte **Filtre avancé**, champ par champ. Chaque ligne t\'explique à quoi elle sert. Coche l\'action, renseigne la **Plage**, la **Zone de critères** et la destination, puis valide.',
       visuel: {
         type: 'boitedialogue',
         titre: 'Filtre avancé',
         champs: [
-          { type: 'case', label: 'Copier vers un autre emplacement', requis: true },
-          { type: 'champ', label: 'Plage', valeur: '$A$1:$D$13', requis: true },
-          { type: 'champ', label: 'Zone de critères', valeur: '$H$1:$J$3', requis: true },
-          { type: 'champ', label: 'Copier dans', valeur: '$H$7', requis: true },
-          { type: 'case', label: 'Extraction sans doublon' },
+          { type: 'case', label: 'Copier vers un autre emplacement', requis: true, aide: 'L\'action à faire. **Décoché** = filtrer **sur place** (les lignes non retenues sont masquées dans ta liste). **Coché** = **extraire** les résultats plus loin, la liste d\'origine reste intacte.' },
+          { type: 'champ', label: 'Plage', valeur: '$A$1:$D$13', requis: true, aide: 'La **liste à filtrer**, en-têtes compris (ici A1:D13).' },
+          { type: 'champ', label: 'Zone de critères', valeur: '$H$1:$J$3', requis: true, aide: 'Le petit tableau de **conditions**, avec les mêmes en-têtes que ta liste (ici H1:J3). C\'est lui qui dit quelles lignes garder.' },
+          { type: 'champ', label: 'Copier dans', valeur: '$H$7', requis: true, aide: 'La **destination** où poser les lignes extraites (ici H7). Ne sert que si « Copier vers un autre emplacement » est coché.' },
+          { type: 'case', label: 'Extraction sans doublon', aide: 'Coché = si deux lignes extraites sont **identiques**, Excel n\'en garde **qu\'une**.' },
         ],
         boutonOK: 'OK',
-        resultat: 'Filtre lancé ! Seules les lignes qui respectent la zone de critères sont extraites en $H$7, sans toucher à la liste d\'origine. Tu croises autant de critères que tu veux.',
+        resultat: 'Filtre lancé ! Seules les lignes qui respectent la zone de critères sont extraites en H7, sans toucher à la liste d\'origine. Tu croises autant de critères que tu veux.',
       },
     },
     {
@@ -5786,7 +5786,7 @@ const DOUBLONSSOUSTOTAUX = {
     { humeur: 'accueil', dit: 'Avant d\'analyser une liste, on la **nettoie** (supprimer les doublons), puis on la **synthétise** (les sous-totaux). Deux réflexes de pro pour finir ce chapitre.', visuel: { type: 'tableaudonnees', entetes: ['Nom', 'Ville'], lignes: [['Marie', 'Lyon'], ['Karim', 'Paris'], ['Marie', 'Lyon'], ['Léa', 'Nice']], legende: 'La ligne « Marie · Lyon » apparaît deux fois : c\'est un doublon à supprimer.' } },
     {
       humeur: 'accueil',
-      dit: '**À toi.** Onglet **Données > Supprimer les doublons**, coche les colonnes à comparer, valide, et **regarde la ligne en double disparaître** du tableau.',
+      dit: '**À toi de nettoyer.** Pour retirer la ligne « Marie · Lyon » qui apparaît deux fois, va dans **Données > Supprimer les doublons** (c\'est là que vit cet outil), coche les colonnes à comparer, valide, et **regarde le doublon disparaître** du tableau.',
       visuel: {
         type: 'supprimerdoublons',
         resultat: 'Doublon supprimé ! La 2ᵉ ligne « Marie · Lyon » a disparu, une seule occurrence gardée. Comme tu n\'as coché que Nom et Ville, Excel les a vues comme identiques (le CA différent, 8 200 vs 6 100, n\'a pas compté).',
@@ -5806,7 +5806,13 @@ const DOUBLONSSOUSTOTAUX = {
       humeur: 'pensif',
       dit: 'Les **boutons de plan 1 / 2 / 3** (à gauche) font basculer entre la vue d\'ensemble et le détail.',
       visuel: { type: 'plan' },
-      plus: ['NAVIGATION DU PLAN. Bouton 1 : uniquement le total général (tous les détails masqués). Bouton 2 : les sous-totaux (à chaque changement de groupe) et le total général, sans le détail ligne à ligne. Bouton 3 : la vue complète, tous les enregistrements détaillés avec les sous-totaux et le total général. Pour retirer les sous-totaux : Données > Plan > Sous-total > Supprimer tout.'],
+      plus: [
+        '**Navigation du plan.**',
+        '**Bouton 1** : uniquement le total général (tous les détails masqués).',
+        '**Bouton 2** : les sous-totaux (à chaque changement de groupe) et le total général, sans le détail ligne à ligne.',
+        '**Bouton 3** : la vue complète, tous les enregistrements détaillés avec les sous-totaux et le total général.',
+        '**Pour retirer les sous-totaux** : Données > Plan > Sous-total > Supprimer tout.',
+      ],
     },
     {
       humeur: 'pensif',
@@ -5826,7 +5832,16 @@ const DOUBLONSSOUSTOTAUX = {
         ],
         explication: 'Le 109, c\'est SOMME en ignorant les lignes masquées (le 9 les inclurait). Résultat : 100 tant que rien n\'est filtré ; filtre une région et le total se recalcule tout seul. C\'est là toute la force de SOUS.TOTAL.',
       },
-      plus: ['La fonction SOUS.TOTAL offre la flexibilité de choisir d\'inclure ou d\'exclure les lignes masquées, tout en proposant une palette de calculs (somme, moyenne, écart-type…). Structure : =SOUS.TOTAL(no_fonction; plage1; …). No_fonction : 1 à 11 (inclut les masqués) ou 101 à 111 (ignore les masqués). Ex. MOYENNE = 1 ou 101, NB = 2 ou 102, MAX = 4 ou 104, MIN = 5 ou 105, SOMME = 9 ou 109.'],
+      plus: [
+        'La fonction SOUS.TOTAL te laisse choisir d\'inclure ou d\'exclure les lignes masquées, avec une palette de calculs (somme, moyenne, écart-type…).',
+        'Structure : **=SOUS.TOTAL(no_fonction ; plage1 ; …)**.',
+        'Le **no_fonction** : de **1 à 11** inclut les lignes masquées, de **101 à 111** les ignore.',
+        'MOYENNE = 1 ou 101',
+        'NB = 2 ou 102',
+        'MAX = 4 ou 104',
+        'MIN = 5 ou 105',
+        'SOMME = 9 ou 109',
+      ],
     },
     {
       humeur: 'accueil',
