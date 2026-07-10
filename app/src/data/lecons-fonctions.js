@@ -5937,6 +5937,18 @@ const ANALYSERTCD = {
     },
     {
       humeur: 'pensif',
+      dit: 'Et pour des **nombres** ? Excel les range en **tranches**. Imagine des biens de surfaces variées : clic droit sur la colonne des surfaces → **Grouper** → une fenêtre te demande la taille de chaque tranche.',
+      visuel: { type: 'tcdgroupernombre', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', titreChamp: 'Surface (m²)', valeurTitre: 'Nombre de biens', avant: [{ et: '40', val: '1' }, { et: '65', val: '1' }, { et: '90', val: '1' }, { et: '140', val: '1' }], apres: [{ et: '0-49', val: '1' }, { et: '50-99', val: '2' }, { et: '100-149', val: '1' }], debut: '0', fin: '150', pas: '50', totalAvant: '4', totalApres: '4', explication: 'Par intervalle de 50, les surfaces se rangent en tranches 0-49, 50-99, 100-149 : d\'un coup on voit combien de biens par gamme de surface. Pour défaire : clic droit > Dissocier.' },
+      plus: [
+        'Regrouper des nombres crée des **tranches** automatiques.',
+        'Clic droit sur la colonne > **Grouper** ouvre une fenêtre : **Début**, **Fin**, et **Par** (la taille de chaque tranche).',
+        'Ex. Par = 50 → tranches 0-49, 50-99, 100-149…',
+        'Idéal pour transformer des valeurs continues (âges, prix, surfaces) en catégories lisibles.',
+        'Pour défaire : clic droit > **Dissocier**.',
+      ],
+    },
+    {
+      humeur: 'pensif',
       dit: 'Tu veux le **poids de chaque zone** en pourcentage, sans écrire une seule formule ? Fais un clic droit sur une valeur (un montant), ouvre **Afficher les valeurs**, puis choisis **% du total général**.',
       visuel: { type: 'tcdscene', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', consigne: 'Clic droit sur un montant → Afficher les valeurs → % du total général', declencheur: 'menu', clicDroitLabel: 'Clic droit sur un montant', items: [{ label: 'Synthétiser les valeurs par' }, { label: 'Afficher les valeurs', sousmenu: ['% du total général', '% du total de la ligne', '% du total de la colonne', 'Différence par rapport à…'] }, '-', { label: 'Paramètres des champs de valeurs…' }], cible: 1, sousCible: 0, avant: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], total: '910 000 €' }, apres: { titre: 'Localisation', valeurTitre: '% du total général', lignes: [{ et: 'Paris', val: '46 %' }, { et: 'Lyon', val: '34 %' }, { et: 'Marseille', val: '20 %' }], total: '100 %' }, explication: 'Clic droit > Afficher les valeurs > « % du total général » : chaque montant devient un pourcentage. Paris pèse 46 % des ventes. Idéal pour comparer des proportions plutôt que des euros bruts.' },
       plus: ['Excel propose des modes de calcul avancés sans formule : clic droit sur une valeur > Afficher les valeurs, puis choisis % du total général, % du total de la ligne, % du total de la colonne, Différence par rapport à, Rang… Autre astuce : clic droit > Synthétiser les valeurs par pour passer de la Somme à la Moyenne, au Nombre, au Max…'],

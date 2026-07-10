@@ -4994,6 +4994,73 @@ function TcdGrouperTexteInteractif({ v, onResolu }) {
   )
 }
 
+// REGROUPER DES VALEURS NUMÉRIQUES dans un TCD : clic droit sur la colonne de nombres → Grouper →
+// la fenêtre « Grouper » (Début / Fin / Par intervalle) → OK → les valeurs se rangent en tranches.
+function TcdGrouperNombreInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', titreChamp = 'Surface (m²)', valeurTitre = 'Nombre de biens', avant = [], apres = [], debut = '40', fin = '150', pas = '50', totalAvant = '', totalApres = '', explication = '' } = v
+  const [phase, setPhase] = useState('menu')   // menu | dialog | fait
+  const [pasOK, setPasOK] = useState(false)
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const lignes = fait ? apres : avant
+  const total = fait ? totalApres : totalAvant
+
+  const consigne = () => {
+    if (phase === 'menu') return 'Clic droit sur la colonne des **surfaces**, puis choisis **Grouper**.'
+    if (phase === 'dialog') return pasOK ? 'Clique **OK** pour créer les tranches.' : `La fenêtre **Grouper** s'ouvre. Clique le champ **Par** et mets **${pas}** (la taille de chaque tranche).`
+    return ''
+  }
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="flex items-start gap-3 p-3">
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{titreChamp}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              {lignes.map((l, i) => (
+                <tr key={i} className={fait ? 'animate-fade-up' : ''}><td className={`border border-navy/15 px-2 py-1 ${fait ? 'bg-mint/10 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td><td className="border border-navy/15 px-2 py-1 text-right text-navy/85">{l.val}</td></tr>
+              ))}
+              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+            </tbody>
+          </table>
+
+          {phase === 'menu' && (
+            <div className="w-40 shrink-0">
+              <p className="mb-1 text-center text-[9px] font-bold uppercase tracking-wide text-navy/40">🖱 Clic droit sur les surfaces</p>
+              <div className="overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+                {['Développer/Réduire', 'Trier', '-', 'Grouper…', 'Dissocier…'].map((it, i) => it === '-' ? <div key={i} className="my-0.5 border-t border-navy/10" /> : (
+                  <div key={i} onClick={/^Grouper/.test(it) ? () => setPhase('dialog') : undefined} className={`px-3 py-1.5 text-navy/80 ${/^Grouper/.test(it) ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold ring-1 ring-inset ring-mint' : ''}`}>{it}</div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => (<span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>))}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+
+      {/* La fenêtre « Grouper » : Début / Fin / Par intervalle */}
+      {phase === 'dialog' && (
+        <div className="mx-auto mt-3 max-w-[13rem] overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Grouper</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="flex items-center gap-2"><span className="w-14 text-right text-navy/60">Début :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-1 font-mono text-navy">{debut}</span></div>
+            <div className="flex items-center gap-2"><span className="w-14 text-right text-navy/60">Fin :</span><span className="flex-1 rounded-sm border border-navy/25 px-2 py-1 font-mono text-navy">{fin}</span></div>
+            <div className="flex items-center gap-2"><span className="w-14 text-right text-navy/60">Par :</span><button onClick={() => setPasOK(true)} className={`flex-1 rounded-sm border px-2 py-1 text-left font-mono ${pasOK ? 'border-navy/30 text-navy' : 'animate-pulse border-mint text-navy/35 ring-1 ring-mint'}`}>{pasOK ? pas : 'clique pour saisir…'}</button></div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => pasOK && setPhase('fait')} disabled={!pasOK} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${pasOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -8849,7 +8916,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8977,6 +9044,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <TcdActualiserInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'tcdgroupertexte' ? (
             <TcdGrouperTexteInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'tcdgroupernombre' ? (
+            <TcdGrouperNombreInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9072,7 +9141,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                   ? 'Actualise le TCD'
                                                                                                   : s.visuel?.type === 'tcdgroupertexte'
                                                                                                     ? 'Regroupe les valeurs'
-                                                                                                    : 'Réponds pour continuer'
+                                                                                                    : s.visuel?.type === 'tcdgroupernombre'
+                                                                                                      ? 'Crée les tranches'
+                                                                                                      : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
