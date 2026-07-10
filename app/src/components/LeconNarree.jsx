@@ -5421,6 +5421,126 @@ function ValidationDonneesInteractif({ v, onResolu }) {
   )
 }
 
+// L'EFFET de la validation, montré en vrai (les 2 autres onglets de la boîte).
+// mode='message' : on coche le message de saisie, OK, puis on CLIQUE la cellule → la bulle d'aide
+// apparaît. mode='erreur' : on choisit le style Arrêt, OK, puis on TAPE une valeur interdite →
+// l'alerte surgit et BLOQUE la saisie. Le user voit ce qui se passe après la manip.
+function ValidationEffetInteractif({ v, onResolu }) {
+  const { mode = 'message', resultat = '' } = v
+  const [phase, setPhase] = useState('config')   // config | demo | fait
+  const [coche, setCoche] = useState(false)
+  const [style, setStyle] = useState(null)
+  const [menu, setMenu] = useState(false)
+  const [effet, setEffet] = useState(false)       // bulle affichée (message) / alerte affichée (erreur)
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const estMsg = mode === 'message'
+  const pretOK = estMsg ? coche : style === 'Arrêt'
+
+  const consigne = () => {
+    if (estMsg) {
+      if (phase === 'config') return coche ? 'Clique **OK** pour appliquer ce message.' : 'Coche **Afficher un message quand la cellule est sélectionnée**.'
+      if (phase === 'demo') return 'Réglé ! Maintenant **clique la cellule B2** pour voir la bulle d\'aide apparaître.'
+    } else {
+      if (phase === 'config') return style === 'Arrêt' ? 'Clique **OK** pour appliquer l\'alerte.' : 'Déroule le **Style** et choisis **Arrêt** (le seul qui bloque vraiment la saisie).'
+      if (phase === 'demo') return 'Réglé ! **Tape « Berlin »** (une ville hors liste) et valide, pour voir l\'alerte réagir.'
+    }
+    return ''
+  }
+
+  return (
+    <div className="mt-3">
+      <div className={`rounded-xl border px-3 py-2 text-sm ${fait ? 'border-mint/40 bg-mint/[0.07]' : 'border-navy/10 bg-navy/5'}`}>
+        {fait ? <span className="font-bold text-mint">✓ {resultat}</span> : <span className="text-navy/85">👆 {gras(consigne())}</span>}
+      </div>
+
+      {/* La cellule B2 concernée (déjà validée : liste de villes) */}
+      <div className="mx-auto mt-3 w-fit">
+        <div className="relative">
+          <table className="border-collapse bg-white shadow-sm">
+            <thead><tr><th className="h-5 w-6 border border-navy/15 bg-navy/10"></th><th className="h-5 w-24 border border-navy/15 bg-navy/10 text-[10px] font-semibold text-navy/50">B</th></tr></thead>
+            <tbody>
+              <tr><td className="h-6 w-6 border border-navy/15 bg-navy/10 text-center text-[10px] font-semibold text-navy/50">1</td><td className="h-6 border border-navy/15 bg-mint/20 px-1.5 text-[11px] font-bold text-navy">Ville</td></tr>
+              <tr><td className="h-8 w-6 border border-navy/15 bg-navy/10 text-center text-[10px] font-semibold text-navy/50">2</td>
+                <td className={`h-8 border border-navy/15 px-1.5 text-[11px] ${phase === 'demo' && estMsg ? 'cursor-pointer ring-2 ring-inset ring-navy animate-pulse' : phase !== 'config' ? 'ring-2 ring-inset ring-navy' : ''}`}
+                  onClick={phase === 'demo' && estMsg ? () => { setEffet(true); setPhase('fait') } : undefined}>
+                  <span className="flex items-center justify-between gap-1"><span className="font-semibold text-navy">Lyon</span><span className="grid h-4 w-4 place-items-center rounded-sm border border-navy/30 bg-navy/5 text-[8px] text-navy">▾</span></span>
+                </td></tr>
+            </tbody>
+          </table>
+
+          {/* mode message : la bulle d'aide qui apparaît sous B2 */}
+          {estMsg && effet && (
+            <div className="absolute left-8 top-[calc(100%+2px)] z-10 w-52 animate-fade-up rounded-md border border-[#d9c86a] bg-[#fbf6d6] px-2 py-1.5 text-[10px] text-navy/85 shadow-lg">
+              <p className="font-bold text-navy">Ville de livraison</p>
+              <p>Choisis une ville dans la liste, ne tape rien à la main.</p>
+            </div>
+          )}
+        </div>
+        {estMsg && effet && <p className="mt-24 text-center text-[10px] text-navy/50">La bulle s'affiche <b className="text-navy/70">dès qu'on sélectionne B2</b>, avant même de saisir.</p>}
+      </div>
+
+      {/* mode message : la boîte, onglet Message de saisie */}
+      {estMsg && phase === 'config' && (
+        <div className="mx-auto mt-3 max-w-xs overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Validation des données</div>
+          <div className="flex gap-3 border-b border-navy/10 bg-white px-3 pt-1.5 text-[10px]"><span className="pb-1 text-navy/35">Options</span><span className="border-b-2 border-navy pb-1 font-semibold text-navy">Message de saisie</span><span className="pb-1 text-navy/35">Alerte d'erreur</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <button onClick={() => setCoche((c) => !c)} className="flex w-full items-center gap-2 text-left text-navy/80">
+              <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${coche ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{coche && '✓'}</span>Afficher un message quand la cellule est sélectionnée
+            </button>
+            <div><p className="text-navy/55">Titre :</p><div className="mt-0.5 rounded-sm border border-navy/25 px-2 py-1 text-navy">Ville de livraison</div></div>
+            <div><p className="text-navy/55">Message :</p><div className="mt-0.5 rounded-sm border border-navy/25 px-2 py-1 text-navy">Choisis une ville dans la liste, ne tape rien à la main.</div></div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => pretOK && setPhase('demo')} disabled={!pretOK} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${pretOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+
+      {/* mode erreur : la boîte, onglet Alerte d'erreur */}
+      {!estMsg && phase === 'config' && (
+        <div className="mx-auto mt-3 max-w-xs overflow-visible rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80">Validation des données</div>
+          <div className="flex gap-3 border-b border-navy/10 bg-white px-3 pt-1.5 text-[10px]"><span className="pb-1 text-navy/35">Options</span><span className="pb-1 text-navy/35">Message de saisie</span><span className="border-b-2 border-navy pb-1 font-semibold text-navy">Alerte d'erreur</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <div className="relative">
+              <p className="text-navy/55">Style :</p>
+              <button onClick={() => setMenu((m) => !m)} className={`mt-0.5 flex w-full items-center justify-between rounded-sm border px-2 py-1 text-left ${style === 'Arrêt' ? 'border-navy/25 text-navy' : 'animate-pulse border-mint ring-1 ring-mint text-navy/70'}`}><span>{style || 'Avertissement'}</span><span className="text-navy/40">▾</span></button>
+              {menu && (
+                <div className="absolute z-10 mt-0.5 w-full overflow-hidden rounded-sm border border-navy/20 bg-white shadow-lg">
+                  {['Arrêt', 'Avertissement', 'Information'].map((o) => <div key={o} onClick={() => { if (o === 'Arrêt') { setStyle('Arrêt'); setMenu(false) } }} className={o === 'Arrêt' ? 'flex cursor-pointer items-center gap-1 bg-mint/15 px-2 py-1 font-semibold text-navy ring-1 ring-inset ring-mint' : 'px-2 py-1 text-navy/45'}>{o === 'Arrêt' && '🛑'} {o}</div>)}
+                </div>
+              )}
+            </div>
+            <div><p className="text-navy/55">Titre :</p><div className="mt-0.5 rounded-sm border border-navy/25 px-2 py-1 text-navy">Ville non autorisée</div></div>
+            <div><p className="text-navy/55">Message :</p><div className="mt-0.5 rounded-sm border border-navy/25 px-2 py-1 text-navy">Choisis une ville de la liste déroulante.</div></div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => pretOK && setPhase('demo')} disabled={!pretOK} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${pretOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+
+      {/* mode erreur : taper une valeur interdite */}
+      {!estMsg && phase === 'demo' && (
+        <div className="mx-auto mt-3 flex max-w-xs items-center justify-center gap-2">
+          <span className="rounded-sm border border-navy/25 bg-white px-2 py-1 font-mono text-[11px] text-navy">Berlin</span>
+          <button onClick={() => { setEffet(true); setPhase('fait') }} className="animate-pulse rounded-sm border-2 border-mint bg-mint/15 px-3 py-1 text-[11px] font-bold text-navy">Entrée ↵</button>
+        </div>
+      )}
+
+      {/* mode erreur : l'alerte qui bloque */}
+      {!estMsg && effet && (
+        <div className="mx-auto mt-3 max-w-xs animate-fade-up overflow-hidden rounded-lg border border-navy/25 shadow-xl">
+          <div className="flex items-center gap-2 bg-[#e9e9e9] px-3 py-1.5 text-[11px] font-semibold text-navy/80"><span className="text-base">🛑</span>Ville non autorisée</div>
+          <div className="space-y-2 bg-white p-3 text-[11px]">
+            <p className="text-navy/80">Choisis une ville de la liste déroulante.</p>
+            <div className="flex justify-end gap-2"><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/70">Réessayer</span><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/70">Annuler</span></div>
+            <p className="border-t border-navy/10 pt-1.5 text-center text-[10px] font-semibold text-red-700">« Berlin » refusé : B2 garde sa valeur, la saisie est bloquée.</p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Le menu déroulant « Mise en forme conditionnelle » (Accueil > Styles), une entrée surlignée.
 function MFCMenu({ v }) {
   const actif = v?.actif ?? 0
@@ -8280,7 +8400,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8396,6 +8516,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <SupprimerDoublonsInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'validationdonnees' ? (
             <ValidationDonneesInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'validationeffet' ? (
+            <ValidationEffetInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8479,7 +8601,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                       ? 'Supprime les doublons'
                                                                                       : s.visuel?.type === 'validationdonnees'
                                                                                         ? 'Pose la validation'
-                                                                                        : 'Réponds pour continuer'
+                                                                                        : s.visuel?.type === 'validationeffet'
+                                                                                          ? 'Teste l\'effet'
+                                                                                          : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

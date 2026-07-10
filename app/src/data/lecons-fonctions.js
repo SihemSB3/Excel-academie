@@ -5700,12 +5700,16 @@ const VALIDATIONDONNEES = {
     },
     {
       humeur: 'pensif',
-      dit: 'Deuxième onglet utile : le **Message de saisie**. Il affiche une petite bulle d\'aide **dès qu\'on sélectionne la cellule** (« Choisis parmi cette liste de capitales »).',
-      visuel: { type: 'champs', titre: 'Validation des données · Message de saisie', champs: [{ l: 'Afficher un message quand la cellule est sélectionnée', check: true }, { l: 'Titre', v: 'Capitale', actif: true }, { l: 'Message', v: 'Choisis parmi cette liste', actif: true }] },    },
+      dit: 'Deuxième onglet de la boîte : le **Message de saisie**. Règle-le, puis clique la cellule : une petite bulle d\'aide apparaît **dès qu\'on la sélectionne**, avant même de saisir. Teste l\'effet !',
+      visuel: { type: 'validationeffet', mode: 'message', resultat: 'La bulle d\'aide s\'affiche dès qu\'on sélectionne B2. Un guide discret qui rappelle quoi saisir, sans encombrer le tableau.' },
+      plus: ['Le message de saisie sert à guider l\'utilisateur : une info-bulle apparaît automatiquement quand la cellule reçoit le focus. Idéal pour rappeler la consigne (« choisis dans la liste ») sans ajouter de texte permanent dans la feuille.'],
+    },
     {
       humeur: 'pensif',
-      dit: 'Troisième onglet : l\'**Alerte d\'erreur**. Elle réagit quand on tape une valeur interdite. Tu choisis son **Style** : Arrêt, Avertissement ou Information.',
-      visuel: { type: 'champs', titre: 'Validation des données · Alerte d\'erreur', champs: [{ l: 'Quand des données non valides sont tapées', check: true }, { l: 'Style', v: 'Arrêt', actif: true }, { l: 'Titre', v: 'Valeur non autorisée', actif: true }, { l: 'Message', v: 'Choisis une capitale de la liste', actif: true }] },    },
+      dit: 'Troisième onglet : l\'**Alerte d\'erreur**. Choisis le **Style : Arrêt**, puis tente de taper une ville hors liste : l\'alerte surgit et **bloque** la saisie. Vois par toi-même !',
+      visuel: { type: 'validationeffet', mode: 'erreur', resultat: 'L\'alerte « Arrêt » a bloqué « Berlin » : la cellule refuse toute valeur hors liste. Style Arrêt = interdiction ferme.' },
+      plus: ['L\'alerte d\'erreur réagit quand on tape une valeur interdite. Trois styles : « Arrêt » bloque la saisie (impossible de valider), « Avertissement » et « Information » préviennent mais laissent le choix de continuer. Pour des données strictes, on choisit Arrêt.'],
+    },
     {
       humeur: 'pensif',
       dit: 'Une nuance à saisir. **Vrai ou faux ?**',
