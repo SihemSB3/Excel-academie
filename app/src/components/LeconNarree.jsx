@@ -4551,20 +4551,25 @@ function TcdBuilder({ v, onResolu, onErreur }) {
 // direct (une ligne s'ajoute à l'actualisation, dates regroupées, valeurs en %…). Props :
 // `avant`/`apres` = { titre, valeurTitre, lignes:[{et,val,nouvelle?}], total }.
 function TcdScene({ v, onResolu, onErreur }) {
-  const { feuilles = ['Ventes', 'Feuil1'], feuilleActive = 'Feuil1', classeur = 'Ventes.xlsx', consigne, declencheur = 'menu', clicDroitLabel = 'Clic droit sur le TCD', items = [], onglets = ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], groupeNom, groupes = [], cible, avant = {}, apres = {}, explication } = v
+  const { feuilles = ['Ventes', 'Feuil1'], feuilleActive = 'Feuil1', classeur = 'Ventes.xlsx', consigne, declencheur = 'menu', clicDroitLabel = 'Clic droit sur le TCD', items = [], onglets = ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], groupeNom, groupes = [], cible, sousCible, avant = {}, apres = {}, explication } = v
   const [fait, setFait] = useState(false)
   const [rates, setRates] = useState([])
+  const [sousOuvert, setSousOuvert] = useState(null)  // index de l'item parent dont le sous-menu est ouvert
   const tcd = fait ? apres : avant
-  const choisir = (val) => {
+  const reussir = () => { setFait(true); onResolu && onResolu() }
+  const rater = (cle) => { if (!rates.includes(cle)) { setRates((r) => [...r, cle]); onErreur && onErreur() } }
+  // Ruban : cible = libellé du bouton.
+  const choisir = (val) => { if (fait) return; if (val === cible) reussir(); else rater(val) }
+  // Menu clic droit : cible = index de l'item. Un item peut ouvrir un SOUS-MENU (sousmenu:[...]),
+  // auquel cas c'est un item du sous-menu (sousCible) qui valide.
+  const choisirItem = (i) => {
     if (fait) return
-    if (val === cible) {
-      setFait(true)
-      onResolu && onResolu()
-    } else if (!rates.includes(val)) {
-      setRates((r) => [...r, val])
-      onErreur && onErreur()
-    }
+    const it = items[i]
+    if (it && typeof it === 'object' && it.sousmenu) { if (i === cible) setSousOuvert(i); else rater(i); return }
+    if (sousCible == null && i === cible) reussir()
+    else rater(i)
   }
+  const choisirSous = (j) => { if (fait) return; if (j === sousCible) reussir(); else rater('s' + j) }
 
   const Tcd = () => (
     <table className="border-collapse text-[10px]">
@@ -4616,21 +4621,37 @@ function TcdScene({ v, onResolu, onErreur }) {
         <div className="flex items-start gap-2 p-2">
           <div className="min-w-0 flex-1 overflow-x-auto"><Tcd /></div>
           {declencheur === 'menu' && !fait && (
-            <div className="w-40 shrink-0">
+            <div className="w-44 shrink-0">
               <p className="mb-1 text-center text-[9px] font-bold uppercase tracking-wide text-navy/40">🖱 {clicDroitLabel}</p>
               <div className="overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
                 {items.map((it, i) => {
                   const label = typeof it === 'string' ? it : it.label
                   if (label === '-') return <div key={i} className="my-0.5 border-t border-navy/10" />
                   const rate = rates.includes(i)
+                  const aSous = typeof it === 'object' && it.sousmenu
+                  const actif = sousOuvert === i
                   return (
-                    <div key={i} onClick={!rate ? () => choisir(i) : undefined} className={`flex items-center gap-2 px-3 py-1.5 transition ${!rate ? 'cursor-pointer hover:bg-mint/10' : 'text-navy/30'} text-navy/80`}>
+                    <div key={i} onClick={!rate ? () => choisirItem(i) : undefined} className={`flex items-center gap-2 px-3 py-1.5 transition ${!rate ? 'cursor-pointer hover:bg-mint/10' : 'text-navy/30'} ${actif ? 'bg-mint/15 font-semibold' : ''} text-navy/80`}>
                       {typeof it === 'object' && it.icone && <span className="w-4 text-center">{it.icone}</span>}
-                      <span>{label}</span>
+                      <span className="flex-1">{label}</span>
+                      {aSous && <span className="text-navy/40">▸</span>}
                     </div>
                   )
                 })}
               </div>
+              {/* Sous-menu de l'item ouvert (ex. Afficher les valeurs ▸ % du total général) */}
+              {sousOuvert != null && items[sousOuvert]?.sousmenu && (
+                <div className="mt-1.5 animate-fade-up overflow-hidden rounded-md border border-mint/40 bg-white text-[11px] shadow-xl">
+                  <p className="border-b border-navy/10 bg-mint/10 px-2 py-1 text-[9px] font-bold text-navy/60">{items[sousOuvert].label} ▸</p>
+                  {items[sousOuvert].sousmenu.map((so, j) => {
+                    const solabel = typeof so === 'string' ? so : so.label
+                    const rate = rates.includes('s' + j)
+                    return (
+                      <div key={j} onClick={!rate ? () => choisirSous(j) : undefined} className={`px-3 py-1.5 transition ${!rate ? 'cursor-pointer hover:bg-mint/10' : 'text-navy/30'} ${j === sousCible ? 'font-semibold text-navy' : 'text-navy/80'}`}>{solabel}</div>
+                    )
+                  })}
+                </div>
+              )}
             </div>
           )}
         </div>
