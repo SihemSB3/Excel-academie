@@ -4752,18 +4752,49 @@ function TcdMasquerInteractif({ v, onResolu }) {
 // champ. Un clic sur un bouton FILTRE le TCD en direct (les autres lignes disparaissent), le
 // bouton s'allume. L'icône entonnoir barré efface le filtre. Montre CE QU'EST un segment.
 function SegmentInteractif({ v, onResolu }) {
-  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', titreChamp = 'Localisation', valeurTitre = 'Somme de Montant', lignes = [], cible = 'Paris', totalTous = '', explication = '' } = v
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', titreChamp = 'Localisation', champsDispo = ['Localisation', 'Type de bien', 'Agent', 'Montant'], valeurTitre = 'Somme de Montant', lignes = [], cible = 'Paris', totalTous = '', explication = '' } = v
+  const [phase, setPhase] = useState('choix')   // choix (fenêtre Insérer des segments) | filtre
+  const [coches, setCoches] = useState({})
   const [sel, setSel] = useState(null)
   const [fait, setFait] = useState(false)
   useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const champOK = coches[titreChamp] === true
   const cliquer = (et) => { if (fait) return; setSel(et); if (et === cible) setFait(true) }
   const effacer = () => { if (!fait) setSel(null) }
   const visibles = sel ? lignes.filter((l) => l.et === sel) : lignes
   const total = sel ? (lignes.find((l) => l.et === sel)?.val || totalTous) : totalTous
 
+  const consigne = () => {
+    if (phase === 'choix') return champOK ? 'Clique **OK** : Excel crée le segment du champ choisi.' : `« Insérer un segment » ouvre cette fenêtre : **coche d'abord le champ** dont tu veux les boutons, ici **${titreChamp}**.`
+    return `Voici ton **segment** (une boîte de boutons, un par ${titreChamp.toLowerCase()}). Clique **« ${cible} »** : le TCD se filtre en un clic.`
+  }
+
+  if (phase === 'choix') {
+    return (
+      <div className="mt-3">
+        <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>
+        <div className="mx-auto max-w-[15rem] overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Insérer des segments</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-1.5 bg-white p-3">
+            <p className="text-navy/50">Choisis le(s) champ(s) à filtrer :</p>
+            {champsDispo.map((c) => { const on = coches[c] === true; const estCible = c === titreChamp; return (
+              <button key={c} onClick={() => setCoches((s) => ({ ...s, [c]: !s[c] }))} className="flex w-full items-center gap-2 text-left text-navy/80">
+                <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${on ? 'border-mint bg-mint' : `border-navy/40 ${estCible && !champOK ? 'animate-pulse ring-1 ring-mint' : ''}`}`}>{on && '✓'}</span>{c}
+              </button>
+            ) })}
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2">
+              <button onClick={() => champOK && setPhase('filtre')} disabled={!champOK} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${champOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button>
+              <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="mt-3">
-      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(`Un **segment** est une boîte de boutons, un par valeur du champ. Clique **« ${cible} »** : le TCD se filtre en un clic.`)}</p>}
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
       <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
         <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
         <div className="flex items-start gap-3 p-3">

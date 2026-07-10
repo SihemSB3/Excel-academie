@@ -5942,7 +5942,7 @@ const ANALYSERTCD = {
     },
     {
       humeur: 'content',
-      dit: 'Et voilà ton **segment** : une boîte avec un bouton par ville. Clique **Paris** et regarde le TCD se filtrer instantanément sur Paris. (Le petit entonnoir en haut à droite efface le filtre.)',
+      dit: 'Le clic « Insérer un segment » ouvre d\'abord une **fenêtre** : tu **coches le champ** dont tu veux les boutons (**Localisation**), puis OK. Ton **segment** apparaît alors : une boîte avec un bouton par ville. Clique **Paris** et regarde le TCD se filtrer. (Le petit entonnoir en haut à droite efface le filtre.)',
       visuel: { type: 'segment', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', titreChamp: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], cible: 'Paris', totalTous: '910 000 €', explication: 'Un clic sur « Paris » et tout le TCD se filtre sur Paris (420 000 €). Le segment, c\'est le filtre le plus rapide et le plus lisible : les boutons montrent d\'un coup d\'œil ce qui est sélectionné.' },
       plus: [
         'Le segment, une fois posé :',
