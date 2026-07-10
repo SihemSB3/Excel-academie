@@ -5926,6 +5926,17 @@ const ANALYSERTCD = {
     },
     {
       humeur: 'pensif',
+      dit: 'On peut aussi regrouper des **valeurs de texte à la main** : réunir Paris et Lyon sous un même groupe. **Sélectionne les deux** (clic sur Paris, puis **Ctrl + clic** sur Lyon), puis **clic droit → Grouper**.',
+      visuel: { type: 'tcdgroupertexte', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', titreChamp: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], grouper: ['Paris', 'Lyon'], nomGroupe: 'Groupe1', total: '910 000 €', explication: 'Paris et Lyon sont réunis sous « Groupe1 ». Tu peux cliquer ce nom pour le renommer (ex. « Grandes villes »). Pratique pour regrouper des catégories qui n\'ont pas de champ commun dans la source.' },
+      plus: [
+        'Regrouper des valeurs de texte, c\'est réunir manuellement des éléments qui n\'ont pas de champ commun.',
+        'Sélectionne-les (clic + **Ctrl + clic**), clic droit > **Grouper**.',
+        'Excel crée un niveau « Groupe1 » : **clique ce nom pour le renommer** (ex. Grandes villes).',
+        'Pour défaire : clic droit sur le groupe > **Dissocier**.',
+      ],
+    },
+    {
+      humeur: 'pensif',
       dit: 'Tu veux le **poids de chaque zone** en pourcentage, sans écrire une seule formule ? Fais un clic droit sur une valeur (un montant), ouvre **Afficher les valeurs**, puis choisis **% du total général**.',
       visuel: { type: 'tcdscene', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', consigne: 'Clic droit sur un montant → Afficher les valeurs → % du total général', declencheur: 'menu', clicDroitLabel: 'Clic droit sur un montant', items: [{ label: 'Synthétiser les valeurs par' }, { label: 'Afficher les valeurs', sousmenu: ['% du total général', '% du total de la ligne', '% du total de la colonne', 'Différence par rapport à…'] }, '-', { label: 'Paramètres des champs de valeurs…' }], cible: 1, sousCible: 0, avant: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], total: '910 000 €' }, apres: { titre: 'Localisation', valeurTitre: '% du total général', lignes: [{ et: 'Paris', val: '46 %' }, { et: 'Lyon', val: '34 %' }, { et: 'Marseille', val: '20 %' }], total: '100 %' }, explication: 'Clic droit > Afficher les valeurs > « % du total général » : chaque montant devient un pourcentage. Paris pèse 46 % des ventes. Idéal pour comparer des proportions plutôt que des euros bruts.' },
       plus: ['Excel propose des modes de calcul avancés sans formule : clic droit sur une valeur > Afficher les valeurs, puis choisis % du total général, % du total de la ligne, % du total de la colonne, Différence par rapport à, Rang… Autre astuce : clic droit > Synthétiser les valeurs par pour passer de la Somme à la Moyenne, au Nombre, au Max…'],

@@ -4917,6 +4917,83 @@ function TcdActualiserInteractif({ v, onResolu }) {
   )
 }
 
+// REGROUPER DES VALEURS DE TEXTE dans un TCD : on SÉLECTIONNE plusieurs étiquettes (clic +
+// Ctrl+clic), clic droit → Grouper → elles se réunissent sous « Groupe1 » (qu'on peut renommer).
+// Le vrai geste : la sélection multiple, puis le menu contextuel.
+function TcdGrouperTexteInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', titreChamp = 'Localisation', valeurTitre = 'Somme de Montant', lignes = [], grouper = [], nomGroupe = 'Groupe1', total = '', explication = '' } = v
+  const [sel, setSel] = useState([])
+  const [menu, setMenu] = useState(false)   // menu clic droit ouvert
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const pret = grouper.length === sel.length && grouper.every((g) => sel.includes(g))
+  const toggle = (et) => { if (fait || menu) return; setSel((s) => s.includes(et) ? s.filter((x) => x !== et) : [...s, et]) }
+  const autres = lignes.filter((l) => !grouper.includes(l.et))
+  const dansGroupe = lignes.filter((l) => grouper.includes(l.et))
+
+  const consigne = () => {
+    if (fait) return ''
+    if (!pret) return `Sélectionne **${grouper.join('** et **')}** : clique le premier, puis **Ctrl + clic** sur le second.`
+    if (!menu) return 'Les deux sont sélectionnés. Fais un **clic droit** sur la sélection.'
+    return 'Clique **Grouper** pour les réunir.'
+  }
+
+  const LigneTcd = (l, indent) => (
+    <tr key={l.et}><td className={`border border-navy/15 px-2 py-1 text-navy/85 ${indent ? 'pl-5' : ''}`}>{l.et}</td><td className="border border-navy/15 px-2 py-1 text-right text-navy/85">{l.val}</td></tr>
+  )
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="flex items-start gap-3 p-3">
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{titreChamp}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              {!fait ? (
+                lignes.map((l) => { const on = sel.includes(l.et); return (
+                  <tr key={l.et} onClick={() => toggle(l.et)} className={!menu ? 'cursor-pointer' : ''}>
+                    <td className={`border px-2 py-1 ${on ? 'border-[#2f6fb3] bg-[#cfe8ff] font-semibold text-navy ring-1 ring-inset ring-[#2f6fb3]' : 'border-navy/15 text-navy/85'}`}>{l.et}</td>
+                    <td className={`border border-navy/15 px-2 py-1 text-right ${on ? 'bg-[#cfe8ff] font-semibold' : 'text-navy/85'}`}>{l.val}</td>
+                  </tr>
+                ) })
+              ) : (
+                <>
+                  <tr className="animate-fade-up"><td className="border border-navy/15 bg-mint/15 px-2 py-1 font-bold text-navy" colSpan={2}>▾ {nomGroupe}</td></tr>
+                  {dansGroupe.map((l) => LigneTcd(l, true))}
+                  {autres.map((l) => LigneTcd(l, false))}
+                </>
+              )}
+              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+            </tbody>
+          </table>
+
+          {/* Menu clic droit (apparaît quand la sélection est prête) */}
+          {!fait && pret && (
+            <div className="w-40 shrink-0">
+              {!menu ? (
+                <button onClick={() => setMenu(true)} className="w-full animate-pulse rounded-md border-2 border-mint bg-mint/15 px-2 py-1.5 text-[11px] font-bold text-navy">🖱 Clic droit</button>
+              ) : (
+                <div className="overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+                  {['Développer/Réduire', 'Trier', '-', 'Grouper…', 'Dissocier…'].map((it, i) => it === '-' ? <div key={i} className="my-0.5 border-t border-navy/10" /> : (
+                    <div key={i} onClick={/^Grouper/.test(it) ? () => setFait(true) : undefined} className={`px-3 py-1.5 text-navy/80 ${/^Grouper/.test(it) ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold ring-1 ring-inset ring-mint' : ''}`}>{it}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => (<span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>))}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -8772,7 +8849,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8898,6 +8975,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <SegmentInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'tcdactualiser' ? (
             <TcdActualiserInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'tcdgroupertexte' ? (
+            <TcdGrouperTexteInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8991,7 +9070,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                 ? 'Filtre avec le segment'
                                                                                                 : s.visuel?.type === 'tcdactualiser'
                                                                                                   ? 'Actualise le TCD'
-                                                                                                  : 'Réponds pour continuer'
+                                                                                                  : s.visuel?.type === 'tcdgroupertexte'
+                                                                                                    ? 'Regroupe les valeurs'
+                                                                                                    : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
