@@ -4669,6 +4669,85 @@ function TcdScene({ v, onResolu, onErreur }) {
   )
 }
 
+// MASQUER un élément d'un TCD via la vraie UI Excel : la flèche ▼ de l'en-tête du champ ouvre
+// une liste À COCHER (toutes les valeurs cochées). On DÉCOCHE l'élément (Marseille) puis OK →
+// il disparaît du rapport. Montre OÙ est la flèche et que masquer = décocher (pas un menu direct).
+function TcdMasquerInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', champ = 'Localisation', valeurTitre = 'Somme de Montant', lignes = [], masquer = 'Marseille', totalAvant = '', totalApres = '', explication = '' } = v
+  const [ouvert, setOuvert] = useState(false)
+  const [coche, setCoche] = useState(() => Object.fromEntries(lignes.map((l) => [l.et, true])))
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const cibleDecoche = coche[masquer] === false
+  const tous = lignes.every((l) => coche[l.et])
+  const visibles = fait ? lignes.filter((l) => coche[l.et]) : lignes
+  const total = fait ? totalApres : totalAvant
+  const toggle = (et) => { if (!fait) setCoche((s) => ({ ...s, [et]: !s[et] })) }
+  const toggleTous = () => { if (!fait) { const nv = !tous; setCoche(Object.fromEntries(lignes.map((l) => [l.et, nv]))) } }
+
+  const consigne = () => {
+    if (!ouvert) return `Clique la **flèche ▼** posée sur l'en-tête **${champ}** (le bouton de filtre du champ).`
+    if (!cibleDecoche) return `Dans la liste, **décoche « ${masquer} »** (masquer = retirer la coche).`
+    return 'Clique **OK** pour appliquer.'
+  }
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="relative flex items-start gap-2 p-3">
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr>
+                <td className="border border-navy/15 bg-navy/10 px-1 py-1">
+                  <span className="flex items-center gap-1">
+                    <span className="font-bold text-navy/70">{champ}</span>
+                    <button onClick={() => !fait && !ouvert && setOuvert(true)} className={`grid h-4 w-4 place-items-center rounded-sm border text-[8px] ${!fait && !ouvert ? 'animate-pulse border-mint bg-mint/20 text-navy ring-1 ring-mint' : 'border-navy/30 bg-white text-navy/60'}`}>▼</button>
+                  </span>
+                </td>
+                <td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td>
+              </tr>
+              {visibles.map((l, i) => (
+                <tr key={i}>
+                  <td className="border border-navy/15 px-2 py-1 text-navy/85">{l.et}</td>
+                  <td className={`border border-navy/15 px-2 py-1 text-right ${fait ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td>
+                </tr>
+              ))}
+              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+            </tbody>
+          </table>
+
+          {/* La liste de filtre déroulée par la flèche ▼ (cases à cocher) */}
+          {ouvert && !fait && (
+            <div className="w-48 shrink-0 overflow-hidden rounded-md border border-navy/25 bg-white text-[11px] shadow-xl">
+              <div className="px-2 py-1 text-navy/50">↑↓ Trier de A à Z / Z à A</div>
+              <div className="border-t border-navy/10" />
+              <button onClick={toggleTous} className="flex w-full items-center gap-2 px-2 py-1 text-left text-navy/70">
+                <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${tous ? 'border-navy/50 bg-navy/60' : 'border-navy/40'}`}>{tous && '✓'}</span>(Sélectionner tout)
+              </button>
+              {lignes.map((l) => { const on = coche[l.et]; const estCible = l.et === masquer; return (
+                <button key={l.et} onClick={() => toggle(l.et)} className="flex w-full items-center gap-2 px-2 py-1 text-left text-navy/80">
+                  <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${on ? 'border-mint bg-mint' : 'border-navy/40'} ${estCible && on && !cibleDecoche ? 'animate-pulse ring-1 ring-mint' : ''}`}>{on && '✓'}</span>{l.et}
+                </button>
+              ) })}
+              <div className="flex justify-end gap-2 border-t border-navy/10 p-1.5">
+                <button onClick={() => cibleDecoche && setFait(true)} disabled={!cibleDecoche} className={`rounded-sm border px-3 py-0.5 font-bold ${cibleDecoche ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button>
+                <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-2 py-0.5 text-navy/60">Annuler</span>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => (<span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>))}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -8524,7 +8603,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -8644,6 +8723,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ValidationEffetInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'listedynamique' ? (
             <ListeDynamiqueInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'tcdmasquer' ? (
+            <TcdMasquerInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -8731,7 +8812,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                           ? 'Teste l\'effet'
                                                                                           : s.visuel?.type === 'listedynamique'
                                                                                             ? 'Rends la liste dynamique'
-                                                                                            : 'Réponds pour continuer'
+                                                                                            : s.visuel?.type === 'tcdmasquer'
+                                                                                              ? 'Masque l\'élément'
+                                                                                              : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

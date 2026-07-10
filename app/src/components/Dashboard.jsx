@@ -173,7 +173,7 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
         <p className="mt-1 text-sm text-navy/85">Le Shifu t'explique une fonction pas à pas, avec un mini-défi à la fin.</p>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {[
-            ['analysertcd', 'Faire des calculs'],
+            ['calculs', 'Faire des calculs'],
             ['saisie', 'Saisir des données'],
             ['recopie', 'Recopie & séries'],
             ['somme', 'La fonction SOMME'],

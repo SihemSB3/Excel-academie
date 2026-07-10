@@ -6039,9 +6039,15 @@ const CROISERCHAMPS = {
     },
     {
       humeur: 'pensif',
-      dit: 'Dernière astuce d\'organisation : **masquer** un élément sans le supprimer. Clique la **flèche ▾** de l\'étiquette Localisation et cache **Marseille**. Regarde-le disparaître du TCD.',
-      visuel: { type: 'tcdscene', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', consigne: 'Clique la flèche ▾ de Localisation, puis choisis de masquer Marseille', declencheur: 'menu', clicDroitLabel: 'Flèche ▾ de Localisation', items: [{ label: 'Trier de A à Z' }, { label: 'Trier de Z à A' }, '-', { label: 'Masquer « Marseille »' }, { label: 'Masquer « Lyon »' }], cible: 3, avant: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], total: '910 000 €' }, apres: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }], total: '730 000 €' }, explication: 'Marseille disparaît du rapport (le total passe à 730 000 €), mais tes données source restent intactes. Pour le faire réapparaître, rouvre le menu et re-coche-le.' },
-      plus: ['Pour masquer des éléments : clique sur la petite flèche à côté de l\'étiquette de ton champ (ex. Localisation), décoche chaque catégorie que tu ne veux plus voir, puis clique sur OK. Les éléments disparaissent instantanément du TCD, sans altérer la source. Pour les faire réapparaître, rouvre le menu et re-coche les cases.'],
+      dit: 'Dernière astuce d\'organisation : **masquer** un élément sans le supprimer. Sur l\'en-tête **Localisation**, il y a une petite **flèche ▼** (le filtre du champ). Ouvre-la et **décoche Marseille**. Regarde-le disparaître du TCD.',
+      visuel: { type: 'tcdmasquer', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', champ: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], masquer: 'Marseille', totalAvant: '910 000 €', totalApres: '730 000 €', explication: 'Marseille disparaît du rapport (le total passe à 730 000 €), mais tes données source restent intactes. Pour le faire réapparaître, rouvre la flèche ▼ et re-coche Marseille.' },
+      plus: [
+        'Masquer un élément sans toucher à la source :',
+        'Clique la petite **flèche ▼** posée sur l\'en-tête du champ (ex. Localisation).',
+        'Dans la liste qui s\'ouvre, **décoche** chaque catégorie à cacher (ici Marseille).',
+        'Clique **OK** : les éléments décochés disparaissent du TCD instantanément.',
+        'Pour les faire réapparaître : rouvre la flèche ▼ et **re-coche** les cases.',
+      ],
     },
     {
       humeur: 'accueil',
