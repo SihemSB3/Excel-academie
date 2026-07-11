@@ -5655,9 +5655,9 @@ const RECHERCHEH = {
 // ======================= CHAPITRE 12 : FILTRER ET EXTRAIRE LES DONNÉES D'UNE LISTE =======================
 const U12 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX12 = {
-  ex83: { titre: 'Exercice 83 · La validation des données', url: U12('1gjqOfykJ2HYqZlK6EKIQIdgrKOxLrkSS') },
-  ex84: { titre: 'Exercice 84 · Les filtres avancés', url: U12('1kQIVrv507TrRfMHXjewRn0zjnehNZN7S') },
-  ex85: { titre: 'Exercice 85 · La suppression des doublons', url: U12('1u7xpRGT32a3hf8QLSylsXhv96uf2iLgo') },
+  ex83: { titre: 'Exercice 73 · La validation des données', url: U12('16etf565pXKLv_sEhb1IilLRFkKdHrrOi') },
+  ex84: { titre: 'Exercice 74 · Les filtres avancés', url: U12('12IGOcjWiFGuWpsaTda4eRaxhefZFcSwk') },
+  ex85: { titre: 'Exercice 75 · La suppression des doublons', url: U12('1OxmXcRFbtar1dVXpYGJHPYzx4Y9FqRg0') },
   ex57: { titre: 'Exercice 47 · Les sous-totaux', url: U12('1ikSHnMExovQdlmnpVuBHdrRJR1C74z77') },
   ex58: { titre: 'Exercice 48 · La fonction SOUS.TOTAL', url: U12('1ct0clJYg_Hs7TVHmthVap9TW4suWhRbF') },
 }
@@ -5855,10 +5855,10 @@ const DOUBLONSSOUSTOTAUX = {
 // ======================= CHAPITRE 13 : LES TABLEAUX CROISÉS DYNAMIQUES (ceinture NOIRE) =======================
 const U13 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX13 = {
-  ex86: { titre: 'Exercice 86 · Ton premier TCD', url: U13('1fE-WYZC_epyM0d4TZksVvnC-kLkMJPna') },
-  ex87: { titre: 'Exercice 87 · Créer un TCD', url: U13('1VrBIuDme7ARcyssPGyjXX1P7USDH09SM') },
-  ex88: { titre: 'Exercice 88 · Créer un nouveau TCD', url: U13('12tEy50LIYJxmvmxN_hvT1E6CrIqvCnYK') },
-  ex89: { titre: 'Exercice 89 · Les champs calculés dans un TCD', url: U13('1mJiKhrqr4YAYMCwWVj2Q0JopPLXf7lvl') },
+  ex86: { titre: 'Exercice 76 · Ton premier TCD', url: U13('1-PtXjKPbzNqBLnptSA0hJFjkZKCOlnhU') },
+  ex87: { titre: 'Exercice 77 · Créer un TCD', url: U13('14EpfX9QyqD3AK7unBFuSr5X38DAmSjaH') },
+  ex88: { titre: 'Exercice 78 · Créer un nouveau TCD', url: U13('1pjRQw2w8HI4je7T_CvrdmnnFZkSmi-cT') },
+  ex89: { titre: 'Exercice 79 · Les champs calculés dans un TCD', url: U13('18OeXJQioHJIpkmggRVsy0aBn4dLQ2a3j') },
 }
 
 // Table source fil rouge du chapitre : des ventes immobilières.
