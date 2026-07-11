@@ -92,6 +92,9 @@ function coloreAvecRefs(formule, map) {
 // `animePoignee` = la poignée descend le long de la colonne.
 function Tableur({ v }) {
   const { cols, rows, cells = {}, actif, formule, poignee, legende, refsCouleur, animePoignee, feuilles, feuilleActive, classeur, role } = v
+  // Un TCD (feuille active « TCD », ou flag pivot) s'affiche en bleu clair, comme les vrais
+  // tableaux croisés dynamiques d'Excel, pour bien le distinguer d'un tableau normal.
+  const pivot = v.pivot || feuilleActive === 'TCD'
   const rendreFormule = (f) => (refsCouleur ? coloreAvecRefs(f, refsCouleur) : coloreFormule(f))
   return (
     <div className="mt-3">
@@ -123,7 +126,7 @@ function Tableur({ v }) {
                 const estPoignee = id === poignee
                 const coul = refsCouleur && refsCouleur[id] ? REF_COULEURS[refsCouleur[id]] : null
                 let cls = 'text-navy/90'
-                if (cell.entete) cls = 'bg-navy/10 font-bold text-navy/70'
+                if (cell.entete) cls = pivot ? 'bg-[#cfe0f3] font-bold text-[#1f4e79]' : 'bg-navy/10 font-bold text-navy/70'
                 if (cell.ref) cls = 'bg-sky-500/25 text-navy'
                 if (cell.vert) cls = 'bg-mint/40 font-bold text-navy'
                 if (cell.rouge) cls = 'bg-red-500/25 font-bold text-red-700'
@@ -4575,8 +4578,8 @@ function TcdScene({ v, onResolu, onErreur }) {
     <table className="border-collapse text-[10px]">
       <tbody>
         <tr>
-          <td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{tcd.titre || 'Étiquettes de lignes'}</td>
-          <td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{tcd.valeurTitre || 'Somme de Montant'}</td>
+          <td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">{tcd.titre || 'Étiquettes de lignes'}</td>
+          <td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{tcd.valeurTitre || 'Somme de Montant'}</td>
         </tr>
         {(tcd.lignes || []).map((l, i) => (
           <tr key={i} className={fait && l.nouvelle ? 'animate-fade-up' : ''}>
@@ -4585,7 +4588,7 @@ function TcdScene({ v, onResolu, onErreur }) {
           </tr>
         ))}
         {tcd.total && (
-          <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{tcd.total}</td></tr>
+          <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{tcd.total}</td></tr>
         )}
       </tbody>
     </table>
@@ -4706,7 +4709,7 @@ function TcdMasquerInteractif({ v, onResolu }) {
                     <button onClick={() => !fait && !ouvert && setOuvert(true)} className={`grid h-4 w-4 place-items-center rounded-sm border text-[8px] ${!fait && !ouvert ? 'animate-pulse border-mint bg-mint/20 text-navy ring-1 ring-mint' : 'border-navy/30 bg-white text-navy/60'}`}>▼</button>
                   </span>
                 </td>
-                <td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td>
+                <td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{valeurTitre}</td>
               </tr>
               {visibles.map((l, i) => (
                 <tr key={i}>
@@ -4714,7 +4717,7 @@ function TcdMasquerInteractif({ v, onResolu }) {
                   <td className={`border border-navy/15 px-2 py-1 text-right ${fait ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td>
                 </tr>
               ))}
-              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{total}</td></tr>
             </tbody>
           </table>
 
@@ -4802,8 +4805,8 @@ function SegmentInteractif({ v, onResolu }) {
           <table className="border-collapse text-[10px]">
             <tbody>
               <tr>
-                <td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{titreChamp}</td>
-                <td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td>
+                <td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">{titreChamp}</td>
+                <td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{valeurTitre}</td>
               </tr>
               {visibles.map((l, i) => (
                 <tr key={i} className={sel ? 'animate-fade-up' : ''}>
@@ -4811,7 +4814,7 @@ function SegmentInteractif({ v, onResolu }) {
                   <td className={`border border-navy/15 px-2 py-1 text-right ${sel ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td>
                 </tr>
               ))}
-              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{total}</td></tr>
             </tbody>
           </table>
 
@@ -4885,11 +4888,11 @@ function TcdActualiserInteractif({ v, onResolu }) {
             <>
               <table className="border-collapse text-[10px]">
                 <tbody>
-                  <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{tcd.titre}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{tcd.valeurTitre}</td></tr>
+                  <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">{tcd.titre}</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{tcd.valeurTitre}</td></tr>
                   {(tcd.lignes || []).map((l, i) => (
                     <tr key={i} className={fait && l.nouvelle ? 'animate-fade-up' : ''}><td className={`border border-navy/15 px-2 py-1 ${fait && l.nouvelle ? 'bg-mint/20 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${fait && l.nouvelle ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td></tr>
                   ))}
-                  <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{tcd.total}</td></tr>
+                  <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{tcd.total}</td></tr>
                 </tbody>
               </table>
               {phase === 'tcd' && (
@@ -4950,7 +4953,7 @@ function TcdGrouperTexteInteractif({ v, onResolu }) {
         <div className="flex items-start gap-3 p-3">
           <table className="border-collapse text-[10px]">
             <tbody>
-              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{titreChamp}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">{titreChamp}</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{valeurTitre}</td></tr>
               {!fait ? (
                 lignes.map((l) => { const on = sel.includes(l.et); return (
                   <tr key={l.et} onClick={() => toggle(l.et)} className={!menu ? 'cursor-pointer' : ''}>
@@ -4965,7 +4968,7 @@ function TcdGrouperTexteInteractif({ v, onResolu }) {
                   {autres.map((l) => LigneTcd(l, false))}
                 </>
               )}
-              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{total}</td></tr>
             </tbody>
           </table>
 
@@ -5019,11 +5022,11 @@ function TcdGrouperNombreInteractif({ v, onResolu }) {
         <div className="flex items-start gap-3 p-3">
           <table className="border-collapse text-[10px]">
             <tbody>
-              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{titreChamp}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">{titreChamp}</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{valeurTitre}</td></tr>
               {lignes.map((l, i) => (
                 <tr key={i} className={fait ? 'animate-fade-up' : ''}><td className={`border border-navy/15 px-2 py-1 ${fait ? 'bg-mint/10 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td><td className="border border-navy/15 px-2 py-1 text-right text-navy/85">{l.val}</td></tr>
               ))}
-              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{total}</td></tr>
             </tbody>
           </table>
 
@@ -5108,8 +5111,8 @@ function ChampCalculeInteractif({ v, onResolu }) {
           <table className="border-collapse text-[10px]">
             <tbody>
               <tr>
-                <td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Agent</td>
-                <td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">Somme de Montant</td>
+                <td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">Agent</td>
+                <td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">Somme de Montant</td>
                 {fait && <td className="border border-navy/15 bg-mint/25 px-2 py-1 text-right font-bold text-navy animate-fade-up">Somme de {nom}</td>}
               </tr>
               {lignes.map((l, i) => (
@@ -5120,8 +5123,8 @@ function ChampCalculeInteractif({ v, onResolu }) {
                 </tr>
               ))}
               <tr>
-                <td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td>
-                <td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{v.total}</td>
+                <td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td>
+                <td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{v.total}</td>
                 {fait && <td className="border border-navy/15 bg-mint/15 px-2 py-1 text-right font-bold text-navy/80 animate-fade-up">{v.totalPrime}</td>}
               </tr>
             </tbody>
@@ -5227,9 +5230,9 @@ function SourceGranditInteractif({ v, onResolu }) {
               {phase === 'demo' && <button onClick={() => setPhase('fait')} className="mb-2 animate-pulse rounded-md border-2 border-mint bg-mint/15 px-3 py-1 text-[11px] font-bold text-navy">🔄 Actualiser le TCD</button>}
               <table className="border-collapse text-[10px]">
                 <tbody>
-                  <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{tcd.titre}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{tcd.valeurTitre}</td></tr>
+                  <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">{tcd.titre}</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{tcd.valeurTitre}</td></tr>
                   {(tcd.lignes || []).map((l, i) => <tr key={i} className={fait && l.nouvelle ? 'animate-fade-up' : ''}><td className={`border border-navy/15 px-2 py-1 ${fait && l.nouvelle ? 'bg-mint/20 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${fait && l.nouvelle ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td></tr>)}
-                  <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{tcd.total}</td></tr>
+                  <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{tcd.total}</td></tr>
                 </tbody>
               </table>
               <p className="mt-1 font-mono text-[9px] text-navy/45">Source du TCD : {src}</p>
@@ -5264,14 +5267,14 @@ function TcdDetailInteractif({ v, onResolu }) {
           {!ouvert ? (
             <table className="border-collapse text-[10px]">
               <tbody>
-                <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Agent</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+                <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">Agent</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{valeurTitre}</td></tr>
                 {agents.map((a) => { const estCible = a.et === cible; return (
                   <tr key={a.et}>
                     <td className="border border-navy/15 px-2 py-1 text-navy/85">{a.et}</td>
                     <td onDoubleClick={estCible ? () => setOuvert(true) : undefined} className={`border border-navy/15 px-2 py-1 text-right ${estCible ? 'animate-pulse cursor-pointer bg-mint/15 font-semibold text-navy ring-1 ring-inset ring-mint' : 'text-navy/85'}`}>{a.val}</td>
                   </tr>
                 ) })}
-                <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+                <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{total}</td></tr>
               </tbody>
             </table>
           ) : (
@@ -5337,9 +5340,9 @@ function ChronologieInteractif({ v, onResolu }) {
         <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-start">
           <table className="border-collapse text-[10px]">
             <tbody>
-              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{tcd.titre}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">{tcd.titre}</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{valeurTitre}</td></tr>
               {(tcd.lignes || []).map((l, i) => <tr key={i} className={sel ? 'animate-fade-up' : ''}><td className={`border border-navy/15 px-2 py-1 ${sel ? 'bg-mint/10 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${sel ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td></tr>)}
-              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{tcd.total}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{tcd.total}</td></tr>
             </tbody>
           </table>
 
@@ -5405,7 +5408,7 @@ function TcdSousTotauxInteractif({ v, onResolu }) {
         <div className="p-3">
           <table className="border-collapse text-[10px]">
             <tbody>
-              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Localisation / Type de bien</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">Localisation / Type de bien</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{valeurTitre}</td></tr>
               {groupes.map((g, gi) => (
                 <Fragment key={gi}>
                   <tr><td className="border border-navy/15 bg-navy/[0.03] px-2 py-1 font-semibold text-navy" colSpan={2}>{g.loc}</td></tr>
@@ -5413,7 +5416,7 @@ function TcdSousTotauxInteractif({ v, onResolu }) {
                   {fait && <tr className="animate-fade-up"><td className="border border-navy/15 bg-mint/15 px-2 py-1 font-bold text-navy">Total {g.loc}</td><td className="border border-navy/15 bg-mint/15 px-2 py-1 text-right font-bold text-navy">{g.total}</td></tr>}
                 </Fragment>
               ))}
-              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{totalGeneral}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{totalGeneral}</td></tr>
             </tbody>
           </table>
         </div>
@@ -5453,7 +5456,7 @@ function ParamChampValeurInteractif({ v, onResolu }) {
           {/* Le TCD */}
           <table className="border-collapse text-[10px]">
             <tbody>
-              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Agent</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{fait ? apresTitre : avantTitre}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">Agent</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{fait ? apresTitre : avantTitre}</td></tr>
               {lignesAgents.map((l, i) => <tr key={i}><td className="border border-navy/15 px-2 py-1 text-navy/85">{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${fait ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{fait ? l.moy : l.som}</td></tr>)}
             </tbody>
           </table>
@@ -5547,13 +5550,13 @@ function TcdMultiTablesInteractif({ v, onResolu }) {
           {/* Le TCD */}
           <table className="border-collapse text-[10px]">
             <tbody>
-              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{enLignes ? 'Région' : 'Étiquettes de lignes'}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{enValeurs ? 'Somme de Montant' : ''}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">{enLignes ? 'Région' : 'Étiquettes de lignes'}</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{enValeurs ? 'Somme de Montant' : ''}</td></tr>
               {tcdLignes.length === 0 ? (
                 <tr><td className="border border-navy/15 px-2 py-2 text-center text-navy/30" colSpan={2}>(ajoute des champs)</td></tr>
               ) : tcdLignes.map((l, i) => (
                 <tr key={i}><td className="border border-navy/15 px-2 py-1 text-navy/85">{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${fait ? 'font-semibold text-mint-dark' : !fait && pret ? 'bg-red-500/10 text-red-700' : 'text-navy/85'}`}>{enValeurs ? l.val : ''}</td></tr>
               ))}
-              {pret && <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>}
+              {pret && <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{total}</td></tr>}
             </tbody>
           </table>
 
@@ -5641,9 +5644,9 @@ function TcdOptionsInteractif({ v, onResolu }) {
         <div className="flex items-start gap-3 p-3">
           <table className="border-collapse text-[10px]">
             <tbody>
-              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Localisation</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              <tr><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 font-bold text-[#1f4e79]">Localisation</td><td className="border border-[#9cc2e5] bg-[#cfe0f3] px-2 py-1 text-right font-bold text-[#1f4e79]">{valeurTitre}</td></tr>
               {lignes.map((l, i) => <tr key={i}><td className="border border-navy/15 px-2 py-1 text-navy/85">{l.et}</td><td className="border border-navy/15 px-2 py-1 text-right text-navy/85">{l.val}</td></tr>)}
-              {!fait && <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>}
+              {!fait && <tr><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 font-bold text-[#1f4e79]">Total général</td><td className="border border-[#9cc2e5] bg-[#dbe9f7] px-2 py-1 text-right font-bold text-[#1f4e79]">{total}</td></tr>}
             </tbody>
           </table>
           {phase === 'tcd' && (
