@@ -5859,6 +5859,9 @@ const EX13 = {
   ex87: { titre: 'Exercice 77 · Créer un TCD', url: U13('14EpfX9QyqD3AK7unBFuSr5X38DAmSjaH') },
   ex88: { titre: 'Exercice 78 · Créer un nouveau TCD', url: U13('1pjRQw2w8HI4je7T_CvrdmnnFZkSmi-cT') },
   ex89: { titre: 'Exercice 79 · Les champs calculés dans un TCD', url: U13('18OeXJQioHJIpkmggRVsy0aBn4dLQ2a3j') },
+  ex90: { titre: 'Exercice 80 · Grouper les dates dans un TCD', url: U13('1_S2QPXPhLZXtI5IIayfdQ0SvxkBsRpfv') },
+  ex91: { titre: 'Exercice 81 · Grouper les valeurs numériques dans un TCD', url: U13('1Yd1op5T3nAh1AjB9-4WDcdDpJAqa0dmu') },
+  ex92: { titre: 'Exercice 82 · Changer la source de données d\'un TCD', url: U13('131JUQ1d0sScSV7lW3HvxrpCXsVJFMl78') },
 }
 
 // Table source fil rouge du chapitre : des ventes immobilières.
@@ -5904,7 +5907,7 @@ const CREERTCD = {
 const ANALYSERTCD = {
   id: 'fn-analysertcd',
   titre: 'Manipuler & analyser un TCD',
-  exercices: [EX13.ex88, EX13.ex89],
+  exercices: [EX13.ex88, EX13.ex89, EX13.ex90, EX13.ex91, EX13.ex92],
   narration: [
     { humeur: 'accueil', dit: 'Un TCD est **vivant** : tu l\'actualises, tu le regroupes, tu l\'affines, tu le filtres. Voici ton rapport, sur sa feuille **TCD** : les ventes immobilières par localisation. On va le manipuler pour de vrai.', visuel: { type: 'tableur', cols: ['A', 'B'], rows: [1, 2, 3, 4, 5], cells: { A1: { t: 'Localisation', entete: true }, B1: { t: 'Somme de Montant', entete: true }, A2: { t: 'Paris' }, B2: { t: '420 000 €', num: true }, A3: { t: 'Lyon' }, B3: { t: '310 000 €', num: true }, A4: { t: 'Marseille' }, B4: { t: '180 000 €', num: true }, A5: { t: 'Total général', entete: true }, B5: { t: '910 000 €', num: true } }, feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', legende: 'Le TCD vit sur sa propre feuille (onglet TCD) ; les données brutes sont sur l\'onglet Ventes.' } },
     {
