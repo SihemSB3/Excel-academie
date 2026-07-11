@@ -5989,6 +5989,18 @@ const ANALYSERTCD = {
       ],
     },
     {
+      humeur: 'pensif',
+      dit: 'Tous les réglages fins d\'un TCD sont réunis dans les **Options du tableau croisé dynamique** (5 onglets). Ouvre-les (**clic droit > Options**) et, sous **Totaux et filtres**, **décoche les totaux généraux** pour masquer la ligne Total.',
+      visuel: { type: 'tcdoptions', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], total: '910 000 €', explication: 'La ligne « Total général » disparaît. Les Options du TCD centralisent TOUS les réglages sur 5 onglets : Disposition et mise en forme, Totaux et filtres, Affichage, Données, Impression. C\'est là qu\'on ajuste le comportement du rapport.' },
+      plus: [
+        'Ouvrir les Options : **clic droit sur le TCD > Options du tableau croisé dynamique**, ou onglet **Analyse du TCD > Options**.',
+        '**Disposition et mise en forme** : fusion des cellules, largeur auto, texte des cellules vides.',
+        '**Totaux et filtres** : afficher ou non les totaux généraux, autoriser plusieurs filtres.',
+        '**Affichage** : disposition classique (glisser-déposer), en-têtes de champ.',
+        '**Données** : actualiser à l\'ouverture, garder les éléments supprimés de la source.',
+      ],
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Quel **raccourci clavier** actualise le TCD sélectionné ?',
       visuel: { type: 'question', options: ['Alt + F5', 'Ctrl + R', 'F9', 'Ctrl + Alt + F5'], bonne: 0, explication: 'Alt + F5 actualise le TCD sélectionné (comme le clic droit > Actualiser). Pour tout actualiser d\'un coup dans le classeur : Ctrl + Alt + F5.' },

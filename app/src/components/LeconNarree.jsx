@@ -5612,6 +5612,80 @@ function TcdMultiTablesInteractif({ v, onResolu }) {
   )
 }
 
+// OPTIONS DU TCD : la fenêtre à 5 onglets qui centralise tous les réglages. On l'ouvre (clic droit
+// > Options), on va sur « Totaux et filtres », on décoche les totaux généraux → la ligne Total
+// général disparaît du TCD (exemple concret d'un réglage des Options).
+function TcdOptionsInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', valeurTitre = 'Somme de Montant', lignes = [], total = '', explication = '' } = v
+  const ONGLETS = ['Disposition et mise en forme', 'Totaux et filtres', 'Affichage', 'Données', 'Impression']
+  const [phase, setPhase] = useState('tcd')   // tcd | dialog | fait
+  const [ongletActif, setOngletActif] = useState('Totaux et filtres')
+  const [coche, setCoche] = useState(true)     // totaux généraux affichés
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+
+  const consigne = () => {
+    if (phase === 'tcd') return 'Fais un **clic droit** sur le TCD, puis **Options du tableau croisé dynamique…**.'
+    if (phase === 'dialog') return coche ? 'Onglet **Totaux et filtres** : **décoche** « Afficher les totaux généraux pour les lignes ».' : 'Clique **OK**.'
+    return ''
+  }
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="flex items-start gap-3 p-3">
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Localisation</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              {lignes.map((l, i) => <tr key={i}><td className="border border-navy/15 px-2 py-1 text-navy/85">{l.et}</td><td className="border border-navy/15 px-2 py-1 text-right text-navy/85">{l.val}</td></tr>)}
+              {!fait && <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>}
+            </tbody>
+          </table>
+          {phase === 'tcd' && (
+            <div className="w-44 shrink-0">
+              <p className="mb-1 text-center text-[9px] font-bold uppercase tracking-wide text-navy/40">🖱 Clic droit sur le TCD</p>
+              <div className="overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+                {['Actualiser', 'Trier', '-', 'Options du tableau croisé dynamique…'].map((it, i) => it === '-' ? <div key={i} className="my-0.5 border-t border-navy/10" /> : (
+                  <div key={i} onClick={/^Options/.test(it) ? () => setPhase('dialog') : undefined} className={`px-3 py-1.5 text-navy/80 ${/^Options/.test(it) ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold ring-1 ring-inset ring-mint' : ''}`}>{it}</div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>)}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+
+      {/* La fenêtre « Options du tableau croisé dynamique » (5 onglets) */}
+      {phase === 'dialog' && (
+        <div className="mx-auto mt-3 max-w-sm overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Options du tableau croisé dynamique</span><span className="text-navy/40">✕</span></div>
+          <div className="flex flex-wrap gap-x-3 gap-y-0.5 border-b border-navy/10 bg-white px-3 pt-1.5 text-[9px]">
+            {ONGLETS.map((o) => <button key={o} onClick={() => setOngletActif(o)} className={`pb-1 ${o === ongletActif ? 'border-b-2 border-navy font-semibold text-navy' : 'text-navy/40'}`}>{o}</button>)}
+          </div>
+          <div className="min-h-[64px] space-y-2 bg-white p-3">
+            {ongletActif === 'Totaux et filtres' ? (
+              <>
+                <p className="text-navy/50">Totaux généraux :</p>
+                <button onClick={() => setCoche((c) => !c)} className="flex w-full items-center gap-2 text-left text-navy/80"><span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${coche ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{coche && '✓'}</span>Afficher les totaux généraux pour les lignes</button>
+                <button className="flex w-full items-center gap-2 text-left text-navy/40"><span className="grid h-3.5 w-3.5 place-items-center rounded-sm border border-mint bg-mint text-[9px] text-white">✓</span>Afficher les totaux généraux pour les colonnes</button>
+              </>
+            ) : (
+              <p className="text-navy/40">Réglages de l'onglet « {ongletActif} » (disposition, affichage, données, impression…).</p>
+            )}
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => !coche && setPhase('fait')} disabled={coche} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${!coche ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -9467,7 +9541,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux', 'paramchampvaleur', 'tcdmultitables'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux', 'paramchampvaleur', 'tcdmultitables', 'tcdoptions'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -9611,6 +9685,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ParamChampValeurInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'tcdmultitables' ? (
             <TcdMultiTablesInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'tcdoptions' ? (
+            <TcdOptionsInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9722,7 +9798,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                                   ? 'Change le calcul'
                                                                                                                   : s.visuel?.type === 'tcdmultitables'
                                                                                                                     ? 'Relie les tables'
-                                                                                                                    : 'Réponds pour continuer'
+                                                                                                                    : s.visuel?.type === 'tcdoptions'
+                                                                                                                      ? 'Règle les options'
+                                                                                                                      : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
