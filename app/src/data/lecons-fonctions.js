@@ -2528,10 +2528,10 @@ const FONCTIONSFINANCIERES = {
 // ======================================================================
 const U6 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX6 = {
-  ex48: { titre: 'Exercice 48 · Gérer les feuilles', url: U6('1lSbCb39V-BvhlHPToOJlByuAGAVyRxtu') },
-  ex49: { titre: 'Exercice 49 · Protéger les feuilles', url: U6('1BFYBd5KZemeTtWnh_dsRfhSlLGdCNJGK') },
-  ex50: { titre: 'Exercice 50 · Protéger et verrouiller les feuilles', url: U6('18tDrAmtYmebzRMk4w1XAKwjYerBK4kuZ') },
-  ex51: { titre: 'Exercice 51 · Les liaisons', url: U6('1NxxrVxepD465ZVXpB4KCOSXgR__Mlm8v') },
+  ex48: { titre: 'Exercice 38 · Gérer les feuilles', url: U6('1y-PUalkRbXs-dLlP-R_SwL2gqAfvtxcz') },
+  ex49: { titre: 'Exercice 39 · Protéger les feuilles', url: U6('13mCvIVB6FGJ0AAqEOWyy8bb4Yf8_C6x2') },
+  ex50: { titre: 'Exercice 40 · Protéger et verrouiller les feuilles', url: U6('1MQ3U-c3fqoYFzrzOKO9P8pelnIHCPa49') },
+  ex51: { titre: 'Exercice 41 · Les liaisons', url: U6('1cn1bimIrYrBVR0RqKw3Vt937e0lfjRQr') },
 }
 
 // --- Leçon 1 : Gérer les feuilles du classeur ---
@@ -3114,13 +3114,13 @@ const PROTEGERFEUILLES = {
 // CHAPITRE 7 — Exploiter une liste (ceinture verte)
 // ======================================================================
 const EX7 = {
-  ex52: { titre: 'Exercice 52 · Figer/Libérer les volets', url: U6('18bvVTJ6qBCIcIL48V-QaGKFwa7BHntDa') },
-  ex53: { titre: 'Exercice 53 · Les sauts de page', url: U6('1PnBhb4XI95uE2S-zhzwS6TO14Rdz-d-F') },
-  ex54: { titre: 'Exercice 54 · Création de tableaux', url: U6('1rw9kW9D4pnqd2pquIE6MCiJFrPf2cYBF') },
-  ex55: { titre: 'Exercice 55 · Le formulaire', url: U6('1sXHA54yo5MpbIB8ZHD4hDsKMqZ8ZUMGK') },
-  ex56: { titre: 'Exercice 56 · Tris et filtres', url: U6('1Uj9AmixGKi9HUgyyIXOZS5f4SCyZXjD2') },
-  ex57: { titre: 'Exercice 57 · Les sous-totaux', url: U6('1RM6WsBhY3nYP0l_Ho0ibyHG8H_kviq1q') },
-  ex58: { titre: 'Exercice 58 · La fonction SOUS.TOTAL', url: U6('1Uc3I_2N2Sc-8OO6ucHbkCZB7RterbBVl') },
+  ex52: { titre: 'Exercice 42 · Figer/Libérer les volets', url: U6('1NZ2LGAMGt_yiBXCFZ7cPmqh0_hFDGzJ_') },
+  ex53: { titre: 'Exercice 43 · Les sauts de page', url: U6('117sJsI5FVkTF0-qV3FAZP_ieE-YtJvVb') },
+  ex54: { titre: 'Exercice 44 · Création de tableaux', url: U6('1zxeOacQ11fZvtJOEOsGhXnKdRiIyxKj5') },
+  ex55: { titre: 'Exercice 45 · Le formulaire', url: U6('1spkaPe7sEMorWvHOM6-YWfS4XlVhpVM4') },
+  ex56: { titre: 'Exercice 46 · Tris et filtres', url: U6('1vDcJp5YnG1aLmBN58m-GplB5BFZWP2fb') },
+  ex57: { titre: 'Exercice 47 · Les sous-totaux', url: U6('1ikSHnMExovQdlmnpVuBHdrRJR1C74z77') },
+  ex58: { titre: 'Exercice 48 · La fonction SOUS.TOTAL', url: U6('1ct0clJYg_Hs7TVHmthVap9TW4suWhRbF') },
 }
 const LISTE_ENTETES = ['Vendeur', 'Ville', 'CA']
 const LISTE_LIGNES = [['Marie', 'Lyon', '8 200 €'], ['Karim', 'Paris', '12 500 €'], ['Léa', 'Lyon', '6 400 €'], ['Tom', 'Marseille', '9 100 €']]
@@ -3649,14 +3649,14 @@ const SOUSTOTAUX = {
 // ===================== CHAPITRE 8 : LES GRAPHIQUES (ceinture verte-bleue) =====================
 const U8 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX8 = {
-  ex59: { titre: 'Exercice 59 · Les graphiques simples', url: U8('1uDZv2IHm9cJLabXOjyKnUkn3NdirIMDS') },
-  ex60: { titre: 'Exercice 60 · Ajuster et déplacer les graphiques', url: U8('1uU4Wzf713BPAL4aole3v0MH9WJKIOjhO') },
-  ex61: { titre: 'Exercice 61 · Modifier un graphique', url: U8('1S0UsABE9xqY0CrmGslOaofp3NjhKDigf') },
-  ex62: { titre: 'Exercice 62 · Modifier les axes et les séries', url: U8('1vy7yz5epg9rKDu1FXUXsKOmIjdwyoIfd') },
-  ex63: { titre: 'Exercice 63 · Intervertir les lignes/colonnes', url: U8('16gROGvwigLzb0CUmzhAQDTfyZbmm0T2X') },
-  ex64: { titre: 'Exercice 64 · Déplacer et imprimer un graphique', url: U8('19rVXC94sgEj7M8Q-9nUjfn6j83v1S6-7') },
-  ex65: { titre: 'Exercice 65 · Les graphiques mixtes ou combinés', url: U8('12ORIQGPvwm-b5C7ZQPezBz-rPns3vM1Y') },
-  ex66: { titre: 'Exercice 66 · Les graphiques Sparklines', url: U8('1-Yyh64VoGeTuVboK9LHictSDi-jexdQZ') },
+  ex59: { titre: 'Exercice 49 · Les graphiques simples', url: U8('1yU4h52NTXcyNW5nROx8yRugtYs8zoDdj') },
+  ex60: { titre: 'Exercice 50 · Ajuster et déplacer les graphiques', url: U8('1UiiKEyA3KlYaPYT1P46bqNnBAqK29Vz7') },
+  ex61: { titre: 'Exercice 51 · Modifier un graphique', url: U8('15E9h6uKYrryXgCFr5TrcHv_wdtGgyFf_') },
+  ex62: { titre: 'Exercice 52 · Modifier les axes et les séries', url: U8('1yoCXC3FuGOZHzyA1lrlQg9O59xDkXc2g') },
+  ex63: { titre: 'Exercice 53 · Intervertir les lignes/colonnes', url: U8('1fRMgFwEqq5Xm-QPM1fdWmQwbmq2wC-Cy') },
+  ex64: { titre: 'Exercice 54 · Déplacer et imprimer un graphique', url: U8('1dQvXxzelvGpJn4615FsEZPNgOY4TozAd') },
+  ex65: { titre: 'Exercice 55 · Les graphiques mixtes ou combinés', url: U8('1OB2qtO8VNQkobealqKxakJ2ns94PPFD8') },
+  ex66: { titre: 'Exercice 56 · Les graphiques Sparklines', url: U8('1CbiaORbBEP1pJtLnuQOcgBAgIyLWotcV') },
 }
 const GRAPH_MOIS = { cats: ['Jan', 'Fév', 'Mar', 'Avr'], series: [{ nom: 'Ventes', vals: [12, 19, 15, 24] }] }
 const GRAPH_PRODUITS = { cats: ['T1', 'T2', 'T3'], series: [{ nom: 'Ebook Excel', couleur: '#41c1ba', vals: [12, 18, 24] }, { nom: 'Ebook Shaolin', couleur: '#0a335d', vals: [9, 15, 21] }] }
@@ -5658,8 +5658,8 @@ const EX12 = {
   ex83: { titre: 'Exercice 83 · La validation des données', url: U12('1gjqOfykJ2HYqZlK6EKIQIdgrKOxLrkSS') },
   ex84: { titre: 'Exercice 84 · Les filtres avancés', url: U12('1kQIVrv507TrRfMHXjewRn0zjnehNZN7S') },
   ex85: { titre: 'Exercice 85 · La suppression des doublons', url: U12('1u7xpRGT32a3hf8QLSylsXhv96uf2iLgo') },
-  ex57: { titre: 'Exercice 57 · Les sous-totaux', url: U12('1RM6WsBhY3nYP0l_Ho0ibyHG8H_kviq1q') },
-  ex58: { titre: 'Exercice 58 · La fonction SOUS.TOTAL', url: U12('1Uc3I_2N2Sc-8OO6ucHbkCZB7RterbBVl') },
+  ex57: { titre: 'Exercice 47 · Les sous-totaux', url: U12('1ikSHnMExovQdlmnpVuBHdrRJR1C74z77') },
+  ex58: { titre: 'Exercice 48 · La fonction SOUS.TOTAL', url: U12('1ct0clJYg_Hs7TVHmthVap9TW4suWhRbF') },
 }
 
 // --- Leçon 1 : La validation de données ---
