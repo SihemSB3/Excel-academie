@@ -691,13 +691,13 @@ const SERIES = {
 // ======================================================================
 const U3 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX3 = {
-  ex20: { titre: 'Exercice 20 · Gérer les lignes et les colonnes', url: U3('1ARgtsYquOrh70G3Wf8SdeGhdjeZUHC-_') },
-  ex21: { titre: 'Exercice 21 · Gérer les lignes et les colonnes', url: U3('1T_PH2xE7JuVkrBO_NBkM8bW8AANQ_Hrb') },
-  ex22: { titre: 'Exercice 22 · Mise en forme', url: U3('1ghp7gHiC7yJ1C5YgusteqC55oE0Aqk2o') },
-  ex23: { titre: 'Exercice 23 · Mise en forme - Format de cellule', url: U3('1KUKIwvYcWv-Kx-ESf7zg466zMNvGkFPG') },
-  ex24: { titre: 'Exercice 24 · Mise en forme - Pinceau magique', url: U3('1e2Tfq-ci6sYx_dWgXcVzMZ_uMutayzag') },
-  ex25: { titre: 'Exercice 25 · Mise en forme - Style de cellule', url: U3('1GpwoFYdkdO6h5lTOzMiSYgBeJtAXhCKX') },
-  ex26: { titre: 'Exercice 26 · Thème et impression', url: U3('1nhtbeHh0mc-SGOuc6L_RdEbhV9HcXhqT') },
+  ex20: { titre: 'Exercice 16 · Gérer les lignes et les colonnes', url: U3('13ZUE6aUT2tsyqFOKMYczUcA5Ww3aS-ND') },
+  ex21: { titre: 'Exercice 17 · Gérer les lignes et les colonnes', url: U3('1psRStNp9lC21p12KtjQFUijGYK5tqpUt') },
+  ex22: { titre: 'Exercice 18 · Mise en forme', url: U3('1yXExYk_XEulgVWuUSHIbKUIiYj33-Gto') },
+  ex23: { titre: 'Exercice 19 · Mise en forme - Format de cellule', url: U3('1ddp2CSZRr7vkrVJ1wuxS5KfC0rNnbuYX') },
+  ex24: { titre: 'Exercice 20 · Mise en forme - Pinceau magique', url: U3('1h9Xa8QxwfcDx5GmBAxHvt6JbcBtNXM7j') },
+  ex25: { titre: 'Exercice 21 · Mise en forme - Style de cellule', url: U3('1evl5MzwogUF9aM9ZvCHu6yBXwdb8Aj-r') },
+  ex26: { titre: 'Exercice 22 · Thème et impression', url: U3('1oGOgzWCmbatwIYj0P6Srl8jrVPgfwDR9') },
 }
 
 // --- Leçon 1 : Gérer les lignes & les colonnes ---
