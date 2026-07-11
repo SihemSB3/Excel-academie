@@ -5368,6 +5368,65 @@ function ChronologieInteractif({ v, onResolu }) {
   )
 }
 
+// SOUS-TOTAUX D'UN TCD : quand il y a 2 champs en Lignes (ex. Localisation > Type de bien), on
+// affiche un sous-total par groupe via Création du TCD > Sous-totaux. Le user clique le ruban →
+// le menu → « Afficher en bas du groupe » → les lignes Total Paris / Total Lyon apparaissent.
+function TcdSousTotauxInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', valeurTitre = 'Somme de Montant', groupes = [], totalGeneral = '', explication = '' } = v
+  const [menu, setMenu] = useState(false)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+
+  const consigne = () => fait ? '' : !menu ? 'Onglet **Création du TCD** : clique **Sous-totaux**.' : 'Choisis **Afficher tous les sous-totaux en bas du groupe**.'
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        {!fait && (
+          <div className="border-b border-navy/10 bg-[#f3f3f3] px-2 pt-1">
+            <div className="flex gap-0.5 text-[10px]">{['Fichier', 'Analyse du TCD', 'Création'].map((o) => <span key={o} className={`rounded-t px-2 py-1 ${o === 'Création' ? 'bg-white font-bold text-[#0a7a3d]' : 'text-navy/55'}`}>{o}</span>)}</div>
+            <div className="relative flex items-start gap-2 bg-white px-2 py-1.5">
+              <div className="rounded-md border border-navy/15 bg-navy/[0.02] px-1.5 pb-1 pt-1">
+                <button onClick={() => !menu && setMenu(true)} className={`flex w-16 flex-col items-center gap-1 rounded px-1 py-1 text-center text-[10px] ${!menu ? 'animate-pulse cursor-pointer bg-mint/15 ring-1 ring-mint' : ''}`}><span className="text-sm">Σ▾</span><span className="leading-tight text-navy/75">Sous-totaux</span></button>
+                <div className="mt-1 border-t border-navy/10 pt-0.5 text-center text-[9px] font-semibold text-navy/60">Disposition</div>
+              </div>
+              {menu && (
+                <div className="absolute left-2 top-full z-20 w-52 overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+                  {['Ne pas afficher les sous-totaux', 'Afficher tous les sous-totaux en bas du groupe', 'Afficher tous les sous-totaux en haut du groupe'].map((it) => (
+                    <div key={it} onClick={/en bas/.test(it) ? () => setFait(true) : undefined} className={`px-3 py-1.5 text-navy/80 ${/en bas/.test(it) ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold ring-1 ring-inset ring-mint' : ''}`}>{it}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        <div className="p-3">
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Localisation / Type de bien</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              {groupes.map((g, gi) => (
+                <Fragment key={gi}>
+                  <tr><td className="border border-navy/15 bg-navy/[0.03] px-2 py-1 font-semibold text-navy" colSpan={2}>{g.loc}</td></tr>
+                  {g.lignes.map((l, li) => <tr key={li}><td className="border border-navy/15 px-2 py-1 pl-5 text-navy/85">{l[0]}</td><td className="border border-navy/15 px-2 py-1 text-right text-navy/85">{l[1]}</td></tr>)}
+                  {fait && <tr className="animate-fade-up"><td className="border border-navy/15 bg-mint/15 px-2 py-1 font-bold text-navy">Total {g.loc}</td><td className="border border-navy/15 bg-mint/15 px-2 py-1 text-right font-bold text-navy">{g.total}</td></tr>}
+                </Fragment>
+              ))}
+              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{totalGeneral}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>)}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -9223,7 +9282,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -9361,6 +9420,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <TcdDetailInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'chronologie' ? (
             <ChronologieInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'tcdsoustotaux' ? (
+            <TcdSousTotauxInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9466,7 +9527,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                             ? 'Ouvre le détail'
                                                                                                             : s.visuel?.type === 'chronologie'
                                                                                                               ? 'Filtre par période'
-                                                                                                              : 'Réponds pour continuer'
+                                                                                                              : s.visuel?.type === 'tcdsoustotaux'
+                                                                                                                ? 'Affiche les sous-totaux'
+                                                                                                                : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

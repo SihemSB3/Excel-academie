@@ -6081,6 +6081,17 @@ const CROISERCHAMPS = {
     },
     {
       humeur: 'pensif',
+      dit: 'Justement, avec **deux champs en lignes** (Localisation, puis Type de bien), tu peux afficher un **sous-total par groupe**. Onglet **Création du TCD > Sous-totaux > Afficher en bas du groupe**.',
+      visuel: { type: 'tcdsoustotaux', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', valeurTitre: 'Somme de Montant', groupes: [{ loc: 'Paris', total: '420 000 €', lignes: [['Appartement', '250 000 €'], ['Maison', '170 000 €']] }, { loc: 'Lyon', total: '310 000 €', lignes: [['Appartement', '180 000 €'], ['Maison', '130 000 €']] }], totalGeneral: '730 000 €', explication: 'Une ligne « Total Paris » (420 000 €) et « Total Lyon » (310 000 €) s\'insèrent sous chaque groupe. Pratique pour lire le sous-total de chaque famille sans quitter le détail.' },
+      plus: [
+        'Les sous-totaux n\'apparaissent que si tu as **au moins 2 champs en Lignes** (un groupe et un sous-groupe).',
+        'Réglage : **Création du TCD > Disposition > Sous-totaux**.',
+        '3 choix : ne pas afficher · en **bas** du groupe · en **haut** du groupe.',
+        'Tu peux aussi cliquer droit sur le champ de groupe > **Sous-total « Localisation »**.',
+      ],
+    },
+    {
+      humeur: 'pensif',
       dit: 'Dernière astuce d\'organisation : **masquer** un élément sans le supprimer. Sur l\'en-tête **Localisation**, il y a une petite **flèche ▼** (le filtre du champ). Ouvre-la et **décoche Marseille**. Regarde-le disparaître du TCD.',
       visuel: { type: 'tcdmasquer', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', champ: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], masquer: 'Marseille', totalAvant: '910 000 €', totalApres: '730 000 €', explication: 'Marseille disparaît du rapport (le total passe à 730 000 €), mais tes données source restent intactes. Pour le faire réapparaître, rouvre la flèche ▼ et re-coche Marseille.' },
       plus: [
