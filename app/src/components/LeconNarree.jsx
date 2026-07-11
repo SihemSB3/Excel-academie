@@ -5427,6 +5427,81 @@ function TcdSousTotauxInteractif({ v, onResolu }) {
   )
 }
 
+// PARAMÈTRES DES CHAMPS DE VALEUR via le VOLET des champs (2e méthode pour changer le calcul) :
+// dans le volet « Champs de TCD », zone Valeurs, on clique le champ → Paramètres des champs de
+// valeurs → on choisit la fonction (Moyenne). Le TCD (visible) se met à jour.
+function ParamChampValeurInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', lignesAgents = [], avantTitre = 'Somme de Montant', apresTitre = 'Moyenne de Montant', fonctions = ['Somme', 'Moyenne', 'Nombre', 'Max', 'Min'], cible = 'Moyenne', explication = '' } = v
+  const [phase, setPhase] = useState('pane')   // pane | menu | dialog | fait
+  const [sel, setSel] = useState(null)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+
+  const consigne = () => {
+    if (phase === 'pane') return 'Dans le **volet des champs**, zone **Valeurs**, clique le champ **« Somme de Montant »**.'
+    if (phase === 'menu') return 'Choisis **Paramètres des champs de valeurs…**.'
+    if (phase === 'dialog') return sel === cible ? 'Clique **OK**.' : `Dans la liste, choisis **${cible}**.`
+    return ''
+  }
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-start">
+          {/* Le TCD */}
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Agent</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{fait ? apresTitre : avantTitre}</td></tr>
+              {lignesAgents.map((l, i) => <tr key={i}><td className="border border-navy/15 px-2 py-1 text-navy/85">{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${fait ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{fait ? l.moy : l.som}</td></tr>)}
+            </tbody>
+          </table>
+
+          {/* Le volet des champs de TCD */}
+          <div className="w-48 shrink-0 overflow-visible rounded-md border border-navy/25 bg-[#fafafa] text-[10px] shadow-md">
+            <div className="border-b border-navy/15 px-2 py-1 font-bold text-navy/70">Champs de tableau croisé dynamique</div>
+            <div className="px-2 py-1 text-navy/50">Zones :</div>
+            <div className="grid grid-cols-2 gap-1 px-2 pb-2">
+              <div className="rounded border border-navy/15 bg-white p-1"><p className="text-[8px] text-navy/40">≡ Lignes</p><p className="mt-0.5 rounded-sm bg-navy/[0.04] px-1 py-0.5 text-navy/70">Agent</p></div>
+              <div className="relative rounded border border-navy/15 bg-white p-1">
+                <p className="text-[8px] text-navy/40">Σ Valeurs</p>
+                <button onClick={() => phase === 'pane' && setPhase('menu')} className={`mt-0.5 flex w-full items-center justify-between rounded-sm px-1 py-0.5 text-left ${phase === 'pane' ? 'animate-pulse bg-mint/15 text-navy ring-1 ring-mint' : 'bg-navy/[0.04] text-navy/70'}`}>Somme de Montant <span className="text-navy/40">▾</span></button>
+                {phase === 'menu' && (
+                  <div className="absolute right-0 top-full z-20 mt-0.5 w-40 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
+                    {['Monter', 'Descendre', 'Supprimer le champ', 'Paramètres des champs de valeurs…'].map((it) => (
+                      <div key={it} onClick={/^Paramètres/.test(it) ? () => setPhase('dialog') : undefined} className={`px-2 py-1 text-navy/80 ${/^Paramètres/.test(it) ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold ring-1 ring-inset ring-mint' : ''}`}>{it}</div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>)}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+
+      {/* La boîte « Paramètres des champs de valeurs » */}
+      {phase === 'dialog' && (
+        <div className="mx-auto mt-3 max-w-[15rem] overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Paramètres des champs de valeurs</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-1 bg-white p-3">
+            <p className="text-navy/55">Résumer le champ de valeurs par :</p>
+            {fonctions.map((f) => { const on = sel === f; const estCible = f === cible; return (
+              <button key={f} onClick={() => setSel(f)} className={`flex w-full items-center gap-2 rounded-sm px-2 py-1 text-left ${on ? 'bg-[#cfe8ff] font-semibold text-navy ring-1 ring-inset ring-[#2f6fb3]' : `text-navy/70 ${sel == null && estCible ? 'animate-pulse ring-1 ring-mint' : ''}`}`}>{f}</button>
+            ) })}
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => sel === cible && setFait(true)} disabled={sel !== cible} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${sel === cible ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -9282,7 +9357,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux', 'paramchampvaleur'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -9422,6 +9497,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ChronologieInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'tcdsoustotaux' ? (
             <TcdSousTotauxInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'paramchampvaleur' ? (
+            <ParamChampValeurInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9529,7 +9606,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                               ? 'Filtre par période'
                                                                                                               : s.visuel?.type === 'tcdsoustotaux'
                                                                                                                 ? 'Affiche les sous-totaux'
-                                                                                                                : 'Réponds pour continuer'
+                                                                                                                : s.visuel?.type === 'paramchampvaleur'
+                                                                                                                  ? 'Change le calcul'
+                                                                                                                  : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

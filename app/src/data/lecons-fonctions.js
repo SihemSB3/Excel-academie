@@ -6122,7 +6122,18 @@ const ALLERPLUSLOIN = {
       humeur: 'pensif',
       dit: 'Par défaut, Excel fait la **Somme**. Tu veux plutôt la **moyenne** des ventes par agent ? Clic droit sur un montant, ouvre **Synthétiser les valeurs par**, puis choisis **Moyenne**.',
       visuel: { type: 'tcdscene', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', consigne: 'Clic droit sur un montant → Synthétiser les valeurs par → Moyenne', declencheur: 'menu', clicDroitLabel: 'Clic droit sur un montant', items: [{ label: 'Actualiser' }, { label: 'Synthétiser les valeurs par', sousmenu: ['Somme', 'Moyenne', 'Nombre', 'Max', 'Min'] }, { label: 'Afficher les valeurs' }, '-', { label: 'Paramètres des champs de valeurs…' }], cible: 1, sousCible: 1, avant: { titre: 'Agent', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Alice', val: '620 000 €' }, { et: 'Bob', val: '410 000 €' }], total: '1 030 000 €' }, apres: { titre: 'Agent', valeurTitre: 'Moyenne de Montant', lignes: [{ et: 'Alice', val: '310 000 €' }, { et: 'Bob', val: '205 000 €' }], total: '257 500 €' }, explication: 'Clic droit > Synthétiser les valeurs par > Moyenne : le TCD affiche maintenant la moyenne des ventes par agent (Alice : 310 000 € en moyenne). Tu peux aussi choisir Nombre, Max, Min…' },
-      plus: ['Par défaut, Excel résume avec la Somme, mais tu peux changer la fonction de synthèse : clic droit sur une valeur > Synthétiser les valeurs par > Moyenne, Nombre, Max, Min… Méthode 2 : dans le volet Champs, clique le champ en Valeurs > Paramètres des champs de valeur > choisis la fonction > OK.'],
+      plus: ['Par défaut, Excel résume avec la Somme, mais tu peux changer la fonction de synthèse : clic droit sur une valeur > Synthétiser les valeurs par > Moyenne, Nombre, Max, Min…'],
+    },
+    {
+      humeur: 'pensif',
+      dit: 'Il y a une **2ᵉ méthode**, par le **volet des champs** (à droite). Zone **Valeurs**, clique **« Somme de Montant »**, puis **Paramètres des champs de valeurs…**, et choisis **Moyenne**. Même résultat, autre chemin.',
+      visuel: { type: 'paramchampvaleur', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', lignesAgents: [{ et: 'Alice', som: '620 000 €', moy: '310 000 €' }, { et: 'Bob', som: '410 000 €', moy: '205 000 €' }], avantTitre: 'Somme de Montant', apresTitre: 'Moyenne de Montant', fonctions: ['Somme', 'Moyenne', 'Nombre', 'Max', 'Min'], cible: 'Moyenne', explication: 'Via le volet des champs > Paramètres des champs de valeurs > Moyenne : le TCD passe en moyenne, exactement comme le clic droit. Deux chemins pour le même réglage : le clic droit (rapide) et le volet (quand tu réorganises déjà tes champs).' },
+      plus: [
+        'Le **volet des champs** (« Champs de tableau croisé dynamique ») liste les champs et 4 zones : Filtres, Colonnes, Lignes, Valeurs.',
+        'Clique un champ de la zone **Valeurs** > **Paramètres des champs de valeurs…**.',
+        'Onglet « Résumer les valeurs par » : choisis Somme, Moyenne, Nombre, Max, Min…',
+        'C\'est la même chose que le clic droit > Synthétiser les valeurs par, mais depuis le volet.',
+      ],
     },
     {
       humeur: 'pensif',
