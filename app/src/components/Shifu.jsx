@@ -62,18 +62,15 @@ export function Shifu({ humeur = 'accueil', size = 110, className = '' }) {
       <ellipse cx="100" cy="84" rx="52" ry="50" fill="#d9a273" stroke="#b57f4f" strokeWidth="2" />
       <circle cx="50" cy="88" r="9" fill="#d9a273" stroke="#b57f4f" strokeWidth="2" />
       <circle cx="150" cy="88" r="9" fill="#d9a273" stroke="#b57f4f" strokeWidth="2" />
-      {/* Cheveux latéraux (barbe grise du maître) */}
-      <path d="M53 70 Q47 98 60 114" stroke="#e6e9ec" strokeWidth="6" fill="none" strokeLinecap="round" />
-      <path d="M147 70 Q153 98 140 114" stroke="#e6e9ec" strokeWidth="6" fill="none" strokeLinecap="round" />
-      {/* Chignon (cheveux bruns) */}
-      <ellipse cx="100" cy="31" rx="13" ry="12" fill="#4a3220" />
-      <rect x="91" y="39" width="18" height="8" rx="3" fill="#4a3220" />
-      <path d={sourcils[humeur]} stroke="#eef1f2" strokeWidth="4.5" fill="none" strokeLinecap="round" />
+      {/* Barbe latérale (brune) reliant les tempes au menton. Crâne rasé (pas de chignon). */}
+      <path d="M53 70 Q47 98 60 114" stroke="#6b4a2e" strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d="M147 70 Q153 98 140 114" stroke="#6b4a2e" strokeWidth="6" fill="none" strokeLinecap="round" />
+      <path d={sourcils[humeur]} stroke="#5a3d22" strokeWidth="4.5" fill="none" strokeLinecap="round" />
       {yeux[humeur]}
       <path d="M96 90 Q100 98 104 90" stroke="#b57f4f" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      <path d="M100 102 Q85 104 72 120" stroke="#eef1f2" strokeWidth="7" fill="none" strokeLinecap="round" />
-      <path d="M100 102 Q115 104 128 120" stroke="#eef1f2" strokeWidth="7" fill="none" strokeLinecap="round" />
-      <path d="M73 112 Q78 158 100 160 Q122 158 127 112 Q113 130 100 128 Q87 130 73 112 Z" fill="#eef1f2" stroke="#dadfe1" strokeWidth="1.5" />
+      <path d="M100 102 Q85 104 72 120" stroke="#6b4a2e" strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d="M100 102 Q115 104 128 120" stroke="#6b4a2e" strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d="M73 112 Q78 158 100 160 Q122 158 127 112 Q113 130 100 128 Q87 130 73 112 Z" fill="#6b4a2e" stroke="#54371f" strokeWidth="1.5" />
     </svg>
   )
 }
