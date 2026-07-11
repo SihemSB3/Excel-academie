@@ -4297,11 +4297,11 @@ const MIXTESPARKLINE = {
 // ===================== CHAPITRE 9 : CONSOLIDATION (ceinture bleue) =====================
 const U9 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX9 = {
-  ex67: { titre: 'Exercice 67 · La consolidation par position', url: U9('10pBsvSA3QfN-3BvARSWVf5mpc-3CY_05') },
-  ex68: { titre: 'Exercice 68 · La consolidation par position', url: U9('1PXBbM1_qLtBxprYf9CzNNkD8oz-OKuzA') },
-  ex69: { titre: 'Exercice 69 · La consolidation par catégorie', url: U9('1QZ11MHMtcHo8LL35SNHWPOb_nLXPTkyF') },
-  ex70: { titre: 'Exercice 70 · La consolidation par TCD multi-tables', url: U9('16VhY98IzS703g0_-thhe6d7_OaZ4iyGU') },
-  ex70c: { titre: 'Exercice 70 · TCD multi-tables — Correction', url: U9('1lQ8RwFBBSNEm--jGjSpWuEhLEWgwrCYQ') },
+  ex67: { titre: 'Exercice 57 · La consolidation par position', url: U9('1lR2JVWwF8wWbSMT8S7R5UvIPOtCRk2Ln') },
+  ex68: { titre: 'Exercice 58 · La consolidation par position', url: U9('1m3L9khnfSFFp7xyy5UrC2PQ-P5g6j7LG') },
+  ex69: { titre: 'Exercice 59 · La consolidation par catégorie', url: U9('1ZwXQUWwvhmv8x0br8VO2EVS86-U1upJ6') },
+  ex70: { titre: 'Exercice 60 · La consolidation par TCD multi-tables', url: U9('18xN6d1GZqNViwbM4U9eH6OJ43kW2Tv4E') },
+  ex70c: { titre: 'Exercice 60 · TCD multi-tables — Correction', url: U9('1OAIzn5k3GItqTVF-EIwkppIi6o-yk_XQ') },
 }
 const CONSO_ENTETES = ['Produit', 'CA']
 const CONSO_FEUILLES = ['Janvier', 'Février', 'Mars', 'Synthèse']
@@ -4571,12 +4571,12 @@ const TCDRELATIONS = {
 // ===================== CHAPITRE 10 : FONCTIONS CONDITIONNELLES (ceinture bleue-marron) =====================
 const U10 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX10 = {
-  ex71: { titre: 'Exercice 71 · La mise en forme conditionnelle', url: U10('1pxcb_TevJZSOLe2CzDjbun4sGE-y43rW') },
-  ex72: { titre: 'Exercice 72 · La fonction SI simple', url: U10('1xX0Nik_L4NRNArhkQpRWeYKCNikEAYcO') },
-  ex73: { titre: 'Exercice 73 · La fonction SI imbriquée, ET, OU', url: U10('18Q9o1iM-L5onhnyPNiugW82GjbOiSCqp') },
-  ex74: { titre: 'Exercice 74 · Les fonctions SI.ENS', url: U10('1eMcGOXxo2JQlkJU--0X_YGtAg0l_fiQq') },
-  ex75: { titre: 'Exercice 75 · Les références semi-relatives', url: U10('1aNsWTtgeRmcWDvvCSTVFgQMbWTL0JLoC') },
-  ex76: { titre: 'Exercice 76 · La gestion des erreurs', url: U10('1Rc6M4Bi4-jCR6d6fH_yLerRKD8VJe09q') },
+  ex71: { titre: 'Exercice 61 · La mise en forme conditionnelle', url: U10('1ck3yE4WFBpgI5B2drmCzAkZL2rUul6EG') },
+  ex72: { titre: 'Exercice 62 · La fonction SI simple', url: U10('1u6hVoWOq5LUfglv8CbiM2eL3I4mqIc8t') },
+  ex73: { titre: 'Exercice 63 · La fonction SI imbriquée, ET, OU', url: U10('15r4diyO7snaTs_1Of3qhYVSUj3pK4O6M') },
+  ex74: { titre: 'Exercice 64 · Les fonctions SI.ENS', url: U10('1ATJQGp8cOanFAKayZrqZKpAm1hGn_u1S') },
+  ex75: { titre: 'Exercice 65 · Les références semi-relatives', url: U10('1Hocvgd9pu5_D-jOCjTt641RxTvdKWhfO') },
+  ex76: { titre: 'Exercice 66 · La gestion des erreurs', url: U10('15DUznvLpVfGJDYvwcddhPVI41MeDicOs') },
 }
 
 // --- Leçon 1 : La mise en forme conditionnelle ---
@@ -5114,12 +5114,12 @@ const SIERREUR = {
 // ===================== CHAPITRE 11 : LES FONCTIONS DE RECHERCHE (ceinture marron) =====================
 const U11 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX11 = {
-  ex77: { titre: 'Exercice 77 · La recherche V', url: U11('1ImjZcJYdbLED6cFJ-uYLdgsGtdSa8Rr-') },
-  ex78: { titre: 'Exercice 78 · La recherche V', url: U11('1cEVDpasec3uz9h1uI95VPW_JTW-dmJJ4') },
-  ex79: { titre: 'Exercice 79 · La recherche V', url: U11('1pOTcfkh3AsDBJMMMp2stssvWj7NNkLli') },
-  ex80: { titre: 'Exercice 80 · La recherche X', url: U11('1mlK1qB-GuQ7JOz9cepQl2R4ghcO0QdHJ') },
-  ex81: { titre: 'Exercice 81 · La recherche X à 2 critères', url: U11('1UsDUnk-UGJ9rapkepMLemeWaPXFNR04N') },
-  ex82: { titre: 'Exercice 82 · La recherche H', url: U11('1dkTbFnEUwAMPnrSIy_WfnQYAjxc-0qX6') },
+  ex77: { titre: 'Exercice 67 · La recherche V', url: U11('1v2Df6PVyitrjcygMzA_SlvddrHiZl-5S') },
+  ex78: { titre: 'Exercice 68 · La recherche V', url: U11('1N-rLX-5hTQ9ytsdKiRBRuUmFyz624lJL') },
+  ex79: { titre: 'Exercice 69 · La recherche V', url: U11('1Sjeo7jGalC9M-FqAsjVeXdIou-nBXxir') },
+  ex80: { titre: 'Exercice 70 · La recherche X', url: U11('14gS4ogl5nCFCzPv49ZjpUqM4LovHy510') },
+  ex81: { titre: 'Exercice 71 · La recherche X à 2 critères', url: U11('1ExGOEPAnl_AExSKM9notfpnfsfrpCASh') },
+  ex82: { titre: 'Exercice 72 · La recherche H', url: U11('1I8d-lpInbwB7C6G7rBUSBADDxzP-OAEP') },
 }
 
 // Les deux tableaux fil rouge du chapitre : Commandes (principal) + Stock (référentiel).
