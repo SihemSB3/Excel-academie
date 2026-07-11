@@ -168,6 +168,31 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
         })}
       </div>
 
+      <div className="mt-8 rounded-2xl border border-[#e8853a]/30 bg-[#e8853a]/10 p-4">
+        <p className="text-xs font-bold uppercase tracking-wide text-[#c2691f]">🎯 Les plus demandées en entreprise</p>
+        <p className="mt-1 text-sm text-navy/85">Accès direct : apprends tout de suite ce que les recruteurs réclament. La ceinture noire, elle, se mérite en faisant tout le parcours dans l'ordre.</p>
+        {[
+          ['Fonctions de recherche', [['recherchev', 'RECHERCHEV'], ['recherchex', 'RECHERCHEX'], ['rechercheh', 'RECHERCHEH']]],
+          ['Fonctions conditionnelles', [['fonctionsi', 'La fonction SI'], ['siimbrique', 'SI imbriquée'], ['nbsiens', 'NB.SI.ENS'], ['sommesiens', 'SOMME.SI.ENS']]],
+          ['Tableaux croisés dynamiques', [['creertcd', 'Créer un TCD'], ['analysertcd', 'Manipuler un TCD'], ['croiserchamps', 'Croiser les champs'], ['allerplusloin', 'Aller plus loin']]],
+        ].map(([groupe, lecons]) => (
+          <div key={groupe} className="mt-3">
+            <p className="text-xs font-bold text-navy/60">{groupe}</p>
+            <div className="mt-1.5 grid grid-cols-2 gap-2">
+              {lecons.map(([id, label]) => (
+                <button
+                  key={id}
+                  onClick={() => onOuvrirDemo(id)}
+                  className="rounded-xl border border-[#e8853a]/25 bg-white/70 py-2.5 text-sm font-bold text-navy transition hover:bg-[#e8853a]/10"
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div className="mt-8 rounded-2xl border border-mint/30 bg-mint/10 p-4">
         <p className="text-xs font-bold uppercase tracking-wide text-mint">✨ Nouveau format</p>
         <p className="mt-1 text-sm text-navy/85">Le Shifu t'explique une fonction pas à pas, avec un mini-défi à la fin.</p>
