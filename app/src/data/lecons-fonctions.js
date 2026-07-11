@@ -1327,11 +1327,11 @@ const IMPRESSION = {
 // ======================================================================
 const U4 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX4 = {
-  ex27: { titre: 'Exercice 27 · La somme automatique & l\'assistant fonction', url: U4('1gLigeNmo2AoNXepQFKYX_E--PIBMzKDZ') },
-  ex28: { titre: 'Exercice 28 · Les formules simples', url: U4('1JKWi2XOuuMVEKpkkZs29uklNAXuQak2e') },
-  ex29: { titre: 'Exercice 29 · Les références absolues', url: U4('1jmbeEpSQhDTRBUklRyADas9cGgCkGnBs') },
-  ex30: { titre: 'Exercice 30 · Les noms de cellules', url: U4('1el8wJNKuVKPaUHlAMlMSMyDG3hJVC26s') },
-  ex31: { titre: 'Exercice 31 · L\'Assistant Fonction & la fonction VPM', url: U4('12iolLrs8zG3TjJGG4R_tsfjaH_Hr_FXw') },
+  ex27: { titre: 'Exercice 23 · La somme automatique & l\'assistant fonction', url: U4('15eO-z9wGKu7k1J3LOLr64K-Lu1jwwuLP') },
+  ex28: { titre: 'Exercice 24 · Les formules simples', url: U4('1W1nnc7HSx-zVph5yaHF5prc5rkDqaCB0') },
+  ex29: { titre: 'Exercice 25 · Les références absolues', url: U4('1MnsT4-it60frbmszonlACg5VlwzXx_zj') },
+  ex30: { titre: 'Exercice 26 · Les noms de cellules', url: U4('1eqzzoKOgqzj0aC3T7sKU_GwYhDI3Lpuk') },
+  ex31: { titre: 'Exercice 27 · L\'Assistant Fonction & la fonction VPM', url: U4('1EFA2nE2_PnK8lelCk8i15A6fJPL6sPaI') },
 }
 
 // --- Tableur d'exemple : ventes par produit (pour MIN) ---
@@ -1852,16 +1852,16 @@ const ARGUMENTSVPM = {
 // ======================================================================
 const U5 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX5 = {
-  ex32: { titre: 'Exercice 32 · Outils Rechercher & Remplacer', url: U5('14vsQh2c4uGF2MnBamFbmw1fYtgM3zGCH') },
-  ex33: { titre: 'Exercice 33 · Outils Convertir', url: U5('1sur2I43EWLIEJ_JVD0EtIFZEtBY5S0P8') },
-  ex34: { titre: 'Exercice 34 · La formule ARRONDI', url: U5('1aMgQmQ7cDWDaAHdydk6BanjmEJvDpkkB') },
-  ex35: { titre: 'Exercice 35 · La formule ARRONDI.INF', url: U5('1G0BChNm5lJQhVl2eg8hCK8gR6PO1h-DN') },
-  ex36: { titre: 'Exercice 36 · La formule ARRONDI.SUP', url: U5('12v9bE2CBvo04swEH_hh8NulrTUW1TaZs') },
-  ex37: { titre: 'Exercice 37 · La formule TRONQUE', url: U5('1lv2z88X7R7aGxfVeR0Qpr8I5YaPoNnaE') },
-  ex39: { titre: 'Exercice 39 · Quelques fonctions dates', url: U5('16xVopbr8ckfE2xNjewwUMrtaTjAZme8O') },
-  ex45: { titre: 'Exercice 45 · La fonction VPM', url: U5('1Knkc-_HzjmKXvYCwv8r-Svi8VXcPd_Ed') },
-  ex46: { titre: 'Exercice 46 · La fonction VA', url: U5('1d-vITQUCEhKjJE6zFtYWafKbhj8I7pXy') },
-  ex47: { titre: 'Exercice 47 · La fonction NPM', url: U5('1cj0xGn9VA8AbM7w7uiOjlmW54c1CnDIN') },
+  ex32: { titre: 'Exercice 28 · Outils Rechercher & Remplacer', url: U5('18cRFj6TXI4JHiAnox8gE4KwuosvyELK8') },
+  ex33: { titre: 'Exercice 29 · Outils Convertir', url: U5('1I1BpagwAd3OSlTZ0ekJwCSj6Yrv1ub2E') },
+  ex34: { titre: 'Exercice 30 · La formule ARRONDI', url: U5('14PS5TQuwKaezihXmk00gmEDjx-XAFGW9') },
+  ex35: { titre: 'Exercice 31 · La formule ARRONDI.INF', url: U5('1lrJHddlKwv1Sa8BldzBCbx8u9w-CYbIM') },
+  ex36: { titre: 'Exercice 32 · La formule ARRONDI.SUP', url: U5('11Cis4o8CnB4h-2ow6FjGtkAxrXxBMAAA') },
+  ex37: { titre: 'Exercice 33 · La formule TRONQUE', url: U5('1skaSNeSXNWjPwaeA70YOCR6YKcaTTvcg') },
+  ex39: { titre: 'Exercice 34 · Quelques fonctions dates', url: U5('1ARhBJ1F7zI2vPqPebQl_Yw4d-61JrJ-g') },
+  ex45: { titre: 'Exercice 35 · La fonction VPM', url: U5('1FaeU9U6H9NAMFAseiIluhR-oulps2tEX') },
+  ex46: { titre: 'Exercice 36 · La fonction VA', url: U5('1jft8-wQsmNHl_A_qSwzbpJN6ZRSVNWfx') },
+  ex47: { titre: 'Exercice 37 · La fonction NPM', url: U5('16f9SshRfTfzSs3fsF53qND1M_BAm1f1w') },
 }
 
 // --- Leçon 1 : Rechercher & Remplacer ---
