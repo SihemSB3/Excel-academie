@@ -6191,7 +6191,19 @@ const ALLERPLUSLOIN = {
       dit: 'À toi. Pour qu\'un TCD intègre **automatiquement** les nouvelles lignes de la source, le mieux est de…',
       visuel: { type: 'question', options: ['Transformer la source en Tableau (Ctrl+L) et pointer son nom', 'Recréer le TCD à chaque fois', 'Copier-coller les lignes dans le TCD'], bonne: 0, explication: 'Un Tableau structuré (Ctrl+L) s\'étend tout seul à chaque ajout. En pointant son nom comme source du TCD, un simple Actualiser suffit pour tout mettre à jour.' },
     },
-    { humeur: 'fier', dit: 'Changer le calcul, créer tes formules, extraire le détail, garder tout à jour : plus rien ne résiste à ton TCD. La ceinture noire n\'est plus qu\'à un souffle ! 🥋🖤' },
+    {
+      humeur: 'pensif',
+      dit: 'Le niveau maître : un **TCD sur PLUSIEURS tables**. Tu as une table **Ventes** (AgentID, Montant) et une table **Agents** (AgentID, Nom, Région). Croise-les pour avoir le **Montant par Région**, sans RECHERCHEV, en les **reliant**.',
+      visuel: { type: 'tcdmultitables', classeur: 'VentesImmo.xlsx', feuilles: ['Données', 'TCD'], feuilleActive: 'TCD', lignesFinal: [{ et: 'Nord', val: '620 000 €' }, { et: 'Sud', val: '410 000 €' }], total: '1 030 000 €', explication: 'En reliant Ventes[AgentID] à Agents[AgentID], le TCD croise les deux tables : le Montant (table Ventes) se répartit par Région (table Agents). Nord 620 000 €, Sud 410 000 €, chacun son vrai total. C\'est le modèle de données : plusieurs tables reliées dans UN seul TCD, sans RECHERCHEV.' },
+      plus: [
+        'Un TCD peut croiser **plusieurs tables** grâce au **modèle de données** (coche « Ajouter au modèle de données » à la création, ou utilise des Tableaux structurés).',
+        'Le volet des champs liste alors **toutes les tables** ; tu piochais les champs dans l\'une ou l\'autre.',
+        'Si les tables ne sont pas reliées, Excel affiche un avertissement et propose **Créer une relation…**.',
+        'Une relation = une **colonne commune** aux deux tables (ici AgentID), comme la clé d\'une RECHERCHEV, mais gérée par Excel.',
+        'Tu peux aussi gérer les liens dans **Analyse du TCD > Relations**.',
+      ],
+    },
+    { humeur: 'fier', dit: 'Changer le calcul, créer tes formules, extraire le détail, croiser plusieurs tables : plus rien ne résiste à ton TCD. La ceinture noire est à toi ! 🥋🖤' },
   ],
 }
 

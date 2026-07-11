@@ -5502,6 +5502,116 @@ function ParamChampValeurInteractif({ v, onResolu }) {
   )
 }
 
+// TCD MULTI-TABLES (modèle de données) : un seul TCD qui croise DEUX tables reliées. Le volet
+// liste les 2 tables ; on ajoute Région (table Agents) en Lignes et Montant (table Ventes) en
+// Valeurs. Sans lien, tous les totaux sont identiques (louche) → Excel propose de créer une
+// RELATION (Ventes[AgentID] ↔ Agents[AgentID]) → le TCD se corrige. Le user construit le lien.
+const MT_TABLES = [{ nom: 'Ventes', champs: ['AgentID', 'Montant'] }, { nom: 'Agents', champs: ['AgentID', 'Nom', 'Région'] }]
+function TcdMultiTablesInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Données', 'TCD'], feuilleActive = 'TCD', lignesFinal = [], total = '', explication = '' } = v
+  const [enLignes, setEnLignes] = useState(false)     // Région ajouté en Lignes
+  const [enValeurs, setEnValeurs] = useState(false)   // Montant ajouté en Valeurs
+  const [phase, setPhase] = useState('build')          // build | relation | fait
+  const [colG, setColG] = useState(null)               // colonne choisie pour Ventes
+  const [colD, setColD] = useState(null)               // colonne associée pour Agents
+  const [menuG, setMenuG] = useState(false)
+  const [menuD, setMenuD] = useState(false)
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const pret = enLignes && enValeurs
+  const relOK = colG === 'AgentID' && colD === 'AgentID'
+
+  const consigne = () => {
+    if (phase === 'build') { if (!enLignes) return 'Dans le volet, clique **Région** (table Agents) pour le mettre en **Lignes**.'; if (!enValeurs) return 'Maintenant clique **Montant** (table Ventes) pour le mettre en **Valeurs**.'; return 'Les totaux sont tous **identiques** : les tables ne sont pas reliées ! Clique **Créer…** pour ajouter la relation.' }
+    if (phase === 'relation') return !relOK ? 'Choisis la colonne commune aux deux tables : **AgentID** de chaque côté.' : 'Clique **OK** pour créer la relation.'
+    return ''
+  }
+
+  const tcdLignes = pret ? (fait ? lignesFinal : lignesFinal.map((l) => ({ et: l.et, val: total }))) : []
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        {pret && !fait && phase === 'build' && (
+          <div className="flex items-center gap-2 border-b border-amber-300 bg-amber-50 px-3 py-1.5 text-[10px] text-amber-800">
+            <span>⚠ Des relations entre les tables peuvent être nécessaires.</span>
+            <button onClick={() => setPhase('relation')} className="ml-auto animate-pulse rounded border-2 border-mint bg-mint/15 px-2 py-0.5 font-bold text-navy">Créer…</button>
+          </div>
+        )}
+        <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-start">
+          {/* Le TCD */}
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{enLignes ? 'Région' : 'Étiquettes de lignes'}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{enValeurs ? 'Somme de Montant' : ''}</td></tr>
+              {tcdLignes.length === 0 ? (
+                <tr><td className="border border-navy/15 px-2 py-2 text-center text-navy/30" colSpan={2}>(ajoute des champs)</td></tr>
+              ) : tcdLignes.map((l, i) => (
+                <tr key={i}><td className="border border-navy/15 px-2 py-1 text-navy/85">{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${fait ? 'font-semibold text-mint-dark' : !fait && pret ? 'bg-red-500/10 text-red-700' : 'text-navy/85'}`}>{enValeurs ? l.val : ''}</td></tr>
+              ))}
+              {pret && <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>}
+            </tbody>
+          </table>
+
+          {/* Le volet des champs : DEUX tables */}
+          <div className="w-52 shrink-0 rounded-md border border-navy/25 bg-[#fafafa] text-[10px] shadow-md">
+            <div className="border-b border-navy/15 px-2 py-1 font-bold text-navy/70">Champs de tableau croisé dynamique</div>
+            <div className="space-y-1.5 p-2">
+              {MT_TABLES.map((t) => (
+                <div key={t.nom}>
+                  <p className="font-semibold text-navy/70">📋 {t.nom}</p>
+                  <div className="mt-0.5 flex flex-wrap gap-1">
+                    {t.champs.map((c) => {
+                      const estRegion = c === 'Région', estMontant = c === 'Montant'
+                      const ajoute = (estRegion && enLignes) || (estMontant && enValeurs)
+                      const actif = phase === 'build' && !ajoute && ((estRegion && !enLignes) || (estMontant && enLignes && !enValeurs))
+                      const clic = estRegion ? () => setEnLignes(true) : estMontant ? () => { if (enLignes) setEnValeurs(true) } : undefined
+                      return <button key={c} onClick={clic} disabled={!actif} className={`rounded-sm border px-1.5 py-0.5 ${ajoute ? 'border-mint bg-mint/20 font-semibold text-navy' : actif ? 'animate-pulse border-mint bg-white text-navy ring-1 ring-mint' : 'border-navy/15 bg-white text-navy/50'}`}>{c}</button>
+                    })}
+                  </div>
+                </div>
+              ))}
+              <div className="mt-1 border-t border-navy/10 pt-1">
+                <p className="text-[8px] uppercase text-navy/40">≡ Lignes</p><p className="rounded-sm bg-white px-1 py-0.5 text-navy/70">{enLignes ? 'Région' : '—'}</p>
+                <p className="mt-1 text-[8px] uppercase text-navy/40">Σ Valeurs</p><p className="rounded-sm bg-white px-1 py-0.5 text-navy/70">{enValeurs ? 'Somme de Montant' : '—'}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>)}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+
+      {/* La boîte « Créer une relation » */}
+      {phase === 'relation' && (
+        <div className="mx-auto mt-3 max-w-sm overflow-visible rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Créer une relation</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-2 bg-white p-3">
+            <p className="text-navy/55">Choisis les tables et colonnes à relier :</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div><p className="text-navy/50">Table</p><div className="rounded-sm border border-navy/25 px-2 py-1 text-navy">Ventes</div></div>
+              <div className="relative"><p className="text-navy/50">Colonne</p>
+                <button onClick={() => setMenuG((m) => !m)} className={`flex w-full items-center justify-between rounded-sm border px-2 py-1 ${colG ? 'border-navy/25 text-navy' : 'animate-pulse border-mint text-navy/40 ring-1 ring-mint'}`}>{colG || 'choisir…'}<span className="text-navy/40">▾</span></button>
+                {menuG && <div className="absolute z-20 mt-0.5 w-full overflow-hidden rounded-sm border border-navy/20 bg-white shadow-lg">{['AgentID', 'Montant'].map((c) => <div key={c} onClick={() => { setColG(c); setMenuG(false) }} className="cursor-pointer px-2 py-1 text-navy/80 hover:bg-mint/15">{c}</div>)}</div>}
+              </div>
+              <div><p className="text-navy/50">Table associée</p><div className="rounded-sm border border-navy/25 px-2 py-1 text-navy">Agents</div></div>
+              <div className="relative"><p className="text-navy/50">Colonne associée</p>
+                <button onClick={() => setMenuD((m) => !m)} className={`flex w-full items-center justify-between rounded-sm border px-2 py-1 ${colD ? 'border-navy/25 text-navy' : `text-navy/40 ${colG ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/25'}`}`}>{colD || 'choisir…'}<span className="text-navy/40">▾</span></button>
+                {menuD && <div className="absolute z-20 mt-0.5 w-full overflow-hidden rounded-sm border border-navy/20 bg-white shadow-lg">{['AgentID', 'Nom', 'Région'].map((c) => <div key={c} onClick={() => { setColD(c); setMenuD(false) }} className="cursor-pointer px-2 py-1 text-navy/80 hover:bg-mint/15">{c}</div>)}</div>}
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2"><button onClick={() => relOK && setPhase('fait')} disabled={!relOK} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${relOK ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button><span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span></div>
+          </div>
+        </div>
+      )}
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -9357,7 +9467,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux', 'paramchampvaleur'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux', 'paramchampvaleur', 'tcdmultitables'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -9499,6 +9609,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <TcdSousTotauxInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'paramchampvaleur' ? (
             <ParamChampValeurInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'tcdmultitables' ? (
+            <TcdMultiTablesInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9608,7 +9720,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                                 ? 'Affiche les sous-totaux'
                                                                                                                 : s.visuel?.type === 'paramchampvaleur'
                                                                                                                   ? 'Change le calcul'
-                                                                                                                  : 'Réponds pour continuer'
+                                                                                                                  : s.visuel?.type === 'tcdmultitables'
+                                                                                                                    ? 'Relie les tables'
+                                                                                                                    : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
