@@ -29,7 +29,7 @@ const SOMME = {
   id: 'fn-somme',
   titre: 'La fonction SOMME',
   exercices: [
-    { titre: 'Exercice 27 · La somme automatique', url: 'https://drive.google.com/file/d/1-jhK6ibgg4FalgRiCDb2E1Z3LzT2G7Vf/view?usp=drivesdk' },
+    { titre: 'Exercice 12 · La somme automatique', url: 'https://drive.google.com/file/d/179TMP7ez2SErhcTehTzh1EfAE9lVgtgP/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'SOMME additionne plusieurs cellules d\'un seul coup. On va la construire ensemble.' },
@@ -143,7 +143,7 @@ const CALCULS = {
   id: 'fn-calculs',
   titre: 'Faire des calculs',
   exercices: [
-    { titre: 'Exercice 5 · Les calculs avec les opérateurs', url: 'https://drive.google.com/file/d/1OI37AtYGKyXyn8yLMxrtGoqx3qRh32ic/view?usp=drivesdk' },
+    { titre: 'Exercice 3 · Les calculs avec les opérateurs', url: 'https://drive.google.com/file/d/1XXoNOsvhno-smWRswpSpIBdq7EAi1Z7B/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Excel, c\'est une super calculatrice : tu fais tes calculs directement dans les cellules. Regarde ce petit tableau, c\'est lui qu\'on va faire parler.', visuel: tabC({}) },
@@ -203,8 +203,8 @@ const SAISIE = {
   id: 'fn-saisie',
   titre: 'Saisir des données',
   exercices: [
-    { titre: 'Exercice 1 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1TUJmySZN9RH-IFm_XN3AfiyDUhYjgiBP/view?usp=drivesdk' },
-    { titre: 'Exercice 3 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1KQT1lJm2r8XSCeXW_190mpvLVPeiTsjr/view?usp=drivesdk' },
+    { titre: 'Exercice 1 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1LeWxiL51a6-L-jUHA9x-KMnrz9-UDT1p/view?usp=drivesdk' },
+    { titre: 'Exercice 2 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1uQTMl6x5FKKXh8MsLyiIdUBC01aUp3BE/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Avant de calculer, il faut savoir remplir ses cellules. C\'est la base de tout tableau.' },
@@ -270,8 +270,8 @@ const RECOPIE = {
   id: 'fn-recopie',
   titre: 'Recopie des données & formules',
   exercices: [
-    { titre: 'Exercice 6 · Recopie des données et des formules', url: 'https://drive.google.com/file/d/1F8xgMQ9lXx8kHiDayV7lNx_ykT1se3ew/view?usp=drivesdk' },
-    { titre: 'Exercice 7 · Recopie des données et des formules', url: 'https://drive.google.com/file/d/1ESKhSMHzcT4-vz2w3EZNrWvetip41t6f/view?usp=drivesdk' },
+    { titre: 'Exercice 4 · Recopie des données et des formules', url: 'https://drive.google.com/file/d/1JJg0nByuY3Tk6KS2dZ59FSQRd9NA3K1l/view?usp=drivesdk' },
+    { titre: 'Exercice 5 · Recopie des données et des formules', url: 'https://drive.google.com/file/d/1h7dujCQVaITdmXokmckPngQVYIHdmNwn/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Excel peut recopier une donnée ou une formule tout seul, pour t\'éviter de tout retaper à la main.' },
@@ -315,7 +315,7 @@ const REFERENCES = {
   id: 'fn-references',
   titre: 'Références relatives & absolues',
   exercices: [
-    { titre: 'Exercice 29 · Les références absolues', url: 'https://drive.google.com/file/d/1l5K36ffDWFQ4YcFC1GhLm2xxCbh8lA5O/view?usp=drivesdk' },
+    { titre: 'Exercice 15 · Les références absolues', url: 'https://drive.google.com/file/d/1YbaCA5hY0lmU33_-6ZSV0AXXaPTKk-T-/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Quand tu recopies une formule, Excel adapte tout seul les cellules. Très pratique ! Et parfois, tu veux qu\'une cellule reste fixe. Voyons les deux cas.', plus: ['Par défaut, Excel utilise des références dites « relatives » : quand tu copies une formule vers une autre cellule, les coordonnées de cellule s\'adaptent en fonction de la nouvelle position.', 'Une référence absolue, elle, reste fixe même si tu copies la formule ailleurs. C\'est utile quand tu veux toujours faire référence à la même cellule, comme un taux de TVA, un seuil, ou une valeur constante.'] },
@@ -372,8 +372,8 @@ const DEPLACER = {
   id: 'fn-deplacer',
   titre: 'Déplacer & copier des cellules',
   exercices: [
-    { titre: 'Exercice 13 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1kkB6js7svYzkQtPr16gbB3E4WM4riT1x/view?usp=drivesdk' },
-    { titre: 'Exercice 15 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1q9KdbsHFcTJ8mHQBI-IjAOAqmjv_ctXI/view?usp=drivesdk' },
+    { titre: 'Exercice 9 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1Ge1e62oLXppkADg73c6qWOA4ZPE3NcRA/view?usp=drivesdk' },
+    { titre: 'Exercice 10 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1ZqxQnjYAVlGtjNU3YM-jCcVnkARuAOSA/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Réorganiser ton tableau, dupliquer des infos... dans Excel, tout peut se déplacer, à condition de connaître les bons gestes.' },
@@ -462,7 +462,7 @@ const COLLAGE = {
   id: 'fn-collage',
   titre: 'Le collage spécial',
   exercices: [
-    { titre: 'Exercice 16 · Collage spécial', url: 'https://drive.google.com/file/d/1CBaMieuqtAYGiPPsnRYEJ-N6n9oEUhB9/view?usp=drivesdk' },
+    { titre: 'Exercice 11 · Collage spécial', url: 'https://drive.google.com/file/d/19t6YSaDRpO1J1g2oU6ibMkB1Nshbx348/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Le Ctrl + C / Ctrl + V, tu le connais déjà. Le **collage spécial**, c\'est la version précise : tu colles seulement ce que tu veux.' },
@@ -542,8 +542,8 @@ const ASSISTANT = {
   id: 'fn-assistant',
   titre: 'L\'assistant fonction & les fonctions de base',
   exercices: [
-    { titre: 'Exercice 18 · L\'assistant fonction', url: 'https://drive.google.com/file/d/1gjZG8-JbugggNgei9agNRgHk4Ku2ywRE/view?usp=drivesdk' },
-    { titre: 'Exercice 19 · Formule sans assistant fonction', url: 'https://drive.google.com/file/d/1eREpvf22vzKVNxCrcEV9xxM74HRy1tOc/view?usp=drivesdk' },
+    { titre: 'Exercice 13 · L\'assistant fonction', url: 'https://drive.google.com/file/d/10pSttmBFWXPpxrnWJEtKnEx3uq93GrlT/view?usp=drivesdk' },
+    { titre: 'Exercice 14 · Formule sans assistant fonction', url: 'https://drive.google.com/file/d/1evRQn4T4tANi0ddh4cn3qfcxEBEA-HQO/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Tu ne sais pas encore taper une formule tout(e) seul(e) ? L\'**assistant fonction** te guide, pas à pas.' },
@@ -629,9 +629,9 @@ const SERIES = {
   id: 'fn-series',
   titre: 'Les séries automatiques',
   exercices: [
-    { titre: 'Exercice 8 · Création de série', url: 'https://drive.google.com/file/d/11ynTg8L2DuaPlp-vdYi9RKWptpctU4cS/view?usp=drivesdk' },
-    { titre: 'Exercice 9 · Création de série', url: 'https://drive.google.com/file/d/1P0pTkfmihSKXD_MVp5SB4XXEzNtin1XG/view?usp=drivesdk' },
-    { titre: 'Exercice 10 · Création de série', url: 'https://drive.google.com/file/d/1w2DDpfULU8QDFKhlx9iLjW3ini_cemG7/view?usp=drivesdk' },
+    { titre: 'Exercice 6 · Création de série', url: 'https://drive.google.com/file/d/1fRWXb9X7cYXpij0ATNAoo3d_t-BHydqt/view?usp=drivesdk' },
+    { titre: 'Exercice 7 · Création de série', url: 'https://drive.google.com/file/d/153_yhlXdoIQFp5vUhnFGZf8qlIvJGjUY/view?usp=drivesdk' },
+    { titre: 'Exercice 8 · Création de série', url: 'https://drive.google.com/file/d/1YNtuY85wrKG2np13AItegrneNFJpAspK/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'La poignée de recopie ne sert pas qu\'à copier : elle crée aussi des **suites automatiques**, les séries. Un vrai gain de temps.' },
