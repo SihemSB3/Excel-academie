@@ -6130,8 +6130,14 @@ const ALLERPLUSLOIN = {
     },
     {
       humeur: 'accueil',
-      dit: 'Astuce détective. Tu veux voir **toutes les lignes** qui composent le total d\'Alice. **Que fais-tu ?**',
-      visuel: { type: 'question', options: ['Un double-clic sur son total', 'Une RECHERCHEV', 'Un clic droit > Supprimer'], bonne: 0, explication: 'Un double-clic sur une valeur du TCD crée automatiquement une nouvelle feuille listant TOUTES les lignes de la source qui composent ce total. Parfait pour vérifier ou approfondir.' },
+      dit: 'Astuce détective : **afficher le détail** d\'un total. Tu veux voir toutes les ventes qui composent le total d\'Alice. **Double-clique sa valeur** dans le TCD : Excel crée une feuille avec le détail.',
+      visuel: { type: 'tcddetail', classeur: 'VentesImmo.xlsx', valeurTitre: 'Somme de Montant', agents: [{ et: 'Alice', val: '620 000 €' }, { et: 'Bob', val: '410 000 €' }], cible: 'Alice', total: '1 030 000 €', detailCols: ['Agent', 'Type de bien', 'Date', 'Montant'], detail: [['Alice', 'Appartement', '12/01/2024', '210 000 €'], ['Alice', 'Maison', '03/06/2024', '410 000 €']], explication: 'Un double-clic sur une valeur du TCD crée une nouvelle feuille listant TOUTES les lignes de la source qui composent ce total (ici les 2 ventes d\'Alice : 210 000 + 410 000 = 620 000 €). Parfait pour vérifier ou approfondir un chiffre.' },
+      plus: [
+        'Afficher le détail (drill-down) = **double-clic** sur n\'importe quelle valeur du TCD.',
+        'Excel crée une **nouvelle feuille** avec toutes les lignes source de ce total.',
+        'Idéal pour auditer un chiffre : d\'où vient ce montant ?',
+        'La feuille de détail est une copie figée : elle ne se met pas à jour toute seule (regénère-la au besoin).',
+      ],
     },
     {
       humeur: 'pensif',

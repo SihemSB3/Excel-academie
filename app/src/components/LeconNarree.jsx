@@ -5246,6 +5246,56 @@ function SourceGranditInteractif({ v, onResolu }) {
   )
 }
 
+// AFFICHER LE DÉTAIL D'UN TOTAL (drill-down) : un DOUBLE-CLIC sur une valeur du TCD crée une
+// nouvelle feuille listant toutes les lignes de la source qui composent ce total. On voit le TCD,
+// puis la feuille de détail qui apparaît.
+function TcdDetailInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', valeurTitre = 'Somme de Montant', agents = [], cible = 'Alice', total = '', detailCols = [], detail = [], explication = '' } = v
+  const [ouvert, setOuvert] = useState(false)   // la feuille de détail est créée
+  useEffect(() => { if (ouvert) onResolu && onResolu() }, [ouvert])
+  const feuilleActive = ouvert ? cible : 'TCD'
+
+  return (
+    <div className="mt-3">
+      {!ouvert && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(`**Double-clique** le total d'**${cible}** (${agents.find((a) => a.et === cible)?.val}) pour voir les ventes qui le composent.`)}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="p-3">
+          {!ouvert ? (
+            <table className="border-collapse text-[10px]">
+              <tbody>
+                <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">Agent</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+                {agents.map((a) => { const estCible = a.et === cible; return (
+                  <tr key={a.et}>
+                    <td className="border border-navy/15 px-2 py-1 text-navy/85">{a.et}</td>
+                    <td onDoubleClick={estCible ? () => setOuvert(true) : undefined} className={`border border-navy/15 px-2 py-1 text-right ${estCible ? 'animate-pulse cursor-pointer bg-mint/15 font-semibold text-navy ring-1 ring-inset ring-mint' : 'text-navy/85'}`}>{a.val}</td>
+                  </tr>
+                ) })}
+                <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{total}</td></tr>
+              </tbody>
+            </table>
+          ) : (
+            <>
+              <p className="mb-1 text-[10px] text-navy/55">Détail des ventes de <b className="text-navy/80">{cible}</b> (nouvelle feuille créée par le double-clic) :</p>
+              <table className="border-collapse text-[10px]">
+                <tbody>
+                  <tr>{detailCols.map((h) => <td key={h} className="border border-navy/15 bg-mint/25 px-2 py-1 font-bold text-navy">{h}</td>)}</tr>
+                  {detail.map((r, i) => <tr key={i} className="animate-fade-up">{r.map((c, ci) => <td key={ci} className={`border border-navy/15 px-2 py-1 ${ci === r.length - 1 ? 'text-right font-semibold text-navy/85' : 'text-navy/85'}`}>{c}</td>)}</tr>)}
+                </tbody>
+              </table>
+            </>
+          )}
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {['Ventes', 'TCD', ...(ouvert ? [cible] : [])].map((f) => <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'} ${ouvert && f === cible ? 'animate-fade-up ring-1 ring-mint' : ''}`}>{f}</span>)}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {ouvert && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -9101,7 +9151,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -9235,6 +9285,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <ChampCalculeInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'sourcegrandit' ? (
             <SourceGranditInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'tcddetail' ? (
+            <TcdDetailInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9336,7 +9388,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                         ? 'Crée le champ calculé'
                                                                                                         : s.visuel?.type === 'sourcegrandit'
                                                                                                           ? 'Rends la source extensible'
-                                                                                                          : 'Réponds pour continuer'
+                                                                                                          : s.visuel?.type === 'tcddetail'
+                                                                                                            ? 'Ouvre le détail'
+                                                                                                            : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}
