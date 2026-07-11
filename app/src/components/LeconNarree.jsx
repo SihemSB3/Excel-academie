@@ -5464,16 +5464,9 @@ function ParamChampValeurInteractif({ v, onResolu }) {
             <div className="px-2 py-1 text-navy/50">Zones :</div>
             <div className="grid grid-cols-2 gap-1 px-2 pb-2">
               <div className="rounded border border-navy/15 bg-white p-1"><p className="text-[8px] text-navy/40">≡ Lignes</p><p className="mt-0.5 rounded-sm bg-navy/[0.04] px-1 py-0.5 text-navy/70">Agent</p></div>
-              <div className="relative rounded border border-navy/15 bg-white p-1">
+              <div className="rounded border border-navy/15 bg-white p-1">
                 <p className="text-[8px] text-navy/40">Σ Valeurs</p>
-                <button onClick={() => phase === 'pane' && setPhase('menu')} className={`mt-0.5 flex w-full items-center justify-between rounded-sm px-1 py-0.5 text-left ${phase === 'pane' ? 'animate-pulse bg-mint/15 text-navy ring-1 ring-mint' : 'bg-navy/[0.04] text-navy/70'}`}>Somme de Montant <span className="text-navy/40">▾</span></button>
-                {phase === 'menu' && (
-                  <div className="absolute right-0 top-full z-20 mt-0.5 w-40 overflow-hidden rounded-md border border-navy/20 bg-white shadow-xl">
-                    {['Monter', 'Descendre', 'Supprimer le champ', 'Paramètres des champs de valeurs…'].map((it) => (
-                      <div key={it} onClick={/^Paramètres/.test(it) ? () => setPhase('dialog') : undefined} className={`px-2 py-1 text-navy/80 ${/^Paramètres/.test(it) ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold ring-1 ring-inset ring-mint' : ''}`}>{it}</div>
-                    ))}
-                  </div>
-                )}
+                <button onClick={() => phase === 'pane' && setPhase('menu')} className={`mt-0.5 flex w-full items-center justify-between rounded-sm px-1 py-0.5 text-left ${phase === 'pane' ? 'animate-pulse bg-mint/15 text-navy ring-1 ring-mint' : phase === 'menu' ? 'bg-mint/15 font-semibold text-navy ring-1 ring-mint' : 'bg-navy/[0.04] text-navy/70'}`}>Somme de Montant <span className="text-navy/40">▾</span></button>
               </div>
             </div>
           </div>
@@ -5483,6 +5476,16 @@ function ParamChampValeurInteractif({ v, onResolu }) {
           <span className="px-1 text-navy/35">＋</span>
         </div>
       </div>
+
+      {/* Le menu du champ, rendu SOUS la fenêtre (sinon coupé par overflow-hidden) */}
+      {phase === 'menu' && (
+        <div className="mx-auto mt-2 w-60 overflow-hidden rounded-md border border-navy/20 bg-white text-[11px] shadow-xl">
+          <p className="border-b border-navy/10 bg-navy/5 px-2 py-0.5 text-[9px] text-navy/50">Menu du champ « Somme de Montant »</p>
+          {['Monter', 'Descendre', 'Supprimer le champ', 'Paramètres des champs de valeurs…'].map((it) => (
+            <div key={it} onClick={/^Paramètres/.test(it) ? () => setPhase('dialog') : undefined} className={`px-3 py-1.5 ${/^Paramètres/.test(it) ? 'animate-pulse cursor-pointer bg-mint/10 font-semibold text-navy ring-1 ring-inset ring-mint' : 'text-navy/70'}`}>{it}</div>
+          ))}
+        </div>
+      )}
 
       {/* La boîte « Paramètres des champs de valeurs » */}
       {phase === 'dialog' && (
