@@ -5296,6 +5296,78 @@ function TcdDetailInteractif({ v, onResolu }) {
   )
 }
 
+// CHRONOLOGIE (timeline) : le segment version DATES. On choisit le champ date (fenêtre Insérer
+// des chronologies), une barre de périodes apparaît (avec le niveau Années/Trimestres/Mois/Jours),
+// et un clic sur une période filtre le TCD sur cette période. Le tableau reste visible.
+function ChronologieInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', feuilles = ['Ventes', 'TCD'], feuilleActive = 'TCD', champDate = 'Date de vente', niveaux = ['Années', 'Trimestres', 'Mois', 'Jours'], niveauActif = 'Années', valeurTitre = 'Somme de Montant', periodes = [], cible = '2024', tcdAvant = {}, tcdApres = {}, explication = '' } = v
+  const [phase, setPhase] = useState('choix')  // choix | filtre
+  const [coche, setCoche] = useState(false)
+  const [sel, setSel] = useState(null)
+  const [fait, setFait] = useState(false)
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const cliquer = (p) => { if (fait) return; setSel(p); if (p === cible) setFait(true) }
+  const tcd = sel === cible ? tcdApres : tcdAvant
+
+  if (phase === 'choix') {
+    return (
+      <div className="mt-3">
+        <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(coche ? 'Clique **OK** : la chronologie apparaît.' : `« Insérer une chronologie » ouvre cette fenêtre. **Coche le champ date** (**${champDate}**).`)}</p>
+        <div className="mx-auto max-w-[14rem] overflow-hidden rounded-lg border border-navy/25 text-[11px] shadow-xl">
+          <div className="flex items-center justify-between bg-[#e9e9e9] px-3 py-1.5 font-semibold text-navy/80"><span>Insérer des chronologies</span><span className="text-navy/40">✕</span></div>
+          <div className="space-y-1.5 bg-white p-3">
+            <button onClick={() => setCoche((c) => !c)} className="flex w-full items-center gap-2 text-left text-navy/80">
+              <span className={`grid h-3.5 w-3.5 place-items-center rounded-sm border text-[9px] text-white ${coche ? 'border-mint bg-mint' : 'animate-pulse border-mint ring-1 ring-mint'}`}>{coche && '✓'}</span>{champDate}
+            </button>
+            <div className="flex justify-end gap-2 border-t border-navy/10 pt-2">
+              <button onClick={() => coche && setPhase('filtre')} disabled={!coche} className={`rounded-sm border-2 px-5 py-0.5 font-bold ${coche ? 'animate-pulse border-mint bg-mint/15 text-navy' : 'border-navy/20 bg-[#f0f0f0] text-navy/35'}`}>OK</button>
+              <span className="rounded-sm border border-navy/25 bg-[#f0f0f0] px-3 py-0.5 text-navy/60">Annuler</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(`Voici la **chronologie**. Clique la période **${cible}** : le TCD se filtre sur cette année.`)}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+        <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-start">
+          <table className="border-collapse text-[10px]">
+            <tbody>
+              <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{tcd.titre}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{valeurTitre}</td></tr>
+              {(tcd.lignes || []).map((l, i) => <tr key={i} className={sel ? 'animate-fade-up' : ''}><td className={`border border-navy/15 px-2 py-1 ${sel ? 'bg-mint/10 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${sel ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td></tr>)}
+              <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{tcd.total}</td></tr>
+            </tbody>
+          </table>
+
+          {/* La chronologie : titre + niveau + barre de périodes */}
+          <div className="w-52 shrink-0 overflow-hidden rounded-md border border-navy/25 bg-white shadow-md">
+            <div className="flex items-center justify-between border-b border-navy/15 px-2 py-1">
+              <span className="text-[10px] font-bold text-navy/70">{champDate}</span>
+              <span className="flex items-center gap-0.5 rounded border border-navy/20 px-1 py-0.5 text-[9px] text-navy/60">{niveauActif} <span className="text-navy/40">▾</span></span>
+            </div>
+            <div className="px-2 py-1 text-[8px] uppercase tracking-wide text-navy/35">{sel ? sel : 'Toutes les périodes'}</div>
+            <div className="flex gap-0.5 px-2 pb-1">
+              {periodes.map((p) => { const on = sel === p; const estCible = p === cible; return (
+                <button key={p} onClick={() => cliquer(p)} className={`flex-1 rounded-sm border px-1 py-2 text-center text-[10px] transition ${on ? 'border-[#2f7a4d] bg-[#2f7a4d]/10 font-bold text-navy' : `border-navy/15 bg-white text-navy/70 hover:bg-mint/10 ${!fait && estCible ? 'animate-pulse ring-1 ring-mint' : ''}`}`}>{p}<span className={`mt-1 block h-1 rounded-full ${on ? 'bg-[#2f7a4d]' : 'bg-navy/10'}`} /></button>
+              ) })}
+            </div>
+            <div className="mx-2 mb-1.5 h-1.5 rounded-full bg-navy/10" />
+          </div>
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {feuilles.map((f) => <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>)}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -9151,7 +9223,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -9287,6 +9359,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <SourceGranditInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'tcddetail' ? (
             <TcdDetailInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'chronologie' ? (
+            <ChronologieInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9390,7 +9464,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                           ? 'Rends la source extensible'
                                                                                                           : s.visuel?.type === 'tcddetail'
                                                                                                             ? 'Ouvre le détail'
-                                                                                                            : 'Réponds pour continuer'
+                                                                                                            : s.visuel?.type === 'chronologie'
+                                                                                                              ? 'Filtre par période'
+                                                                                                              : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

@@ -5977,6 +5977,18 @@ const ANALYSERTCD = {
       ],
     },
     {
+      humeur: 'content',
+      dit: 'Pour les **dates**, le segment a un grand frère : la **chronologie**. Insère-la (coche le champ date), puis clique une **période** : le TCD se filtre sur cette période. Tu peux même changer le niveau (Années, Trimestres, Mois, Jours).',
+      visuel: { type: 'chronologie', classeur: 'VentesImmo.xlsx', feuilles: ['Ventes', 'TCD'], feuilleActive: 'TCD', champDate: 'Date de vente', niveaux: ['Années', 'Trimestres', 'Mois', 'Jours'], niveauActif: 'Années', valeurTitre: 'Somme de Montant', periodes: ['2022', '2023', '2024'], cible: '2024', tcdAvant: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], total: '910 000 €' }, tcdApres: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '180 000 €' }, { et: 'Lyon', val: '150 000 €' }], total: '330 000 €' }, explication: 'Un clic sur « 2024 » et tout le TCD ne montre plus que les ventes de 2024 (330 000 €). La chronologie, c\'est le filtre de dates le plus visuel : tu balaies les périodes et tu changes de niveau (Années, Trimestres, Mois, Jours) d\'un clic.' },
+      plus: [
+        'La chronologie est un **filtre de dates visuel** (comme un segment, mais pour le temps).',
+        'Insertion : **Analyse du TCD > Insérer une chronologie**, coche le champ date, OK.',
+        'Clique une **période** pour filtrer ; **glisse** sur la barre pour sélectionner une plage.',
+        'Change de **niveau** en haut à droite : Années, Trimestres, Mois, Jours.',
+        'L\'**entonnoir barré** efface le filtre de dates.',
+      ],
+    },
+    {
       humeur: 'accueil',
       dit: 'À toi. Quel **raccourci clavier** actualise le TCD sélectionné ?',
       visuel: { type: 'question', options: ['Alt + F5', 'Ctrl + R', 'F9', 'Ctrl + Alt + F5'], bonne: 0, explication: 'Alt + F5 actualise le TCD sélectionné (comme le clic droit > Actualiser). Pour tout actualiser d\'un coup dans le classeur : Ctrl + Alt + F5.' },
