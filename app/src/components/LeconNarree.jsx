@@ -5149,6 +5149,103 @@ function ChampCalculeInteractif({ v, onResolu }) {
   )
 }
 
+// UNE SOURCE QUI GRANDIT TOUTE SEULE : rendre le TCD auto-extensible. On transforme la source en
+// Tableau (Ctrl+L, ruban Insertion VISIBLE + la source), on la nomme, on pointe la source du TCD
+// dessus (Analyse > Changer la source de données), puis un ajout + Actualiser fait grandir le TCD.
+// Le tableau reste visible à chaque étape (pas de ruban seul).
+function SourceGranditInteractif({ v, onResolu }) {
+  const { classeur = 'VentesImmo.xlsx', source = [], nouvelle = { loc: 'Nice', mt: '150 000 €' }, nomTable = 'T_VentesImmo', tcdAvant = {}, tcdApres = {}, explication = '' } = v
+  const [phase, setPhase] = useState('ctrll')  // ctrll | nom | changer | demo | fait
+  const fait = phase === 'fait'
+  useEffect(() => { if (fait) onResolu && onResolu() }, [fait])
+  const estTable = phase !== 'ctrll'
+  const nomme = ['changer', 'demo', 'fait'].includes(phase)
+  const surTcd = ['changer', 'demo', 'fait'].includes(phase)
+  const feuilleActive = surTcd ? 'TCD' : 'Ventes'
+  const tcd = fait ? tcdApres : tcdAvant
+  const src = nomme ? `=${nomTable}` : '=Ventes!$A$1:$B$5'
+
+  const consigne = () => {
+    if (phase === 'ctrll') return 'Étape 1. Transforme ta source en **Tableau** : onglet **Insertion > Tableau** (ou **Ctrl + L**).'
+    if (phase === 'nom') return 'Étape 2. **Nomme la Table** : clique le champ Nom et mets **T_VentesImmo** (pour la retrouver facilement).'
+    if (phase === 'changer') return 'Étape 3. Sur le TCD : **Analyse du TCD > Changer la source de données**, et pointe la **Table**.'
+    if (phase === 'demo') return 'Étape 4. Une vente à **Nice** vient d\'arriver dans la Table. Comme le TCD pointe la Table, un simple **Actualiser** l\'intègre.'
+    return ''
+  }
+
+  return (
+    <div className="mt-3">
+      {!fait && <p className="mb-2 rounded-xl bg-navy/5 px-3 py-2 text-center text-sm font-bold text-navy">👆 {gras(consigne())}</p>}
+      <div className="animate-fade-up overflow-hidden rounded-xl border border-navy/15 bg-white shadow-lg">
+        <div className="flex items-center gap-2 bg-[#1f7a4d] px-3 py-1 text-[10px] text-white"><span className="font-semibold">📗 {classeur}</span><span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span></div>
+
+        {/* Ruban contextuel selon l'étape */}
+        {phase === 'ctrll' && (
+          <div className="border-b border-navy/10 bg-[#f3f3f3] px-2 pt-1">
+            <div className="flex gap-0.5 text-[10px]">{['Fichier', 'Accueil', 'Insertion'].map((o) => <span key={o} className={`rounded-t px-2 py-1 ${o === 'Insertion' ? 'bg-white font-bold text-[#0a7a3d]' : 'text-navy/55'}`}>{o}</span>)}</div>
+            <div className="flex items-start gap-2 bg-white px-2 py-1.5">
+              <div className="rounded-md border border-navy/15 bg-navy/[0.02] px-1.5 pb-1 pt-1">
+                <div className="flex items-end gap-1">
+                  <div className="flex w-14 flex-col items-center gap-1 rounded p-1 text-center text-[10px] opacity-50"><span className="text-sm">📊</span><span className="leading-tight text-navy/60">TCD</span></div>
+                  <button onClick={() => setPhase('nom')} className="flex w-14 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center text-[10px] ring-1 ring-mint"><span className="text-sm">▦</span><span className="leading-tight text-navy/75">Tableau</span></button>
+                </div>
+                <div className="mt-1 border-t border-navy/10 pt-0.5 text-center text-[9px] font-semibold text-navy/60">Tableaux</div>
+              </div>
+            </div>
+          </div>
+        )}
+        {phase === 'changer' && (
+          <div className="border-b border-navy/10 bg-[#f3f3f3] px-2 pt-1">
+            <div className="flex gap-0.5 text-[10px]">{['Fichier', 'Analyse du TCD', 'Création'].map((o) => <span key={o} className={`rounded-t px-2 py-1 ${o === 'Analyse du TCD' ? 'bg-white font-bold text-[#0a7a3d]' : 'text-navy/55'}`}>{o}</span>)}</div>
+            <div className="flex items-start gap-2 bg-white px-2 py-1.5">
+              <div className="rounded-md border border-navy/15 bg-navy/[0.02] px-1.5 pb-1 pt-1">
+                <div className="flex items-end gap-1">
+                  <div className="flex w-14 flex-col items-center gap-1 rounded p-1 text-center text-[10px] opacity-50"><span className="text-sm">🔄</span><span className="leading-tight text-navy/60">Actualiser</span></div>
+                  <button onClick={() => setPhase('demo')} className="flex w-16 animate-pulse flex-col items-center gap-1 rounded bg-mint/15 p-1 text-center text-[10px] ring-1 ring-mint"><span className="text-sm">🗄</span><span className="leading-tight text-navy/75">Changer la source de données</span></button>
+                </div>
+                <div className="mt-1 border-t border-navy/10 pt-0.5 text-center text-[9px] font-semibold text-navy/60">Données</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Contenu de la feuille active : la source (Tableau) OU le TCD */}
+        <div className="p-3">
+          {phase === 'nom' && (
+            <button onClick={() => setPhase('changer')} className="mb-1 flex animate-pulse items-center gap-1.5 rounded-sm border border-mint bg-mint/10 px-2 py-0.5 text-[10px] ring-1 ring-mint"><span className="text-navy/45">Nom de la table :</span><span className="font-mono font-semibold text-navy">Tableau1</span><span className="text-navy/40">✎ → T_VentesImmo</span></button>
+          )}
+          {!surTcd ? (
+            <table className="border-collapse text-[10px]">
+              <tbody>
+                <tr>{['Localisation', 'Montant'].map((h) => <td key={h} className={`border px-2 py-1 font-bold ${estTable ? 'border-[#2f6fb3] bg-[#2f6fb3] text-white' : 'border-navy/15 bg-mint/25 text-navy'}`}>{h}</td>)}</tr>
+                {source.map((r, i) => <tr key={i}><td className={`border px-2 py-1 ${estTable ? (i % 2 ? 'border-[#bcd6ec] bg-[#eaf2fa]' : 'border-[#bcd6ec] bg-white') : 'border-navy/15'} text-navy/85`}>{r.loc}</td><td className={`border px-2 py-1 text-right ${estTable ? (i % 2 ? 'border-[#bcd6ec] bg-[#eaf2fa]' : 'border-[#bcd6ec] bg-white') : 'border-navy/15'} text-navy/85`}>{r.mt}</td></tr>)}
+              </tbody>
+            </table>
+          ) : (
+            <>
+              {phase === 'demo' && <p className="mb-2 rounded-md border border-mint/40 bg-mint/10 px-2 py-1 text-[10px] text-navy/80">🆕 <b>{nouvelle.loc} · {nouvelle.mt}</b> vient d'être ajoutée à la Table source.</p>}
+              {phase === 'demo' && <button onClick={() => setPhase('fait')} className="mb-2 animate-pulse rounded-md border-2 border-mint bg-mint/15 px-3 py-1 text-[11px] font-bold text-navy">🔄 Actualiser le TCD</button>}
+              <table className="border-collapse text-[10px]">
+                <tbody>
+                  <tr><td className="border border-navy/15 bg-navy/10 px-2 py-1 font-bold text-navy/70">{tcd.titre}</td><td className="border border-navy/15 bg-navy/10 px-2 py-1 text-right font-bold text-navy/70">{tcd.valeurTitre}</td></tr>
+                  {(tcd.lignes || []).map((l, i) => <tr key={i} className={fait && l.nouvelle ? 'animate-fade-up' : ''}><td className={`border border-navy/15 px-2 py-1 ${fait && l.nouvelle ? 'bg-mint/20 font-semibold text-navy' : 'text-navy/85'}`}>{l.et}</td><td className={`border border-navy/15 px-2 py-1 text-right ${fait && l.nouvelle ? 'font-semibold text-mint-dark' : 'text-navy/85'}`}>{l.val}</td></tr>)}
+                  <tr><td className="border border-navy/15 bg-navy/5 px-2 py-1 font-bold text-navy/70">Total général</td><td className="border border-navy/15 bg-navy/5 px-2 py-1 text-right font-bold text-navy/80">{tcd.total}</td></tr>
+                </tbody>
+              </table>
+              <p className="mt-1 font-mono text-[9px] text-navy/45">Source du TCD : {src}</p>
+            </>
+          )}
+        </div>
+        <div className="flex items-end gap-1 border-t border-navy/10 bg-navy/5 px-2 pt-1 text-[10px]">
+          {['Ventes', 'TCD'].map((f) => <span key={f} className={`rounded-t px-2.5 py-0.5 ${f === feuilleActive ? 'bg-white font-bold text-navy' : 'bg-navy/10 text-navy/50'}`}>{f}</span>)}
+          <span className="px-1 text-navy/35">＋</span>
+        </div>
+      </div>
+      {fait && <p className="mt-2 animate-fade-up rounded-xl bg-mint/15 px-3 py-2 text-sm text-navy/90"><span className="font-bold text-mint">✓ Bien joué ! 🥋</span> {explication}</p>}
+    </div>
+  )
+}
+
 // Le PLAN d'une consolidation liée : les boutons de niveaux 1/2 en haut à gauche, et les
 // boutons + / – dans la marge pour développer ou masquer le détail de chaque groupe.
 function PlanConso() {
@@ -9004,7 +9101,7 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit'].includes(s.visuel?.type) && !resolu
 
   useEffect(() => {
     setResolu(false)
@@ -9136,6 +9233,8 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
             <TcdGrouperNombreInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : s.visuel?.type === 'champcalcule' ? (
             <ChampCalculeInteractif v={s.visuel} onResolu={() => setResolu(true)} />
+          ) : s.visuel?.type === 'sourcegrandit' ? (
+            <SourceGranditInteractif v={s.visuel} onResolu={() => setResolu(true)} />
           ) : (
             <Visuel v={s.visuel} />
           )}
@@ -9235,7 +9334,9 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
                                                                                                       ? 'Crée les tranches'
                                                                                                       : s.visuel?.type === 'champcalcule'
                                                                                                         ? 'Crée le champ calculé'
-                                                                                                        : 'Réponds pour continuer'
+                                                                                                        : s.visuel?.type === 'sourcegrandit'
+                                                                                                          ? 'Rends la source extensible'
+                                                                                                          : 'Réponds pour continuer'
               : dernier
                 ? 'Terminer'
                 : 'Continuer'}

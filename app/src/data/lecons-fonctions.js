@@ -6135,21 +6135,16 @@ const ALLERPLUSLOIN = {
     },
     {
       humeur: 'pensif',
-      dit: 'Enfin, pour que ton TCD reste **toujours à jour** quand ta liste s\'agrandit : transforme la source en **Tableau** (Ctrl+L) et nomme-la.',
-      visuel: {
-        type: 'methode',
-        titre: 'Une source qui grandit toute seule',
-        blocs: [
-          { etapes: ['Transforme ta source en **Tableau** : sélectionne-la, puis **Insertion > Tableau** (ou **Ctrl + L**).'] },
-          { capture: { type: 'ruban', actif: 'Insertion', onglets: ['Fichier', 'Accueil', 'Insertion', 'Mise en page', 'Formules'], groupeNom: 'Tableaux', groupes: [{ icone: '📊', label: 'Tableau croisé\ndynamique' }, { icone: '▦', label: 'Tableau', actif: true }] } },
-          { etapes: ['Donne-lui un **nom** dans l\'onglet **Création de tableau** (ex. T_VentesImmo).'], depart: 2 },
-          { capture: { type: 'ruban', actif: 'Création de tableau', onglets: ['Fichier', 'Accueil', 'Insertion', 'Création de tableau'], groupeNom: 'Propriétés', groupes: [{ icone: '🏷', label: 'Nom :\nT_VentesImmo', actif: true }] } },
-          { etapes: ['Dans le TCD : **Analyse du TCD > Changer la source de données**, puis pointe le **nom** du tableau.'], depart: 3 },
-          { capture: { type: 'ruban', actif: 'Analyse du TCD', onglets: ['Fichier', 'Accueil', 'Insertion', 'Analyse du TCD', 'Création'], groupeNom: 'Données', groupes: [{ icone: '🔄', label: 'Actualiser' }, { icone: '🗄', label: 'Changer la source\nde données', actif: true }] } },
-          { note: 'Chaque nouvelle ligne ajoutée à la Table est intégrée toute seule : un simple **Actualiser** suffit.', label: 'Bénéfice' },
-        ],
-      },
-      plus: ['Tu peux aussi étendre la plage à la main dans « Changer la source de données » ($E$2383 → $E$2400) ou à la souris avec les poignées vertes.', 'Les Options du TCD (clic droit > Options, ou ruban) centralisent tous les réglages sur 5 onglets : Disposition & mise en forme, Totaux et filtres, Affichage, Données, Impression.'],
+      dit: 'Enfin, pour que ton TCD reste **toujours à jour** quand ta liste grandit : transforme la source en **Tableau**, nomme-la, puis pointe la **source du TCD** dessus. Après ça, chaque nouvelle vente suit toute seule avec un simple Actualiser. Fais les 4 étapes, le tableau reste sous tes yeux.',
+      visuel: { type: 'sourcegrandit', classeur: 'VentesImmo.xlsx', source: [{ loc: 'Paris', mt: '250 000 €' }, { loc: 'Lyon', mt: '310 000 €' }, { loc: 'Marseille', mt: '180 000 €' }, { loc: 'Paris', mt: '170 000 €' }], nouvelle: { loc: 'Nice', mt: '150 000 €' }, nomTable: 'T_VentesImmo', tcdAvant: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }], total: '910 000 €' }, tcdApres: { titre: 'Localisation', valeurTitre: 'Somme de Montant', lignes: [{ et: 'Paris', val: '420 000 €' }, { et: 'Lyon', val: '310 000 €' }, { et: 'Marseille', val: '180 000 €' }, { et: 'Nice', val: '150 000 €', nouvelle: true }], total: '1 060 000 €' }, explication: 'La source du TCD pointe désormais la Table T_VentesImmo. Tu ajoutes Nice, un Actualiser suffit pour l\'intégrer (total 1 060 000 €), sans jamais rétoucher la plage. C\'est ça, une source qui grandit toute seule.' },
+      plus: [
+        'Transforme la source en **Tableau** : sélectionne-la, **Insertion > Tableau** (ou **Ctrl + L**).',
+        'Nomme le Tableau dans **Création de tableau** (ex. T_VentesImmo).',
+        'Sur le TCD : **Analyse du TCD > Changer la source de données**, pointe le **nom** du Tableau.',
+        'Ensuite, chaque ligne ajoutée à la Table est prise en compte : un simple **Actualiser** suffit.',
+        'Tu peux aussi étendre la plage à la main dans « Changer la source de données », ou à la souris avec les poignées vertes.',
+        'Les **Options du TCD** (clic droit > Options, ou ruban) centralisent tous les réglages sur 5 onglets : Disposition & mise en forme, Totaux et filtres, Affichage, Données, Impression.',
+      ],
     },
     {
       humeur: 'accueil',
