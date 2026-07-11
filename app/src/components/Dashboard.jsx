@@ -193,29 +193,6 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
         ))}
       </div>
 
-      <div className="mt-8 rounded-2xl border border-mint/30 bg-mint/10 p-4">
-        <p className="text-xs font-bold uppercase tracking-wide text-mint">✨ Nouveau format</p>
-        <p className="mt-1 text-sm text-navy/85">Le Shifu t'explique une fonction pas à pas, avec un mini-défi à la fin.</p>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          {[
-            ['calculs', 'Faire des calculs'],
-            ['saisie', 'Saisir des données'],
-            ['recopie', 'Recopie & séries'],
-            ['somme', 'La fonction SOMME'],
-            ['references', 'Références $'],
-            ['si', 'La fonction SI'],
-          ].map(([id, label]) => (
-            <button
-              key={id}
-              onClick={() => onOuvrirDemo(id)}
-              className="rounded-xl border border-navy/15 bg-navy/5 py-3 text-sm font-bold text-navy transition hover:bg-navy/10"
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       <button
         onClick={onOuvrirConnexion}
         className="mt-8 w-full rounded-2xl border border-navy/15 bg-navy/5 px-4 py-3 text-sm font-bold text-navy transition hover:bg-navy/10 lg:hidden"
