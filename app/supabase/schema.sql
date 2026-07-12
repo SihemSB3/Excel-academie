@@ -8,6 +8,8 @@ create table if not exists public.progression (
   ceintures text[] not null default '{}',
   ecrans_valides jsonb not null default '{}'::jsonb,
   chapitres_termines integer[] not null default '{}',
+  journal jsonb not null default '{}'::jsonb,
+  streak jsonb not null default '{"jour": null, "serie": 0}'::jsonb,
   updated_at timestamptz not null default now()
 );
 

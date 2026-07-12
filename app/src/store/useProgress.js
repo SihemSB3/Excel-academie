@@ -25,6 +25,30 @@ function estVeille(jour, aujourdhui) {
   return jour === jourLocal(d)
 }
 
+// Fusion locale/cloud à la connexion : jamais d'écrasement, au pire un léger
+// sur-comptage (ex: xp) mais aucune perte de progression sur les 2 appareils.
+function fusionnerJournal(a, b) {
+  const cles = new Set([...Object.keys(a), ...Object.keys(b)])
+  const out = {}
+  for (const id of cles) {
+    const x = a[id]
+    const y = b[id]
+    out[id] = !x ? y : !y ? x : x.fois >= y.fois ? x : y
+  }
+  return out
+}
+
+function fusionnerProgression(local, distant) {
+  return {
+    xp: Math.max(local.xp, distant.xp),
+    ceintures: Array.from(new Set([...local.ceintures, ...distant.ceintures])),
+    chapitresTermines: Array.from(new Set([...local.chapitresTermines, ...distant.chapitresTermines])),
+    ecransValides: { ...distant.ecransValides, ...local.ecransValides },
+    journal: fusionnerJournal(local.journal, distant.journal),
+    streak: (local.streak?.serie || 0) >= (distant.streak?.serie || 0) ? local.streak : distant.streak,
+  }
+}
+
 function charger() {
   try {
     const raw = localStorage.getItem(KEY)
@@ -108,5 +132,10 @@ export function useProgress() {
 
   const reinitialiser = useCallback(() => setEtat({ ...DEFAUT }), [])
 
-  return { etat, validerEcran, estValide, debloquerCeinture, enregistrerKata, reinitialiser }
+  // Fusionne l'état distant (Supabase) avec l'état local courant, sans jamais écraser.
+  const fusionnerEtDefinir = useCallback((distant) => {
+    setEtat((s) => fusionnerProgression(s, { ...DEFAUT, ...distant }))
+  }, [])
+
+  return { etat, validerEcran, estValide, debloquerCeinture, enregistrerKata, reinitialiser, fusionnerEtDefinir }
 }

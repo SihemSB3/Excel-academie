@@ -1,5 +1,7 @@
 import { chapitres, etapesChapitre } from '../data/chapitres'
 import { useProgressCtx } from '../store/ProgressContext'
+import { useAuth } from '../store/AuthContext'
+import { supabase } from '../lib/supabase'
 import { CEINTURES, ceintureInfo, indexCeinture, couleurTexte } from '../lib/belts'
 import { revisionsDues } from '../lib/revisions'
 import { BeltGraphic, ProgressBar } from './ui'
@@ -9,6 +11,7 @@ import { proverbeDuJour } from '../data/proverbes'
 
 export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObjectifs, onOuvrirConnexion }) {
   const { etat } = useProgressCtx()
+  const { utilisateur } = useAuth()
   const derniere = etat.ceintures[etat.ceintures.length - 1] || null
   const info = ceintureInfo(derniere)
   const prochaine = CEINTURES[indexCeinture(derniere) + 1] || null
@@ -200,12 +203,21 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
         ))}
       </div>
 
-      <button
-        onClick={onOuvrirConnexion}
-        className="mt-8 w-full rounded-2xl border border-navy/15 bg-navy/5 px-4 py-3 text-sm font-bold text-navy transition hover:bg-navy/10 lg:hidden"
-      >
-        Se connecter / créer un compte
-      </button>
+      {utilisateur ? (
+        <div className="mt-8 flex items-center justify-between gap-3 rounded-2xl border border-navy/15 bg-navy/5 px-4 py-3 lg:hidden">
+          <p className="truncate text-sm text-navy/70">{utilisateur.email}</p>
+          <button onClick={() => supabase.auth.signOut()} className="shrink-0 text-sm font-bold text-navy hover:underline">
+            Se déconnecter
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={onOuvrirConnexion}
+          className="mt-8 w-full rounded-2xl border border-navy/15 bg-navy/5 px-4 py-3 text-sm font-bold text-navy transition hover:bg-navy/10 lg:hidden"
+        >
+          Se connecter / créer un compte
+        </button>
+      )}
 
       <p className="mt-6 text-center text-[11px] text-navy/30">
         Les 13 chapitres, de la ceinture blanche à la noire. Progression sauvegardée sur ton compte.

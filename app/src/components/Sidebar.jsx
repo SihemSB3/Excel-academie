@@ -1,5 +1,7 @@
 import { chapitres } from '../data/chapitres'
 import { useProgressCtx } from '../store/ProgressContext'
+import { useAuth } from '../store/AuthContext'
+import { supabase } from '../lib/supabase'
 import { ceintureInfo } from '../lib/belts'
 import { BeltGraphic, ProgressBar } from './ui'
 import { Shifu } from './Shifu'
@@ -7,6 +9,7 @@ import { Shifu } from './Shifu'
 // Barre latérale visible uniquement sur grand écran (lg+). Panneau d'identité + statut.
 export default function Sidebar({ retourDojo, onConnexion }) {
   const { etat } = useProgressCtx()
+  const { utilisateur } = useAuth()
   const derniere = etat.ceintures[etat.ceintures.length - 1] || null
   const info = ceintureInfo(derniere)
   const faits = etat.chapitresTermines.length
@@ -49,12 +52,24 @@ export default function Sidebar({ retourDojo, onConnexion }) {
       </div>
 
       <div className="mt-auto space-y-3">
-        <button
-          onClick={onConnexion}
-          className="w-full rounded-xl border border-navy/15 bg-navy/5 py-2.5 text-sm font-bold text-navy transition hover:bg-navy/10"
-        >
-          Se connecter
-        </button>
+        {utilisateur ? (
+          <div className="space-y-2">
+            <p className="truncate text-center text-xs text-navy/50">{utilisateur.email}</p>
+            <button
+              onClick={() => supabase.auth.signOut()}
+              className="w-full rounded-xl border border-navy/15 bg-navy/5 py-2.5 text-sm font-bold text-navy transition hover:bg-navy/10"
+            >
+              Se déconnecter
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={onConnexion}
+            className="w-full rounded-xl border border-navy/15 bg-navy/5 py-2.5 text-sm font-bold text-navy transition hover:bg-navy/10"
+          >
+            Se connecter
+          </button>
+        )}
         <p className="text-[11px] leading-relaxed text-navy/30">
           Apprends sur mobile, pratique les exercices sur ordinateur. Ta progression te suit partout.
         </p>
