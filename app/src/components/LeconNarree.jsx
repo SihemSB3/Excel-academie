@@ -9542,12 +9542,33 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
     : lecon.narration
   const [etape, setEtape] = useState(0)
   const [resolu, setResolu] = useState(false)
+  // MODE REVUE : quand il est actif, on n'exige pas de réussir chaque interaction
+  // pour avancer, ce qui permet de relire une leçon entière sans la « jouer ».
+  // Actif par défaut tant que l'app sert d'outil de relecture (comme estDebloque
+  // dans le Dashboard). Se coupe/rallume depuis l'en-tête de la leçon (persistant).
+  const [revue, setRevue] = useState(() => {
+    try {
+      return localStorage.getItem('excel-dojo-gating') !== 'on'
+    } catch {
+      return true
+    }
+  })
+  const basculerRevue = () =>
+    setRevue((r) => {
+      const nv = !r
+      try {
+        localStorage.setItem('excel-dojo-gating', nv ? 'off' : 'on')
+      } catch {
+        /* stockage indisponible */
+      }
+      return nv
+    })
   // Pour le journal d'apprentissage : erreurs sur les interactions + temps passé.
   const erreursRef = useRef(0)
   const debutRef = useRef(Date.now())
   const s = steps[etape]
   const dernier = etape >= steps.length - 1
-  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux', 'paramchampvaleur', 'tcdmultitables', 'tcdoptions'].includes(s.visuel?.type) && !resolu
+  const bloque = ['question', 'elargir', 'doubleclic', 'trouvererreur', 'choixtableau', 'vraifaux', 'cliquecible', 'tirepoignee', 'selectplage', 'choixsuggestion', 'baliseclic', 'annulesaisie', 'collagetranspose', 'construitformule', 'tcdbuilder', 'tcdscene', 'sommeauto', 'stylebuilder', 'entetebuilder', 'assistantformule', 'remplacer', 'convertirwizard', 'zonenombuilder', 'rubannommage', 'ongletsinteractif', 'boitedialogue', 'listeinteractive', 'graphiqueinteractif', 'mfcbuilder', 'refbuilder', 'consoliderinteractif', 'planconsointeractif', 'creertableauinteractif', 'inserertcdinteractif', 'relationinteractif', 'sommesienscroise', 'supprimerdoublons', 'validationdonnees', 'validationeffet', 'listedynamique', 'tcdmasquer', 'segment', 'tcdactualiser', 'tcdgroupertexte', 'tcdgroupernombre', 'champcalcule', 'sourcegrandit', 'tcddetail', 'chronologie', 'tcdsoustotaux', 'paramchampvaleur', 'tcdmultitables', 'tcdoptions'].includes(s.visuel?.type) && !resolu && !revue
 
   useEffect(() => {
     setResolu(false)
@@ -9576,6 +9597,19 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
           ×
         </button>
         <p className="flex-1 truncate text-xs font-bold uppercase tracking-wide text-navy/50">{lecon.titre}</p>
+        <button
+          onClick={basculerRevue}
+          title={
+            revue
+              ? 'Mode révision : tu avances librement sans faire les manipulations. Clique pour réactiver les interactions.'
+              : 'Mode entraînement : chaque manipulation doit être réussie pour avancer. Clique pour parcourir librement.'
+          }
+          className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold transition ${
+            revue ? 'bg-mint/20 text-mint hover:bg-mint/30' : 'bg-navy/10 text-navy/50 hover:bg-navy/15'
+          }`}
+        >
+          {revue ? '👁 Révision' : '🥋 Entraînement'}
+        </button>
         <button
           onClick={() => (onTermine || onQuitter)(stats(true))}
           className="shrink-0 text-xs font-bold text-navy/40 transition hover:text-navy"
