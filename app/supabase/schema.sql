@@ -41,3 +41,33 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.creer_progression();
+
+-- Empêche de marquer un chapitre "terminé" en sautant des chapitres, même via
+-- un appel direct à l'API Supabase (contourne les vérifications côté client).
+-- Un chapitre ne peut être ajouté à chapitres_termines que s'il suit immédiatement
+-- le plus grand chapitre déjà marqué terminé (ou si c'est le chapitre 1).
+create or replace function public.verifier_ordre_chapitres()
+returns trigger language plpgsql as $$
+declare
+  max_nouveau integer;
+  max_ancien integer;
+begin
+  select coalesce(max(v), 0) into max_nouveau from unnest(new.chapitres_termines) as v;
+
+  if tg_op = 'INSERT' then
+    max_ancien := 0;
+  else
+    select coalesce(max(v), 0) into max_ancien from unnest(old.chapitres_termines) as v;
+  end if;
+
+  if max_nouveau > max_ancien + 1 then
+    raise exception 'Chapitres a terminer dans l''ordre (tentative de valider % alors que % etait le dernier termine)', max_nouveau, max_ancien;
+  end if;
+
+  return new;
+end; $$;
+
+drop trigger if exists on_progression_ordre_chapitres on public.progression;
+create trigger on_progression_ordre_chapitres
+  before insert or update on public.progression
+  for each row execute function public.verifier_ordre_chapitres();
