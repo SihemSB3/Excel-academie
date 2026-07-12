@@ -5859,9 +5859,9 @@ const EX13 = {
   ex87: { titre: 'Exercice 77 · Créer un TCD', url: U13('14EpfX9QyqD3AK7unBFuSr5X38DAmSjaH') },
   ex88: { titre: 'Exercice 78 · Créer un nouveau TCD', url: U13('1pjRQw2w8HI4je7T_CvrdmnnFZkSmi-cT') },
   ex89: { titre: 'Exercice 79 · Les champs calculés dans un TCD', url: U13('18OeXJQioHJIpkmggRVsy0aBn4dLQ2a3j') },
-  ex90: { titre: 'Exercice 80 · Grouper les dates dans un TCD', url: U13('1_S2QPXPhLZXtI5IIayfdQ0SvxkBsRpfv') },
-  ex91: { titre: 'Exercice 81 · Grouper les valeurs numériques dans un TCD', url: U13('1Yd1op5T3nAh1AjB9-4WDcdDpJAqa0dmu') },
-  ex92: { titre: 'Exercice 82 · Changer la source de données d\'un TCD', url: U13('131JUQ1d0sScSV7lW3HvxrpCXsVJFMl78') },
+  ex90: { titre: 'Exercice 80 · Grouper les dates dans un TCD', url: U13('1LfHvvK3n_KYphFTZwVZRFPjB4NO3EGLD') },
+  ex91: { titre: 'Exercice 81 · Grouper les valeurs numériques dans un TCD', url: U13('1nMPtbouFKpOF-oWVppPpTP7-GAyBpa1L') },
+  ex92: { titre: 'Exercice 82 · Changer la source de données d\'un TCD', url: U13('13WpDa44rHczUjUc1be2SrggxyS2LOete') },
 }
 
 // Table source fil rouge du chapitre : des ventes immobilières.
