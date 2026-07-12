@@ -17,6 +17,26 @@ export function Bouton({ children, onClick, variant = 'primary', disabled = fals
 }
 
 // Ceinture dessinée en SVG, colorée selon le niveau
+// Bandeau de téléchargement du chapitre du guide (PDF). Affiché en haut de l'écran d'un chapitre.
+export function TelechargerGuide({ url, className = '' }) {
+  if (!url) return null
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`flex items-center gap-3 rounded-2xl border border-[#e8853a]/30 bg-[#e8853a]/10 px-4 py-3 text-left transition hover:bg-[#e8853a]/[0.16] ${className}`}
+    >
+      <span className="text-xl">📘</span>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-bold text-navy">Le cours de ce chapitre en PDF</p>
+        <p className="text-xs text-navy/55">Télécharge le chapitre du guide et garde-le avec toi.</p>
+      </div>
+      <span className="shrink-0 rounded-full bg-[#e8853a] px-3 py-1 text-xs font-bold text-white">Télécharger</span>
+    </a>
+  )
+}
+
 export function BeltGraphic({ ceinture = 'blanche', size = 130, anime = false }) {
   const { couleur, couleur2, bord } = ceintureInfo(ceinture)
   const bicolore = couleur2 && couleur2 !== couleur

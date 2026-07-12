@@ -1,5 +1,5 @@
 import { ceintureInfo } from '../lib/belts'
-import { BeltGraphic } from './ui'
+import { BeltGraphic, TelechargerGuide } from './ui'
 
 const ICONE = { lecon: '📖', narration: '📖', flashcards: '⌨️', fiche_memo: '📋', quiz: '🎯', checklist: '✅' }
 const ETIQUETTE = {
@@ -35,6 +35,7 @@ export default function ChapterMap({ ch, estFait, tousFaits, onOuvrir, onQuitter
       </div>
 
       <div className="flex-1 px-5 py-6">
+        <TelechargerGuide url={ch.guideUrl} className="mb-6" />
         <ol className="relative">
           {ch.modules.map((m, i) => {
             const fait = i < faits

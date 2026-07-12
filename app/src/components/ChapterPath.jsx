@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ceintureInfo } from '../lib/belts'
-import { BeltGraphic } from './ui'
+import { BeltGraphic, TelechargerGuide } from './ui'
 import { Shifu } from './Shifu'
 
 const ICONE = { lecon: '📖', narration: '📖', flashcards: '⌨️', fiche_memo: '📋', quiz: '🎯', checklist: '✅' }
@@ -79,6 +79,10 @@ export default function ChapterPath({ ch, estFait, tousFaits, onOuvrir, onQuitte
             {faits}/{N} étapes · objectif ceinture {ceinture.label.toLowerCase()}
           </p>
         </div>
+      </div>
+
+      <div className="px-5 pb-2">
+        <TelechargerGuide url={ch.guideUrl} />
       </div>
 
       <div ref={scroller} className="flex flex-1 items-center overflow-x-auto overflow-y-hidden">
