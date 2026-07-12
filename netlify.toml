@@ -15,3 +15,13 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# En-têtes de sécurité de base (anti-clickjacking, anti-sniffing MIME, referrer limité).
+# Pas de Content-Security-Policy pour l'instant : l'app utilise beaucoup de styles
+# inline (style={{...}}) qu'une CSP stricte casserait sans tests approfondis d'abord.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
