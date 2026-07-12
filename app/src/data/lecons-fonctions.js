@@ -30,6 +30,7 @@ const SOMME = {
   titre: 'La fonction SOMME',
   exercices: [
     { titre: 'Exercice 12 · La somme automatique', url: 'https://drive.google.com/file/d/179TMP7ez2SErhcTehTzh1EfAE9lVgtgP/view?usp=drivesdk' },
+    { titre: 'Exercice 85 · La somme', url: 'https://drive.google.com/file/d/1C0kRdIOEQKe7ATX5S4VinwOivp7DR7FD/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'SOMME additionne plusieurs cellules d\'un seul coup. On va la construire ensemble.' },
@@ -205,6 +206,8 @@ const SAISIE = {
   exercices: [
     { titre: 'Exercice 1 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1LeWxiL51a6-L-jUHA9x-KMnrz9-UDT1p/view?usp=drivesdk' },
     { titre: 'Exercice 2 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1uQTMl6x5FKKXh8MsLyiIdUBC01aUp3BE/view?usp=drivesdk' },
+    { titre: 'Exercice 83 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1f151Nn1sXRh7tdMKjglzXaXeDXWqH9Ix/view?usp=drivesdk' },
+    { titre: 'Exercice 84 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1T_zLaSIl2rsHw65MB3Us1As0czh-omsp/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Avant de calculer, il faut savoir remplir ses cellules. C\'est la base de tout tableau.' },
@@ -374,6 +377,7 @@ const DEPLACER = {
   exercices: [
     { titre: 'Exercice 9 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1Ge1e62oLXppkADg73c6qWOA4ZPE3NcRA/view?usp=drivesdk' },
     { titre: 'Exercice 10 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1ZqxQnjYAVlGtjNU3YM-jCcVnkARuAOSA/view?usp=drivesdk' },
+    { titre: 'Exercice 86 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1kU3RqgxxifQX7yLCSSuUNq8teBPlZgcX/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Réorganiser ton tableau, dupliquer des infos... dans Excel, tout peut se déplacer, à condition de connaître les bons gestes.' },
@@ -1862,6 +1866,11 @@ const EX5 = {
   ex45: { titre: 'Exercice 35 · La fonction VPM', url: U5('1FaeU9U6H9NAMFAseiIluhR-oulps2tEX') },
   ex46: { titre: 'Exercice 36 · La fonction VA', url: U5('1jft8-wQsmNHl_A_qSwzbpJN6ZRSVNWfx') },
   ex47: { titre: 'Exercice 37 · La fonction NPM', url: U5('16f9SshRfTfzSs3fsF53qND1M_BAm1f1w') },
+  ex40: { titre: 'Exercice 87 · La fonction DATEDIF', url: U5('1CmKXdWeORRd45GhbC6YvAN3Cj_-ys3Vb') },
+  ex41: { titre: 'Exercice 88 · Quelques fonctions dates 2', url: U5('1gGFkJ5QDOov6QyIbmEjUYNQP55BTuWSu') },
+  ex42: { titre: 'Exercice 89 · Quelques fonctions Texte', url: U5('1WmrMRJzyTaITyCFFkscgGVQ_0CPvSvgf') },
+  ex43: { titre: 'Exercice 90 · Formule GAUCHE, DROITE, CONCATENER', url: U5('1TVvR07HSy7vr95_dOh2M7H-vjO1zgxLi') },
+  ex44: { titre: 'Exercice 91 · Cas pratique formule texte', url: U5('1MH980X5ekm1rT1rx0TlB_sIDcaEPj_3T') },
 }
 
 // --- Leçon 1 : Rechercher & Remplacer ---
@@ -2167,7 +2176,7 @@ const tabDdif = (cf, resultat) => {
 const FONCTIONSDATE = {
   id: 'fn-fonctionsdate',
   titre: 'Les fonctions de date',
-  exercices: [EX5.ex39],
+  exercices: [EX5.ex39, EX5.ex40, EX5.ex41],
   narration: [
     { humeur: 'accueil', dit: 'Les fonctions de date servent à découper une date (année, mois, jour) ou à calculer des durées : ancienneté, délai, jours restants, jours ouvrés… Très utile pour les plannings et les suivis.' },
     { humeur: 'pensif', dit: '**ANNEE** renvoie l\'année d\'une date, **MOIS** renvoie le numéro du mois (1 = janvier, 12 = décembre).', visuel: { type: 'formule', formule: '=ANNEE(date)   =MOIS(date)' } },
@@ -2307,7 +2316,7 @@ const tabTxt = (a2, formule, resultat, libA) => ({
 const FONCTIONSTEXTE = {
   id: 'fn-fonctionstexte',
   titre: 'Les fonctions de texte',
-  exercices: [],
+  exercices: [EX5.ex42, EX5.ex43, EX5.ex44],
   narration: [
     { humeur: 'accueil', dit: 'Les fonctions de texte servent à reformater ou découper du texte : afficher une date joliment, extraire un prénom, isoler un code… Pratique pour nettoyer un fichier.' },
     { humeur: 'pensif', dit: '**TEXTE** affiche une valeur (date, nombre…) dans le format exact que tu veux, écrit entre guillemets.', visuel: { type: 'formule', formule: '=TEXTE(valeur ; "format")' } },
