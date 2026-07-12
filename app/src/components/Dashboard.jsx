@@ -19,9 +19,7 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
   const valides = (n) => Object.keys(etat.ecransValides).filter((k) => k.startsWith(`ch${n}-`)).length
   // Répétition espacée : les katas déjà appris dont l'échéance de révision est atteinte.
   const revisions = revisionsDues(etat.journal, chapitres)
-  // MODE REVUE (temporaire) : tous les chapitres accessibles pour relire le ch.3 sans refaire 1 et 2.
-  // Pour réactiver la progression : const estDebloque = (n) => n === 1 || etat.chapitresTermines.includes(n - 1)
-  const estDebloque = () => true
+  const estDebloque = (n) => n === 1 || etat.chapitresTermines.includes(n - 1)
   let objectif = null
   try {
     objectif = localStorage.getItem('excel-dojo-objectif')

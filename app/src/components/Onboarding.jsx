@@ -12,11 +12,14 @@ const ETAPES = [
   { humeur: 'fier', dit: '**Règle de l\'académie n°3 :** prends ton temps et savoure chaque étape. Le Shifu t\'accompagne à chaque pas. Prêt(e) à commencer ?' },
 ]
 
-// La Voie : les 13 ceintures, de la blanche à la noire (une par chapitre).
+// La Voie : les 7 ceintures pleines, de la blanche à la noire (les bicolores
+// intermédiaires ne sont pas montrées ici, ça ferait trop d'un coup à l'accueil).
+const CEINTURES_PLEINES = CEINTURES.filter((c) => !c.id.includes('-'))
+
 function Voie() {
   return (
     <div className="mt-4 flex flex-wrap items-end justify-center gap-x-2 gap-y-3">
-      {CEINTURES.map((c, i) => (
+      {CEINTURES_PLEINES.map((c, i) => (
         <div key={c.id} className="flex animate-fade-up flex-col items-center" style={{ animationDelay: `${i * 90}ms` }}>
           <BeltGraphic ceinture={c.id} size={i === 0 ? 58 : 46} />
           <span className="mt-0.5 text-[10px] font-bold uppercase tracking-wide text-navy/45">{c.label}</span>
