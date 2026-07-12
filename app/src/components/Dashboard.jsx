@@ -147,7 +147,14 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
                   {ch.chapitre}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-bold text-navy">{ch.titre}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="truncate font-bold text-navy">{ch.titre}</p>
+                    {ch.gratuit && (
+                      <span className="shrink-0 rounded-full bg-mint/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-mint">
+                        Gratuit
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-navy/50">
                     {!debloque
                       ? 'Verrouillé'

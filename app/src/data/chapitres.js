@@ -34,7 +34,8 @@ const GUIDES_PDF = {
 }
 
 export const chapitres = [chapitre1, chapitre2, chapitre3, chapitre4, chapitre5, chapitre6, chapitre7, chapitre8, chapitre9, chapitre10, chapitre11, chapitre12, chapitre13].map(
-  (c) => ({ ...c, guideUrl: GUIDES_PDF[c.chapitre] || null }),
+  // gratuit : chapitres 1 et 2 offerts (freemium). Le reste sera premium une fois le paiement branché.
+  (c) => ({ ...c, guideUrl: GUIDES_PDF[c.chapitre] || null, gratuit: c.chapitre === 1 || c.chapitre === 2 }),
 )
 
 export const getChapitre = (n) => chapitres.find((c) => c.chapitre === n)
