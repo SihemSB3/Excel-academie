@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react'
+import { createContext, useContext, useEffect, useRef } from 'react'
 import { useProgress } from './useProgress'
 import { useAuth } from './AuthContext'
 import { supabase, supabaseActif } from '../lib/supabase'
@@ -26,13 +26,24 @@ const depuisSupabase = (ligne) => ({
 export function ProgressProvider({ children }) {
   const value = useProgress()
   const { session } = useAuth()
-  const { etat, fusionnerEtDefinir } = value
+  const { etat, fusionnerEtDefinir, reinitialiser } = value
   const userId = session?.user?.id
+  // Mémorise le dernier compte connecté sur cet appareil, pour détecter un
+  // changement de compte (pas juste un rafraîchissement de session du même user).
+  const dernierUserConnu = useRef(userId || null)
 
   // Au login (ou au chargement avec une session déjà active) : on récupère la
   // progression cloud et on la fusionne avec le local, jamais on n'écrase.
+  // Exception : si un AUTRE compte était connecté juste avant sur cet appareil
+  // (déconnexion puis connexion d'une personne différente, sans recharger la
+  // page), on repart d'un état local vierge avant de fusionner, pour ne pas
+  // faire "déborder" la progression du compte précédent sur le nouveau.
   useEffect(() => {
     if (!supabaseActif || !userId) return
+    const compteDifferent = dernierUserConnu.current && dernierUserConnu.current !== userId
+    dernierUserConnu.current = userId
+    if (compteDifferent) reinitialiser()
+
     let annule = false
     supabase
       .from('progression')
