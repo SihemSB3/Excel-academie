@@ -48,9 +48,11 @@ export default function Auth({ onRetour, onConnecte }) {
 
   return (
     <div className="flex flex-1 flex-col px-5 py-8">
-      <button onClick={onRetour} aria-label="Fermer" className="self-start text-2xl leading-none text-navy/50 hover:text-navy">
-        ×
-      </button>
+      {onRetour && (
+        <button onClick={onRetour} aria-label="Fermer" className="self-start text-2xl leading-none text-navy/50 hover:text-navy">
+          ×
+        </button>
+      )}
 
       <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center">
         <div className="mb-2 flex justify-center">

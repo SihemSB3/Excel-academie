@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { ProgressProvider } from './store/ProgressContext'
+import { useAuth } from './store/AuthContext'
+import { supabaseActif } from './lib/supabase'
 import Sidebar from './components/Sidebar'
 import Dashboard from './components/Dashboard'
 import ChapterFlow from './components/ChapterFlow'
@@ -13,6 +15,7 @@ import { LECONS_FONCTIONS } from './data/lecons-fonctions'
 const CLE_ONBOARD = 'excel-dojo-onboarded'
 
 export default function App() {
+  const { session, chargement } = useAuth()
   const [onboarde, setOnboarde] = useState(() => {
     try {
       return localStorage.getItem(CLE_ONBOARD) === '1'
@@ -39,6 +42,25 @@ export default function App() {
     return (
       <div className="flex min-h-screen w-full overflow-x-hidden bg-cream">
         <Onboarding onTerminer={terminerOnboarding} />
+      </div>
+    )
+  }
+
+  // Compte obligatoire pour tout le contenu (y compris ch.1/2), le temps que
+  // le vrai systeme d'abonnement (phase 2) soit branche : impossible d'ouvrir
+  // le dojo sans etre connecte, meme via un lien partage.
+  if (supabaseActif && chargement) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-cream">
+        <p className="text-sm text-navy/40">Chargement…</p>
+      </div>
+    )
+  }
+
+  if (supabaseActif && !session) {
+    return (
+      <div className="flex min-h-screen w-full overflow-x-hidden bg-cream">
+        <Auth onConnecte={() => {}} />
       </div>
     )
   }
