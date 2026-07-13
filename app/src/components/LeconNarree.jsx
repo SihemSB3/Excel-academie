@@ -9544,13 +9544,14 @@ export default function LeconNarree({ lecon, onQuitter, onTermine }) {
   const [resolu, setResolu] = useState(false)
   // MODE REVUE : quand il est actif, on n'exige pas de réussir chaque interaction
   // pour avancer, ce qui permet de relire une leçon entière sans la « jouer ».
-  // Actif par défaut tant que l'app sert d'outil de relecture (comme estDebloque
-  // dans le Dashboard). Se coupe/rallume depuis l'en-tête de la leçon (persistant).
+  // Par défaut désactivé (mode Entraînement, gating actif) : un nouvel élève doit
+  // réussir chaque interaction. L'élève peut basculer en Révision lui-même depuis
+  // l'en-tête de la leçon (préférence persistante, ex : pour relire un chapitre déjà acquis).
   const [revue, setRevue] = useState(() => {
     try {
-      return localStorage.getItem('excel-dojo-gating') !== 'on'
+      return localStorage.getItem('excel-dojo-gating') === 'off'
     } catch {
-      return true
+      return false
     }
   })
   const basculerRevue = () =>
