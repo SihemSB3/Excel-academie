@@ -123,7 +123,7 @@ export function ShifuBubble({ message, humeur = 'accueil', size = 88 }) {
       <div className="shrink-0 animate-float">
         <Shifu humeur={humeur} size={size} />
       </div>
-      <div className="relative mb-3 flex-1 animate-fade-up rounded-2xl rounded-bl-sm border border-navy/10 bg-navy/5 px-4 py-3 text-sm leading-relaxed text-navy/90">
+      <div className="relative mb-3 min-w-0 flex-1 animate-fade-up rounded-2xl rounded-bl-sm border border-navy/10 bg-navy/5 px-4 py-3 text-sm leading-relaxed text-navy/90">
         {message}
       </div>
     </div>
@@ -137,7 +137,7 @@ export function ShifuDit({ message, humeur = 'accueil', size = 72, onDone }) {
       <div className="shrink-0 animate-float">
         <Shifu humeur={humeur} size={size} />
       </div>
-      <div className="relative mb-3 flex-1 animate-fade-up rounded-2xl rounded-bl-sm border border-navy/10 bg-navy/5 px-4 py-3 text-sm leading-relaxed text-navy/90">
+      <div className="relative mb-3 min-w-0 flex-1 animate-fade-up rounded-2xl rounded-bl-sm border border-navy/10 bg-navy/5 px-4 py-3 text-sm leading-relaxed text-navy/90">
         <TypeWriter text={message} onDone={onDone} />
       </div>
     </div>

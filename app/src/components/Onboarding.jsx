@@ -37,7 +37,7 @@ export default function Onboarding({ onTerminer }) {
   const avancer = () => (dernier ? onTerminer() : setEtape((e) => e + 1))
 
   return (
-    <div className="relative flex min-h-screen flex-1 flex-col overflow-hidden bg-cream px-5 py-8">
+    <div className="relative flex min-h-screen min-w-0 flex-1 flex-col overflow-hidden bg-cream px-5 py-8">
       {/* Décor de l'académie en filigrane */}
       <div className="pointer-events-none absolute -right-12 top-12 text-navy/5">
         <MannequinBois size={230} />
@@ -52,7 +52,7 @@ export default function Onboarding({ onTerminer }) {
         <p className="mt-1.5 text-sm font-bold text-navy/55">La méthode Shaolin pour maîtriser Excel</p>
       </div>
 
-      <div className="z-10 mx-auto flex w-full max-w-xl flex-1 flex-col justify-center">
+      <div className="z-10 mx-auto flex w-full min-w-0 max-w-xl flex-1 flex-col justify-center">
         <div key={etape} className="flex min-h-[280px] flex-col justify-center">
           <ShifuDit message={s.dit} humeur={s.humeur} size={88} />
           {s.voie && <Voie />}
