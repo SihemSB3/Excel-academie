@@ -6,6 +6,10 @@
   color-scheme: light;
 }
 
+html {
+  background: #f5f0e8;
+}
+
 body {
   margin: 0;
   font-family: 'Nunito', system-ui, sans-serif;
