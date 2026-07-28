@@ -38,11 +38,13 @@ Le script d'ajout de client ne crée **pas** le compte du formateur. Tu dois le 
 
 1. Menu de gauche : **SQL Editor** > **New query**
 2. Ouvre `creer-un-client.sql` sur ton Mac, copie tout, colle dans Supabase
-3. En haut du script, **remplace les 4 valeurs** entre guillemets :
+3. En haut du script, **remplace les valeurs** entre guillemets :
    - `v_organisation` = nom de l'école
    - `v_groupe` = nom de la promo
    - `v_email_form` = email du formateur (le même qu'à l'étape 1)
    - `v_licences` = nombre de licences
+   - `v_formule` = `'decouverte'`, `'equipe'`, `'etablissement'` ou `'partenaire'`
+   - `v_duree_mois` = durée de l'abonnement (12 par défaut)
    - `v_domaine` = laisse `null`, ou mets `'domaine.fr'` pour restreindre
 4. Clique sur **Run**
 5. Regarde les messages en bas : tu verras le **code d'invitation** et le **lien à transmettre**, du type :
@@ -71,6 +73,18 @@ dans la limite des licences. Si le domaine est restreint, seules les bonnes adre
 
 ---
 
+---
+
+## Renouveler un abonnement (chaque année)
+
+L'abonnement dure 12 mois (`date_debut` → `date_fin`). Cette date sert à te **relancer**, elle ne coupe rien toute seule : c'est le booléen `actif` que tu bascules à la main si un client ne renouvelle pas.
+
+1. **À J-30 de `date_fin`** : préviens le client, envoie la facture de renouvellement. (Mets-toi un rappel dans Google Agenda à la création du client, comme pour tes relances de facturation.)
+2. **Facture payée** : SQL Editor > coller `renouveler.sql`, renseigner le **code du groupe** et la durée, Run. L'échéance est repoussée d'un an (sans jours perdus si tu renouvelles en avance).
+3. **Client qui ne renouvelle pas** : quand tu décides d'arrêter, passe `actif` à `false` sur son groupe. Ça bloque les nouvelles inscriptions. (Les apprenants déjà inscrits ne sont pas déconnectés pour l'instant, voir la note ci-dessous.)
+
+---
+
 ## Points de vigilance
 
 - **Vérifie le domaine du lien.** Le script affiche `lartdudigital.fr`. Si l'app est servie
@@ -81,3 +95,7 @@ dans la limite des licences. Si le domaine est restreint, seules les bonnes adre
   Pas besoin de le revérifier à chaque client.
 - **Le code d'invitation est unique et sans caractères ambigus** (pas de O/0 ni I/1),
   donc facile à dicter au téléphone si besoin.
+- **`actif = false` bloque les nouvelles inscriptions mais ne déconnecte pas les
+  apprenants déjà inscrits.** Suffisant pour démarrer (la valeur vendue, c'est le
+  suivi formateur, que tu arrêtes d'assurer). Si un jour un client abuse, on ajoutera
+  un vrai blocage d'accès à ce moment-là, pas avant.

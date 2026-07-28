@@ -70,9 +70,19 @@ create table if not exists public.groupes (
   licences integer not null default 10 check (licences > 0),
   -- Si renseigné, seules les adresses de ce domaine peuvent rejoindre (ex. 'esc-rive-gauche.fr').
   domaine_email text,
+  -- Abonnement : la formule vendue et la période de 12 mois.
+  formule text check (formule in ('decouverte', 'equipe', 'etablissement', 'partenaire')),
+  date_debut date not null default current_date,
+  -- Échéance indicative : sert à relancer à J-30. C'est "actif" qui coupe l'accès, pas cette date.
+  date_fin date,
   actif boolean not null default true,
   cree_le timestamptz not null default now()
 );
+
+-- Pour les bases déjà installées avant l'ajout de l'abonnement (sans effet si déjà présent).
+alter table public.groupes add column if not exists formule text check (formule in ('decouverte', 'equipe', 'etablissement', 'partenaire'));
+alter table public.groupes add column if not exists date_debut date not null default current_date;
+alter table public.groupes add column if not exists date_fin date;
 
 create table if not exists public.membres (
   groupe_id uuid not null references public.groupes on delete cascade,
