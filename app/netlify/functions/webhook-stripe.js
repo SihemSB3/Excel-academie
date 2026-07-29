@@ -22,7 +22,17 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 // Date AAAA-MM-JJ à partir d'un timestamp Stripe (secondes).
 const dateDe = (ts) => new Date(ts * 1000).toISOString().slice(0, 10)
 
-const majParUser = (userId, champs) => supabase.from('profils').update(champs).eq('user_id', userId)
+// Fin de la période payée. Selon la version de l'API Stripe, la date est portée
+// par l'abonnement lui-même ou par sa ligne d'abonnement ; on gère les deux, avec
+// un filet de 31 jours si Stripe ne la fournit pas (corrigé au paiement suivant).
+const finPeriode = (sub) => {
+  const ts = sub?.items?.data?.[0]?.current_period_end ?? sub?.current_period_end
+  return dateDe(ts || Math.floor(Date.now() / 1000) + 31 * 86400)
+}
+
+// Upsert : crée le profil s'il manque (ex. compte créé avant la table profils),
+// sinon met à jour. Écrit par le service_role, seul habilité sur les champs premium.
+const upsertProfil = (userId, champs) => supabase.from('profils').upsert({ user_id: userId, ...champs }, { onConflict: 'user_id' })
 const majParClient = (customerId, champs) => supabase.from('profils').update(champs).eq('stripe_customer_id', customerId)
 
 export default async (req) => {
@@ -42,12 +52,12 @@ export default async (req) => {
       const userId = s.client_reference_id
       if (userId && s.mode === 'payment') {
         // Achat à vie : accès permanent.
-        await majParUser(userId, { premium_a_vie: true, stripe_customer_id: s.customer })
+        await upsertProfil(userId, { premium_a_vie: true, stripe_customer_id: s.customer })
       } else if (userId && s.mode === 'subscription') {
         // Abonnement mensuel : accès jusqu'à la fin de la période payée.
         const sub = await stripe.subscriptions.retrieve(s.subscription)
-        await majParUser(userId, {
-          premium_jusqu_au: dateDe(sub.current_period_end),
+        await upsertProfil(userId, {
+          premium_jusqu_au: finPeriode(sub),
           stripe_customer_id: s.customer,
         })
       }
@@ -57,7 +67,7 @@ export default async (req) => {
       const inv = event.data.object
       if (inv.subscription && inv.customer) {
         const sub = await stripe.subscriptions.retrieve(inv.subscription)
-        await majParClient(inv.customer, { premium_jusqu_au: dateDe(sub.current_period_end) })
+        await majParClient(inv.customer, { premium_jusqu_au: finPeriode(sub) })
       }
     }
     // customer.subscription.deleted : rien à faire. premium_jusqu_au reflète déjà
