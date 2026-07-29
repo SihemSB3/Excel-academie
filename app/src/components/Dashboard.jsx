@@ -248,6 +248,13 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
       <p className="mt-6 text-center text-[11px] text-navy/30">
         Les 13 chapitres, de la ceinture blanche à la noire. Progression sauvegardée sur ton compte.
       </p>
+      <p className="mt-2 text-center text-[11px] text-navy/30">
+        <a href="/cgv.html" target="_blank" rel="noopener noreferrer" className="hover:text-navy/60">CGV</a>
+        {' · '}
+        <a href="/confidentialite.html" target="_blank" rel="noopener noreferrer" className="hover:text-navy/60">Confidentialité</a>
+        {' · '}
+        <a href="/mentions-legales.html" target="_blank" rel="noopener noreferrer" className="hover:text-navy/60">Mentions légales</a>
+      </p>
     </div>
   )
 }

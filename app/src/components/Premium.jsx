@@ -115,7 +115,7 @@ export default function Premium({ onRetour, onChoisir }) {
           />
           <span>
             J'accepte les{' '}
-            <a href="https://lartdudigital.fr/cgv" target="_blank" rel="noopener noreferrer" className="font-bold text-navy underline">
+            <a href="/cgv.html" target="_blank" rel="noopener noreferrer" className="font-bold text-navy underline">
               conditions générales de vente
             </a>{' '}
             et je demande l'accès immédiat au contenu, en renonçant à mon droit de rétractation de 14 jours.
