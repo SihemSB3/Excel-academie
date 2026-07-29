@@ -14,10 +14,16 @@
 //   SUPABASE_SERVICE_ROLE_KEY   la clé service_role (secrète, JAMAIS côté navigateur)
 
 import Stripe from 'stripe'
-import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+
+// On appelle l'API REST de Supabase directement avec fetch, plutôt que la
+// librairie @supabase/supabase-js : dans une fonction serverless en Node 20,
+// cette librairie plante à l'initialisation (WebSocket temps réel indisponible).
+// Un simple fetch est plus léger et suffit largement pour écrire une ligne.
+const SB_URL = process.env.SUPABASE_URL
+const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+const sbHeaders = { apikey: SB_KEY, Authorization: `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' }
 
 // Date AAAA-MM-JJ à partir d'un timestamp Stripe (secondes).
 const dateDe = (ts) => new Date(ts * 1000).toISOString().slice(0, 10)
@@ -31,9 +37,25 @@ const finPeriode = (sub) => {
 }
 
 // Upsert : crée le profil s'il manque (ex. compte créé avant la table profils),
-// sinon met à jour. Écrit par le service_role, seul habilité sur les champs premium.
-const upsertProfil = (userId, champs) => supabase.from('profils').upsert({ user_id: userId, ...champs }, { onConflict: 'user_id' })
-const majParClient = (customerId, champs) => supabase.from('profils').update(champs).eq('stripe_customer_id', customerId)
+// sinon fusionne. Écrit par le service_role, seul habilité sur les champs premium.
+async function upsertProfil(userId, champs) {
+  const r = await fetch(`${SB_URL}/rest/v1/profils`, {
+    method: 'POST',
+    headers: { ...sbHeaders, Prefer: 'resolution=merge-duplicates,return=minimal' },
+    body: JSON.stringify({ user_id: userId, ...champs }),
+  })
+  if (!r.ok) throw new Error(`Supabase ${r.status} : ${await r.text()}`)
+}
+
+// Mise à jour par client Stripe (le profil existe déjà à ce stade).
+async function majParClient(customerId, champs) {
+  const r = await fetch(`${SB_URL}/rest/v1/profils?stripe_customer_id=eq.${encodeURIComponent(customerId)}`, {
+    method: 'PATCH',
+    headers: { ...sbHeaders, Prefer: 'return=minimal' },
+    body: JSON.stringify(champs),
+  })
+  if (!r.ok) throw new Error(`Supabase ${r.status} : ${await r.text()}`)
+}
 
 export default async (req) => {
   const signature = req.headers.get('stripe-signature')
