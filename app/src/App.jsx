@@ -14,6 +14,7 @@ import EspaceFormateur from './components/EspaceFormateur'
 import Rejoindre from './components/Rejoindre'
 import SuiviGroupe from './components/SuiviGroupe'
 import Premium from './components/Premium'
+import NouveauMotDePasse from './components/NouveauMotDePasse'
 import { codeDepuisUrl, nettoyerUrl, chargerMesGroupes, chargerStatutPremium } from './lib/groupes'
 import { estChapitreGratuit } from './data/chapitres'
 import { LECONS_FONCTIONS } from './data/lecons-fonctions'
@@ -43,7 +44,7 @@ const apercuVerrouDemande = () => {
 }
 
 export default function App() {
-  const { session, chargement } = useAuth()
+  const { session, chargement, recuperation } = useAuth()
   const [demoFormateur, setDemoFormateur] = useState(demoFormateurDemandee)
   // Lien d'invitation d'un formateur : …/?groupe=ESC-B2A-7F3K
   const [codeGroupe, setCodeGroupe] = useState(codeDepuisUrl)
@@ -124,6 +125,12 @@ export default function App() {
   const ouvrirObjectifs = () => setVue({ ecran: 'objectifs' })
   const ouvrirConnexion = () => setVue({ ecran: 'connexion' })
   const retourDojo = () => setVue({ ecran: 'dashboard' })
+
+  // Retour d'un lien « mot de passe oublié » : on fait choisir un nouveau mot de
+  // passe avant tout le reste (onboarding, dojo, etc.).
+  if (recuperation) {
+    return <NouveauMotDePasse onTermine={retourDojo} />
+  }
 
   if (demoFormateur) {
     return (

@@ -8,6 +8,9 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [chargement, setChargement] = useState(true)
+  // Vrai quand l'utilisateur revient d'un lien « mot de passe oublié » : il faut
+  // alors lui faire choisir un nouveau mot de passe avant tout le reste.
+  const [recuperation, setRecuperation] = useState(false)
 
   useEffect(() => {
     if (!supabaseActif) {
@@ -18,11 +21,20 @@ export function AuthProvider({ children }) {
       setSession(data.session)
       setChargement(false)
     })
-    const { data: ecoute } = supabase.auth.onAuthStateChange((_evenement, s) => setSession(s))
+    const { data: ecoute } = supabase.auth.onAuthStateChange((evenement, s) => {
+      setSession(s)
+      if (evenement === 'PASSWORD_RECOVERY') setRecuperation(true)
+    })
     return () => ecoute.subscription.unsubscribe()
   }, [])
 
-  const value = { session, utilisateur: session?.user ?? null, chargement }
+  const value = {
+    session,
+    utilisateur: session?.user ?? null,
+    chargement,
+    recuperation,
+    terminerRecuperation: () => setRecuperation(false),
+  }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

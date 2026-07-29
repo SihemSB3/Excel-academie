@@ -18,8 +18,32 @@ export default function Auth({ onRetour, onConnecte }) {
   const soumettre = async () => {
     setErreur('')
     setInfo('')
-    if (!email.trim() || !mdp) {
-      setErreur('Renseigne ton email et ton mot de passe.')
+    if (!email.trim()) {
+      setErreur('Renseigne ton email.')
+      return
+    }
+    if (!supabaseActif) {
+      setErreur('La connexion sera disponible très bientôt.')
+      return
+    }
+    // Mot de passe oublié : on envoie un lien de réinitialisation par email.
+    if (mode === 'reset') {
+      setCharge(true)
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: window.location.origin,
+        })
+        if (error) throw error
+        setInfo('Si un compte existe pour cette adresse, tu recevras un email avec un lien pour choisir un nouveau mot de passe.')
+      } catch (e) {
+        setErreur(e?.message || 'Une erreur est survenue.')
+      } finally {
+        setCharge(false)
+      }
+      return
+    }
+    if (!mdp) {
+      setErreur('Renseigne ton mot de passe.')
       return
     }
     if (mdp.length < 6) {
@@ -30,10 +54,6 @@ export default function Auth({ onRetour, onConnecte }) {
     // de bord n'afficherait que des adresses email.
     if (mode === 'inscription' && (!prenom.trim() || !nom.trim())) {
       setErreur('Renseigne ton prénom et ton nom.')
-      return
-    }
-    if (!supabaseActif) {
-      setErreur('La connexion sera disponible très bientôt.')
       return
     }
     setCharge(true)
@@ -71,10 +91,12 @@ export default function Auth({ onRetour, onConnecte }) {
           <Shifu humeur="accueil" size={84} />
         </div>
         <h1 className="text-center font-display text-3xl text-navy">
-          {mode === 'inscription' ? 'Créer un compte' : 'Connexion'}
+          {mode === 'reset' ? 'Mot de passe oublié' : mode === 'inscription' ? 'Créer un compte' : 'Connexion'}
         </h1>
         <p className="mt-2 text-center text-sm text-navy/60">
-          Connecte-toi pour retrouver ta progression sur tous tes appareils : apprends sur mobile, fais les exercices sur PC.
+          {mode === 'reset'
+            ? 'Entre ton email : on t’envoie un lien pour choisir un nouveau mot de passe.'
+            : 'Connecte-toi pour retrouver ta progression sur tous tes appareils : apprends sur mobile, fais les exercices sur PC.'}
         </p>
 
         {!supabaseActif && (
@@ -112,15 +134,30 @@ export default function Auth({ onRetour, onConnecte }) {
             autoComplete="email"
             className="w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-navy outline-none focus:border-mint"
           />
-          <input
-            type="password"
-            value={mdp}
-            onChange={(e) => setMdp(e.target.value)}
-            placeholder="Mot de passe"
-            autoComplete={mode === 'inscription' ? 'new-password' : 'current-password'}
-            className="w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-navy outline-none focus:border-mint"
-          />
+          {mode !== 'reset' && (
+            <input
+              type="password"
+              value={mdp}
+              onChange={(e) => setMdp(e.target.value)}
+              placeholder="Mot de passe"
+              autoComplete={mode === 'inscription' ? 'new-password' : 'current-password'}
+              className="w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-navy outline-none focus:border-mint"
+            />
+          )}
         </div>
+
+        {mode === 'connexion' && (
+          <button
+            onClick={() => {
+              setMode('reset')
+              setErreur('')
+              setInfo('')
+            }}
+            className="mt-2 self-end text-xs text-navy/50 transition hover:text-navy"
+          >
+            Mot de passe oublié ?
+          </button>
+        )}
 
         {/* Information obligatoire : la progression est visible du formateur dès
             qu'un apprenant rejoint un groupe. On le dit avant l'inscription. */}
@@ -136,19 +173,23 @@ export default function Auth({ onRetour, onConnecte }) {
 
         <div className="mt-5">
           <Bouton onClick={soumettre} disabled={charge}>
-            {charge ? '...' : mode === 'inscription' ? 'Créer mon compte' : 'Se connecter'}
+            {charge ? '...' : mode === 'reset' ? 'Envoyer le lien' : mode === 'inscription' ? 'Créer mon compte' : 'Se connecter'}
           </Bouton>
         </div>
 
         <button
           onClick={() => {
-            setMode(mode === 'inscription' ? 'connexion' : 'inscription')
+            setMode(mode === 'connexion' ? 'inscription' : 'connexion')
             setErreur('')
             setInfo('')
           }}
           className="mt-4 text-center text-sm text-navy/60 transition hover:text-navy"
         >
-          {mode === 'inscription' ? 'Déjà un compte ? Se connecter' : 'Pas encore de compte ? En créer un'}
+          {mode === 'reset'
+            ? 'Retour à la connexion'
+            : mode === 'inscription'
+              ? 'Déjà un compte ? Se connecter'
+              : 'Pas encore de compte ? En créer un'}
         </button>
       </div>
     </div>
