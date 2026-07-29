@@ -9,6 +9,8 @@ export default function Auth({ onRetour, onConnecte }) {
   const [mode, setMode] = useState('connexion') // 'connexion' | 'inscription'
   const [email, setEmail] = useState('')
   const [mdp, setMdp] = useState('')
+  const [prenom, setPrenom] = useState('')
+  const [nom, setNom] = useState('')
   const [erreur, setErreur] = useState('')
   const [info, setInfo] = useState('')
   const [charge, setCharge] = useState(false)
@@ -24,6 +26,12 @@ export default function Auth({ onRetour, onConnecte }) {
       setErreur('Le mot de passe doit faire au moins 6 caractères.')
       return
     }
+    // Le prénom et le nom servent au suivi du formateur : sans eux, son tableau
+    // de bord n'afficherait que des adresses email.
+    if (mode === 'inscription' && (!prenom.trim() || !nom.trim())) {
+      setErreur('Renseigne ton prénom et ton nom.')
+      return
+    }
     if (!supabaseActif) {
       setErreur('La connexion sera disponible très bientôt.')
       return
@@ -31,7 +39,11 @@ export default function Auth({ onRetour, onConnecte }) {
     setCharge(true)
     try {
       if (mode === 'inscription') {
-        const { error } = await supabase.auth.signUp({ email: email.trim(), password: mdp })
+        const { error } = await supabase.auth.signUp({
+          email: email.trim(),
+          password: mdp,
+          options: { data: { prenom: prenom.trim(), nom: nom.trim() } },
+        })
         if (error) throw error
         setInfo('Compte créé ! Vérifie ta boîte mail pour confirmer, puis connecte-toi.')
       } else {
@@ -72,6 +84,26 @@ export default function Auth({ onRetour, onConnecte }) {
         )}
 
         <div className="mt-5 space-y-3">
+          {mode === 'inscription' && (
+            <div className="flex gap-3">
+              <input
+                type="text"
+                value={prenom}
+                onChange={(e) => setPrenom(e.target.value)}
+                placeholder="Prénom"
+                autoComplete="given-name"
+                className="w-full min-w-0 rounded-xl border border-navy/15 bg-white px-4 py-3 text-navy outline-none focus:border-mint"
+              />
+              <input
+                type="text"
+                value={nom}
+                onChange={(e) => setNom(e.target.value)}
+                placeholder="Nom"
+                autoComplete="family-name"
+                className="w-full min-w-0 rounded-xl border border-navy/15 bg-white px-4 py-3 text-navy outline-none focus:border-mint"
+              />
+            </div>
+          )}
           <input
             type="email"
             value={email}
@@ -89,6 +121,15 @@ export default function Auth({ onRetour, onConnecte }) {
             className="w-full rounded-xl border border-navy/15 bg-white px-4 py-3 text-navy outline-none focus:border-mint"
           />
         </div>
+
+        {/* Information obligatoire : la progression est visible du formateur dès
+            qu'un apprenant rejoint un groupe. On le dit avant l'inscription. */}
+        {mode === 'inscription' && (
+          <p className="mt-3 text-xs leading-relaxed text-navy/55">
+            Si tu rejoins le groupe d'un établissement, ton formateur verra ta progression : chapitres validés, temps
+            passé et résultats aux quiz. Personne d'autre n'y a accès.
+          </p>
+        )}
 
         {erreur && <p className="mt-3 rounded-xl bg-red-500/10 px-3 py-2 text-sm text-red-700">{erreur}</p>}
         {info && <p className="mt-3 rounded-xl bg-mint/15 px-3 py-2 text-sm text-mint">{info}</p>}

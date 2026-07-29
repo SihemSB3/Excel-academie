@@ -21,8 +21,20 @@ create table if not exists public.profils (
   user_id uuid primary key references auth.users on delete cascade,
   prenom text not null default '',
   nom text not null default '',
+  -- Abonnement particulier (B2C). L'accès complet est accordé si premium_a_vie,
+  -- ou si premium_jusqu_au est dans le futur, ou (géré ailleurs) si l'utilisateur
+  -- est membre d'un groupe B2B actif.
+  premium_a_vie boolean not null default false,
+  premium_jusqu_au date,
+  -- Rempli par le webhook Stripe pour relier le compte à son client Stripe.
+  stripe_customer_id text,
   cree_le timestamptz not null default now()
 );
+
+-- Pour les bases déjà installées avant l'ajout du premium (sans effet si déjà présent).
+alter table public.profils add column if not exists premium_a_vie boolean not null default false;
+alter table public.profils add column if not exists premium_jusqu_au date;
+alter table public.profils add column if not exists stripe_customer_id text;
 
 alter table public.profils enable row level security;
 
@@ -32,6 +44,14 @@ create policy "creation de son profil" on public.profils
   for insert with check (auth.uid() = user_id);
 create policy "mise a jour de son profil" on public.profils
   for update using (auth.uid() = user_id);
+
+-- Sécurité : un utilisateur ne peut écrire QUE son prénom et son nom. Les champs
+-- premium (premium_a_vie, premium_jusqu_au, stripe_customer_id) ne sont modifiables
+-- que côté serveur (service_role, via le webhook Stripe), jamais depuis le navigateur.
+-- Sans ça, n'importe qui pourrait se donner l'accès premium en une requête.
+revoke insert, update on public.profils from authenticated;
+grant insert (user_id, prenom, nom) on public.profils to authenticated;
+grant update (prenom, nom) on public.profils to authenticated;
 
 -- Le prénom et le nom sont saisis à l'inscription et transmis dans les métadonnées
 -- du compte. On les recopie ici pour pouvoir les afficher au formateur.

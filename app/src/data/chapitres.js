@@ -40,6 +40,9 @@ export const chapitres = [chapitre1, chapitre2, chapitre3, chapitre4, chapitre5,
 
 export const getChapitre = (n) => chapitres.find((c) => c.chapitre === n)
 
+// Un chapitre est gratuit (freemium) s'il est marqué comme tel (ch. 1 et 2).
+export const estChapitreGratuit = (n) => Boolean(getChapitre(n)?.gratuit)
+
 // Nombre total d'étapes validables dans un chapitre (1 par écran de leçon, 1 par autre module)
 export function etapesChapitre(ch) {
   let total = 0

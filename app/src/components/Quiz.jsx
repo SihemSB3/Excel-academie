@@ -4,7 +4,7 @@ import { Bouton } from './ui'
 import { Shifu } from './Shifu'
 
 export default function Quiz({ module, onTermine }) {
-  const { validerEcran } = useProgressCtx()
+  const { validerEcran, enregistrerQuiz } = useProgressCtx()
   const questions = module.questions
   const [i, setI] = useState(0)
   const [selection, setSelection] = useState([])
@@ -33,6 +33,9 @@ export default function Quiz({ module, onTermine }) {
       setValide(false)
       window.scrollTo({ top: 0 })
     } else {
+      // On consigne le résultat dès la fin du quiz, réussi ou non : c'est ce qui
+      // alimente le suivi du formateur. Seul le meilleur passage est conservé.
+      enregistrerQuiz(module.id, score, questions.length)
       setFini(true)
     }
   }

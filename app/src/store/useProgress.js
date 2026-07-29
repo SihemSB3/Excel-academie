@@ -12,6 +12,8 @@ const DEFAUT = {
   // erreurs cumulées et du dernier passage, temps passé (secondes), date du dernier passage.
   journal: {}, // ex: { 'ch7-m2': { fois: 2, erreursTotal: 3, dernierErreurs: 0, dureeTotale: 240, dernierLe: '2026-07-02' } }
   streak: { jour: null, serie: 0 }, // série de jours consécutifs avec au moins un kata terminé
+  // Meilleur score obtenu à chaque quiz, en pourcentage. Sert au suivi du formateur.
+  quiz: {}, // ex: { 'ch2-quiz': { score: 14, total: 16, pourcentage: 88 } }
 }
 
 // 'AAAA-MM-JJ' en heure locale (toISOString basculerait de jour selon le fuseau)
@@ -46,7 +48,18 @@ function fusionnerProgression(local, distant) {
     ecransValides: { ...distant.ecransValides, ...local.ecransValides },
     journal: fusionnerJournal(local.journal, distant.journal),
     streak: (local.streak?.serie || 0) >= (distant.streak?.serie || 0) ? local.streak : distant.streak,
+    quiz: fusionnerQuiz(local.quiz || {}, distant.quiz || {}),
   }
+}
+
+// On garde toujours le meilleur score de chaque quiz, jamais le plus récent :
+// refaire un quiz pour réviser ne doit pas faire baisser le suivi.
+function fusionnerQuiz(a, b) {
+  const out = { ...a }
+  for (const [id, res] of Object.entries(b)) {
+    if (!out[id] || (res?.pourcentage || 0) > (out[id]?.pourcentage || 0)) out[id] = res
+  }
+  return out
 }
 
 function charger() {
@@ -130,6 +143,17 @@ export function useProgress() {
     })
   }, [])
 
+  // Consigne le résultat d'un quiz. On ne conserve que le meilleur passage.
+  const enregistrerQuiz = useCallback((id, score, total) => {
+    if (!total) return
+    const pourcentage = Math.round((score / total) * 100)
+    setEtat((s) => {
+      const avant = s.quiz?.[id]
+      if (avant && avant.pourcentage >= pourcentage) return s
+      return { ...s, quiz: { ...(s.quiz || {}), [id]: { score, total, pourcentage } } }
+    })
+  }, [])
+
   const reinitialiser = useCallback(() => setEtat({ ...DEFAUT }), [])
 
   // Fusionne l'état distant (Supabase) avec l'état local courant, sans jamais écraser.
@@ -137,5 +161,5 @@ export function useProgress() {
     setEtat((s) => fusionnerProgression(s, { ...DEFAUT, ...distant }))
   }, [])
 
-  return { etat, validerEcran, estValide, debloquerCeinture, enregistrerKata, reinitialiser, fusionnerEtDefinir }
+  return { etat, validerEcran, estValide, debloquerCeinture, enregistrerKata, enregistrerQuiz, reinitialiser, fusionnerEtDefinir }
 }

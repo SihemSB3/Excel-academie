@@ -10,7 +10,15 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Fonctions serveur (paiement Stripe). Dossier relatif à base = app/netlify/functions.
+# Endpoints : /.netlify/functions/creer-paiement et /.netlify/functions/webhook-stripe.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Single Page App : tout passe par index.html (pas de routage serveur).
+# (Les routes /.netlify/functions/* sont servies par le runtime des fonctions,
+# elles ne sont pas capturées par cette redirection.)
 [[redirects]]
   from = "/*"
   to = "/index.html"

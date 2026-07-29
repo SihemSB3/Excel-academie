@@ -5,7 +5,7 @@ import { MannequinBois } from './icons'
 import { CEINTURES } from '../lib/belts'
 
 const ETAPES = [
-  { humeur: 'accueil', dit: 'Bienvenue à **Excel Académie**. Ici, on n\'apprend pas Excel par cœur : on s\'entraîne, geste après geste.' },
+  { humeur: 'accueil', dit: 'Bienvenue dans **La Méthode Excel**. Ici, on n\'apprend pas Excel par cœur : on s\'entraîne, geste après geste.' },
   { humeur: 'content', dit: 'Tu vas progresser comme un artiste martial : de la **ceinture blanche** à la **ceinture noire**. Chaque chapitre maîtrisé te fait gagner une ceinture.', voie: true },
   { humeur: 'pensif', dit: '**Règle de l\'académie n°1 :** la régularité bat l\'intensité. Un petit entraînement chaque jour vaut mieux qu\'une longue séance une fois par mois.' },
   { humeur: 'pensif', dit: '**Règle de l\'académie n°2 :** ici, aucun jugement. Chaque erreur te rapproche de la maîtrise, elle fait partie du chemin.' },
@@ -48,8 +48,8 @@ export default function Onboarding({ onTerminer }) {
 
       <div className="z-10 mb-4 text-center">
         <p className="font-display text-[11px] uppercase tracking-[0.25em] text-mint">L'Art du Digital</p>
-        <h1 className="font-display text-4xl text-navy">Excel Académie</h1>
-        <p className="mt-1.5 text-sm font-bold text-navy/55">La méthode Shaolin pour maîtriser Excel</p>
+        <h1 className="font-display text-4xl text-navy">La Méthode Excel</h1>
+        <p className="mt-1.5 text-sm font-bold text-navy/55">Étape par étape, de la ceinture blanche à la noire</p>
       </div>
 
       <div className="z-10 mx-auto flex w-full min-w-0 max-w-xl flex-1 flex-col justify-center">

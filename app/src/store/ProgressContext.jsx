@@ -12,6 +12,7 @@ const versSupabase = (etat) => ({
   chapitres_termines: etat.chapitresTermines,
   journal: etat.journal,
   streak: etat.streak,
+  quiz: etat.quiz,
 })
 
 const depuisSupabase = (ligne) => ({
@@ -21,6 +22,7 @@ const depuisSupabase = (ligne) => ({
   chapitresTermines: ligne.chapitres_termines,
   journal: ligne.journal,
   streak: ligne.streak,
+  quiz: ligne.quiz || {},
 })
 
 export function ProgressProvider({ children }) {

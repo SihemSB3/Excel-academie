@@ -9,9 +9,11 @@ import { ShifuBubble } from './Shifu'
 import { MannequinBois } from './icons'
 import { proverbeDuJour } from '../data/proverbes'
 
-export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObjectifs, onOuvrirConnexion }) {
+export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObjectifs, onOuvrirConnexion, onOuvrirPremium, acces = true }) {
   const { etat } = useProgressCtx()
   const { utilisateur } = useAuth()
+  // Verrou freemium : vrai quand l'utilisateur n'a pas l'accès complet au premium.
+  const verrouille = acces === false
   const derniere = etat.ceintures[etat.ceintures.length - 1] || null
   const info = ceintureInfo(derniere)
   const prochaine = CEINTURES[indexCeinture(derniere) + 1] || null
@@ -123,6 +125,20 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
         <p className="mt-1 text-sm italic text-navy/80">« {proverbeDuJour()} »</p>
       </div>
 
+      {verrouille && (
+        <button
+          onClick={onOuvrirPremium}
+          className="mt-7 flex w-full items-center gap-3 rounded-2xl border border-mint bg-mint/10 px-4 py-3 text-left transition hover:bg-mint/20"
+        >
+          <span className="text-xl">🔓</span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-navy">Débloque tout le parcours</p>
+            <p className="text-xs text-navy/60">Les 13 chapitres et les 91 exercices, dès 129 € à vie.</p>
+          </div>
+          <span className="shrink-0 rounded-full bg-mint px-3 py-1 text-xs font-bold text-navy-deep">Voir</span>
+        </button>
+      )}
+
       <h2 className="mb-3 mt-7 font-display text-xl text-navy/80">La Voie</h2>
       <div className="space-y-3">
         {chapitres.map((ch) => {
@@ -131,6 +147,9 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
           const debloque = estDebloque(ch.chapitre)
           const termine = etat.chapitresTermines.includes(ch.chapitre)
           const ceintureCh = ceintureInfo(ch.ceinture)
+          // Verrou premium : chapitre payant alors que l'accès complet n'est pas acquis.
+          // Reste cliquable (renvoie vers l'abonnement), contrairement au verrou d'ordre.
+          const premiumLock = verrouille && !ch.gratuit
           return (
             <button
               key={ch.chapitre}
@@ -150,21 +169,27 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <p className="truncate font-bold text-navy">{ch.titre}</p>
-                    {ch.gratuit && (
+                    {ch.gratuit ? (
                       <span className="shrink-0 rounded-full bg-mint/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-mint">
                         Gratuit
                       </span>
-                    )}
+                    ) : premiumLock ? (
+                      <span className="shrink-0 rounded-full bg-[#e8853a]/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#c2691f]">
+                        Premium
+                      </span>
+                    ) : null}
                   </div>
                   <p className="text-xs text-navy/50">
                     {!debloque
                       ? 'Verrouillé'
-                      : termine
-                        ? `Ceinture ${ceintureCh.label} obtenue ✓`
-                        : `${fait}/${total} étapes`}
+                      : premiumLock
+                        ? 'Réservé aux abonnés'
+                        : termine
+                          ? `Ceinture ${ceintureCh.label} obtenue ✓`
+                          : `${fait}/${total} étapes`}
                   </p>
                 </div>
-                <span className="text-navy/40">{debloque ? '›' : '🔒'}</span>
+                <span className="text-navy/40">{!debloque ? '🔒' : premiumLock ? '🔒' : '›'}</span>
               </div>
               {debloque && !termine && fait > 0 && (
                 <div className="mt-3">
@@ -191,9 +216,12 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
                 <button
                   key={id}
                   onClick={() => onOuvrirDemo(id)}
-                  className="rounded-xl border border-[#e8853a]/25 bg-white/70 py-2.5 text-sm font-bold text-navy transition hover:bg-[#e8853a]/10"
+                  className={`flex items-center justify-center gap-1.5 rounded-xl border border-[#e8853a]/25 bg-white/70 py-2.5 text-sm font-bold text-navy transition hover:bg-[#e8853a]/10 ${
+                    verrouille ? 'opacity-80' : ''
+                  }`}
                 >
                   {label}
+                  {verrouille && <span className="text-xs">🔒</span>}
                 </button>
               ))}
             </div>
