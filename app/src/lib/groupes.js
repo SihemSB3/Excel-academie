@@ -78,6 +78,18 @@ export async function chargerStatutPremium(userId) {
   return Boolean(data.premium_jusqu_au && data.premium_jusqu_au >= aujourdhui)
 }
 
+// Détail du compte de l'utilisateur pour son espace perso (identité + abonnement).
+export async function chargerMonCompte(userId) {
+  if (!supabaseActif || !userId) return null
+  const { data, error } = await supabase
+    .from('profils')
+    .select('prenom, nom, premium_a_vie, premium_jusqu_au, stripe_customer_id')
+    .eq('user_id', userId)
+    .maybeSingle()
+  if (error) return null
+  return data
+}
+
 const joursDepuis = (iso) => {
   if (!iso) return 999
   const ecart = Date.now() - new Date(iso).getTime()

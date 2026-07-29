@@ -36,6 +36,12 @@ export default async (req) => {
       client_reference_id: userId,
       customer_email: email || undefined,
       allow_promotion_codes: true,
+      // user_id porté aussi par le paiement/abonnement : indispensable pour
+      // retrouver le compte lors d'un remboursement (charge.refunded).
+      metadata: { user_id: userId },
+      ...(config.mode === 'payment'
+        ? { payment_intent_data: { metadata: { user_id: userId } } }
+        : { subscription_data: { metadata: { user_id: userId } } }),
       success_url: `${site}/?paiement=ok`,
       cancel_url: `${site}/?paiement=annule`,
     })

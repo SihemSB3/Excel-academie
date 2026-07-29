@@ -14,6 +14,7 @@ import EspaceFormateur from './components/EspaceFormateur'
 import Rejoindre from './components/Rejoindre'
 import SuiviGroupe from './components/SuiviGroupe'
 import Premium from './components/Premium'
+import Compte from './components/Compte'
 import NouveauMotDePasse from './components/NouveauMotDePasse'
 import { codeDepuisUrl, nettoyerUrl, chargerMesGroupes, chargerStatutPremium } from './lib/groupes'
 import { estChapitreGratuit } from './data/chapitres'
@@ -124,6 +125,7 @@ export default function App() {
   }
   const ouvrirObjectifs = () => setVue({ ecran: 'objectifs' })
   const ouvrirConnexion = () => setVue({ ecran: 'connexion' })
+  const ouvrirCompte = () => setVue({ ecran: 'compte' })
   const retourDojo = () => setVue({ ecran: 'dashboard' })
 
   // Retour d'un lien « mot de passe oublié » : on fait choisir un nouveau mot de
@@ -206,13 +208,14 @@ export default function App() {
     <ProgressProvider>
       {/* Sur grand écran : barre latérale + grande zone de contenu. Sur mobile : colonne unique. */}
       <div className="flex min-h-screen w-full overflow-x-hidden bg-cream">
-        <Sidebar retourDojo={retourDojo} onConnexion={ouvrirConnexion} />
+        <Sidebar retourDojo={retourDojo} onConnexion={ouvrirConnexion} onOuvrirCompte={ouvrirCompte} />
         <main className="flex min-h-screen min-w-0 flex-1 flex-col bg-cream shadow-2xl">
-          {vue.ecran === 'dashboard' && <Dashboard onOuvrirChapitre={ouvrirChapitre} onOuvrirDemo={ouvrirDemo} onOuvrirObjectifs={ouvrirObjectifs} onOuvrirConnexion={ouvrirConnexion} onOuvrirPremium={ouvrirPremium} acces={acces} />}
+          {vue.ecran === 'dashboard' && <Dashboard onOuvrirChapitre={ouvrirChapitre} onOuvrirDemo={ouvrirDemo} onOuvrirObjectifs={ouvrirObjectifs} onOuvrirConnexion={ouvrirConnexion} onOuvrirPremium={ouvrirPremium} onOuvrirCompte={ouvrirCompte} acces={acces} />}
           {vue.ecran === 'chapitre' && <ChapterFlow chapitre={vue.chapitre} moduleInitial={vue.moduleInitial} onQuitter={retourDojo} />}
           {vue.ecran === 'demo' && <LeconNarree lecon={LECONS_FONCTIONS[vue.fonction]} onQuitter={retourDojo} />}
           {vue.ecran === 'objectifs' && <ObjectifsSmart onTerminer={retourDojo} />}
           {vue.ecran === 'premium' && <Premium onRetour={retourDojo} onChoisir={supabaseActif ? lancerPaiement : undefined} />}
+          {vue.ecran === 'compte' && <Compte onRetour={retourDojo} onOuvrirPremium={ouvrirPremium} />}
           {vue.ecran === 'connexion' && <Auth onRetour={retourDojo} onConnecte={retourDojo} />}
         </main>
         <SifuChat />

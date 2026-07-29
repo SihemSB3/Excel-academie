@@ -39,8 +39,24 @@ vont QUE dans Netlify, jamais dans le code, jamais dans le navigateur, jamais da
    - `checkout.session.completed`
    - `invoice.paid`
    - `customer.subscription.deleted`
+   - `charge.refunded` (retire l'accès premium en cas de remboursement)
 4. Valider, puis copier le **secret de signature** (`whsec_…`) et le coller dans
    la variable Netlify `STRIPE_WEBHOOK_SECRET`.
+
+> ⚠️ Si le webhook existe déjà (test ou live), **ajoute `charge.refunded`** à sa
+> liste d'événements, sinon les remboursements ne retireront pas l'accès.
+
+## 2 bis. Activer le portail client (gestion / résiliation de l'abonnement)
+
+L'espace « Mon compte » de l'app laisse l'abonné gérer et résilier son abonnement
+via le portail Stripe. Il faut l'activer une fois :
+
+1. Stripe > **Réglages > Facturation > Portail client**.
+2. **Activer** le portail, et autoriser l'**annulation des abonnements**.
+3. À faire séparément en mode **test** et en mode **live**.
+
+(La fonction `portail-client.js` réutilise `VITE_SUPABASE_ANON_KEY`, déjà réglée ;
+rien de plus à ajouter côté variables.)
 
 ---
 

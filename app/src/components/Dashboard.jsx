@@ -1,7 +1,6 @@
 import { chapitres, etapesChapitre } from '../data/chapitres'
 import { useProgressCtx } from '../store/ProgressContext'
 import { useAuth } from '../store/AuthContext'
-import { supabase } from '../lib/supabase'
 import { CEINTURES, ceintureInfo, indexCeinture, couleurTexte } from '../lib/belts'
 import { revisionsDues } from '../lib/revisions'
 import { BeltGraphic, ProgressBar } from './ui'
@@ -9,7 +8,7 @@ import { ShifuBubble } from './Shifu'
 import { MannequinBois } from './icons'
 import { proverbeDuJour } from '../data/proverbes'
 
-export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObjectifs, onOuvrirConnexion, onOuvrirPremium, acces = true }) {
+export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObjectifs, onOuvrirConnexion, onOuvrirPremium, onOuvrirCompte, acces = true }) {
   const { etat } = useProgressCtx()
   const { utilisateur } = useAuth()
   // Verrou freemium : vrai quand l'utilisateur n'a pas l'accès complet au premium.
@@ -230,12 +229,13 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
       </div>
 
       {utilisateur ? (
-        <div className="mt-8 flex items-center justify-between gap-3 rounded-2xl border border-navy/15 bg-navy/5 px-4 py-3 lg:hidden">
+        <button
+          onClick={onOuvrirCompte}
+          className="mt-8 flex w-full items-center justify-between gap-3 rounded-2xl border border-navy/15 bg-navy/5 px-4 py-3 text-left transition hover:bg-navy/10 lg:hidden"
+        >
           <p className="truncate text-sm text-navy/70">{utilisateur.email}</p>
-          <button onClick={() => supabase.auth.signOut()} className="shrink-0 text-sm font-bold text-navy hover:underline">
-            Se déconnecter
-          </button>
-        </div>
+          <span className="shrink-0 text-sm font-bold text-navy">Mon compte ›</span>
+        </button>
       ) : (
         <button
           onClick={onOuvrirConnexion}

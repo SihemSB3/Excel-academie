@@ -91,6 +91,20 @@ export default async (req) => {
         const sub = await stripe.subscriptions.retrieve(inv.subscription)
         await majParClient(inv.customer, { premium_jusqu_au: finPeriode(sub) })
       }
+    } else if (event.type === 'charge.refunded') {
+      // Remboursement TOTAL : on retire l'accès premium. On retrouve le compte par
+      // l'user_id porté dans les métadonnées du paiement, sinon par le client Stripe.
+      const ch = event.data.object
+      if (ch.refunded) {
+        const retire = { premium_a_vie: false, premium_jusqu_au: null }
+        let userId = ch.metadata?.user_id
+        if (!userId && ch.payment_intent) {
+          const pi = await stripe.paymentIntents.retrieve(ch.payment_intent)
+          userId = pi.metadata?.user_id
+        }
+        if (userId) await upsertProfil(userId, retire)
+        else if (ch.customer) await majParClient(ch.customer, retire)
+      }
     }
     // customer.subscription.deleted : rien à faire. premium_jusqu_au reflète déjà
     // la date de fin payée ; l'accès s'éteint tout seul à cette date.
