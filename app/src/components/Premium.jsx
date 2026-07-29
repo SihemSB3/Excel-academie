@@ -52,8 +52,15 @@ function Plan({ titre, prix, sousTitre, detail, recommande, chargement, onClick 
 export default function Premium({ onRetour, onChoisir }) {
   const [message, setMessage] = useState(null)
   const [charge, setCharge] = useState(null)
+  // Renoncement exprès au droit de rétractation (obligatoire pour du contenu
+  // numérique à accès immédiat, voir CGV art. 9). Sans coche, pas de paiement.
+  const [consent, setConsent] = useState(false)
 
   const choisir = async (plan) => {
+    if (!consent) {
+      setMessage('Merci de cocher la case ci-dessous pour continuer.')
+      return
+    }
     // Sans backend branché (mode local/démo), on reste honnête plutôt que d'échouer.
     if (!onChoisir) {
       setMessage('Le paiement sera disponible très bientôt. Ton accès sera débloqué automatiquement après le règlement.')
@@ -99,7 +106,23 @@ export default function Premium({ onRetour, onChoisir }) {
           ))}
         </ul>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border border-navy/15 bg-white/60 p-4 text-sm text-navy/80">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 accent-mint"
+          />
+          <span>
+            J'accepte les{' '}
+            <a href="https://lartdudigital.fr/cgv" target="_blank" rel="noopener noreferrer" className="font-bold text-navy underline">
+              conditions générales de vente
+            </a>{' '}
+            et je demande l'accès immédiat au contenu, en renonçant à mon droit de rétractation de 14 jours.
+          </span>
+        </label>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <Plan
             titre="Accès à vie"
             prix="129 €"
