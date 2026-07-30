@@ -213,7 +213,7 @@ export default function App() {
         <Sidebar retourDojo={retourDojo} onConnexion={ouvrirConnexion} onOuvrirCompte={ouvrirCompte} />
         <main className="flex min-h-screen min-w-0 flex-1 flex-col bg-cream shadow-2xl">
           {vue.ecran === 'dashboard' && <Dashboard onOuvrirChapitre={ouvrirChapitre} onOuvrirDemo={ouvrirDemo} onOuvrirObjectifs={ouvrirObjectifs} onOuvrirConnexion={ouvrirConnexion} onOuvrirPremium={ouvrirPremium} onOuvrirCompte={ouvrirCompte} onOuvrirLegal={ouvrirLegal} acces={acces} />}
-          {vue.ecran === 'chapitre' && <ChapterFlow chapitre={vue.chapitre} moduleInitial={vue.moduleInitial} onQuitter={retourDojo} />}
+          {vue.ecran === 'chapitre' && <ChapterFlow chapitre={vue.chapitre} moduleInitial={vue.moduleInitial} onQuitter={retourDojo} acces={acces} onOuvrirPremium={ouvrirPremium} />}
           {vue.ecran === 'demo' && <LeconNarree lecon={LECONS_FONCTIONS[vue.fonction]} onQuitter={retourDojo} />}
           {vue.ecran === 'objectifs' && <ObjectifsSmart onTerminer={retourDojo} />}
           {vue.ecran === 'premium' && <Premium onRetour={retourDojo} onChoisir={supabaseActif ? lancerPaiement : undefined} onOuvrirCgv={() => ouvrirLegal('cgv')} />}

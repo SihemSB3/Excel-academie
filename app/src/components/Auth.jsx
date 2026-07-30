@@ -64,8 +64,13 @@ export default function Auth({ onRetour, onConnecte }) {
           password: mdp,
           options: { data: { prenom: prenom.trim(), nom: nom.trim() } },
         })
-        if (error) throw error
-        setInfo('Compte créé ! Vérifie ta boîte mail pour confirmer, puis connecte-toi.')
+        // Si l'adresse a déjà un compte, on ne le dit PAS : afficher « cet email
+        // est déjà pris » permettrait à n'importe qui de tester une liste
+        // d'adresses pour savoir qui est inscrit (énumération de comptes). On
+        // renvoie le même message que pour une inscription réussie, comme le
+        // fait déjà l'écran « mot de passe oublié ».
+        if (error && !/already|exist|registered|déjà/i.test(error.message || '')) throw error
+        setInfo("Si cette adresse n'a pas déjà de compte, tu vas recevoir un email de confirmation. Vérifie ta boîte mail, puis connecte-toi.")
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: mdp })
         if (error) throw error

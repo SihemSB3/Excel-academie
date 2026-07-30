@@ -33,3 +33,9 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    # Force le navigateur à n'utiliser que HTTPS pendant 2 ans, y compris si
+    # quelqu'un tape l'adresse en http:// ou clique un vieux lien.
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    # L'app n'a besoin ni de caméra, ni de micro, ni de position, ni de paiement
+    # natif : on les refuse explicitement, pour l'app comme pour tout iframe.
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), accelerometer=()"

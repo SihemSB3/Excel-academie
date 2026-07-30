@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getChapitre } from '../data/chapitres'
+import { getChapitre, estChapitreGratuit } from '../data/chapitres'
 import { useProgressCtx } from '../store/ProgressContext'
 import ChapterMap from './ChapterMap'
 import ChapterPath from './ChapterPath'
@@ -12,12 +12,15 @@ import BeltUnlock from './BeltUnlock'
 import KataComplete from './KataComplete'
 import ObjectifsSmart from './ObjectifsSmart'
 import LeconNarree from './LeconNarree'
+import FinGratuit from './FinGratuit'
 import { LECONS_FONCTIONS } from '../data/lecons-fonctions'
 
 // Un chapitre = un parcours. Mobile : carte verticale. PC : chemin horizontal animé.
-export default function ChapterFlow({ chapitre, moduleInitial = null, onQuitter }) {
+export default function ChapterFlow({ chapitre, moduleInitial = null, onQuitter, acces = true, onOuvrirPremium }) {
   const ch = getChapitre(chapitre)
   const { etat, debloquerCeinture, validerEcran, enregistrerKata } = useProgressCtx()
+  // Dernier chapitre gratuit franchi par un non-abonné : moment de l'upsell.
+  const finGratuit = estChapitreGratuit(chapitre) && !estChapitreGratuit(chapitre + 1) && acces === false
   // Si on arrive via une « Révision du jour », on ouvre directement le kata concerné.
   const [actif, setActif] = useState(() => {
     if (moduleInitial && ch) {
@@ -29,8 +32,11 @@ export default function ChapterFlow({ chapitre, moduleInitial = null, onQuitter 
   const [celebration, setCelebration] = useState(false)
   const [kataFini, setKataFini] = useState(null)
   const [smart, setSmart] = useState(false)
+  const [upsell, setUpsell] = useState(false)
 
   if (!ch) return null
+  if (upsell)
+    return <FinGratuit onDebloquer={() => (onOuvrirPremium ? onOuvrirPremium() : onQuitter())} onContinuer={onQuitter} />
   if (smart)
     return (
       <ObjectifsSmart
@@ -40,7 +46,8 @@ export default function ChapterFlow({ chapitre, moduleInitial = null, onQuitter 
           } catch {
             /* stockage indisponible */
           }
-          onQuitter()
+          if (finGratuit) setUpsell(true)
+          else onQuitter()
         }}
       />
     )
@@ -58,6 +65,9 @@ export default function ChapterFlow({ chapitre, moduleInitial = null, onQuitter 
           if (!vu) {
             setCelebration(false)
             setSmart(true)
+          } else if (finGratuit) {
+            setCelebration(false)
+            setUpsell(true)
           } else {
             onQuitter()
           }
