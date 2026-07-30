@@ -8,7 +8,7 @@ import { ShifuBubble } from './Shifu'
 import { MannequinBois } from './icons'
 import { proverbeDuJour } from '../data/proverbes'
 
-export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObjectifs, onOuvrirConnexion, onOuvrirPremium, onOuvrirCompte, acces = true }) {
+export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObjectifs, onOuvrirConnexion, onOuvrirPremium, onOuvrirCompte, onOuvrirLegal, acces = true }) {
   const { etat } = useProgressCtx()
   const { utilisateur } = useAuth()
   // Verrou freemium : vrai quand l'utilisateur n'a pas l'accès complet au premium.
@@ -249,11 +249,11 @@ export default function Dashboard({ onOuvrirChapitre, onOuvrirDemo, onOuvrirObje
         Les 13 chapitres, de la ceinture blanche à la noire. Progression sauvegardée sur ton compte.
       </p>
       <p className="mt-2 text-center text-[11px] text-navy/30">
-        <a href="/cgv.html" target="_blank" rel="noopener noreferrer" className="hover:text-navy/60">CGV</a>
+        <button onClick={() => onOuvrirLegal('cgv')} className="hover:text-navy/60">CGV</button>
         {' · '}
-        <a href="/confidentialite.html" target="_blank" rel="noopener noreferrer" className="hover:text-navy/60">Confidentialité</a>
+        <button onClick={() => onOuvrirLegal('confidentialite')} className="hover:text-navy/60">Confidentialité</button>
         {' · '}
-        <a href="/mentions-legales.html" target="_blank" rel="noopener noreferrer" className="hover:text-navy/60">Mentions légales</a>
+        <button onClick={() => onOuvrirLegal('mentions')} className="hover:text-navy/60">Mentions légales</button>
       </p>
     </div>
   )

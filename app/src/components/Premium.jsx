@@ -49,7 +49,7 @@ function Plan({ titre, prix, sousTitre, detail, recommande, chargement, onClick 
   )
 }
 
-export default function Premium({ onRetour, onChoisir }) {
+export default function Premium({ onRetour, onChoisir, onOuvrirCgv }) {
   const [message, setMessage] = useState(null)
   const [charge, setCharge] = useState(null)
   // Renoncement exprès au droit de rétractation (obligatoire pour du contenu
@@ -115,9 +115,17 @@ export default function Premium({ onRetour, onChoisir }) {
           />
           <span>
             J'accepte les{' '}
-            <a href="/cgv.html" target="_blank" rel="noopener noreferrer" className="font-bold text-navy underline">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                onOuvrirCgv && onOuvrirCgv()
+              }}
+              className="font-bold text-navy underline"
+            >
               conditions générales de vente
-            </a>{' '}
+            </button>{' '}
             et je demande l'accès immédiat au contenu, en renonçant à mon droit de rétractation de 14 jours.
           </span>
         </label>

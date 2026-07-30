@@ -1,39 +1,11 @@
-<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Conditions Générales de Vente — Excel Académie</title>
-  <meta name="robots" content="noindex" />
-  <style>
-    :root { --cream:#F7F2E7; --card:#FFFDF8; --navy:#0A335D; --slate:#3A4B60; --mint:#2EBF9A; --line:#EFE7D5; }
-    * { box-sizing:border-box; }
-    body { margin:0; background:var(--cream); color:var(--slate);
-      font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.65; }
-    .wrap { max-width:760px; margin:0 auto; padding:40px 20px 64px; }
-    header.brand { border-bottom:2px solid var(--line); padding-bottom:16px; margin-bottom:28px; }
-    header.brand .eyebrow { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--mint); font-weight:800; margin:0; }
-    header.brand h1 { font-size:26px; color:var(--navy); margin:6px 0 0; letter-spacing:.5px; }
-    h2 { font-size:19px; color:var(--navy); margin:34px 0 8px; }
-    p, li { font-size:15.5px; }
-    a { color:#178A72; font-weight:700; }
-    table { border-collapse:collapse; width:100%; margin:10px 0; font-size:14.5px; }
-    th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
-    th { background:#F0FAF6; color:var(--navy); }
-    .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:8px 26px 26px; }
-    .maj { font-size:13px; color:#8A8371; margin-top:28px; }
-    footer.legal { margin-top:36px; font-size:13px; color:#8A8371; text-align:center; }
-    footer.legal a { color:#178A72; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header class="brand">
-      <p class="eyebrow">L'Art du Digital — Excel Académie</p>
-      <h1>Conditions Générales de Vente</h1>
-    </header>
-    <div class="card">
+// Contenu des pages légales, affichées comme écrans de l'app (voir Legal.jsx).
+// Source unique : ne pas dupliquer ailleurs. HTML de confiance (aucune saisie
+// utilisateur), rendu via dangerouslySetInnerHTML dans un conteneur stylé.
 
+export const PAGES_LEGALES = {
+  cgv: {
+    titre: 'Conditions Générales de Vente',
+    html: `
       <h2>Article 1 — Identification du vendeur</h2>
       <p>Les produits sont édités et vendus par <strong>L'ART DU DIGITAL</strong>, SASU au capital de 100 €.</p>
       <ul>
@@ -90,22 +62,94 @@
       <p>L'ensemble des contenus (textes, exercices, ebooks, marque, logo, design) est la propriété exclusive de L'Art du Digital. L'achat confère un droit d'usage <strong>strictement personnel et non transférable</strong>. Toute reproduction, partage, revente ou diffusion est interdite et constitue une contrefaçon.</p>
 
       <h2>Article 13 — Données personnelles</h2>
-      <p>Les données personnelles sont traitées conformément au RGPD. Le Client dispose de droits d'accès, de rectification, d'effacement et d'opposition, à exercer à <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Détails dans la <a href="/confidentialite.html">Politique de confidentialité</a>.</p>
+      <p>Les données personnelles sont traitées conformément au RGPD. Le Client dispose de droits d'accès, de rectification, d'effacement et d'opposition, à exercer à <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Détails dans la Politique de confidentialité.</p>
 
       <h2>Article 14 — Service client et réclamations</h2>
       <p>Pour toute question ou réclamation : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>.</p>
 
       <h2>Article 15 — Médiation de la consommation</h2>
-      <p>Conformément aux articles L612-1 et suivants du Code de la consommation, le Client consommateur peut recourir gratuitement à un médiateur de la consommation en vue de la résolution amiable d'un litige, après réclamation écrite auprès de L'Art du Digital. Médiateur compétent : <strong>[nom, adresse et site du médiateur à indiquer]</strong>. Plateforme européenne de règlement en ligne des litiges : <a href="https://ec.europa.eu/consumers/odr">ec.europa.eu/consumers/odr</a>.</p>
+      <p>Conformément aux articles L612-1 et suivants du Code de la consommation, le Client consommateur peut recourir gratuitement à un médiateur de la consommation en vue de la résolution amiable d'un litige, après réclamation écrite auprès de L'Art du Digital. Médiateur compétent : <strong>[nom, adresse et site du médiateur à indiquer]</strong>. Plateforme européenne de règlement en ligne des litiges : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
 
       <h2>Article 16 — Droit applicable et litiges</h2>
       <p>Les présentes CGV sont soumises au droit français. En cas de litige, une solution amiable sera recherchée en priorité ; à défaut, les tribunaux français sont compétents dans les conditions prévues par le Code de la consommation.</p>
+    `,
+  },
 
-      <p class="maj">Dernière mise à jour : 29 juillet 2026.</p>
-    </div>
-    <footer class="legal">
-      <a href="/cgv.html">CGV</a> · <a href="/confidentialite.html">Confidentialité</a> · <a href="/mentions-legales.html">Mentions légales</a>
-    </footer>
-  </div>
-</body>
-</html>
+  confidentialite: {
+    titre: 'Politique de confidentialité',
+    html: `
+      <h2>1. Responsable du traitement</h2>
+      <p><strong>L'ART DU DIGITAL</strong>, SASU au capital de 100 €, siège : 7 Avenue Maximilien de Robespierre, 94400 Vitry-sur-Seine — RCS 999 164 726 R.C.S. Créteil. Contact : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Aucun DPO n'est désigné à ce jour.</p>
+
+      <h2>2. Données collectées</h2>
+      <p>Nous collectons uniquement les données nécessaires :</p>
+      <table>
+        <tr><th>Donnée</th><th>Pourquoi</th></tr>
+        <tr><td>Prénom, nom</td><td>Personnaliser le compte, permettre le suivi par un formateur (offre pro)</td></tr>
+        <tr><td>Adresse email</td><td>Connexion, envoi des reçus/factures, communication liée au service</td></tr>
+        <tr><td>Mot de passe</td><td>Authentification (stocké chiffré, jamais en clair)</td></tr>
+        <tr><td>Progression (chapitres, quiz, temps)</td><td>Sauvegarder et afficher votre avancement</td></tr>
+        <tr><td>Données de paiement</td><td>Traitées directement par Stripe, jamais conservées par nous</td></tr>
+      </table>
+      <p>Aucune donnée sensible n'est collectée.</p>
+
+      <h2>3. Finalités et bases légales</h2>
+      <ul>
+        <li>Fourniture du service (compte, accès, suivi) : exécution du contrat.</li>
+        <li>Gestion des paiements et abonnements : exécution du contrat.</li>
+        <li>Émission des reçus/factures et comptabilité : obligation légale.</li>
+        <li>Emails liés au service : exécution du contrat.</li>
+        <li>Communication commerciale éventuelle : consentement, avec désinscription possible à tout moment.</li>
+      </ul>
+
+      <h2>4. Destinataires et sous-traitants</h2>
+      <p>Vos données sont traitées par des prestataires techniques agissant pour notre compte : <strong>Supabase</strong> (base de données et authentification), <strong>Stripe</strong> (paiements), <strong>Brevo</strong> (emails), <strong>Netlify</strong> (hébergement). Certains peuvent traiter des données hors Union européenne (Stripe, Netlify — États-Unis), transferts encadrés par des garanties appropriées (clauses contractuelles types). Nous ne vendons ni ne louons vos données à des tiers.</p>
+
+      <h2>5. Durée de conservation</h2>
+      <ul>
+        <li>Compte et progression : tant que le compte est actif ; suppression possible sur demande.</li>
+        <li>Données de facturation : 10 ans (obligations comptables).</li>
+        <li>Données de prospection éventuelles : 3 ans après le dernier contact.</li>
+      </ul>
+
+      <h2>6. Vos droits</h2>
+      <p>Conformément au RGPD, vous disposez des droits d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité, à exercer à <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Vous pouvez introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
+
+      <h2>7. Cookies</h2>
+      <p>Le site et l'application utilisent des cookies strictement nécessaires au fonctionnement (session de connexion). L'ajout de cookies de mesure d'audience ou publicitaires ferait l'objet d'un bandeau de consentement dédié.</p>
+
+      <h2>8. Sécurité</h2>
+      <p>Nous mettons en œuvre des mesures techniques et organisationnelles raisonnables (chiffrement des mots de passe, paiements externalisés à un prestataire certifié, accès restreint).</p>
+
+      <h2>9. Contact</h2>
+      <p>Pour toute question : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>.</p>
+    `,
+  },
+
+  mentions: {
+    titre: 'Mentions légales',
+    html: `
+      <h2>Éditeur</h2>
+      <p>Le site et l'application Excel Académie sont édités par <strong>L'ART DU DIGITAL</strong>, SASU au capital de 100 €.</p>
+      <ul>
+        <li>Siège social : 7 Avenue Maximilien de Robespierre, 94400 Vitry-sur-Seine</li>
+        <li>RCS 999 164 726 R.C.S. Créteil — SIRET 999 164 726 00013</li>
+        <li>N° TVA intracommunautaire : FR93 999 164 726</li>
+        <li>Directrice de la publication : Sihem Bidhi, présidente</li>
+        <li>Contact : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a></li>
+      </ul>
+
+      <h2>Hébergement</h2>
+      <p>Application Excel Académie : <strong>Netlify, Inc.</strong>, 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis. Base de données et authentification : <strong>Supabase</strong>. Le site lartdudigital.fr est hébergé par <strong>Hostinger</strong>.</p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>L'ensemble du site et de l'application (contenus, textes, exercices, ebooks, marque, logo, design) est la propriété exclusive de L'Art du Digital et protégé par le droit de la propriété intellectuelle. Toute reproduction ou utilisation non autorisée est interdite.</p>
+
+      <h2>Données personnelles</h2>
+      <p>Le traitement des données personnelles est décrit dans la Politique de confidentialité, accessible depuis le pied de page.</p>
+
+      <h2>Contact</h2>
+      <p>Pour toute question : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>.</p>
+    `,
+  },
+}
