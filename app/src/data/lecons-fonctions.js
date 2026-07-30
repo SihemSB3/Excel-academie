@@ -29,8 +29,8 @@ const SOMME = {
   id: 'fn-somme',
   titre: 'La fonction SOMME',
   exercices: [
-    { titre: 'Exercice 12 · La somme automatique', url: 'https://drive.google.com/file/d/179TMP7ez2SErhcTehTzh1EfAE9lVgtgP/view?usp=drivesdk' },
-    { titre: 'Exercice 85 · La somme', url: 'https://drive.google.com/file/d/1C0kRdIOEQKe7ATX5S4VinwOivp7DR7FD/view?usp=drivesdk' },
+    { titre: 'Exercice 15 · La somme automatique', url: 'https://drive.google.com/file/d/179TMP7ez2SErhcTehTzh1EfAE9lVgtgP/view?usp=drivesdk' },
+    { titre: 'Exercice 16 · La somme', url: 'https://drive.google.com/file/d/1C0kRdIOEQKe7ATX5S4VinwOivp7DR7FD/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'SOMME additionne plusieurs cellules d\'un seul coup. On va la construire ensemble.' },
@@ -144,7 +144,7 @@ const CALCULS = {
   id: 'fn-calculs',
   titre: 'Faire des calculs',
   exercices: [
-    { titre: 'Exercice 3 · Les calculs avec les opérateurs', url: 'https://drive.google.com/file/d/1XXoNOsvhno-smWRswpSpIBdq7EAi1Z7B/view?usp=drivesdk' },
+    { titre: 'Exercice 5 · Les calculs avec les opérateurs', url: 'https://drive.google.com/file/d/1XXoNOsvhno-smWRswpSpIBdq7EAi1Z7B/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Excel, c\'est une super calculatrice : tu fais tes calculs directement dans les cellules. Regarde ce petit tableau, c\'est lui qu\'on va faire parler.', visuel: tabC({}) },
@@ -206,8 +206,8 @@ const SAISIE = {
   exercices: [
     { titre: 'Exercice 1 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1LeWxiL51a6-L-jUHA9x-KMnrz9-UDT1p/view?usp=drivesdk' },
     { titre: 'Exercice 2 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1uQTMl6x5FKKXh8MsLyiIdUBC01aUp3BE/view?usp=drivesdk' },
-    { titre: 'Exercice 83 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1f151Nn1sXRh7tdMKjglzXaXeDXWqH9Ix/view?usp=drivesdk' },
-    { titre: 'Exercice 84 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1T_zLaSIl2rsHw65MB3Us1As0czh-omsp/view?usp=drivesdk' },
+    { titre: 'Exercice 3 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1f151Nn1sXRh7tdMKjglzXaXeDXWqH9Ix/view?usp=drivesdk' },
+    { titre: 'Exercice 4 · Saisie et modification de données', url: 'https://drive.google.com/file/d/1T_zLaSIl2rsHw65MB3Us1As0czh-omsp/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Avant de calculer, il faut savoir remplir ses cellules. C\'est la base de tout tableau.' },
@@ -273,8 +273,8 @@ const RECOPIE = {
   id: 'fn-recopie',
   titre: 'Recopie des données & formules',
   exercices: [
-    { titre: 'Exercice 4 · Recopie des données et des formules', url: 'https://drive.google.com/file/d/1JJg0nByuY3Tk6KS2dZ59FSQRd9NA3K1l/view?usp=drivesdk' },
-    { titre: 'Exercice 5 · Recopie des données et des formules', url: 'https://drive.google.com/file/d/1h7dujCQVaITdmXokmckPngQVYIHdmNwn/view?usp=drivesdk' },
+    { titre: 'Exercice 6 · Recopie des données et des formules', url: 'https://drive.google.com/file/d/1JJg0nByuY3Tk6KS2dZ59FSQRd9NA3K1l/view?usp=drivesdk' },
+    { titre: 'Exercice 7 · Recopie des données et des formules', url: 'https://drive.google.com/file/d/1h7dujCQVaITdmXokmckPngQVYIHdmNwn/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Excel peut recopier une donnée ou une formule tout seul, pour t\'éviter de tout retaper à la main.' },
@@ -318,7 +318,7 @@ const REFERENCES = {
   id: 'fn-references',
   titre: 'Références relatives & absolues',
   exercices: [
-    { titre: 'Exercice 15 · Les références absolues', url: 'https://drive.google.com/file/d/1YbaCA5hY0lmU33_-6ZSV0AXXaPTKk-T-/view?usp=drivesdk' },
+    { titre: 'Exercice 19 · Les références absolues', url: 'https://drive.google.com/file/d/1YbaCA5hY0lmU33_-6ZSV0AXXaPTKk-T-/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Quand tu recopies une formule, Excel adapte tout seul les cellules. Très pratique ! Et parfois, tu veux qu\'une cellule reste fixe. Voyons les deux cas.', plus: ['Par défaut, Excel utilise des références dites « relatives » : quand tu copies une formule vers une autre cellule, les coordonnées de cellule s\'adaptent en fonction de la nouvelle position.', 'Une référence absolue, elle, reste fixe même si tu copies la formule ailleurs. C\'est utile quand tu veux toujours faire référence à la même cellule, comme un taux de TVA, un seuil, ou une valeur constante.'] },
@@ -375,9 +375,9 @@ const DEPLACER = {
   id: 'fn-deplacer',
   titre: 'Déplacer & copier des cellules',
   exercices: [
-    { titre: 'Exercice 9 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1Ge1e62oLXppkADg73c6qWOA4ZPE3NcRA/view?usp=drivesdk' },
-    { titre: 'Exercice 10 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1ZqxQnjYAVlGtjNU3YM-jCcVnkARuAOSA/view?usp=drivesdk' },
-    { titre: 'Exercice 86 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1kU3RqgxxifQX7yLCSSuUNq8teBPlZgcX/view?usp=drivesdk' },
+    { titre: 'Exercice 11 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1Ge1e62oLXppkADg73c6qWOA4ZPE3NcRA/view?usp=drivesdk' },
+    { titre: 'Exercice 12 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1ZqxQnjYAVlGtjNU3YM-jCcVnkARuAOSA/view?usp=drivesdk' },
+    { titre: 'Exercice 13 · Déplacer ou copier des cellules', url: 'https://drive.google.com/file/d/1kU3RqgxxifQX7yLCSSuUNq8teBPlZgcX/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Réorganiser ton tableau, dupliquer des infos... dans Excel, tout peut se déplacer, à condition de connaître les bons gestes.' },
@@ -466,7 +466,7 @@ const COLLAGE = {
   id: 'fn-collage',
   titre: 'Le collage spécial',
   exercices: [
-    { titre: 'Exercice 11 · Collage spécial', url: 'https://drive.google.com/file/d/19t6YSaDRpO1J1g2oU6ibMkB1Nshbx348/view?usp=drivesdk' },
+    { titre: 'Exercice 14 · Collage spécial', url: 'https://drive.google.com/file/d/19t6YSaDRpO1J1g2oU6ibMkB1Nshbx348/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Le Ctrl + C / Ctrl + V, tu le connais déjà. Le **collage spécial**, c\'est la version précise : tu colles seulement ce que tu veux.' },
@@ -546,8 +546,8 @@ const ASSISTANT = {
   id: 'fn-assistant',
   titre: 'L\'assistant fonction & les fonctions de base',
   exercices: [
-    { titre: 'Exercice 13 · L\'assistant fonction', url: 'https://drive.google.com/file/d/10pSttmBFWXPpxrnWJEtKnEx3uq93GrlT/view?usp=drivesdk' },
-    { titre: 'Exercice 14 · Formule sans assistant fonction', url: 'https://drive.google.com/file/d/1evRQn4T4tANi0ddh4cn3qfcxEBEA-HQO/view?usp=drivesdk' },
+    { titre: 'Exercice 17 · L\'assistant fonction', url: 'https://drive.google.com/file/d/10pSttmBFWXPpxrnWJEtKnEx3uq93GrlT/view?usp=drivesdk' },
+    { titre: 'Exercice 18 · Formule sans assistant fonction', url: 'https://drive.google.com/file/d/1evRQn4T4tANi0ddh4cn3qfcxEBEA-HQO/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'Tu ne sais pas encore taper une formule tout(e) seul(e) ? L\'**assistant fonction** te guide, pas à pas.' },
@@ -633,9 +633,9 @@ const SERIES = {
   id: 'fn-series',
   titre: 'Les séries automatiques',
   exercices: [
-    { titre: 'Exercice 6 · Création de série', url: 'https://drive.google.com/file/d/1fRWXb9X7cYXpij0ATNAoo3d_t-BHydqt/view?usp=drivesdk' },
-    { titre: 'Exercice 7 · Création de série', url: 'https://drive.google.com/file/d/153_yhlXdoIQFp5vUhnFGZf8qlIvJGjUY/view?usp=drivesdk' },
-    { titre: 'Exercice 8 · Création de série', url: 'https://drive.google.com/file/d/1YNtuY85wrKG2np13AItegrneNFJpAspK/view?usp=drivesdk' },
+    { titre: 'Exercice 8 · Création de série', url: 'https://drive.google.com/file/d/1fRWXb9X7cYXpij0ATNAoo3d_t-BHydqt/view?usp=drivesdk' },
+    { titre: 'Exercice 9 · Création de série', url: 'https://drive.google.com/file/d/153_yhlXdoIQFp5vUhnFGZf8qlIvJGjUY/view?usp=drivesdk' },
+    { titre: 'Exercice 10 · Création de série', url: 'https://drive.google.com/file/d/1YNtuY85wrKG2np13AItegrneNFJpAspK/view?usp=drivesdk' },
   ],
   narration: [
     { humeur: 'accueil', dit: 'La poignée de recopie ne sert pas qu\'à copier : elle crée aussi des **suites automatiques**, les séries. Un vrai gain de temps.' },
@@ -695,13 +695,13 @@ const SERIES = {
 // ======================================================================
 const U3 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX3 = {
-  ex20: { titre: 'Exercice 16 · Gérer les lignes et les colonnes', url: U3('13ZUE6aUT2tsyqFOKMYczUcA5Ww3aS-ND') },
-  ex21: { titre: 'Exercice 17 · Gérer les lignes et les colonnes', url: U3('1psRStNp9lC21p12KtjQFUijGYK5tqpUt') },
-  ex22: { titre: 'Exercice 18 · Mise en forme', url: U3('1yXExYk_XEulgVWuUSHIbKUIiYj33-Gto') },
-  ex23: { titre: 'Exercice 19 · Mise en forme - Format de cellule', url: U3('1ddp2CSZRr7vkrVJ1wuxS5KfC0rNnbuYX') },
-  ex24: { titre: 'Exercice 20 · Mise en forme - Pinceau magique', url: U3('1h9Xa8QxwfcDx5GmBAxHvt6JbcBtNXM7j') },
-  ex25: { titre: 'Exercice 21 · Mise en forme - Style de cellule', url: U3('1evl5MzwogUF9aM9ZvCHu6yBXwdb8Aj-r') },
-  ex26: { titre: 'Exercice 22 · Thème et impression', url: U3('1oGOgzWCmbatwIYj0P6Srl8jrVPgfwDR9') },
+  ex20: { titre: 'Exercice 20 · Gérer les lignes et les colonnes', url: U3('13ZUE6aUT2tsyqFOKMYczUcA5Ww3aS-ND') },
+  ex21: { titre: 'Exercice 21 · Gérer les lignes et les colonnes', url: U3('1psRStNp9lC21p12KtjQFUijGYK5tqpUt') },
+  ex22: { titre: 'Exercice 22 · Mise en forme', url: U3('1yXExYk_XEulgVWuUSHIbKUIiYj33-Gto') },
+  ex23: { titre: 'Exercice 23 · Mise en forme - Format de cellule', url: U3('1ddp2CSZRr7vkrVJ1wuxS5KfC0rNnbuYX') },
+  ex24: { titre: 'Exercice 24 · Mise en forme - Pinceau magique', url: U3('1h9Xa8QxwfcDx5GmBAxHvt6JbcBtNXM7j') },
+  ex25: { titre: 'Exercice 25 · Mise en forme - Style de cellule', url: U3('1evl5MzwogUF9aM9ZvCHu6yBXwdb8Aj-r') },
+  ex26: { titre: 'Exercice 26 · Thème et impression', url: U3('1oGOgzWCmbatwIYj0P6Srl8jrVPgfwDR9') },
 }
 
 // --- Leçon 1 : Gérer les lignes & les colonnes ---
@@ -1331,11 +1331,11 @@ const IMPRESSION = {
 // ======================================================================
 const U4 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX4 = {
-  ex27: { titre: 'Exercice 23 · La somme automatique & l\'assistant fonction', url: U4('15eO-z9wGKu7k1J3LOLr64K-Lu1jwwuLP') },
-  ex28: { titre: 'Exercice 24 · Les formules simples', url: U4('1W1nnc7HSx-zVph5yaHF5prc5rkDqaCB0') },
-  ex29: { titre: 'Exercice 25 · Les références absolues', url: U4('1MnsT4-it60frbmszonlACg5VlwzXx_zj') },
-  ex30: { titre: 'Exercice 26 · Les noms de cellules', url: U4('1eqzzoKOgqzj0aC3T7sKU_GwYhDI3Lpuk') },
-  ex31: { titre: 'Exercice 27 · L\'Assistant Fonction & la fonction VPM', url: U4('1EFA2nE2_PnK8lelCk8i15A6fJPL6sPaI') },
+  ex27: { titre: 'Exercice 27 · La somme automatique & l\'assistant fonction', url: U4('15eO-z9wGKu7k1J3LOLr64K-Lu1jwwuLP') },
+  ex28: { titre: 'Exercice 28 · Les formules simples', url: U4('1W1nnc7HSx-zVph5yaHF5prc5rkDqaCB0') },
+  ex29: { titre: 'Exercice 29 · Les références absolues', url: U4('1MnsT4-it60frbmszonlACg5VlwzXx_zj') },
+  ex30: { titre: 'Exercice 30 · Les noms de cellules', url: U4('1eqzzoKOgqzj0aC3T7sKU_GwYhDI3Lpuk') },
+  ex31: { titre: 'Exercice 31 · L\'Assistant Fonction & la fonction VPM', url: U4('1EFA2nE2_PnK8lelCk8i15A6fJPL6sPaI') },
 }
 
 // --- Tableur d'exemple : ventes par produit (pour MIN) ---
@@ -1856,21 +1856,21 @@ const ARGUMENTSVPM = {
 // ======================================================================
 const U5 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX5 = {
-  ex32: { titre: 'Exercice 28 · Outils Rechercher & Remplacer', url: U5('18cRFj6TXI4JHiAnox8gE4KwuosvyELK8') },
-  ex33: { titre: 'Exercice 29 · Outils Convertir', url: U5('1I1BpagwAd3OSlTZ0ekJwCSj6Yrv1ub2E') },
-  ex34: { titre: 'Exercice 30 · La formule ARRONDI', url: U5('14PS5TQuwKaezihXmk00gmEDjx-XAFGW9') },
-  ex35: { titre: 'Exercice 31 · La formule ARRONDI.INF', url: U5('1lrJHddlKwv1Sa8BldzBCbx8u9w-CYbIM') },
-  ex36: { titre: 'Exercice 32 · La formule ARRONDI.SUP', url: U5('11Cis4o8CnB4h-2ow6FjGtkAxrXxBMAAA') },
-  ex37: { titre: 'Exercice 33 · La formule TRONQUE', url: U5('1skaSNeSXNWjPwaeA70YOCR6YKcaTTvcg') },
-  ex39: { titre: 'Exercice 34 · Quelques fonctions dates', url: U5('1ARhBJ1F7zI2vPqPebQl_Yw4d-61JrJ-g') },
-  ex45: { titre: 'Exercice 35 · La fonction VPM', url: U5('1FaeU9U6H9NAMFAseiIluhR-oulps2tEX') },
-  ex46: { titre: 'Exercice 36 · La fonction VA', url: U5('1jft8-wQsmNHl_A_qSwzbpJN6ZRSVNWfx') },
-  ex47: { titre: 'Exercice 37 · La fonction NPM', url: U5('16f9SshRfTfzSs3fsF53qND1M_BAm1f1w') },
-  ex40: { titre: 'Exercice 87 · La fonction DATEDIF', url: U5('1CmKXdWeORRd45GhbC6YvAN3Cj_-ys3Vb') },
-  ex41: { titre: 'Exercice 88 · Quelques fonctions dates 2', url: U5('1gGFkJ5QDOov6QyIbmEjUYNQP55BTuWSu') },
-  ex42: { titre: 'Exercice 89 · Quelques fonctions Texte', url: U5('1WmrMRJzyTaITyCFFkscgGVQ_0CPvSvgf') },
-  ex43: { titre: 'Exercice 90 · Formule GAUCHE, DROITE, CONCATENER', url: U5('1TVvR07HSy7vr95_dOh2M7H-vjO1zgxLi') },
-  ex44: { titre: 'Exercice 91 · Cas pratique formule texte', url: U5('1MH980X5ekm1rT1rx0TlB_sIDcaEPj_3T') },
+  ex32: { titre: 'Exercice 32 · Outils Rechercher & Remplacer', url: U5('18cRFj6TXI4JHiAnox8gE4KwuosvyELK8') },
+  ex33: { titre: 'Exercice 33 · Outils Convertir', url: U5('1I1BpagwAd3OSlTZ0ekJwCSj6Yrv1ub2E') },
+  ex34: { titre: 'Exercice 34 · La formule ARRONDI', url: U5('14PS5TQuwKaezihXmk00gmEDjx-XAFGW9') },
+  ex35: { titre: 'Exercice 35 · La formule ARRONDI.INF', url: U5('1lrJHddlKwv1Sa8BldzBCbx8u9w-CYbIM') },
+  ex36: { titre: 'Exercice 36 · La formule ARRONDI.SUP', url: U5('11Cis4o8CnB4h-2ow6FjGtkAxrXxBMAAA') },
+  ex37: { titre: 'Exercice 37 · La formule TRONQUE', url: U5('1skaSNeSXNWjPwaeA70YOCR6YKcaTTvcg') },
+  ex39: { titre: 'Exercice 38 · Quelques fonctions dates', url: U5('1ARhBJ1F7zI2vPqPebQl_Yw4d-61JrJ-g') },
+  ex45: { titre: 'Exercice 44 · La fonction VPM', url: U5('1FaeU9U6H9NAMFAseiIluhR-oulps2tEX') },
+  ex46: { titre: 'Exercice 45 · La fonction VA', url: U5('1jft8-wQsmNHl_A_qSwzbpJN6ZRSVNWfx') },
+  ex47: { titre: 'Exercice 46 · La fonction NPM', url: U5('16f9SshRfTfzSs3fsF53qND1M_BAm1f1w') },
+  ex40: { titre: 'Exercice 39 · La fonction DATEDIF', url: U5('1CmKXdWeORRd45GhbC6YvAN3Cj_-ys3Vb') },
+  ex41: { titre: 'Exercice 40 · Quelques fonctions dates 2', url: U5('1gGFkJ5QDOov6QyIbmEjUYNQP55BTuWSu') },
+  ex42: { titre: 'Exercice 41 · Quelques fonctions Texte', url: U5('1WmrMRJzyTaITyCFFkscgGVQ_0CPvSvgf') },
+  ex43: { titre: 'Exercice 42 · Formule GAUCHE, DROITE, CONCATENER', url: U5('1TVvR07HSy7vr95_dOh2M7H-vjO1zgxLi') },
+  ex44: { titre: 'Exercice 43 · Cas pratique formule texte', url: U5('1MH980X5ekm1rT1rx0TlB_sIDcaEPj_3T') },
 }
 
 // --- Leçon 1 : Rechercher & Remplacer ---
@@ -2537,10 +2537,10 @@ const FONCTIONSFINANCIERES = {
 // ======================================================================
 const U6 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX6 = {
-  ex48: { titre: 'Exercice 38 · Gérer les feuilles', url: U6('1y-PUalkRbXs-dLlP-R_SwL2gqAfvtxcz') },
-  ex49: { titre: 'Exercice 39 · Protéger les feuilles', url: U6('13mCvIVB6FGJ0AAqEOWyy8bb4Yf8_C6x2') },
-  ex50: { titre: 'Exercice 40 · Protéger et verrouiller les feuilles', url: U6('1MQ3U-c3fqoYFzrzOKO9P8pelnIHCPa49') },
-  ex51: { titre: 'Exercice 41 · Les liaisons', url: U6('1cn1bimIrYrBVR0RqKw3Vt937e0lfjRQr') },
+  ex48: { titre: 'Exercice 47 · Gérer les feuilles', url: U6('1y-PUalkRbXs-dLlP-R_SwL2gqAfvtxcz') },
+  ex49: { titre: 'Exercice 49 · Protéger les feuilles', url: U6('13mCvIVB6FGJ0AAqEOWyy8bb4Yf8_C6x2') },
+  ex50: { titre: 'Exercice 50 · Protéger et verrouiller les feuilles', url: U6('1MQ3U-c3fqoYFzrzOKO9P8pelnIHCPa49') },
+  ex51: { titre: 'Exercice 48 · Les liaisons', url: U6('1cn1bimIrYrBVR0RqKw3Vt937e0lfjRQr') },
 }
 
 // --- Leçon 1 : Gérer les feuilles du classeur ---
@@ -3123,13 +3123,13 @@ const PROTEGERFEUILLES = {
 // CHAPITRE 7 — Exploiter une liste (ceinture verte)
 // ======================================================================
 const EX7 = {
-  ex52: { titre: 'Exercice 42 · Figer/Libérer les volets', url: U6('1NZ2LGAMGt_yiBXCFZ7cPmqh0_hFDGzJ_') },
-  ex53: { titre: 'Exercice 43 · Les sauts de page', url: U6('117sJsI5FVkTF0-qV3FAZP_ieE-YtJvVb') },
-  ex54: { titre: 'Exercice 44 · Création de tableaux', url: U6('1zxeOacQ11fZvtJOEOsGhXnKdRiIyxKj5') },
-  ex55: { titre: 'Exercice 45 · Le formulaire', url: U6('1spkaPe7sEMorWvHOM6-YWfS4XlVhpVM4') },
-  ex56: { titre: 'Exercice 46 · Tris et filtres', url: U6('1vDcJp5YnG1aLmBN58m-GplB5BFZWP2fb') },
-  ex57: { titre: 'Exercice 47 · Les sous-totaux', url: U6('1ikSHnMExovQdlmnpVuBHdrRJR1C74z77') },
-  ex58: { titre: 'Exercice 48 · La fonction SOUS.TOTAL', url: U6('1ct0clJYg_Hs7TVHmthVap9TW4suWhRbF') },
+  ex52: { titre: 'Exercice 51 · Figer/Libérer les volets', url: U6('1NZ2LGAMGt_yiBXCFZ7cPmqh0_hFDGzJ_') },
+  ex53: { titre: 'Exercice 52 · Les sauts de page', url: U6('117sJsI5FVkTF0-qV3FAZP_ieE-YtJvVb') },
+  ex54: { titre: 'Exercice 53 · Création de tableaux', url: U6('1zxeOacQ11fZvtJOEOsGhXnKdRiIyxKj5') },
+  ex55: { titre: 'Exercice 54 · Le formulaire', url: U6('1spkaPe7sEMorWvHOM6-YWfS4XlVhpVM4') },
+  ex56: { titre: 'Exercice 55 · Tris et filtres', url: U6('1vDcJp5YnG1aLmBN58m-GplB5BFZWP2fb') },
+  ex57: { titre: 'Exercice 56 · Les sous-totaux', url: U6('1ikSHnMExovQdlmnpVuBHdrRJR1C74z77') },
+  ex58: { titre: 'Exercice 57 · La fonction SOUS.TOTAL', url: U6('1ct0clJYg_Hs7TVHmthVap9TW4suWhRbF') },
 }
 const LISTE_ENTETES = ['Vendeur', 'Ville', 'CA']
 const LISTE_LIGNES = [['Marie', 'Lyon', '8 200 €'], ['Karim', 'Paris', '12 500 €'], ['Léa', 'Lyon', '6 400 €'], ['Tom', 'Marseille', '9 100 €']]
@@ -3658,14 +3658,14 @@ const SOUSTOTAUX = {
 // ===================== CHAPITRE 8 : LES GRAPHIQUES (ceinture verte-bleue) =====================
 const U8 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX8 = {
-  ex59: { titre: 'Exercice 49 · Les graphiques simples', url: U8('1yU4h52NTXcyNW5nROx8yRugtYs8zoDdj') },
-  ex60: { titre: 'Exercice 50 · Ajuster et déplacer les graphiques', url: U8('1UiiKEyA3KlYaPYT1P46bqNnBAqK29Vz7') },
-  ex61: { titre: 'Exercice 51 · Modifier un graphique', url: U8('15E9h6uKYrryXgCFr5TrcHv_wdtGgyFf_') },
-  ex62: { titre: 'Exercice 52 · Modifier les axes et les séries', url: U8('1yoCXC3FuGOZHzyA1lrlQg9O59xDkXc2g') },
-  ex63: { titre: 'Exercice 53 · Intervertir les lignes/colonnes', url: U8('1fRMgFwEqq5Xm-QPM1fdWmQwbmq2wC-Cy') },
-  ex64: { titre: 'Exercice 54 · Déplacer et imprimer un graphique', url: U8('1dQvXxzelvGpJn4615FsEZPNgOY4TozAd') },
-  ex65: { titre: 'Exercice 55 · Les graphiques mixtes ou combinés', url: U8('1OB2qtO8VNQkobealqKxakJ2ns94PPFD8') },
-  ex66: { titre: 'Exercice 56 · Les graphiques Sparklines', url: U8('1CbiaORbBEP1pJtLnuQOcgBAgIyLWotcV') },
+  ex59: { titre: 'Exercice 58 · Les graphiques simples', url: U8('1yU4h52NTXcyNW5nROx8yRugtYs8zoDdj') },
+  ex60: { titre: 'Exercice 59 · Ajuster et déplacer les graphiques', url: U8('1UiiKEyA3KlYaPYT1P46bqNnBAqK29Vz7') },
+  ex61: { titre: 'Exercice 60 · Modifier un graphique', url: U8('15E9h6uKYrryXgCFr5TrcHv_wdtGgyFf_') },
+  ex62: { titre: 'Exercice 61 · Modifier les axes et les séries', url: U8('1yoCXC3FuGOZHzyA1lrlQg9O59xDkXc2g') },
+  ex63: { titre: 'Exercice 62 · Intervertir les lignes/colonnes', url: U8('1fRMgFwEqq5Xm-QPM1fdWmQwbmq2wC-Cy') },
+  ex64: { titre: 'Exercice 63 · Déplacer et imprimer un graphique', url: U8('1dQvXxzelvGpJn4615FsEZPNgOY4TozAd') },
+  ex65: { titre: 'Exercice 64 · Les graphiques mixtes ou combinés', url: U8('1OB2qtO8VNQkobealqKxakJ2ns94PPFD8') },
+  ex66: { titre: 'Exercice 65 · Les graphiques Sparklines', url: U8('1CbiaORbBEP1pJtLnuQOcgBAgIyLWotcV') },
 }
 const GRAPH_MOIS = { cats: ['Jan', 'Fév', 'Mar', 'Avr'], series: [{ nom: 'Ventes', vals: [12, 19, 15, 24] }] }
 const GRAPH_PRODUITS = { cats: ['T1', 'T2', 'T3'], series: [{ nom: 'Ebook Excel', couleur: '#41c1ba', vals: [12, 18, 24] }, { nom: 'Ebook Shaolin', couleur: '#0a335d', vals: [9, 15, 21] }] }
@@ -4306,11 +4306,11 @@ const MIXTESPARKLINE = {
 // ===================== CHAPITRE 9 : CONSOLIDATION (ceinture bleue) =====================
 const U9 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX9 = {
-  ex67: { titre: 'Exercice 57 · La consolidation par position', url: U9('1lR2JVWwF8wWbSMT8S7R5UvIPOtCRk2Ln') },
-  ex68: { titre: 'Exercice 58 · La consolidation par position', url: U9('1m3L9khnfSFFp7xyy5UrC2PQ-P5g6j7LG') },
-  ex69: { titre: 'Exercice 59 · La consolidation par catégorie', url: U9('1ZwXQUWwvhmv8x0br8VO2EVS86-U1upJ6') },
-  ex70: { titre: 'Exercice 60 · La consolidation par TCD multi-tables', url: U9('18xN6d1GZqNViwbM4U9eH6OJ43kW2Tv4E') },
-  ex70c: { titre: 'Exercice 60 · TCD multi-tables — Correction', url: U9('1OAIzn5k3GItqTVF-EIwkppIi6o-yk_XQ') },
+  ex67: { titre: 'Exercice 66 · La consolidation par position', url: U9('1lR2JVWwF8wWbSMT8S7R5UvIPOtCRk2Ln') },
+  ex68: { titre: 'Exercice 67 · La consolidation par position', url: U9('1m3L9khnfSFFp7xyy5UrC2PQ-P5g6j7LG') },
+  ex69: { titre: 'Exercice 68 · La consolidation par catégorie', url: U9('1ZwXQUWwvhmv8x0br8VO2EVS86-U1upJ6') },
+  ex70: { titre: 'Exercice 69 · La consolidation par TCD multi-tables', url: U9('18xN6d1GZqNViwbM4U9eH6OJ43kW2Tv4E') },
+  ex70c: { titre: 'Exercice 69 · TCD multi-tables — Correction', url: U9('1OAIzn5k3GItqTVF-EIwkppIi6o-yk_XQ') },
 }
 const CONSO_ENTETES = ['Produit', 'CA']
 const CONSO_FEUILLES = ['Janvier', 'Février', 'Mars', 'Synthèse']
@@ -4580,12 +4580,12 @@ const TCDRELATIONS = {
 // ===================== CHAPITRE 10 : FONCTIONS CONDITIONNELLES (ceinture bleue-marron) =====================
 const U10 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX10 = {
-  ex71: { titre: 'Exercice 61 · La mise en forme conditionnelle', url: U10('1ck3yE4WFBpgI5B2drmCzAkZL2rUul6EG') },
-  ex72: { titre: 'Exercice 62 · La fonction SI simple', url: U10('1u6hVoWOq5LUfglv8CbiM2eL3I4mqIc8t') },
-  ex73: { titre: 'Exercice 63 · La fonction SI imbriquée, ET, OU', url: U10('15r4diyO7snaTs_1Of3qhYVSUj3pK4O6M') },
-  ex74: { titre: 'Exercice 64 · Les fonctions SI.ENS', url: U10('1ATJQGp8cOanFAKayZrqZKpAm1hGn_u1S') },
-  ex75: { titre: 'Exercice 65 · Les références semi-relatives', url: U10('1Hocvgd9pu5_D-jOCjTt641RxTvdKWhfO') },
-  ex76: { titre: 'Exercice 66 · La gestion des erreurs', url: U10('15DUznvLpVfGJDYvwcddhPVI41MeDicOs') },
+  ex71: { titre: 'Exercice 70 · La mise en forme conditionnelle', url: U10('1ck3yE4WFBpgI5B2drmCzAkZL2rUul6EG') },
+  ex72: { titre: 'Exercice 71 · La fonction SI simple', url: U10('1u6hVoWOq5LUfglv8CbiM2eL3I4mqIc8t') },
+  ex73: { titre: 'Exercice 72 · La fonction SI imbriquée, ET, OU', url: U10('15r4diyO7snaTs_1Of3qhYVSUj3pK4O6M') },
+  ex74: { titre: 'Exercice 73 · Les fonctions SI.ENS', url: U10('1ATJQGp8cOanFAKayZrqZKpAm1hGn_u1S') },
+  ex75: { titre: 'Exercice 74 · Les références semi-relatives', url: U10('1Hocvgd9pu5_D-jOCjTt641RxTvdKWhfO') },
+  ex76: { titre: 'Exercice 75 · La gestion des erreurs', url: U10('15DUznvLpVfGJDYvwcddhPVI41MeDicOs') },
 }
 
 // --- Leçon 1 : La mise en forme conditionnelle ---
@@ -5123,12 +5123,12 @@ const SIERREUR = {
 // ===================== CHAPITRE 11 : LES FONCTIONS DE RECHERCHE (ceinture marron) =====================
 const U11 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX11 = {
-  ex77: { titre: 'Exercice 67 · La recherche V', url: U11('1v2Df6PVyitrjcygMzA_SlvddrHiZl-5S') },
-  ex78: { titre: 'Exercice 68 · La recherche V', url: U11('1N-rLX-5hTQ9ytsdKiRBRuUmFyz624lJL') },
-  ex79: { titre: 'Exercice 69 · La recherche V', url: U11('1Sjeo7jGalC9M-FqAsjVeXdIou-nBXxir') },
-  ex80: { titre: 'Exercice 70 · La recherche X', url: U11('14gS4ogl5nCFCzPv49ZjpUqM4LovHy510') },
-  ex81: { titre: 'Exercice 71 · La recherche X à 2 critères', url: U11('1ExGOEPAnl_AExSKM9notfpnfsfrpCASh') },
-  ex82: { titre: 'Exercice 72 · La recherche H', url: U11('1I8d-lpInbwB7C6G7rBUSBADDxzP-OAEP') },
+  ex77: { titre: 'Exercice 76 · La recherche V', url: U11('1v2Df6PVyitrjcygMzA_SlvddrHiZl-5S') },
+  ex78: { titre: 'Exercice 77 · La recherche V', url: U11('1N-rLX-5hTQ9ytsdKiRBRuUmFyz624lJL') },
+  ex79: { titre: 'Exercice 78 · La recherche V', url: U11('1Sjeo7jGalC9M-FqAsjVeXdIou-nBXxir') },
+  ex80: { titre: 'Exercice 79 · La recherche X', url: U11('14gS4ogl5nCFCzPv49ZjpUqM4LovHy510') },
+  ex81: { titre: 'Exercice 80 · La recherche X à 2 critères', url: U11('1ExGOEPAnl_AExSKM9notfpnfsfrpCASh') },
+  ex82: { titre: 'Exercice 81 · La recherche H', url: U11('1I8d-lpInbwB7C6G7rBUSBADDxzP-OAEP') },
 }
 
 // Les deux tableaux fil rouge du chapitre : Commandes (principal) + Stock (référentiel).
@@ -5664,11 +5664,11 @@ const RECHERCHEH = {
 // ======================= CHAPITRE 12 : FILTRER ET EXTRAIRE LES DONNÉES D'UNE LISTE =======================
 const U12 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX12 = {
-  ex83: { titre: 'Exercice 73 · La validation des données', url: U12('16etf565pXKLv_sEhb1IilLRFkKdHrrOi') },
-  ex84: { titre: 'Exercice 74 · Les filtres avancés', url: U12('12IGOcjWiFGuWpsaTda4eRaxhefZFcSwk') },
-  ex85: { titre: 'Exercice 75 · La suppression des doublons', url: U12('1OxmXcRFbtar1dVXpYGJHPYzx4Y9FqRg0') },
-  ex57: { titre: 'Exercice 47 · Les sous-totaux', url: U12('1ikSHnMExovQdlmnpVuBHdrRJR1C74z77') },
-  ex58: { titre: 'Exercice 48 · La fonction SOUS.TOTAL', url: U12('1ct0clJYg_Hs7TVHmthVap9TW4suWhRbF') },
+  ex83: { titre: 'Exercice 82 · La validation des données', url: U12('16etf565pXKLv_sEhb1IilLRFkKdHrrOi') },
+  ex84: { titre: 'Exercice 83 · Les filtres avancés', url: U12('12IGOcjWiFGuWpsaTda4eRaxhefZFcSwk') },
+  ex85: { titre: 'Exercice 84 · La suppression des doublons', url: U12('1OxmXcRFbtar1dVXpYGJHPYzx4Y9FqRg0') },
+  ex57: { titre: 'Exercice 56 · Les sous-totaux', url: U12('1ikSHnMExovQdlmnpVuBHdrRJR1C74z77') },
+  ex58: { titre: 'Exercice 57 · La fonction SOUS.TOTAL', url: U12('1ct0clJYg_Hs7TVHmthVap9TW4suWhRbF') },
 }
 
 // --- Leçon 1 : La validation de données ---
@@ -5864,13 +5864,13 @@ const DOUBLONSSOUSTOTAUX = {
 // ======================= CHAPITRE 13 : LES TABLEAUX CROISÉS DYNAMIQUES (ceinture NOIRE) =======================
 const U13 = (id) => `https://drive.google.com/file/d/${id}/view?usp=drivesdk`
 const EX13 = {
-  ex86: { titre: 'Exercice 76 · Ton premier TCD', url: U13('1-PtXjKPbzNqBLnptSA0hJFjkZKCOlnhU') },
-  ex87: { titre: 'Exercice 77 · Créer un TCD', url: U13('14EpfX9QyqD3AK7unBFuSr5X38DAmSjaH') },
-  ex88: { titre: 'Exercice 78 · Créer un nouveau TCD', url: U13('1pjRQw2w8HI4je7T_CvrdmnnFZkSmi-cT') },
-  ex89: { titre: 'Exercice 79 · Les champs calculés dans un TCD', url: U13('18OeXJQioHJIpkmggRVsy0aBn4dLQ2a3j') },
-  ex90: { titre: 'Exercice 80 · Grouper les dates dans un TCD', url: U13('1LfHvvK3n_KYphFTZwVZRFPjB4NO3EGLD') },
-  ex91: { titre: 'Exercice 81 · Grouper les valeurs numériques dans un TCD', url: U13('1nMPtbouFKpOF-oWVppPpTP7-GAyBpa1L') },
-  ex92: { titre: 'Exercice 82 · Changer la source de données d\'un TCD', url: U13('13WpDa44rHczUjUc1be2SrggxyS2LOete') },
+  ex86: { titre: 'Exercice 85 · Ton premier TCD', url: U13('1-PtXjKPbzNqBLnptSA0hJFjkZKCOlnhU') },
+  ex87: { titre: 'Exercice 86 · Créer un TCD', url: U13('14EpfX9QyqD3AK7unBFuSr5X38DAmSjaH') },
+  ex88: { titre: 'Exercice 87 · Créer un nouveau TCD', url: U13('1pjRQw2w8HI4je7T_CvrdmnnFZkSmi-cT') },
+  ex89: { titre: 'Exercice 88 · Les champs calculés dans un TCD', url: U13('18OeXJQioHJIpkmggRVsy0aBn4dLQ2a3j') },
+  ex90: { titre: 'Exercice 89 · Grouper les dates dans un TCD', url: U13('1LfHvvK3n_KYphFTZwVZRFPjB4NO3EGLD') },
+  ex91: { titre: 'Exercice 90 · Grouper les valeurs numériques dans un TCD', url: U13('1nMPtbouFKpOF-oWVppPpTP7-GAyBpa1L') },
+  ex92: { titre: 'Exercice 91 · Changer la source de données d\'un TCD', url: U13('13WpDa44rHczUjUc1be2SrggxyS2LOete') },
 }
 
 // Table source fil rouge du chapitre : des ventes immobilières.
