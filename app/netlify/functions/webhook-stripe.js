@@ -5,6 +5,7 @@
 // À déclarer dans Stripe (Développeurs > Webhooks) sur l'URL :
 //   https://<ton-app>/.netlify/functions/webhook-stripe
 // Événements à écouter : checkout.session.completed, invoice.paid,
+//                        charge.refunded, customer.subscription.updated,
 //                        customer.subscription.deleted
 //
 // Variables d'environnement Netlify nécessaires :
@@ -12,8 +13,10 @@
 //   STRIPE_WEBHOOK_SECRET       secret de signature du webhook (whsec_…)
 //   SUPABASE_URL                https://mrllrnqixxbweskanqda.supabase.co
 //   SUPABASE_SERVICE_ROLE_KEY   la clé service_role (secrète, JAMAIS côté navigateur)
+//   BREVO_API_KEY               clé API Brevo (email de confirmation d'annulation)
 
 import Stripe from 'stripe'
+import { envoyerEmailAnnulation } from './_emails.js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -55,6 +58,19 @@ async function majParClient(customerId, champs) {
     body: JSON.stringify(champs),
   })
   if (!r.ok) throw new Error(`Supabase ${r.status} : ${await r.text()}`)
+}
+
+// Prénom de l'utilisateur à partir de son client Stripe (pour personnaliser l'email).
+async function prenomParClient(customerId) {
+  const r = await fetch(`${SB_URL}/rest/v1/profils?stripe_customer_id=eq.${encodeURIComponent(customerId)}&select=prenom`, { headers: sbHeaders })
+  const rows = await r.json().catch(() => [])
+  return rows?.[0]?.prenom || ''
+}
+
+// Date de fin de période, en français (ex. « 29 août 2026 »).
+const dateFrancaise = (sub) => {
+  const ts = sub?.items?.data?.[0]?.current_period_end ?? sub?.current_period_end
+  return ts ? new Date(ts * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
 }
 
 export default async (req) => {
@@ -104,6 +120,17 @@ export default async (req) => {
         }
         if (userId) await upsertProfil(userId, retire)
         else if (ch.customer) await majParClient(ch.customer, retire)
+      }
+    } else if (event.type === 'customer.subscription.updated') {
+      // Résiliation programmée qui vient d'être activée par le client (depuis le
+      // portail) : on envoie l'email de confirmation d'annulation, une seule fois.
+      const sub = event.data.object
+      const prev = event.data.previous_attributes || {}
+      if (sub.cancel_at_period_end === true && prev.cancel_at_period_end === false && sub.customer) {
+        const cust = await stripe.customers.retrieve(sub.customer)
+        if (cust && !cust.deleted && cust.email) {
+          await envoyerEmailAnnulation({ to: cust.email, prenom: await prenomParClient(sub.customer), dateFin: dateFrancaise(sub) })
+        }
       }
     }
     // customer.subscription.deleted : rien à faire. premium_jusqu_au reflète déjà

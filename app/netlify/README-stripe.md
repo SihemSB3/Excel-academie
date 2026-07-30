@@ -21,6 +21,7 @@ Netlify : **Site settings > Environment variables > Add a variable**. À régler
 | `STRIPE_SECRET_KEY` | Stripe > Développeurs > Clés API > clé **secrète** (`sk_…`) | **OUI, secret** |
 | `STRIPE_WEBHOOK_SECRET` | fourni à l'étape 2 (`whsec_…`) | **OUI, secret** |
 | `SITE_URL` | l'adresse publique de l'app (ex. `https://excelacademie.netlify.app`) | non |
+| `BREVO_API_KEY` | Brevo > SMTP & API > Clés API (email de confirmation d'annulation) | **OUI, secret** |
 
 > Les Price IDs (129 € à vie, 19,90 €/mois) sont déjà dans le code. Pour les
 > surcharger (ex. passer en mode test), ajouter `STRIPE_PRICE_VIE` et
@@ -40,6 +41,7 @@ vont QUE dans Netlify, jamais dans le code, jamais dans le navigateur, jamais da
    - `invoice.paid`
    - `customer.subscription.deleted`
    - `charge.refunded` (retire l'accès premium en cas de remboursement)
+   - `customer.subscription.updated` (email de confirmation quand un client résilie)
 4. Valider, puis copier le **secret de signature** (`whsec_…`) et le coller dans
    la variable Netlify `STRIPE_WEBHOOK_SECRET`.
 

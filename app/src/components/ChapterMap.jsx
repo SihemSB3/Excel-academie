@@ -35,7 +35,7 @@ export default function ChapterMap({ ch, estFait, tousFaits, onOuvrir, onQuitter
       </div>
 
       <div className="flex-1 px-5 py-6">
-        <TelechargerGuide url={ch.guideUrl} className="mb-6" />
+        <TelechargerGuide chapitre={ch.chapitre} className="mb-6" />
         <ol className="relative">
           {ch.modules.map((m, i) => {
             const fait = i < faits

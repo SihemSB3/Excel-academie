@@ -103,7 +103,16 @@ export const PAGES_LEGALES = {
       </ul>
 
       <h2>4. Destinataires et sous-traitants</h2>
-      <p>Vos données sont traitées par des prestataires techniques agissant pour notre compte : <strong>Supabase</strong> (base de données et authentification), <strong>Stripe</strong> (paiements), <strong>Brevo</strong> (emails), <strong>Netlify</strong> (hébergement). Certains peuvent traiter des données hors Union européenne (Stripe, Netlify — États-Unis), transferts encadrés par des garanties appropriées (clauses contractuelles types). Nous ne vendons ni ne louons vos données à des tiers.</p>
+      <p>Vos données sont traitées par des prestataires techniques agissant pour notre compte :</p>
+      <table>
+        <tr><th>Prestataire</th><th>Rôle</th><th>Lieu de traitement</th></tr>
+        <tr><td>Supabase</td><td>Base de données, comptes, stockage des guides PDF</td><td>Royaume-Uni (Londres)</td></tr>
+        <tr><td>Stripe</td><td>Paiements et facturation</td><td>Irlande et États-Unis</td></tr>
+        <tr><td>Netlify</td><td>Hébergement de l'application</td><td>États-Unis</td></tr>
+        <tr><td>Brevo</td><td>Envoi des emails</td><td>France</td></tr>
+      </table>
+      <p>Les transferts hors Union européenne sont encadrés : par la <strong>décision d'adéquation</strong> de la Commission européenne en faveur du Royaume-Uni pour Supabase, et par des garanties appropriées (Data Privacy Framework ou clauses contractuelles types) pour les prestataires établis aux États-Unis.</p>
+      <p>Les polices de caractères et l'ensemble des ressources de l'application sont servies depuis nos propres serveurs : <strong>aucune donnée n'est transmise à un service tiers lors du simple chargement des pages</strong>. Nous ne vendons ni ne louons vos données.</p>
 
       <h2>5. Durée de conservation</h2>
       <ul>

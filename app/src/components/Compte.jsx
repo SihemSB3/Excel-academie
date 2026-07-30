@@ -17,6 +17,11 @@ export default function Compte({ onRetour, onOuvrirPremium }) {
   const [compte, setCompte] = useState(undefined)
   const [chargePortail, setChargePortail] = useState(false)
   const [erreur, setErreur] = useState('')
+  // Suppression de compte : en deux temps, avec confirmation tapée à la main.
+  // C'est irréversible, un simple clic serait trop facile à faire par erreur.
+  const [zoneSuppression, setZoneSuppression] = useState(false)
+  const [confirmation, setConfirmation] = useState('')
+  const [chargeSuppression, setChargeSuppression] = useState(false)
 
   useEffect(() => {
     let annule = false
@@ -47,6 +52,25 @@ export default function Compte({ onRetour, onOuvrirPremium }) {
     } catch (e) {
       setErreur("Impossible d'ouvrir la gestion de l'abonnement pour le moment.")
       setChargePortail(false)
+    }
+  }
+
+  const supprimerCompte = async () => {
+    setErreur('')
+    setChargeSuppression(true)
+    try {
+      const reponse = await fetch('/.netlify/functions/supprimer-compte', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: session?.access_token }),
+      })
+      if (!reponse.ok) throw new Error(await reponse.text())
+      // Le compte n'existe plus : on ferme la session et on repart à zéro.
+      await supabase.auth.signOut()
+      window.location.href = '/'
+    } catch (e) {
+      setErreur("La suppression n'a pas abouti. Réessaie, ou écris à contact@lartdudigital.fr.")
+      setChargeSuppression(false)
     }
   }
 
@@ -121,6 +145,77 @@ export default function Compte({ onRetour, onOuvrirPremium }) {
         >
           Se déconnecter
         </button>
+
+        {/* Droit à l'effacement (RGPD art. 17). Discret mais accessible sans
+            avoir à écrire un email : la demande doit pouvoir être exercée seule. */}
+        <section className="mt-10 border-t border-navy/10 pt-6">
+          {!zoneSuppression ? (
+            <button
+              onClick={() => setZoneSuppression(true)}
+              className="text-xs text-navy/40 underline transition hover:text-red-700"
+            >
+              Supprimer mon compte
+            </button>
+          ) : (
+            <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-5">
+              <h2 className="font-display text-xl text-red-800">Supprimer définitivement mon compte</h2>
+
+              <ul className="mt-3 space-y-1.5 text-sm text-navy/80">
+                <li>• Ton compte, ta progression, tes ceintures et tes résultats aux quiz seront effacés.</li>
+                <li>• C'est <strong className="font-bold">définitif</strong> : rien ne pourra être récupéré.</li>
+                {aVie && (
+                  <li>
+                    • Tu perdras ton <strong className="font-bold">accès à vie</strong>, déjà payé. Il ne sera pas
+                    remboursé et ne pourra pas être rétabli.
+                  </li>
+                )}
+                {abonneMensuel && (
+                  <li>
+                    • Ton abonnement mensuel sera <strong className="font-bold">résilié automatiquement</strong>. Aucun
+                    nouveau prélèvement ne sera effectué.
+                  </li>
+                )}
+                <li>
+                  • Tes <strong className="font-bold">factures sont conservées 10 ans</strong>, comme la loi comptable
+                  l'impose. C'est la seule donnée qui subsiste, et elle reste chez notre prestataire de paiement.
+                </li>
+              </ul>
+
+              <label className="mt-4 block text-sm text-navy/80">
+                Pour confirmer, tape <strong className="font-bold">SUPPRIMER</strong> ci-dessous :
+                <input
+                  type="text"
+                  value={confirmation}
+                  onChange={(e) => setConfirmation(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-navy/20 bg-white px-4 py-3 text-navy outline-none focus:border-red-500"
+                  autoComplete="off"
+                />
+              </label>
+
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                <button
+                  onClick={supprimerCompte}
+                  disabled={confirmation.trim().toUpperCase() !== 'SUPPRIMER' || chargeSuppression}
+                  className="w-full rounded-2xl bg-red-700 px-5 py-3 font-bold text-white transition hover:bg-red-800 disabled:opacity-40"
+                >
+                  {chargeSuppression ? '…' : 'Supprimer définitivement'}
+                </button>
+                <button
+                  onClick={() => {
+                    setZoneSuppression(false)
+                    setConfirmation('')
+                    setErreur('')
+                  }}
+                  className="w-full rounded-2xl border border-navy/20 px-5 py-3 font-bold text-navy transition hover:bg-navy/5"
+                >
+                  Annuler
+                </button>
+              </div>
+
+              {erreur && <p className="mt-3 rounded-xl bg-red-500/10 px-3 py-2 text-sm text-red-700">{erreur}</p>}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   )

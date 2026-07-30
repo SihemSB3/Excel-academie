@@ -1,5 +1,6 @@
-import { useId } from 'react'
+import { useId, useState } from 'react'
 import { ceintureInfo } from '../lib/belts'
+import { useAuth } from '../store/AuthContext'
 
 // Bouton principal réutilisé partout
 export function Bouton({ children, onClick, variant = 'primary', disabled = false, className = '' }) {
@@ -18,22 +19,55 @@ export function Bouton({ children, onClick, variant = 'primary', disabled = fals
 
 // Ceinture dessinée en SVG, colorée selon le niveau
 // Bandeau de téléchargement du chapitre du guide (PDF). Affiché en haut de l'écran d'un chapitre.
-export function TelechargerGuide({ url, className = '' }) {
-  if (!url) return null
+// Le PDF n'est plus un lien en dur : on demande au serveur un lien signé, valable
+// une minute, qu'il ne délivre qu'après avoir vérifié le compte et l'abonnement.
+// Rien n'est donc récupérable en lisant le code de la page.
+export function TelechargerGuide({ chapitre, className = '' }) {
+  const { session } = useAuth()
+  const [charge, setCharge] = useState(false)
+  const [erreur, setErreur] = useState('')
+
+  if (!chapitre) return null
+
+  const telecharger = async () => {
+    setErreur('')
+    setCharge(true)
+    try {
+      const reponse = await fetch('/.netlify/functions/guide-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: session?.access_token, chapitre }),
+      })
+      if (!reponse.ok) throw new Error(await reponse.text())
+      const { url } = await reponse.json()
+      if (!url) throw new Error('Lien manquant')
+      // Le lien expire en 60 s : on l'ouvre tout de suite, on ne le stocke pas.
+      window.open(url, '_blank', 'noopener,noreferrer')
+    } catch (e) {
+      setErreur(e?.message || 'Le téléchargement a échoué. Réessaie dans un instant.')
+    } finally {
+      setCharge(false)
+    }
+  }
+
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`flex items-center gap-3 rounded-2xl border border-[#e8853a]/30 bg-[#e8853a]/10 px-4 py-3 text-left transition hover:bg-[#e8853a]/[0.16] ${className}`}
-    >
-      <span className="text-xl">📘</span>
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold text-navy">Le cours de ce chapitre en PDF</p>
-        <p className="text-xs text-navy/55">Télécharge le chapitre du guide et garde-le avec toi.</p>
-      </div>
-      <span className="shrink-0 rounded-full bg-[#e8853a] px-3 py-1 text-xs font-bold text-white">Télécharger</span>
-    </a>
+    <div className={className}>
+      <button
+        onClick={telecharger}
+        disabled={charge}
+        className="flex w-full items-center gap-3 rounded-2xl border border-[#e8853a]/30 bg-[#e8853a]/10 px-4 py-3 text-left transition hover:bg-[#e8853a]/[0.16] disabled:opacity-60"
+      >
+        <span className="text-xl">📘</span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-bold text-navy">Le cours de ce chapitre en PDF</p>
+          <p className="text-xs text-navy/55">Télécharge le chapitre du guide et garde-le avec toi.</p>
+        </div>
+        <span className="shrink-0 rounded-full bg-[#e8853a] px-3 py-1 text-xs font-bold text-white">
+          {charge ? '…' : 'Télécharger'}
+        </span>
+      </button>
+      {erreur && <p className="mt-2 rounded-xl bg-red-500/10 px-3 py-2 text-xs text-red-700">{erreur}</p>}
+    </div>
   )
 }
 

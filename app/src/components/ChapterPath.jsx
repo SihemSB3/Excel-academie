@@ -82,7 +82,7 @@ export default function ChapterPath({ ch, estFait, tousFaits, onOuvrir, onQuitte
       </div>
 
       <div className="px-5 pb-2">
-        <TelechargerGuide url={ch.guideUrl} />
+        <TelechargerGuide chapitre={ch.chapitre} />
       </div>
 
       <div ref={scroller} className="flex flex-1 items-center overflow-x-auto overflow-y-hidden">
