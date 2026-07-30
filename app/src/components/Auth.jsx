@@ -46,8 +46,8 @@ export default function Auth({ onRetour, onConnecte }) {
       setErreur('Renseigne ton mot de passe.')
       return
     }
-    if (mdp.length < 6) {
-      setErreur('Le mot de passe doit faire au moins 6 caractères.')
+    if (mdp.length < 8) {
+      setErreur('Le mot de passe doit faire au moins 8 caractères.')
       return
     }
     // Le prénom et le nom servent au suivi du formateur : sans eux, son tableau

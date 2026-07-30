@@ -150,6 +150,17 @@ create policy "lecture de ses groupes" on public.groupes
 create policy "le formateur modifie son groupe" on public.groupes
   for update using (id in (select public.mes_groupes_formateur()));
 
+-- Sécurité : la politique ci-dessus dit QUELLE LIGNE un formateur peut modifier,
+-- pas QUELLES COLONNES. Sans la restriction ci-dessous, un formateur pourrait
+-- s'attribuer des licences illimitées (`licences`), prolonger son abonnement
+-- (`date_fin`), réactiver un groupe coupé pour impayé (`actif`), ouvrir son
+-- groupe à toutes les adresses (`domaine_email`) ou le rattacher à une autre
+-- organisation, le tout en une requête depuis son navigateur.
+-- On ne lui laisse donc que le renommage de sa promo, son seul besoin légitime.
+-- Le nombre de licences se pilote côté vendeur, puisque c'est ce qui est facturé.
+revoke update on public.groupes from authenticated;
+grant update (nom) on public.groupes to authenticated;
+
 create policy "lecture de son organisation" on public.organisations
   for select using (
     id in (select organisation_id from public.groupes where id in (select public.mes_groupes()))

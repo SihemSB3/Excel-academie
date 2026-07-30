@@ -27,7 +27,7 @@ export default function Legal({ page = 'cgv', onRetour, onChangerPage }) {
       <div className="mx-auto w-full max-w-2xl">
         {onRetour && (
           <button onClick={onRetour} className="mb-4 text-sm font-bold text-navy/60 transition hover:text-navy">
-            ‹ Retour au dojo
+            ‹ Retour à l'Académie
           </button>
         )}
 

@@ -55,7 +55,7 @@ export default function Compte({ onRetour, onOuvrirPremium }) {
       <div className="mx-auto w-full max-w-xl">
         {onRetour && (
           <button onClick={onRetour} className="mb-4 text-sm font-bold text-navy/60 transition hover:text-navy">
-            ‹ Retour au dojo
+            ‹ Retour à l'Académie
           </button>
         )}
 
