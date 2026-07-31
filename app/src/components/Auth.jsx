@@ -5,10 +5,10 @@ import { supabase, supabaseActif } from '../lib/supabase'
 
 // Écran connexion / inscription. Inactif tant que les clés Supabase ne sont pas
 // renseignées (l'app continue alors en mode local). S'active dès que le .env est rempli.
-export default function Auth({ onRetour, onConnecte }) {
-  // On ouvre sur l'inscription : la plupart des arrivants sont de nouveaux
-  // visiteurs qui viennent tester. Un habitué bascule en « Se connecter ».
-  const [mode, setMode] = useState('inscription') // 'connexion' | 'inscription'
+export default function Auth({ onRetour, onConnecte, modeInitial = 'inscription' }) {
+  // On ouvre sur l'inscription par défaut : la plupart des arrivants sont de
+  // nouveaux visiteurs qui viennent tester. Un habitué bascule en « Se connecter ».
+  const [mode, setMode] = useState(modeInitial) // 'connexion' | 'inscription' | 'reset'
   const [email, setEmail] = useState('')
   const [mdp, setMdp] = useState('')
   const [prenom, setPrenom] = useState('')

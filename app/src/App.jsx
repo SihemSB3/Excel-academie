@@ -10,6 +10,7 @@ import Onboarding from './components/Onboarding'
 import SifuChat from './components/SifuChat'
 import ObjectifsSmart from './components/ObjectifsSmart'
 import Auth from './components/Auth'
+import Accueil from './components/Accueil'
 import EspaceFormateur from './components/EspaceFormateur'
 import Rejoindre from './components/Rejoindre'
 import SuiviGroupe from './components/SuiviGroupe'
@@ -53,6 +54,9 @@ export default function App() {
   // Groupe encadré par l'utilisateur, s'il est formateur. undefined = pas encore su.
   const [groupeEncadre, setGroupeEncadre] = useState(undefined)
   const [voirCommeApprenant, setVoirCommeApprenant] = useState(false)
+  // Visiteur non connecté : null = page de présentation, sinon l'écran d'auth
+  // ouvert en inscription ou connexion.
+  const [vueEntree, setVueEntree] = useState(null)
   const apercuVerrou = apercuVerrouDemande()
   // Accès complet au contenu premium. En local/démo tout est ouvert (sauf aperçu
   // forcé). En production : abonné premium, ou membre d'un groupe école/entreprise.
@@ -185,11 +189,14 @@ export default function App() {
   }
 
   if (supabaseActif && !session) {
-    return (
-      <div className="flex min-h-screen w-full overflow-x-hidden bg-cream">
-        <Auth onConnecte={() => {}} />
-      </div>
-    )
+    if (vueEntree) {
+      return (
+        <div className="flex min-h-screen w-full overflow-x-hidden bg-cream">
+          <Auth modeInitial={vueEntree} onRetour={() => setVueEntree(null)} onConnecte={() => {}} />
+        </div>
+      )
+    }
+    return <Accueil onCommencer={() => setVueEntree('inscription')} onConnexion={() => setVueEntree('connexion')} />
   }
 
   // Aiguillage selon le rôle : un formateur arrive sur le suivi de son groupe,
