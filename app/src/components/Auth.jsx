@@ -6,7 +6,9 @@ import { supabase, supabaseActif } from '../lib/supabase'
 // Écran connexion / inscription. Inactif tant que les clés Supabase ne sont pas
 // renseignées (l'app continue alors en mode local). S'active dès que le .env est rempli.
 export default function Auth({ onRetour, onConnecte }) {
-  const [mode, setMode] = useState('connexion') // 'connexion' | 'inscription'
+  // On ouvre sur l'inscription : la plupart des arrivants sont de nouveaux
+  // visiteurs qui viennent tester. Un habitué bascule en « Se connecter ».
+  const [mode, setMode] = useState('inscription') // 'connexion' | 'inscription'
   const [email, setEmail] = useState('')
   const [mdp, setMdp] = useState('')
   const [prenom, setPrenom] = useState('')
@@ -101,8 +103,16 @@ export default function Auth({ onRetour, onConnecte }) {
         <p className="mt-2 text-center text-sm text-navy/60">
           {mode === 'reset'
             ? 'Entre ton email : on t’envoie un lien pour choisir un nouveau mot de passe.'
-            : 'Connecte-toi pour retrouver ta progression sur tous tes appareils : apprends sur mobile, fais les exercices sur PC.'}
+            : mode === 'inscription'
+              ? 'Crée ton compte gratuit et commence à t’entraîner tout de suite.'
+              : 'Connecte-toi pour retrouver ta progression sur tous tes appareils.'}
         </p>
+
+        {supabaseActif && mode !== 'reset' && (
+          <div className="mt-4 rounded-xl border border-mint/40 bg-mint/10 px-4 py-3 text-center text-sm text-navy/85">
+            🥋 <strong className="font-bold">Les 2 premiers chapitres sont offerts.</strong> Teste l’Académie gratuitement, sans carte bancaire.
+          </div>
+        )}
 
         {!supabaseActif && (
           <div className="mt-4 rounded-xl border border-mint/30 bg-mint/10 px-4 py-3 text-center text-sm text-navy/80">
@@ -178,7 +188,7 @@ export default function Auth({ onRetour, onConnecte }) {
 
         <div className="mt-5">
           <Bouton onClick={soumettre} disabled={charge}>
-            {charge ? '...' : mode === 'reset' ? 'Envoyer le lien' : mode === 'inscription' ? 'Créer mon compte' : 'Se connecter'}
+            {charge ? '...' : mode === 'reset' ? 'Envoyer le lien' : mode === 'inscription' ? 'Créer mon compte gratuit' : 'Se connecter'}
           </Bouton>
         </div>
 
