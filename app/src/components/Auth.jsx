@@ -5,6 +5,17 @@ import { supabase, supabaseActif } from '../lib/supabase'
 
 // Écran connexion / inscription. Inactif tant que les clés Supabase ne sont pas
 // renseignées (l'app continue alors en mode local). S'active dès que le .env est rempli.
+// Traduit en français les messages d'erreur (Supabase renvoie de l'anglais).
+function traduireErreur(e) {
+  const m = e?.message || ''
+  if (/password/i.test(m))
+    return 'Ton mot de passe doit contenir au moins 8 caractères, dont une minuscule, une majuscule, un chiffre et un caractère spécial (ex. ! ? @ #).'
+  if (/invalid login credentials/i.test(m)) return 'Email ou mot de passe incorrect.'
+  if (/email not confirmed/i.test(m)) return 'Confirme d’abord ton email : vérifie ta boîte mail (et les spams).'
+  if (/rate limit|too many/i.test(m)) return 'Trop de tentatives, réessaie dans quelques minutes.'
+  return m || 'Une erreur est survenue.'
+}
+
 export default function Auth({ onRetour, onConnecte, modeInitial = 'inscription' }) {
   // On ouvre sur l'inscription par défaut : la plupart des arrivants sont de
   // nouveaux visiteurs qui viennent tester. Un habitué bascule en « Se connecter ».
@@ -38,7 +49,7 @@ export default function Auth({ onRetour, onConnecte, modeInitial = 'inscription'
         if (error) throw error
         setInfo('Si un compte existe pour cette adresse, tu recevras un email avec un lien pour choisir un nouveau mot de passe.')
       } catch (e) {
-        setErreur(e?.message || 'Une erreur est survenue.')
+        setErreur(traduireErreur(e))
       } finally {
         setCharge(false)
       }
@@ -48,9 +59,17 @@ export default function Auth({ onRetour, onConnecte, modeInitial = 'inscription'
       setErreur('Renseigne ton mot de passe.')
       return
     }
-    if (mdp.length < 8) {
-      setErreur('Le mot de passe doit faire au moins 8 caractères.')
-      return
+    // À l'inscription, on vérifie la règle de Supabase EN FRANÇAIS, avant l'appel,
+    // pour éviter son message d'erreur technique en anglais.
+    if (mode === 'inscription') {
+      const assezFort =
+        mdp.length >= 8 && /[a-z]/.test(mdp) && /[A-Z]/.test(mdp) && /[0-9]/.test(mdp) && /[^a-zA-Z0-9]/.test(mdp)
+      if (!assezFort) {
+        setErreur(
+          'Ton mot de passe doit contenir au moins 8 caractères, dont une minuscule, une majuscule, un chiffre et un caractère spécial (ex. ! ? @ #).',
+        )
+        return
+      }
     }
     // Le prénom et le nom servent au suivi du formateur : sans eux, son tableau
     // de bord n'afficherait que des adresses email.
@@ -79,7 +98,7 @@ export default function Auth({ onRetour, onConnecte, modeInitial = 'inscription'
         onConnecte && onConnecte()
       }
     } catch (e) {
-      setErreur(e?.message || 'Une erreur est survenue.')
+      setErreur(traduireErreur(e))
     } finally {
       setCharge(false)
     }
