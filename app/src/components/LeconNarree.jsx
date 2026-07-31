@@ -524,7 +524,7 @@ function Glisser() {
   return (
     <div className="mt-3">
       <div className="relative mx-auto max-w-[290px] overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
-        <div className="flex items-center gap-2 bg-[#eceae3] px-2 py-1 text-[10px] text-navy/40"><span>Classeur1 — Excel</span></div>
+        <div className="flex items-center gap-2 bg-[#eceae3] px-2 py-1 text-[10px] text-navy/40"><span>Classeur1 - Excel</span></div>
         <div className="relative grid text-[11px]" style={{ gridTemplateColumns: '22px repeat(3, 1fr)' }}>
           <div className="bg-navy/5" style={{ height: H }} />
           {cols.map((c) => (<div key={c} className="grid place-items-center border-b border-l border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{c}</div>))}
@@ -885,7 +885,7 @@ function DeuxClasseurs({ v }) {
             <span className="text-navy/60">Total :</span>
             <span className={`min-w-[54px] rounded-sm border px-2 py-1 text-center ${f.ref ? 'border-sky-500/40 bg-sky-500/20 font-bold text-navy' : 'border-dashed border-navy/25 text-navy/35'}`}>{f.val || '…'}</span>
           </div>
-          <div className="bg-mint/10 px-2 py-1 text-center text-[9px] font-bold uppercase tracking-wide text-mint">{f.role} — {f.desc}</div>
+          <div className="bg-mint/10 px-2 py-1 text-center text-[9px] font-bold uppercase tracking-wide text-mint">{f.role} - {f.desc}</div>
         </div>
       ))}
     </div>
@@ -1391,7 +1391,7 @@ function BarreAccesRapide() {
           <span className="text-[12px]">↶</span>
           <span className="text-[12px]">↷</span>
           <span className="grid h-4 w-5 place-items-center rounded-sm bg-white/25 text-[10px] ring-2 ring-mint">▾</span>
-          <span className="ml-2 text-[10px] opacity-80">Classeur1 — Excel</span>
+          <span className="ml-2 text-[10px] opacity-80">Classeur1 - Excel</span>
         </div>
       </div>
       <p className="max-w-xs text-center text-[11px] leading-snug text-navy/60">
@@ -1921,7 +1921,7 @@ function SommeAuto({ onResolu }) {
         </button>
       </div>
       <div className="mx-auto mt-3 max-w-[260px] overflow-hidden rounded-xl border border-navy/10 bg-white shadow-lg">
-        <div className="flex items-center gap-2 bg-[#eceae3] px-2 py-1 text-[10px] text-navy/40"><span>Classeur1 — Excel</span></div>
+        <div className="flex items-center gap-2 bg-[#eceae3] px-2 py-1 text-[10px] text-navy/40"><span>Classeur1 - Excel</span></div>
         <div className="grid text-[11px]" style={{ gridTemplateColumns: '22px repeat(2, 1fr)' }}>
           <div className="bg-navy/5" style={{ height: H }} />
           {['A', 'B'].map((c) => (<div key={c} className="grid place-items-center border-b border-l border-navy/10 bg-navy/10 text-navy/50" style={{ height: H }}>{c}</div>))}
@@ -2193,8 +2193,8 @@ function ApercuImpression({ v }) {
       <div className="mt-3 flex flex-col items-center gap-2">
         <div className="w-full max-w-md overflow-hidden rounded-md border border-navy/20 shadow-lg">
           <div className="flex items-center bg-[#1f7a4d] px-2 py-1 text-[10px] text-white">
-            <span className="font-semibold">Classeur1 — Excel</span>
-            <span className="ml-auto opacity-80">—&nbsp;&nbsp;▢&nbsp;&nbsp;✕</span>
+            <span className="font-semibold">Classeur1 - Excel</span>
+            <span className="ml-auto opacity-80">-&nbsp;&nbsp;▢&nbsp;&nbsp;✕</span>
           </div>
           <div className="bg-[#eceae3] p-2">
             <div className="flex text-[8px] text-navy/45">
@@ -2876,8 +2876,8 @@ function Graphique({ v }) {
 
           {annoterAxes && (
             <g>
-              <text x={plot.x + plot.w / 2} y={baseY + 26} textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#41c1ba">Axe X — catégories</text>
-              <text x={13} y={plot.y + plot.h / 2} textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#41c1ba" transform={`rotate(-90 13 ${plot.y + plot.h / 2})`}>Axe Y — valeurs</text>
+              <text x={plot.x + plot.w / 2} y={baseY + 26} textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#41c1ba">Axe X - catégories</text>
+              <text x={13} y={plot.y + plot.h / 2} textAnchor="middle" fontSize="8.5" fontWeight="700" fill="#41c1ba" transform={`rotate(-90 13 ${plot.y + plot.h / 2})`}>Axe Y - valeurs</text>
             </g>
           )}
         </svg>
@@ -3105,7 +3105,7 @@ function RecommandeDialog() {
   )
 }
 
-// Animation : modifier le titre du graphique — on double-clique le titre, on tape le
+// Animation : modifier le titre du graphique - on double-clique le titre, on tape le
 // nouveau texte, puis clic en dehors pour valider. Rejouable.
 function TitreGraphique() {
   const [p, setP] = useState(0) // 0 on approche · 1 double-clic (édition) · 2 on tape · 3 validé
@@ -3327,7 +3327,7 @@ function FiltreGraphique() {
         <p className="mb-1 font-semibold text-navy/70">Catégories</p>
         <div className="ml-1 space-y-1">{cases([['Jan', true], ['Fév', true], ['Mar', true], ['Avr', false]])}</div>
         <div className="mt-2 flex justify-end"><span className="rounded-sm border-2 border-[#0a63c9] bg-[#f0f0f0] px-3 py-0.5 font-semibold">Appliquer</span></div>
-        <p className="mt-1.5 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Coche/décoche (ici <strong className="text-navy">Avr</strong> est décoché), puis <strong className="text-navy">Appliquer</strong> — sans toucher aux données sources.</span></p>
+        <p className="mt-1.5 flex items-start gap-1 text-[10px] text-navy/50"><span>↳</span><span>Coche/décoche (ici <strong className="text-navy">Avr</strong> est décoché), puis <strong className="text-navy">Appliquer</strong> - sans toucher aux données sources.</span></p>
       </div>
     </div>
   )
@@ -3851,7 +3851,7 @@ function ClasseurAxe({ v }) {
   return (
     <div className="mx-auto mt-3 w-full max-w-md overflow-hidden rounded-md border border-navy/25 shadow-xl">
       <div className="flex items-center bg-[#1f7a4d] px-2 py-1 text-[10px] text-white">
-        <span className="font-semibold">📗 Ventes.xlsx — Excel</span>
+        <span className="font-semibold">📗 Ventes.xlsx - Excel</span>
         <span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span>
       </div>
       <div className="flex flex-wrap items-center gap-1.5 border-b border-navy/10 bg-[#f3f3f3] px-2 py-1 text-[9px]">
@@ -5622,8 +5622,8 @@ function TcdMultiTablesInteractif({ v, onResolu }) {
                 </div>
               ))}
               <div className="mt-1 border-t border-navy/10 pt-1">
-                <p className="text-[8px] uppercase text-navy/40">≡ Lignes</p><p className="rounded-sm bg-white px-1 py-0.5 text-navy/70">{enLignes ? 'Région' : '—'}</p>
-                <p className="mt-1 text-[8px] uppercase text-navy/40">Σ Valeurs</p><p className="rounded-sm bg-white px-1 py-0.5 text-navy/70">{enValeurs ? 'Somme de Montant' : '—'}</p>
+                <p className="text-[8px] uppercase text-navy/40">≡ Lignes</p><p className="rounded-sm bg-white px-1 py-0.5 text-navy/70">{enLignes ? 'Région' : '-'}</p>
+                <p className="mt-1 text-[8px] uppercase text-navy/40">Σ Valeurs</p><p className="rounded-sm bg-white px-1 py-0.5 text-navy/70">{enValeurs ? 'Somme de Montant' : '-'}</p>
               </div>
             </div>
           </div>
@@ -5847,7 +5847,7 @@ function VueTCD({ v }) {
     <div className="mt-3">
       <div className="mx-auto w-full max-w-md overflow-hidden rounded-md border border-navy/25 shadow-xl">
         <div className="flex items-center bg-[#1f7a4d] px-2 py-1 text-[10px] text-white">
-          <span className="font-semibold">📗 Consolidation.xlsx — Excel</span>
+          <span className="font-semibold">📗 Consolidation.xlsx - Excel</span>
           <span className="ml-auto opacity-80">▢&nbsp;&nbsp;✕</span>
         </div>
         <div className="flex bg-white">
@@ -6094,7 +6094,7 @@ function RefBuilder({ v, onResolu }) {
           <span className="text-navy/40">fx </span><span className="text-navy/80">{avant}</span><span className={`rounded px-1 ${fait ? 'bg-mint/25 text-navy' : 'bg-amber-200/70 text-navy ring-1 ring-amber-400'}`}>{cycle[i]}</span>
         </div>
         <button onClick={presser} disabled={fait} className={`rounded-lg border-2 px-6 py-2 font-bold shadow-sm ${fait ? 'border-navy/15 bg-navy/5 text-navy/30' : 'animate-pulse border-navy bg-navy/5 text-navy'}`}>⌨ F4</button>
-        <p className="text-center text-[11px] text-navy/60"><span className="font-mono font-semibold text-navy/80">{cycle[i]}</span> — {desc[i]}</p>
+        <p className="text-center text-[11px] text-navy/60"><span className="font-mono font-semibold text-navy/80">{cycle[i]}</span> - {desc[i]}</p>
       </div>
     </div>
   )
@@ -6224,7 +6224,7 @@ function SommeSiEnsCroise({ v, onResolu }) {
       {cur && cur.k === 'f4' && !rempli && (
         <div className="mx-auto mt-2 flex max-w-md items-center justify-center gap-3">
           <button onClick={presserF4} className="animate-pulse rounded-lg border-2 border-navy bg-navy/5 px-5 py-1.5 text-sm font-bold text-navy shadow-sm">⌨ F4</button>
-          <span className="font-mono text-[11px] text-navy/80"><b>{sseCycle(cur.base)[cyc]}</b> <span className="text-navy/50">— {sseLabelFige(sseCycle(cur.base)[cyc])}</span></span>
+          <span className="font-mono text-[11px] text-navy/80"><b>{sseCycle(cur.base)[cyc]}</b> <span className="text-navy/50">- {sseLabelFige(sseCycle(cur.base)[cyc])}</span></span>
         </div>
       )}
 
@@ -8394,7 +8394,7 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
   )
 }
 
-// « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
+// « Lequel choisir ? » : la DÉCOUVERTE avant l'explication - 2 ou 3 propositions
 // (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
 // Liste de données VIVANTE : le user agit (met sous forme de tableau, trie, filtre…)
 // et VOIT le résultat changer (le tableau se transforme, se réordonne, se filtre, s'étend).
@@ -8536,7 +8536,7 @@ function ListeInteractive({ v, onResolu }) {
         <div className="mt-3 flex justify-center">
           {!ghost
             ? <button onClick={() => setGhost(true)} className="flex animate-pulse items-center gap-2 rounded-xl border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy"><span>⌨</span> Tape <span className="rounded bg-white/70 px-1.5 py-0.5 font-mono">{amorce}</span></button>
-            : <button onClick={() => setFait(true)} className="animate-pulse rounded-xl border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">⏎ Entrée — valider « {complet} »</button>}
+            : <button onClick={() => setFait(true)} className="animate-pulse rounded-xl border-2 border-mint bg-mint/15 px-4 py-2 text-sm font-bold text-navy">⏎ Entrée - valider « {complet} »</button>}
         </div>
       )}
 
@@ -8791,7 +8791,7 @@ function GraphiqueInteractif({ v, onResolu }) {
             {spk.lignes.map((row, ri) => (
               <div key={ri} className="contents">
                 {row.map((cell, ci) => <div key={ci} className={`border-b border-navy/5 px-1.5 py-1 ${ci === 0 ? 'text-navy/85' : 'text-right font-mono text-navy/70'}`}>{cell}</div>)}
-                <div className={`grid place-items-center border-b border-l border-navy/5 px-1 py-1 ${!fait ? 'animate-pulse bg-mint/[0.08]' : ''}`}>{fait ? miniSpark(row.slice(1)) : <span className="text-navy/25">—</span>}</div>
+                <div className={`grid place-items-center border-b border-l border-navy/5 px-1 py-1 ${!fait ? 'animate-pulse bg-mint/[0.08]' : ''}`}>{fait ? miniSpark(row.slice(1)) : <span className="text-navy/25">-</span>}</div>
               </div>
             ))}
           </div>
@@ -8955,7 +8955,7 @@ function GraphiqueInteractif({ v, onResolu }) {
       {/* Filtre */}
       {mode === 'filtre' && !fait && (
         <div className="mx-auto mt-3 w-48 overflow-hidden rounded-md border border-navy/20 bg-white p-2 text-[11px] shadow-xl">
-          <p className="mb-1 font-semibold text-navy/60">▽ Filtre — Catégories</p>
+          <p className="mb-1 font-semibold text-navy/60">▽ Filtre - Catégories</p>
           {src.cats.map((c) => {
             const coche = !cachees.includes(c)
             return <button key={c} onClick={() => setCachees((h) => (h.includes(c) ? h.filter((x) => x !== c) : [...h, c]))} className="flex w-full items-center gap-2 px-1 py-1 text-left text-navy/80"><span className={`grid h-4 w-4 place-items-center rounded-sm border text-[9px] text-white ${coche ? 'border-mint bg-mint' : c === filtreCat ? 'animate-pulse border-mint ring-1 ring-mint' : 'border-navy/30'}`}>{coche && '✓'}</span>{c}</button>
@@ -9182,7 +9182,7 @@ function OngletsInteractif({ v, onResolu }) {
   )
 }
 
-// « Lequel choisir ? » : la DÉCOUVERTE avant l'explication — 2 ou 3 propositions
+// « Lequel choisir ? » : la DÉCOUVERTE avant l'explication - 2 ou 3 propositions
 // (mini-tableaux), l'élève clique la bonne AVANT que le Shifu n'explique la règle.
 function ChoixTableau({ v, onResolu, onErreur }) {
   const { options = [], bonne = 0, explication } = v

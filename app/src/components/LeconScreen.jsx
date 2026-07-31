@@ -131,7 +131,7 @@ function ExcelMock({ cible, onZone, vert = [], indice = null, fige = false, sele
           <span className="h-2.5 w-2.5 rounded-sm bg-navy/40" />
           <span className="h-2.5 w-2.5 rounded-sm bg-navy/40" />
         </div>
-        <span className="text-[10px] text-navy/30">Classeur1 — Excel</span>
+        <span className="text-[10px] text-navy/30">Classeur1 - Excel</span>
       </div>
       <div onClick={clic('ruban')} className={cls('ruban', 'flex cursor-pointer items-center gap-3 bg-[#1f7a4d] px-3 py-1.5 text-[11px] text-white hover:brightness-110')}>
         <span className="opacity-90">Fichier</span>

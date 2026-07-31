@@ -267,7 +267,7 @@ export default function EspaceFormateur({
         'Prénom',
         'Ceinture',
         'Chapitres terminés',
-        'Attendus au ' + (jalonCourant ? formaterDate(jalonCourant.date) : '—'),
+        'Attendus au ' + (jalonCourant ? formaterDate(jalonCourant.date) : '-'),
         'Statut',
         'Entraînements',
         'Moyenne quiz',

@@ -689,7 +689,7 @@ const SERIES = {
 }
 
 // ======================================================================
-// CHAPITRE 3 — Mise en forme & mise en page (ceinture orange)
+// CHAPITRE 3 - Mise en forme & mise en page (ceinture orange)
 // Chaque explication a son visuel (comme les captures de l'ebook).
 // « En savoir plus » = texte de l'ebook (verbatim).
 // ======================================================================
@@ -1197,7 +1197,7 @@ const MISEENPAGE = {
           { etapes: ['Va dans **Mise en page > Imprimer les titres**'] },
           { capture: { type: 'ruban', actif: 'Mise en page', groupeNom: 'Mise en page', groupes: [{ icone: '⬓', label: 'Imprimer les titres', actif: true }, { icone: '🖨', label: 'Zone d\'impression' }, { icone: '📐', label: 'Marges' }] } },
           { etapes: ['Dans la fenêtre, choisis **Lignes à répéter en haut** (et/ou colonnes à répéter à gauche)'] },
-          { capture: { type: 'champs', titre: 'Mise en page — Feuille', champs: [{ l: 'Lignes à répéter en haut', v: '$1:$1', actif: true }, { l: 'Colonnes à répéter à gauche', v: '' }] } },
+          { capture: { type: 'champs', titre: 'Mise en page - Feuille', champs: [{ l: 'Lignes à répéter en haut', v: '$1:$1', actif: true }, { l: 'Colonnes à répéter à gauche', v: '' }] } },
         ],
       },
     },
@@ -1322,7 +1322,7 @@ const IMPRESSION = {
 }
 
 // ======================================================================
-// CHAPITRE 4 — Les fonctions de calculs Excel (ceinture verte)
+// CHAPITRE 4 - Les fonctions de calculs Excel (ceinture verte)
 // Chaque explication a son visuel. « En savoir plus » = texte de l'ebook (verbatim).
 // Le ch.2 a déjà enseigné l'assistant, les fonctions de base et les références :
 // ici on approfondit (fonctions simples/complexes, ARRONDI) et on découvre le NEUF
@@ -1558,7 +1558,7 @@ const FONCTIONSCOMPLEXES = {
 const REF4 = { A1: { t: 'Produit', entete: true }, B1: { t: 'Prix HT', entete: true }, C1: { t: 'TTC', entete: true }, E1: { t: 'TVA', entete: true }, A2: { t: 'Clavier' }, B2: { t: '30', num: true }, A3: { t: 'Souris' }, B3: { t: '20', num: true }, E2: { t: '1,2', num: true } }
 const tabREF4 = (cells, formule, actif, legende, extra = {}) => ({ type: 'tableur', cols: ['A', 'B', 'C', 'D', 'E'], rows: [1, 2, 3], cells: { ...REF4, ...cells }, actif, formule, legende, ...extra })
 
-// --- Leçon 3 : Recopier les formules (références relatives & absolues) — RAPPEL ---
+// --- Leçon 3 : Recopier les formules (références relatives & absolues) - RAPPEL ---
 const RECOPIERFORMULES = {
   id: 'fn-recopierformules',
   titre: 'Recopier les formules : références relatives & absolues',
@@ -1847,7 +1847,7 @@ const ARGUMENTSVPM = {
 }
 
 // ======================================================================
-// CHAPITRE 5 — Outils particuliers & Fonctions particulières (ceinture bleue)
+// CHAPITRE 5 - Outils particuliers & Fonctions particulières (ceinture bleue)
 // Construit en plusieurs temps. PARTIE 1 : les outils (Rechercher/Remplacer,
 // Convertir) + l'aperçu des fonctions. PARTIE 2 (à venir) : arrondis, dates,
 // texte, financières. Mêmes règles que ch.3-4 (un visuel par explication…).
@@ -2003,7 +2003,7 @@ const FONCTIONSPARTICULIERES = {
   ],
 }
 
-// ====================== CHAPITRE 5 — PARTIE 2 : les fonctions ======================
+// ====================== CHAPITRE 5 - PARTIE 2 : les fonctions ======================
 
 // --- Leçon 4 : Les arrondis & le tronquage ---
 const tabArr5 = (valeur, formule, resultat, entete) => ({
@@ -2528,7 +2528,7 @@ const FONCTIONSFINANCIERES = {
 }
 
 // ======================================================================
-// CHAPITRE 6 — Lier des feuilles & Tableaux de synthèse (ceinture marron)
+// CHAPITRE 6 - Lier des feuilles & Tableaux de synthèse (ceinture marron)
 // PARTIE 1 : gérer les feuilles + lier des cellules/feuilles.
 // PARTIE 2 (à venir) : liaisons entre classeurs, calculs/références 3D, protection.
 // ======================================================================
@@ -3116,7 +3116,7 @@ const PROTEGERFEUILLES = {
 }
 
 // ======================================================================
-// CHAPITRE 7 — Exploiter une liste (ceinture verte)
+// CHAPITRE 7 - Exploiter une liste (ceinture verte)
 // ======================================================================
 const EX7 = {
   ex52: { titre: 'Exercice 51 · Figer/Libérer les volets', ex: 'x51' },
@@ -4304,7 +4304,7 @@ const EX9 = {
   ex68: { titre: 'Exercice 67 · La consolidation par position', ex: 'x67' },
   ex69: { titre: 'Exercice 68 · La consolidation par catégorie', ex: 'x68' },
   ex70: { titre: 'Exercice 69 · La consolidation par TCD multi-tables', ex: 'x69' },
-  ex70c: { titre: 'Exercice 69 · TCD multi-tables — Correction', ex: 'x70' },
+  ex70c: { titre: 'Exercice 69 · TCD multi-tables - Correction', ex: 'x70' },
 }
 const CONSO_ENTETES = ['Produit', 'CA']
 const CONSO_FEUILLES = ['Janvier', 'Février', 'Mars', 'Synthèse']
@@ -5147,7 +5147,7 @@ const T11_STOCK = {
   valeur: 1,
 }
 
-// --- Leçon 1 : Rappels — références & noms au service des recherches ---
+// --- Leçon 1 : Rappels - références & noms au service des recherches ---
 const RAPPELSRECHERCHE = {
   id: 'fn-rappelsrecherche',
   titre: 'Rappels : références & noms',

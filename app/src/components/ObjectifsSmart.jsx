@@ -63,7 +63,7 @@ export default function ObjectifsSmart({ onTerminer }) {
 
   const valider = () => {
     if (pret) {
-      const resume = vals.T.trim() ? `${vals.S.trim()} — ${vals.T.trim()}` : vals.S.trim()
+      const resume = vals.T.trim() ? `${vals.S.trim()} - ${vals.T.trim()}` : vals.S.trim()
       try {
         localStorage.setItem('excel-dojo-objectif', resume)
         localStorage.setItem('excel-dojo-objectif-smart', JSON.stringify(vals))

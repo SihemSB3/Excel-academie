@@ -65,7 +65,7 @@ function Confetti() {
 }
 
 // La récompense de fin de KATA : plus petite que la cérémonie de ceinture, mais un vrai
-// moment de satisfaction — confettis, +XP, barre de progression vers la prochaine ceinture
+// moment de satisfaction - confettis, +XP, barre de progression vers la prochaine ceinture
 // et félicitations du Shifu. `dejaFait` = kata rejoué (pas de double XP, message adapté).
 export default function KataComplete({ titre, xp, dejaFait, stats, streak = 0, fait, total, ceinture, onContinuer }) {
   const info = ceintureInfo(ceinture)

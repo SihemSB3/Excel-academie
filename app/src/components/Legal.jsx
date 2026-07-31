@@ -31,7 +31,7 @@ export default function Legal({ page = 'cgv', onRetour, onChangerPage }) {
           </button>
         )}
 
-        <p className="text-xs font-bold uppercase tracking-[.2em] text-mint">L'Art du Digital — Excel Académie</p>
+        <p className="text-xs font-bold uppercase tracking-[.2em] text-mint">L'Art du Digital - Excel Académie</p>
         <h1 className="mt-1 font-display text-3xl text-navy-deep sm:text-4xl">{doc.titre}</h1>
 
         <div className="mt-4 flex flex-wrap gap-2">

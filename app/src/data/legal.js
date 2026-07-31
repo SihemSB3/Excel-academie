@@ -6,71 +6,71 @@ export const PAGES_LEGALES = {
   cgv: {
     titre: 'Conditions Générales de Vente',
     html: `
-      <h2>Article 1 — Identification du vendeur</h2>
+      <h2>Article 1 - Identification du vendeur</h2>
       <p>Les produits sont édités et vendus par <strong>L'ART DU DIGITAL</strong>, SASU au capital de 100 €.</p>
       <ul>
         <li>Siège social : 7 Avenue Maximilien de Robespierre, 94400 Vitry-sur-Seine</li>
-        <li>RCS 999 164 726 R.C.S. Créteil — SIRET 999 164 726 00013</li>
+        <li>RCS 999 164 726 R.C.S. Créteil - SIRET 999 164 726 00013</li>
         <li>N° TVA intracommunautaire : FR93 999 164 726</li>
         <li>Présidente : Sihem Bidhi</li>
         <li>Contact : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a></li>
       </ul>
 
-      <h2>Article 2 — Objet et champ d'application</h2>
+      <h2>Article 2 - Objet et champ d'application</h2>
       <p>Les présentes Conditions Générales de Vente (« CGV ») régissent les ventes de produits et services numériques réalisées par L'Art du Digital auprès de tout client agissant en qualité de consommateur (le « Client »). Toute commande implique l'acceptation pleine et entière des présentes CGV. Elles prévalent sur tout autre document. L'Art du Digital se réserve le droit de les modifier ; les CGV applicables sont celles en vigueur à la date de la commande.</p>
 
-      <h2>Article 3 — Produits et services</h2>
+      <h2>Article 3 - Produits et services</h2>
       <p>L'Art du Digital propose des produits numériques :</p>
       <ul>
-        <li><strong>Excel Académie</strong> — application de formation à Excel, en <strong>abonnement mensuel</strong> ou en <strong>accès à vie</strong> (paiement unique). Un accès gratuit (chapitres 1 et 2) est proposé sans paiement.</li>
+        <li><strong>Excel Académie</strong> - application de formation à Excel, en <strong>abonnement mensuel</strong> ou en <strong>accès à vie</strong> (paiement unique). Un accès gratuit (chapitres 1 et 2) est proposé sans paiement.</li>
         <li><strong>Ebooks</strong> au format numérique (PDF).</li>
       </ul>
       <p>Les caractéristiques essentielles de chaque produit sont décrites sur les pages de vente correspondantes.</p>
 
-      <h2>Article 4 — Prix</h2>
+      <h2>Article 4 - Prix</h2>
       <p>Les prix sont indiqués en euros <strong>toutes taxes comprises (TTC)</strong>, TVA française (20 %) incluse.</p>
       <table>
         <tr><th>Produit</th><th>Prix TTC</th></tr>
-        <tr><td>Excel Académie — accès à vie</td><td>129 €</td></tr>
-        <tr><td>Excel Académie — abonnement mensuel</td><td>19,90 € / mois</td></tr>
+        <tr><td>Excel Académie - accès à vie</td><td>129 €</td></tr>
+        <tr><td>Excel Académie - abonnement mensuel</td><td>19,90 € / mois</td></tr>
         <tr><td>Ebooks</td><td>Prix indiqué sur chaque page produit</td></tr>
       </table>
       <p>L'Art du Digital se réserve le droit de modifier ses prix. Les produits sont facturés au tarif en vigueur au moment de la commande. Tout changement de prix de l'abonnement est notifié avant application et n'affecte pas les échéances déjà payées.</p>
 
-      <h2>Article 5 — Commande</h2>
+      <h2>Article 5 - Commande</h2>
       <p>La commande s'effectue en ligne : le Client sélectionne son produit, utilise ou crée son compte, et valide son paiement. La validation vaut acceptation des CGV et du prix. Un email de confirmation (reçu ou facture) est adressé après paiement.</p>
 
-      <h2>Article 6 — Paiement</h2>
+      <h2>Article 6 - Paiement</h2>
       <p>Le paiement s'effectue en ligne par carte bancaire via notre prestataire sécurisé <strong>Stripe</strong>. Un paiement fractionné peut être proposé selon les moyens disponibles, soumis aux conditions du prestataire concerné. Les données de paiement ne sont ni traitées ni conservées par L'Art du Digital. Le contenu est débloqué après encaissement effectif. En cas de défaut de paiement d'une échéance d'abonnement, l'accès peut être suspendu.</p>
 
-      <h2>Article 7 — Accès et livraison du contenu numérique</h2>
+      <h2>Article 7 - Accès et livraison du contenu numérique</h2>
       <p>Les produits étant numériques, la mise à disposition est immédiate : l'accès à Excel Académie est activé sur le compte du Client dès le paiement ; les ebooks sont mis à disposition en téléchargement immédiatement après le paiement. Le Client est responsable de l'exactitude des informations fournies.</p>
 
-      <h2>Article 8 — Durée, renouvellement et résiliation de l'abonnement</h2>
+      <h2>Article 8 - Durée, renouvellement et résiliation de l'abonnement</h2>
       <p>L'abonnement mensuel est conclu pour un mois, reconduit tacitement chaque mois par prélèvement automatique tant que le Client ne l'a pas résilié. Le Client peut <strong>résilier à tout moment</strong>, sans frais, depuis son espace « Mon compte ». La résiliation met fin aux prélèvements futurs et <strong>maintient l'accès jusqu'au terme de la période déjà payée</strong>, sans remboursement au prorata. L'accès à vie n'est pas un abonnement et n'a pas à être résilié.</p>
 
-      <h2>Article 9 — Droit de rétractation</h2>
+      <h2>Article 9 - Droit de rétractation</h2>
       <p>Conformément aux articles L221-18 et suivants du Code de la consommation, le Client dispose en principe d'un délai de 14 jours pour se rétracter. Toutefois, en application de l'article <strong>L221-28 13°</strong>, ce droit ne peut être exercé pour un contenu numérique fourni sans support matériel dont l'exécution a commencé après accord préalable exprès du Client et renoncement exprès à son droit de rétractation. En validant sa commande et en accédant immédiatement au contenu, le Client <strong>demande expressément l'exécution immédiate</strong> et <strong>reconnaît perdre son droit de rétractation</strong> dès cet accès.</p>
 
-      <h2>Article 10 — Garantie de conformité</h2>
+      <h2>Article 10 - Garantie de conformité</h2>
       <p>Le contenu numérique bénéficie de la garantie légale de conformité (articles L224-25-1 et suivants du Code de la consommation). En cas de non-conformité, le Client peut contacter <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>.</p>
 
-      <h2>Article 11 — Responsabilité</h2>
+      <h2>Article 11 - Responsabilité</h2>
       <p>Excel Académie et les ebooks sont des outils d'entraînement et de formation. L'Art du Digital fournit un contenu soigné, sans garantir un résultat individuel précis. L'accès en ligne peut être momentanément interrompu pour maintenance ou pour une cause extérieure, sans engager la responsabilité de L'Art du Digital.</p>
 
-      <h2>Article 12 — Propriété intellectuelle</h2>
+      <h2>Article 12 - Propriété intellectuelle</h2>
       <p>L'ensemble des contenus (textes, exercices, ebooks, marque, logo, design) est la propriété exclusive de L'Art du Digital. L'achat confère un droit d'usage <strong>strictement personnel et non transférable</strong>. Toute reproduction, partage, revente ou diffusion est interdite et constitue une contrefaçon.</p>
 
-      <h2>Article 13 — Données personnelles</h2>
+      <h2>Article 13 - Données personnelles</h2>
       <p>Les données personnelles sont traitées conformément au RGPD. Le Client dispose de droits d'accès, de rectification, d'effacement et d'opposition, à exercer à <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Détails dans la Politique de confidentialité.</p>
 
-      <h2>Article 14 — Service client et réclamations</h2>
+      <h2>Article 14 - Service client et réclamations</h2>
       <p>Pour toute question ou réclamation : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>.</p>
 
-      <h2>Article 15 — Médiation de la consommation</h2>
+      <h2>Article 15 - Médiation de la consommation</h2>
       <p>Conformément aux articles L612-1 et suivants du Code de la consommation, le Client consommateur peut recourir gratuitement à un médiateur de la consommation en vue de la résolution amiable d'un litige, après réclamation écrite auprès de L'Art du Digital. Médiateur compétent : <strong>[nom, adresse et site du médiateur à indiquer]</strong>. Plateforme européenne de règlement en ligne des litiges : <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
 
-      <h2>Article 16 — Droit applicable et litiges</h2>
+      <h2>Article 16 - Droit applicable et litiges</h2>
       <p>Les présentes CGV sont soumises au droit français. En cas de litige, une solution amiable sera recherchée en priorité ; à défaut, les tribunaux français sont compétents dans les conditions prévues par le Code de la consommation.</p>
     `,
   },
@@ -79,7 +79,7 @@ export const PAGES_LEGALES = {
     titre: 'Politique de confidentialité',
     html: `
       <h2>1. Responsable du traitement</h2>
-      <p><strong>L'ART DU DIGITAL</strong>, SASU au capital de 100 €, siège : 7 Avenue Maximilien de Robespierre, 94400 Vitry-sur-Seine — RCS 999 164 726 R.C.S. Créteil. Contact : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Aucun DPO n'est désigné à ce jour.</p>
+      <p><strong>L'ART DU DIGITAL</strong>, SASU au capital de 100 €, siège : 7 Avenue Maximilien de Robespierre, 94400 Vitry-sur-Seine - RCS 999 164 726 R.C.S. Créteil. Contact : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Aucun DPO n'est désigné à ce jour.</p>
 
       <h2>2. Données collectées</h2>
       <p>Nous collectons uniquement les données nécessaires :</p>
@@ -144,7 +144,7 @@ export const PAGES_LEGALES = {
       <p>Le site et l'application Excel Académie sont édités par <strong>L'ART DU DIGITAL</strong>, SASU au capital de 100 €.</p>
       <ul>
         <li>Siège social : 7 Avenue Maximilien de Robespierre, 94400 Vitry-sur-Seine</li>
-        <li>RCS 999 164 726 R.C.S. Créteil — SIRET 999 164 726 00013</li>
+        <li>RCS 999 164 726 R.C.S. Créteil - SIRET 999 164 726 00013</li>
         <li>N° TVA intracommunautaire : FR93 999 164 726</li>
         <li>Directrice de la publication : Sihem Bidhi, présidente</li>
         <li>Contact : <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a></li>
