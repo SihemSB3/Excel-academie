@@ -42,19 +42,19 @@ const templateAnnulation = ({ prenom, dateFin }) => `<!doctype html>
       <div style="height:2px;background:#F0E6D2;border-radius:2px;margin-bottom:18px;"></div>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:12px;"><tr>
         <td style="background:#FBF6EC;border:1px solid #EFE3CD;border-radius:14px;padding:16px 18px;">
-          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">Accès à vie — 129 €</p>
+          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">Accès à vie - 129 €</p>
           <p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:#5A6472;">Les 13 chapitres, les 91 exercices et les guides PDF. Un seul paiement, à toi pour toujours.</p>
           <a href="${LIEN_ABONNEMENT}" style="font-size:14px;font-weight:800;color:#178A72;text-decoration:none;">Débloquer à vie&nbsp;›</a>
         </td></tr></table>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:12px;"><tr>
         <td style="background:#FBF6EC;border:1px solid #EFE3CD;border-radius:14px;padding:16px 18px;">
-          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">Ton Guide Excel — 49 €</p>
+          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">Ton Guide Excel - 49 €</p>
           <p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:#5A6472;">Le manuel complet à garder sous la main, formule par formule.</p>
           <a href="${LIEN_EBOOK_EXCEL}" style="font-size:14px;font-weight:800;color:#178A72;text-decoration:none;">Découvrir l'ebook&nbsp;›</a>
         </td></tr></table>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:12px;"><tr>
         <td style="background:#FBF6EC;border:1px solid #EFE3CD;border-radius:14px;padding:16px 18px;">
-          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">La méthode Shaolin — 19 €</p>
+          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">La méthode Shaolin - 19 €</p>
           <p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:#5A6472;">Apprendre à apprendre, avec la discipline du kung-fu. L'ebook qui change ta façon de progresser.</p>
           <a href="${LIEN_EBOOK_SHAOLIN}" style="font-size:14px;font-weight:800;color:#178A72;text-decoration:none;">Lire un extrait&nbsp;›</a>
         </td></tr></table>
