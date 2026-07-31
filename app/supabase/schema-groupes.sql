@@ -52,6 +52,9 @@ create policy "mise a jour de son profil" on public.profils
 revoke insert, update on public.profils from authenticated;
 grant insert (user_id, prenom, nom) on public.profils to authenticated;
 grant update (prenom, nom) on public.profils to authenticated;
+-- Un visiteur non connecté n'a rien à faire sur les profils : on lui retire tout
+-- droit d'écriture (défense en profondeur, en plus des politiques RLS).
+revoke insert, update, delete on public.profils from anon;
 
 -- Le prénom et le nom sont saisis à l'inscription et transmis dans les métadonnées
 -- du compte. On les recopie ici pour pouvoir les afficher au formateur.
