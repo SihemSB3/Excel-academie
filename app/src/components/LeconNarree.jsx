@@ -3,10 +3,53 @@ import { Bouton } from './ui'
 import { ShifuDit } from './Shifu'
 import { coloreFormule } from '../lib/excel'
 import { NinjaIcon } from './icons'
+import { useAuth } from '../store/AuthContext'
 
 // Rend un texte avec des passages en **gras**
 function gras(str = '') {
   return str.split('**').map((t, i) => (i % 2 === 1 ? <strong key={i} className="font-bold text-navy">{t}</strong> : <span key={i}>{t}</span>))
+}
+
+// Un exercice : le lien Google Sheets n'est plus dans le code. On le demande à la
+// fonction serveur (qui vérifie l'abonnement), puis on ouvre le fichier. L'onglet
+// est ouvert dès le clic pour ne pas être bloqué par le navigateur.
+function ExerciceLien({ ex, i }) {
+  const { session } = useAuth()
+  const [charge, setCharge] = useState(false)
+  const ouvrir = async () => {
+    setCharge(true)
+    const onglet = window.open('', '_blank')
+    try {
+      const r = await fetch('/.netlify/functions/exercice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: session?.access_token, ex: ex.ex }),
+      })
+      if (!r.ok) throw new Error(await r.text())
+      const { url } = await r.json()
+      if (onglet) onglet.location.href = url
+      else window.location.href = url
+    } catch {
+      if (onglet) onglet.close()
+    } finally {
+      setCharge(false)
+    }
+  }
+  return (
+    <button
+      onClick={ouvrir}
+      disabled={charge}
+      className="flex w-full animate-fade-up items-center gap-3 rounded-2xl border border-mint/40 bg-mint/10 p-4 text-left transition hover:bg-mint/20 disabled:opacity-60"
+      style={{ animationDelay: `${i * 100}ms` }}
+    >
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-mint text-xl">📊</span>
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-mint">Entraînement</p>
+        <p className="truncate font-bold text-navy">{ex.titre}</p>
+      </div>
+      <span className="shrink-0 text-navy/40">{charge ? '…' : '↗'}</span>
+    </button>
+  )
 }
 
 // Bloc « méthode » : un titre (ex. « Méthode 1 : le ruban ») puis les étapes,
@@ -7616,21 +7659,7 @@ function Visuel({ v }) {
     return (
       <div className="mt-3 space-y-2">
         {v.items.map((ex, i) => (
-          <a
-            key={i}
-            href={ex.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex animate-fade-up items-center gap-3 rounded-2xl border border-mint/40 bg-mint/10 p-4 transition hover:bg-mint/20"
-            style={{ animationDelay: `${i * 100}ms` }}
-          >
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-mint text-xl">📊</span>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-mint">Entraînement</p>
-              <p className="truncate font-bold text-navy">{ex.titre}</p>
-            </div>
-            <span className="shrink-0 text-navy/40">↗</span>
-          </a>
+          <ExerciceLien key={i} ex={ex} i={i} />
         ))}
       </div>
     )

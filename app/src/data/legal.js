@@ -116,13 +116,15 @@ export const PAGES_LEGALES = {
 
       <h2>5. Durée de conservation</h2>
       <ul>
-        <li>Compte et progression : tant que le compte est actif ; suppression possible sur demande.</li>
+        <li>Compte et progression : tant que le compte est actif. Vous pouvez le supprimer vous-même à tout moment depuis « Mon compte ».</li>
         <li>Données de facturation : 10 ans (obligations comptables).</li>
         <li>Données de prospection éventuelles : 3 ans après le dernier contact.</li>
       </ul>
 
       <h2>6. Vos droits</h2>
-      <p>Conformément au RGPD, vous disposez des droits d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité, à exercer à <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Vous pouvez introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
+      <p>Conformément au RGPD, vous disposez des droits d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité.</p>
+      <p><strong>Effacement :</strong> vous pouvez supprimer votre compte vous-même, immédiatement et sans passer par nous, depuis l'écran « Mon compte ». La suppression efface votre compte, votre progression et vos résultats. Seules vos factures sont conservées, pendant 10 ans, comme la loi comptable l'impose.</p>
+      <p>Pour les autres droits, écrivez à <a href="mailto:contact@lartdudigital.fr">contact@lartdudigital.fr</a>. Vous pouvez introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
 
       <h2>7. Cookies</h2>
       <p>Le site et l'application utilisent des cookies strictement nécessaires au fonctionnement (session de connexion). L'ajout de cookies de mesure d'audience ou publicitaires ferait l'objet d'un bandeau de consentement dédié.</p>
@@ -149,7 +151,7 @@ export const PAGES_LEGALES = {
       </ul>
 
       <h2>Hébergement</h2>
-      <p>Application Excel Académie : <strong>Netlify, Inc.</strong>, 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis. Base de données et authentification : <strong>Supabase</strong>. Le site lartdudigital.fr est hébergé par <strong>Hostinger</strong>.</p>
+      <p>Application Excel Académie : <strong>Netlify, Inc.</strong>, 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis. Base de données, authentification et stockage des guides : <strong>Supabase</strong>, données hébergées au <strong>Royaume-Uni</strong> (Londres). Le site lartdudigital.fr est hébergé par <strong>Hostinger</strong>.</p>
 
       <h2>Propriété intellectuelle</h2>
       <p>L'ensemble du site et de l'application (contenus, textes, exercices, ebooks, marque, logo, design) est la propriété exclusive de L'Art du Digital et protégé par le droit de la propriété intellectuelle. Toute reproduction ou utilisation non autorisée est interdite.</p>
