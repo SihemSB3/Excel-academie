@@ -80,11 +80,12 @@ export default function Accueil({ onCommencer, onConnexion }) {
       <Section className="pb-12">
         <div className="rounded-3xl bg-navy p-8 text-center text-cream">
           <h2 className="font-display text-3xl">La Voie, simplement</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-3">
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
               ['1', 'Apprends', 'Une leçon narrée, courte et claire, avec le Shifu.'],
               ['2', "Entraîne-toi", 'Un vrai fichier Excel à refaire, puis un quiz.'],
               ['3', 'Gagne ta ceinture', 'Chaque chapitre validé te fait monter d’un palier.'],
+              ['4', 'Brille en entreprise', 'Tu maîtrises ce que les recruteurs réclament : RECHERCHEV, TCD, tableaux de bord.'],
             ].map(([n, t, d]) => (
               <div key={n}>
                 <div className="mx-auto grid h-11 w-11 place-items-center rounded-full bg-mint font-display text-lg text-navy-deep">
