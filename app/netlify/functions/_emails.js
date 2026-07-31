@@ -24,7 +24,7 @@ const templateAnnulation = ({ prenom, dateFin }) => `<!doctype html>
       <p style="margin:0 0 18px;font-size:16px;line-height:1.6;color:#3A4B60;">Bonjour <strong style="color:#0A335D;">${prenom}</strong>,</p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:22px;"><tr>
         <td style="background:#F0FAF6;border-left:4px solid #2EBF9A;border-radius:12px;padding:16px 18px;">
-          <p style="margin:0;font-size:15px;line-height:1.6;color:#1F5E52;font-style:italic;">« Le Shifu respecte ta décision, élève. L'Académie ne ferme jamais ses portes : quand tu voudras reprendre l'entraînement, elle sera là. »</p>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:#1F5E52;font-style:italic;">« Le Shifu respecte ta décision, ${prenom || 'élève'}. L'Académie ne ferme jamais ses portes : quand tu voudras reprendre l'entraînement, elle sera là. »</p>
         </td></tr></table>
       <p style="margin:0 0 14px;font-size:16px;line-height:1.6;color:#3A4B60;">Ton abonnement mensuel est arrêté. Voici ce que ça change :</p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:24px;">
@@ -48,15 +48,21 @@ const templateAnnulation = ({ prenom, dateFin }) => `<!doctype html>
         </td></tr></table>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:12px;"><tr>
         <td style="background:#FBF6EC;border:1px solid #EFE3CD;border-radius:14px;padding:16px 18px;">
-          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">Ton Guide Excel — l'ebook</p>
+          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">Ton Guide Excel — 50 €</p>
           <p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:#5A6472;">Le manuel complet à garder sous la main, formule par formule.</p>
           <a href="${LIEN_EBOOK_EXCEL}" style="font-size:14px;font-weight:800;color:#178A72;text-decoration:none;">Découvrir l'ebook&nbsp;›</a>
         </td></tr></table>
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;"><tr>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:12px;"><tr>
         <td style="background:#FBF6EC;border:1px solid #EFE3CD;border-radius:14px;padding:16px 18px;">
-          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">La méthode Shaolin</p>
+          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#0A335D;">La méthode Shaolin — 30 €</p>
           <p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:#5A6472;">Apprendre à apprendre, avec la discipline du kung-fu. L'ebook qui change ta façon de progresser.</p>
           <a href="${LIEN_EBOOK_SHAOLIN}" style="font-size:14px;font-weight:800;color:#178A72;text-decoration:none;">Lire un extrait&nbsp;›</a>
+        </td></tr></table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;"><tr>
+        <td style="background:#0A335D;border-radius:14px;padding:16px 18px;">
+          <p style="margin:0 0 3px;font-size:16px;font-weight:800;color:#FFFFFF;">Un site internet + tunnel de vente</p>
+          <p style="margin:0 0 10px;font-size:14px;line-height:1.5;color:#B9CBE0;">Tu veux vendre en ligne, toi aussi ? Je crée ton site et ton tunnel de vente, clé en main. Sur devis.</p>
+          <a href="mailto:contact@lartdudigital.fr" style="font-size:14px;font-weight:800;color:#7FE3C8;text-decoration:none;">Demander un devis&nbsp;›</a>
         </td></tr></table>
     </td></tr>
     <tr><td style="background:#0A335D;border-radius:0 0 20px 20px;padding:24px 32px;">
