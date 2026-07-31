@@ -8217,7 +8217,10 @@ function ConstruitFormule({ v, onResolu, onErreur }) {
       else raterCourt()
     } else if (stepC.type === 'plage') {
       if (!anchor) {
-        setAnchor(id)
+        // Strict : la sélection doit DÉMARRER sur la bonne cellule. Si le doigt
+        // ripe sur une autre cellule, on signale l'erreur au lieu de l'accepter.
+        if (id === stepC.debut) setAnchor(id)
+        else raterCourt()
         return
       }
       const sel = idsEntre(anchor, id, grille.cols)
